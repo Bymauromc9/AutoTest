@@ -1,0 +1,1484 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autotest de FLI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: una columna estrecha tipo hoja de examen; el progreso es una "columna de evaluación" V/F como en una tabla de verdad */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#15202C; --muted:#5A6573; --line:#D7DDE4;
+  --accent:#27467A; --accent-soft:#E4EAF4; --ok:#1D7544; --ok-soft:#E1F2E8; --bad:#B42318; --bad-soft:#FBE7E5; --warn:#8A5A00; --warn-soft:#FBF0D9;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono","DejaVu Sans Mono","Cambria Math","Segoe UI Symbol",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10151B; --surface:#18202A; --ink:#E5EAF0; --muted:#9BA7B4; --line:#2B3642;
+  --accent:#93B4E6; --accent-soft:#1F2C3E; --ok:#5CC98C; --ok-soft:#163323; --bad:#F2786D; --bad-soft:#3A1C1A; --warn:#E8B85C; --warn-soft:#352914; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151B; --surface:#18202A; --ink:#E5EAF0; --muted:#9BA7B4; --line:#2B3642;
+  --accent:#93B4E6; --accent-soft:#1F2C3E; --ok:#5CC98C; --ok-soft:#163323; --bad:#F2786D; --bad-soft:#3A1C1A; --warn:#E8B85C; --warn-soft:#352914; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(30px,6vw,44px);font-weight:800;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:800}
+h3{font-size:18px;font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+code.f{font-family:var(--f-mono);font-size:.92em;font-weight:500;background:var(--accent-soft);padding:.05em .35em;border-radius:4px;white-space:nowrap}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Cabecera */
+header.top{display:flex;flex-direction:column;gap:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* Ajustes */
+.settings{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.settings label{display:inline-flex;align-items:center;gap:8px}
+select{font:inherit;font-size:15px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+
+/* Lista de tests */
+.tests{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.test-row{display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:center;padding:16px 4px;border-bottom:1px solid var(--line)}
+.test-row .num{font-family:var(--f-display);font-weight:800;font-size:30px;color:var(--accent);text-align:center}
+.test-row .info{min-width:0;display:flex;flex-direction:column;gap:2px}
+.test-row .info p{margin:0;font-size:15px;color:var(--muted)}
+.best{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.best b{color:var(--ink)}
+.test-row.general{background:var(--accent-soft);border-radius:8px;border-bottom:0;margin-top:10px;padding-inline:8px}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--surface);padding:9px 16px;border-radius:7px;font-weight:700;font-size:15px;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+
+/* Pantalla de pregunta */
+.qhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.qtools{display:flex;flex-wrap:wrap;gap:8px}
+.swapnote{margin:0;font-size:14px;color:var(--ok);background:var(--ok-soft);border:1px solid var(--ok);border-radius:7px;padding:7px 12px}
+.column{display:flex;flex-wrap:wrap;gap:3px}
+.cell{width:24px;height:24px;display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;font-weight:700;border:1px solid var(--line);border-radius:3px;color:var(--muted);background:var(--surface)}
+.cell.ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.cell.bad{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+.cell.blank{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.cell.now{outline:2px solid var(--accent);outline-offset:1px;color:var(--accent)}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,4vw,28px);display:flex;flex-direction:column;gap:16px}
+.qtext{font-size:19px;font-weight:600;line-height:1.45;margin:0}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;text-align:left;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--surface);transition:border-color .15s,background .15s}
+.opt .k{font-family:var(--f-mono);font-weight:700;font-size:14px;width:26px;height:26px;display:grid;place-items:center;border-radius:5px;background:var(--accent-soft);color:var(--accent)}
+.opt .t{min-width:0;padding-top:1px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .k{background:var(--ok);color:var(--surface)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .k{background:var(--bad);color:var(--surface)}
+.opt.dim{opacity:.6}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.skip{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:15px;padding:6px 0}
+.feedback{border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:16px}
+.feedback.ok{background:var(--ok-soft);border:1px solid var(--ok)}
+.feedback.bad{background:var(--bad-soft);border:1px solid var(--bad)}
+.feedback.blank{background:var(--warn-soft);border:1px solid var(--warn)}
+.feedback .verdict{font-family:var(--f-display);font-weight:800;font-size:18px}
+.feedback.ok .verdict{color:var(--ok)} .feedback.bad .verdict{color:var(--bad)} .feedback.blank .verdict{color:var(--warn)}
+.feedback p{margin:0}
+.feedback .why{border-top:1px dashed var(--line);padding-top:8px}
+.kbd{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* Resultados */
+.score{display:flex;flex-wrap:wrap;gap:18px 34px;align-items:flex-end;padding:20px 22px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.score .big{font-family:var(--f-display);font-weight:800;font-size:64px;line-height:1;font-variant-numeric:tabular-nums}
+.score .big small{font-size:24px;color:var(--muted)}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;font-variant-numeric:tabular-nums}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-size:22px;font-family:var(--f-display)}
+.stats span{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bytopic{display:flex;flex-direction:column;gap:6px;font-size:15px}
+.bar{display:grid;grid-template-columns:70px 1fr 54px;gap:10px;align-items:center}
+.bar .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar .fill{height:100%;background:var(--ok)}
+.bar .v{font-family:var(--f-mono);font-size:13px;text-align:right}
+.review{display:flex;flex-direction:column;gap:12px}
+.ritem{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;font-size:16px}
+.ritem.blank{border-left-color:var(--warn)}
+.ritem p{margin:0}
+.ritem .tag{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.ritem .yours{color:var(--bad)} .ritem.blank .yours{color:var(--warn)}
+.ritem .right{color:var(--ok);font-weight:600}
+.perfect{padding:16px;border:1px solid var(--ok);background:var(--ok-soft);border-radius:8px}
+/* ===== Chuletas ===== */
+:root{--c-not:#5A6573;--c-not-s:#ECEFF3;--c-and:#1F5FAD;--c-and-s:#E3EEFB;--c-or:#0F7A6B;--c-or-s:#DDF3EF;--c-imp:#B4540A;--c-imp-s:#FCEBDD;--c-iff:#7A3FB0;--c-iff-s:#F0E6FA}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-not:#AEB8C4;--c-not-s:#252E39;--c-and:#8DB8F0;--c-and-s:#17283D;--c-or:#5FD1BE;--c-or-s:#12302C;--c-imp:#F2A15C;--c-imp-s:#3A2615;--c-iff:#C9A2F0;--c-iff-s:#2D1F3D}}
+:root[data-theme="dark"]{--c-not:#AEB8C4;--c-not-s:#252E39;--c-and:#8DB8F0;--c-and-s:#17283D;--c-or:#5FD1BE;--c-or-s:#12302C;--c-imp:#F2A15C;--c-imp-s:#3A2615;--c-iff:#C9A2F0;--c-iff-s:#2D1F3D}
+.c-not{color:var(--c-not);font-weight:700}.c-and{color:var(--c-and);font-weight:700}.c-or{color:var(--c-or);font-weight:700}.c-imp{color:var(--c-imp);font-weight:700}.c-iff{color:var(--c-iff);font-weight:700}
+.k-not{--k:var(--c-not);--ks:var(--c-not-s)}.k-and{--k:var(--c-and);--ks:var(--c-and-s)}.k-or{--k:var(--c-or);--ks:var(--c-or-s)}.k-imp{--k:var(--c-imp);--ks:var(--c-imp-s)}.k-iff{--k:var(--c-iff);--ks:var(--c-iff-s)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:15px;font-weight:600;color:var(--muted)}
+.tab:hover{border-color:var(--accent);color:var(--accent)}
+.tab.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.sheet{display:flex;flex-direction:column;gap:26px}
+.sheet section{display:flex;flex-direction:column;gap:10px}
+.sheet p{margin:0}
+.lead{color:var(--muted)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table.t{border-collapse:collapse;width:100%;font-size:15px}
+table.t th,table.t td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font-size:12px;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg);font-weight:700}
+table.t tr:last-child td{border-bottom:0}
+table.t tr.grp td{background:var(--ks,var(--accent-soft));color:var(--k,var(--accent));font-weight:700;font-size:14px;border-left:4px solid var(--k,var(--accent))}
+table.t td.fcell{white-space:normal}
+table.t td.fcell code.f{display:inline-block;margin:2px 0}
+table.t .note{color:var(--muted);font-size:14px}
+.truth th,.truth td{text-align:center;font-family:var(--f-mono);font-size:15px;padding:8px 6px}
+.truth th{text-transform:none;letter-spacing:0;font-size:14px}
+.truth td:nth-child(2),.truth th:nth-child(2){border-right:2px solid var(--line)}
+.tv{font-weight:700}.tv-v{color:var(--ok)}.tv-f{color:var(--bad)}
+.tv-v.key{background:var(--ok-soft);box-shadow:inset 0 0 0 2px var(--ok)}.tv-f.key{background:var(--bad-soft);box-shadow:inset 0 0 0 2px var(--bad)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.rc{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--k);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.rc .sym{font-family:var(--f-mono);font-size:28px;font-weight:700;color:var(--k);line-height:1}
+.rc h4{margin:0;font-family:var(--f-display);font-size:16px}
+.rc .say{font-size:14px;color:var(--muted)}
+.rc p{font-size:15px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.chain .lv{font-family:var(--f-mono);font-weight:700;font-size:17px;padding:6px 12px;border-radius:7px;background:var(--surface);border:1px solid var(--line)}
+.chain .gt{color:var(--muted);font-weight:700}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout b.big{font-family:var(--f-display);font-size:17px}
+.arrowfig{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.arrowfig .node{border:2px solid var(--c-imp);border-radius:10px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:2px}
+.node .lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--muted)}
+.node .big{font-family:var(--f-mono);font-size:30px;font-weight:700;color:var(--c-imp);line-height:1.1}
+.node .role{font-weight:700}
+.node ul{margin:6px 0 0;padding-left:18px;font-size:15px}
+.arrowfig .arr{display:grid;place-items:center;font-size:44px;color:var(--c-imp);font-weight:700}
+.sq{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sq div{border-radius:8px;padding:10px 12px;border:2px solid;display:flex;flex-direction:column;gap:4px}
+.sq small{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sq .g1{border-color:var(--ok);background:var(--ok-soft)}.sq .g2{border-color:var(--c-iff);background:var(--c-iff-s)}
+.mp{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.mp div{border-radius:8px;padding:10px 12px;border:1px solid;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.mp .yes{border-color:var(--ok);background:var(--ok-soft)}.mp .no{border-color:var(--bad);background:var(--bad-soft)}
+.mp .v{font-family:var(--f-display);font-weight:800}.mp .yes .v{color:var(--ok)}.mp .no .v{color:var(--bad)}
+.spectrum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;font-size:14px}
+.spectrum .brace{border:2px solid;border-radius:8px;padding:4px 6px;font-weight:700;font-size:13px}
+.spectrum .b-sat{grid-column:1/3;border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+.spectrum .b-fal{grid-column:2/4;border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
+.spectrum .box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 6px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.spectrum .box b{font-family:var(--f-display);font-size:16px}
+.mini{display:flex;gap:2px;justify-content:center}
+.mini .cell{width:20px;height:20px;font-size:11px}
+.drill{background:var(--surface);border:2px solid var(--accent);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.drill-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.drill-front{font-size:18px;font-weight:600;line-height:1.45}
+.drill-back{border-top:1px dashed var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.drill-back .ans{font-size:18px;font-weight:700;color:var(--ok)}
+.star{font-family:var(--f-mono);font-size:11px;color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:1px 6px;white-space:nowrap;margin-left:4px;vertical-align:1px}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+/* ===== Exámenes ===== */
+.sechead{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.sechead p{margin:0}
+.ansgrid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface);font-family:var(--f-mono);text-align:center}
+.ansgrid a{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-right:1px solid var(--line)}
+.ansgrid a:last-child{border-right:0}
+.ansgrid .n{font-size:12px;color:var(--muted);background:var(--bg);padding:3px 0;border-bottom:1px solid var(--line)}
+.ansgrid .v{font-weight:700;font-size:16px;padding:5px 0;min-height:32px}
+.ansgrid .v.ok{background:var(--ok-soft);color:var(--ok)}.ansgrid .v.bad{background:var(--bad-soft);color:var(--bad)}.ansgrid .v.blank{background:var(--warn-soft);color:var(--warn)}
+.timer{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+.rules{font-size:15px}
+.qn{font-family:var(--f-display);font-weight:800;color:var(--accent);margin-right:4px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .k{background:var(--accent);color:var(--surface)}
+.opts.row{flex-direction:row;flex-wrap:wrap}
+.opts.row .opt{flex:1 1 200px}
+.exh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pts{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:5px}
+.qcard code.f,.solbox code.f,.ritem code.f,.callout code.f,.drill code.f{white-space:normal;overflow-wrap:anywhere;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.bigf{font-size:18px;text-align:center;margin:0;line-height:1.9}
+.bigf code.f{white-space:normal;font-size:1em}
+.qtbl{width:auto;margin:0 auto}
+.qtbl td,.qtbl th{text-align:center;font-family:var(--f-mono);padding:5px 14px}
+.qtbl th{text-transform:none;font-size:14px;letter-spacing:0}
+.qtbl td:nth-child(2),.qtbl th:nth-child(2){border-right:2px solid var(--line)}
+.solbox{display:flex;flex-direction:column;gap:12px;border-top:1px dashed var(--line);padding-top:14px}
+.solbox h4{margin:0;font-family:var(--f-display);font-size:16px}
+.solpre{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.steps{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:6px}
+.steps li.lv1{margin-left:22px;list-style:"↳  "}
+.steps li.lv1.first{font-weight:700;color:var(--c-iff)}
+.tree{display:flex;flex-direction:column;gap:6px}
+.br{display:flex;flex-direction:column;gap:6px}
+.kids{display:flex;flex-direction:column;gap:10px;margin-left:10px;padding-left:14px;border-left:2px solid var(--c-iff)}
+.blab{font-weight:700;color:var(--c-iff)}
+.blab::before{content:"Rama: ";font-family:var(--f-mono);font-size:12px;font-weight:700;color:var(--muted)}
+.bstep{font-size:15px}
+.bsplit{font-size:15px;font-weight:600}
+.bend{font-weight:700;font-size:15px;padding:6px 10px;border-radius:7px;align-self:flex-start}
+.bend.closed{background:var(--bad-soft);color:var(--bad)}
+.bend.open{background:var(--ok-soft);color:var(--ok)}
+.fit td:first-child{font-family:var(--f-mono);color:var(--muted);width:40px}
+.fit td:nth-child(2){white-space:nowrap}
+.selfg{display:flex;flex-direction:column;gap:8px}
+.selfg .opts{gap:6px}
+.verdict-line{font-weight:700}
+.verdict-line.ok{color:var(--ok)}.verdict-line.bad{color:var(--bad)}.verdict-line.blank{color:var(--warn)}
+.pending{color:var(--warn);font-weight:700}
+@media (max-width:600px){
+  .ansgrid .v{font-size:14px}
+  .arrowfig{grid-template-columns:1fr}.arrowfig .arr{transform:rotate(90deg);font-size:34px;line-height:1}
+  .mp{grid-template-columns:1fr}
+  table.t.stack thead{display:none}
+  table.t.stack,table.t.stack tbody,table.t.stack tr,table.t.stack td{display:block;width:100%}
+  table.t.stack tr{border-bottom:1px solid var(--line);padding:6px 0}
+  table.t.stack tr:last-child{border-bottom:0}
+  table.t.stack td{border:0;padding:4px 12px}
+  table.t.stack td[data-l]::before{content:attr(data-l);display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  table.t.stack tr.grp{padding:0}
+  table.t.stack tr.grp td{padding:8px 12px}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .test-row{grid-template-columns:38px 1fr;}
+  .test-row .btn{grid-column:1 / -1;justify-self:start}
+  .test-row .num{font-size:24px}
+  .score .big{font-size:52px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ======================= BANCO DE PREGUNTAS =======================
+   t: tema; q: enunciado; o: opciones (el orden se baraja al mostrarlas); a: índice correcto;
+   e: explicación; w: explicación específica de por qué una opción incorrecta lo es (opcional).
+   Las fórmulas van entre `acentos graves` y se muestran en fuente de fórmulas. */
+const BANK = [
+/* ---------------- TEMA 1 ---------------- */
+{t:1,q:"Según la definición dada en la asignatura, la lógica es…",o:["La ciencia formal que estudia los razonamientos válidos","El arte de convencer a otros mediante el discurso","El estudio de las opiniones y maneras populares","Una rama de la psicología que estudia cómo pensamos"],a:0,e:"La lógica es la ciencia formal que estudia los razonamientos válidos. Es formal porque usa formas primitivas, una sintaxis y esquemas de inferencia.",w:{1:"Eso es la retórica. Bacon (1605) distinguía: la lógica maneja la razón exacta y la verdad; la retórica, las opiniones populares.",2:"También es retórica, según la cita de Francis Bacon.",3:"La lógica estudia la corrección de los razonamientos, no los procesos psicológicos."}},
+{t:1,q:"Un razonamiento es válido cuando…",o:["De premisas verdaderas se sigue necesariamente la verdad de la conclusión","Las premisas y la conclusión son verdaderas en el mundo real","La conclusión es verdadera","Las premisas no se contradicen entre sí"],a:0,e:"Validez = preservación necesaria de la verdad: si las premisas fueran verdaderas, la conclusión tendría que serlo. No depende de si de hecho lo son.",w:{1:"Un razonamiento con premisas y conclusión verdaderas puede ser inválido (la conclusión puede no seguirse de las premisas).",2:"Que la conclusión sea verdadera no basta: tiene que seguirse necesariamente de las premisas.",3:"Que las premisas sean consistentes no garantiza nada sobre la conclusión."}},
+{t:1,q:"Un cálculo dispone de…",o:["Elementos primitivos, reglas de formación y reglas de transformación","Premisas, conclusión y contraejemplos","Átomos, tablas de verdad y modelos","Axiomas, interpretaciones y mundos posibles"],a:0,e:"Un cálculo tiene: un conjunto de elementos primitivos, reglas de formación (qué expresiones están bien formadas) y reglas de transformación de expresiones bien formadas."},
+{t:1,q:"¿Qué hace falta añadir a un cálculo para obtener un lenguaje formalizado (una lógica)?",o:["Una interpretación de sus expresiones","Más reglas de transformación","Un conjunto de contraejemplos","Eliminar las reglas de formación"],a:0,e:"Una lógica es un cálculo al que se le da una interpretación (los hechos del mundo). En el ejemplo de clase, A=padre, B=madre, X=querer convierte el cálculo en un lenguaje."},
+{t:1,q:"A las oraciones declarativas con pretensión de verdad acerca de los hechos se les llama…",o:["Enunciados","Proposiciones","Predicados","Cláusulas"],a:0,e:"Oración (entidad lingüística) → enunciado (oración declarativa con pretensión de verdad) → proposición (enunciado con términos referenciales).",w:{1:"Proposición es un paso más: un enunciado con términos referenciales."}},
+{t:1,q:"A los enunciados con términos referenciales se les llama…",o:["Proposiciones","Oraciones","Fórmulas mal formadas","Literales"],a:0,e:"Proposición = enunciado con términos referenciales. La lógica representa la estructura de las proposiciones, es decir, la estructura profunda de un hecho."},
+{t:1,q:"«Está lloviendo o no está lloviendo» ilustra…",o:["La ley del tercio excluido","El principio de no contradicción","La monotonía","El modus ponens"],a:0,e:"Tercio excluido: un hecho sólo puede ser verdadero o falso, no hay tercera opción. Por eso `α ∨ ¬α` es siempre V.",w:{1:"No contradicción dice que un hecho y su contrario no pueden darse a la vez: `α ∧ ¬α` es siempre F."}},
+{t:1,q:"El principio de no contradicción afirma que…",o:["Un hecho y su contrario no pueden darse a la vez","Todo hecho es verdadero o falso","Toda fórmula es satisfacible","Si α implica β, β implica α"],a:0,e:"Si A es verdadero no puede ser falso a la vez. Por eso `α ∧ ¬α` es una contradicción (siempre F).",w:{1:"Eso es la ley del tercio excluido."}},
+{t:1,q:"¿Cuál de estas expresiones NO es una proposición?",o:["¿Va a llover mañana?","Mi casa es blanca","2 + 2 = 5","Sócrates es griego"],a:0,e:"Una pregunta no es un enunciado declarativo: no puede ser verdadera ni falsa. «2 + 2 = 5» sí es proposición (falsa).",w:{2:"Es una proposición falsa, pero proposición: tiene valor de verdad."}},
+{t:1,q:"¿Por qué la lógica pasó del lenguaje natural a un lenguaje simbólico?",o:["Porque el lenguaje natural es ambiguo","Porque el lenguaje natural no tiene verbos","Para poder usar ordenadores","Porque Aristóteles no conocía el lenguaje natural"],a:0,e:"El lenguaje natural es ambiguo; para evitar ambigüedades se transformó en un lenguaje simbólico (lógica simbólica), ya en la primera etapa histórica."},
+{t:1,q:"George Boole (1847) dio origen a…",o:["La lógica algebraica","La lógica computacional","La lógica clásica aristotélica","La lógica temporal"],a:0,e:"Boole, en «The Mathematical Analysis of Logic», formuló la lógica en lenguaje matemático: las reglas de inferencia se modelan como leyes algebraicas (2.ª etapa)."},
+{t:1,q:"Frege (1879) propuso la lógica como lenguaje para las Matemáticas. ¿Qué etapa inicia?",o:["La lógica matemática","La lógica algebraica","La lógica computacional","La lógica clásica"],a:0,e:"3.ª etapa (final s. XIX – mitad s. XX): lógica matemática, anticipada por Leibniz. La 4.ª es la lógica computacional."},
+{t:1,q:"¿Cuál de estos NO es uno de los cuatro componentes de la lógica clásica?",o:["Una retórica para convencer","Un lenguaje formal","Una semántica","Un sistema de demostración axiomática"],a:0,e:"Los cuatro componentes son: lenguaje formal, formalización (paso del lenguaje natural al formal), semántica y sistema de demostración axiomática."},
+{t:1,q:"Las equivalencias lógicas y las implicaciones lógicas son…",o:["Tautologías","Contingencias","Contradicciones","Fórmulas mal formadas"],a:0,e:"Son fórmulas semánticamente válidas (verdaderas en todas las interpretaciones). Por eso lo que se deriva sintácticamente coincide con lo que se deduce semánticamente."},
+{t:1,q:"Razonar apoyándose en la verdad de los hechos es el método…",o:["Semántico o interpretativo","Axiomático o deductivo","Sintáctico","Retórico"],a:0,e:"Semántico/interpretativo: se apoya en la verdad de los hechos. Axiomático/deductivo (sintáctico): se apoya en la estructura del lenguaje.",w:{1:"El axiomático o deductivo se apoya en la estructura del lenguaje, no en la verdad de los hechos.",2:"Sintáctico es otro nombre del enfoque axiomático."}},
+{t:1,q:"De los compromisos de McCarthy, ¿cuál se refiere a la verdad de los hechos y de las deducciones del modelo?",o:["Epistemológico","Ontológico","Meta-ontológico","De implementación"],a:0,e:"Epistemológico: la verdad de los hechos y deducciones. Ontológico: los objetos y hechos relevantes. Meta-ontológico: entre el mundo y el modelo. Lógico: expresividad. Implementación: eficacia física.",w:{1:"Ontológico trata de qué objetos y hechos son relevantes en el modelo."}},
+{t:1,q:"En la lógica de predicados, los elementos más simples son…",o:["Los predicados","Las proposiciones","Las cláusulas","Las tablas de verdad"],a:0,e:"Lógica proposicional: proposiciones. Lógica de predicados: predicados (relaciones entre atributo y objeto, y entre atributos de distintos objetos)."},
+{t:1,q:"Las fórmulas construidas correctamente a partir del alfabeto y las reglas sintácticas se llaman…",o:["Fórmulas bien formadas (fbf)","Literales","Modelos","Teoremas"],a:0,e:"Alfabeto + sintaxis (reglas recursivas de combinación) definen las fórmulas bien formadas.",w:{3:"Un teorema es la última fórmula de una demostración; no toda fbf es un teorema."}},
+{t:1,q:"La lógica se describe a veces como…",o:["El «cálculo de la informática»","La «retórica de la informática»","La «estadística del pensamiento»","El «álgebra de los ordenadores» exclusivamente"],a:0,e:"Igual que el cálculo es la herramienta de la física, la lógica es la base formal de la informática (hardware, verificación, IA, bases de datos…)."},
+{t:1,q:"La palabra «lógica» procede del griego λόγος (logos), que significa…",o:["Palabra, pensamiento, idea, argumento o razón","Número, cantidad o medida","Verdad revelada","Máquina o mecanismo"],a:0,e:"Lógica viene de λογική (logike), «dotado de razón, intelectual, dialéctico, argumentativo», que a su vez viene de logos: palabra, pensamiento, idea, argumento, razón o principio."},
+{t:1,q:"Según la RAE, la lógica es la ciencia que expone las leyes, modos y formas de las proposiciones en relación con…",o:["Su verdad o falsedad","Su belleza y estilo","Su origen histórico","Su frecuencia de uso"],a:0,e:"Definición de la RAE: ciencia que expone las leyes, modos y formas de las proposiciones en relación con su verdad o falsedad."},
+{t:1,q:"Según Francis Bacon (1605), la lógica se diferencia de la retórica en que…",o:["La lógica maneja la razón exacta y la verdad; la retórica, las opiniones y maneras populares","La lógica estudia el lenguaje oral y la retórica el escrito","La retórica es una rama de la lógica matemática","No hay diferencia: son sinónimos"],a:0,e:"Bacon: la lógica maneja la razón exacta y la verdad; la retórica la maneja tal como está plantada en las opiniones y maneras populares."},
+{t:1,q:"¿Cuál de estas tareas NO se relaciona con la lógica según la asignatura?",o:["Decidir por intuición en lugar de razonar","Estudiar la inferencia formal","Deducir afirmaciones a partir de otras previas","Determinar respuestas correctas mediante un proceso estandarizado"],a:0,e:"Entre las tareas de la lógica está el razonamiento, en contraposición a la intuición; también el estudio de la inferencia formal, la secuencia de afirmaciones verificadas y la deducción a partir de afirmaciones previas."},
+{t:1,q:"Se dice que la lógica es un ejercicio directo de metacognición. La metacognición es…",o:["Pensar acerca del pensamiento","Memorizar reglas sin entenderlas","Calcular más rápido que un ordenador","Convencer a otros con argumentos emotivos"],a:0,e:"Metacognición = pensar sobre el propio pensamiento. Evaluar si un razonamiento es correcto es exactamente eso."},
+{t:1,q:"¿Cuál es el principal foco de estudio de la lógica?",o:["El razonamiento humano","Los lenguajes de programación","La conducta animal","La estadística de datos"],a:0,e:"La lógica estudia los principios del conocimiento y el pensamiento humanos y analiza la corrección de los razonamientos."},
+{t:1,q:"La lógica analiza la corrección de los razonamientos…",o:["Tanto formales como no formales","Sólo matemáticos","Sólo los escritos en lenguaje natural","Sólo los que tienen premisas verdaderas"],a:0,e:"Según las diapositivas, analiza la corrección de los razonamientos tanto formales como no formales."},
+{t:1,q:"En Inteligencia Artificial, la lógica es el fundamento de…",o:["Los métodos de representación del conocimiento y del razonamiento","Únicamente el diseño de interfaces gráficas","La fabricación de chips de memoria","Los algoritmos de compresión de vídeo"],a:0,e:"Es la base de la representación del conocimiento y el razonamiento: sistemas expertos, razonamiento con incertidumbre, lenguaje natural, razonamiento espacial y temporal, visión, robótica, lógica epistémica…"},
+{t:1,q:"¿Qué aportan los lenguajes de especificación formal en ingeniería del software?",o:["Modelos estructurados, concisos y precisos sobre los que se puede razonar","Eliminan la necesidad de programar","Hacen que el código se ejecute más rápido","Sustituyen a las pruebas con usuarios"],a:0,e:"Los métodos formales permiten definir modelos estructurados, concisos y precisos en distintos niveles de abstracción y razonar sobre ellos, incluso informalmente."},
+{t:1,q:"La primera etapa de la historia de la lógica (≈500 a.C. – s. XIX) comienza con…",o:["Sócrates, Platón y Aristóteles","Boole y De Morgan","Frege y Russell","Turing y McCarthy"],a:0,e:"En esa etapa la lógica se ocupaba de los argumentos en lenguaje natural; aquí comienza la lógica clásica."},
+{t:1,q:"«Todos los hombres son mortales. Sócrates es un hombre. Por tanto, Sócrates es mortal.» Es el ejemplo típico de…",o:["Argumento cuya corrección demostraba la lógica de la primera etapa","Razonamiento de la lógica temporal","Problema SAT resuelto con DPLL","Razonamiento inválido"],a:0,e:"La lógica simbólica de la primera etapa se usaba para demostrar la corrección de argumentos como este, que es válido."},
+{t:1,q:"¿En qué orden aparecen las cuatro etapas de la historia de la lógica?",o:["Clásica → algebraica → matemática → computacional","Algebraica → clásica → computacional → matemática","Matemática → clásica → algebraica → computacional","Clásica → matemática → algebraica → computacional"],a:0,e:"1.ª clásica (500 a.C.–s. XIX), 2.ª algebraica (Boole, 1847), 3.ª matemática (Frege, 1879), 4.ª computacional (mitad s. XX–hoy)."},
+{t:1,q:"¿Quién anticipó mucho antes la lógica matemática, aunque aún no existían herramientas para desarrollarla?",o:["Leibniz","Aristóteles","Boole","Cook"],a:0,e:"Frege (1879) la propuso, pero Leibniz la había anticipado mucho tiempo antes."},
+{t:1,q:"¿Qué motivó el paso a la lógica matemática (3.ª etapa)?",o:["La aparición de paradojas en pruebas matemáticas cada vez más sofisticadas","La invención del ordenador electrónico","La necesidad de convencer en debates públicos","La traducción de textos griegos"],a:0,e:"A medida que las pruebas matemáticas se volvieron más sofisticadas aparecieron paradojas, igual que en el lenguaje natural."},
+{t:1,q:"La lógica computacional es…",o:["La misma lógica matemática aplicada a la computación","Una lógica sin reglas de inferencia","La lógica de Aristóteles traducida a código","Una lógica que sólo trabaja con números"],a:0,e:"Surge con la computadora electrónica: la lógica encuentra un nuevo hogar en la computación."},
+{t:1,q:"¿Cuál de estas NO aparece como aplicación de la lógica a la computación?",o:["Imprimir documentos en color","Diseño de hardware con puertas lógicas","Verificación y corrección de diseños","Sistemas de razonamiento automático y sistemas expertos"],a:0,e:"Aplicaciones citadas: hardware con puertas lógicas, verificación de diseños (lógica temporal), razonamiento automático, sistemas expertos, comprobaciones de seguridad…"},
+{t:1,q:"¿Qué lógica se menciona para la verificación y corrección de un diseño?",o:["La lógica temporal","La lógica algebraica","La retórica","La lógica aristotélica"],a:0,e:"En la 4.ª etapa se cita la verificación y corrección de un diseño mediante lógica temporal."},
+{t:1,q:"La analogía `a(b+c) = ab + ac` ~ `x ∩ (y ∪ z) = (x ∩ y) ∪ (x ∩ z)` ilustra…",o:["La lógica algebraica de Boole","La ley del tercio excluido","El modus ponens","La lógica temporal"],a:0,e:"Boole modeló las reglas de inferencia como leyes para manipular expresiones algebraicas, como la distributiva."},
+{t:1,q:"En el ejemplo de cálculo de clase partimos de `A X B’` y aplicamos RT1. Obtenemos…",o:["`B’ X A`","`A X B’’`","`A’ X B’`","`B X A’`"],a:0,e:"RT1: una expresión del tipo `An X Bn` se transforma en una del tipo `Bn X An`."},
+{t:1,q:"Siguiendo el ejemplo de clase, de `B’ X A` aplicando RT4 se obtiene…",o:["`B’ X A’`","`A X B’`","`B X A`","`B’’ X A`"],a:0,e:"RT4 permite cambiar el elemento A por otro de su tipo. Así, de `B’ X A` se obtiene `B’ X A’`."},
+{t:1,q:"Con la interpretación A = padre, B’’ = nieta y X = querer, la expresión `A X B’’` significa…",o:["Padre quiere a nieta","Nieta quiere a padre","Madre quiere a hija","Hijo quiere a nieta"],a:0,e:"Al dar una interpretación, el cálculo se convierte en un lenguaje formalizado."},
+{t:1,q:"En un cálculo, las reglas de formación…",o:["Establecen qué combinaciones de elementos primitivos son expresiones bien formadas","Transforman unas expresiones bien formadas en otras","Asignan valores de verdad a los átomos","Dan significado a los símbolos"],a:0,e:"Formación = qué está bien construido. Transformación = cómo pasar de una ebf a otra.",w:{1:"Esas son las reglas de transformación."}},
+{t:1,q:"En el lenguaje, una oración es…",o:["Una entidad lingüística","Una proposición siempre verdadera","Un enunciado con términos referenciales","Una fórmula bien formada"],a:0,e:"Oración (entidad lingüística) → enunciado (declarativa con pretensión de verdad) → proposición (enunciado con términos referenciales)."},
+{t:1,q:"¿Qué trata de representar la lógica?",o:["La estructura de una proposición, la estructura profunda de un hecho","El sonido de las palabras","La intención del hablante","El estilo literario de un texto"],a:0,e:"La lógica trata de representar la estructura de una proposición, es decir, la estructura profunda de un hecho."},
+{t:1,q:"¿Por qué se dice que la lógica es una ciencia FORMAL?",o:["Usa formas primitivas para los hechos simples, una sintaxis para los complejos y esquemas de inferencia","Porque sólo se estudia en la universidad","Porque estudia normas de cortesía","Porque sólo trata de hechos reales y verificados"],a:0,e:"Formal por sus formas primitivas, su sintaxis y sus patrones o esquemas de inferencia para obtener derivaciones correctas."},
+{t:1,q:"Según la asignatura, la estructura lógica del mundo y la del lenguaje…",o:["Es la misma","Son opuestas","No guardan relación","Sólo coinciden en matemáticas"],a:0,e:"Por eso podemos razonar apoyándonos en la verdad de los hechos (método semántico) o en la estructura del lenguaje (método axiomático)."},
+{t:1,q:"De los compromisos de McCarthy, ¿cuál se refiere a los objetos y hechos relevantes del modelo?",o:["Ontológico","Epistemológico","Meta-ontológico","Lógico"],a:0,e:"Ontológico: objetos y hechos relevantes. Epistemológico: verdad de hechos y deducciones. Meta-ontológico: relación mundo-modelo."},
+{t:1,q:"El compromiso META-ONTOLÓGICO de McCarthy se establece…",o:["Entre el mundo y el modelo que creamos para entenderlo","Entre el lenguaje y su implementación física","Entre premisas y conclusión","Entre la sintaxis y la semántica"],a:0,e:"Meta-ontológico: entre el mundo y el modelo que creamos para entenderlo."},
+{t:1,q:"El compromiso LÓGICO de McCarthy se refiere a…",o:["La expresividad del lenguaje en relación con el nivel epistemológico","La eficacia física del sistema","Los objetos relevantes del modelo","La verdad de los hechos"],a:0,e:"Lógico: expresividad del lenguaje respecto al nivel epistemológico. Implementación: expresividad y eficacia física respecto a los anteriores."},
+{t:1,q:"El compromiso de IMPLEMENTACIÓN de McCarthy trata de…",o:["Su expresividad y eficacia física en relación a los niveles anteriores","La verdad de los hechos y deducciones","Los objetos del modelo","La relación entre el mundo y el modelo"],a:0,e:"Es el último nivel: cómo se lleva a la práctica eficazmente lo definido en los anteriores."},
+{t:1,q:"John McCarthy (1927–2011) es conocido como…",o:["Uno de los padres de la Inteligencia Artificial","El creador de la lógica algebraica","El autor de la primera tabla de verdad","Quien demostró que SAT es NP-completo"],a:0,e:"McCarthy definió los compromisos de un sistema lógico para representar el conocimiento y el razonamiento."},
+{t:1,q:"¿Cuántos valores de verdad admite la lógica clásica?",o:["Dos: verdadero y falso","Tres: verdadero, falso e indeterminado","Infinitos","Uno"],a:0,e:"Es bivalente por la ley del tercio excluido: un hecho sólo puede ser cierto o falso."},
+{t:1,q:"El componente de la lógica clásica llamado FORMALIZACIÓN consiste en…",o:["Reglas para transformar oraciones del lenguaje natural al lenguaje formal","Un mecanismo de evaluación de fórmulas","Un conjunto de equivalencias lógicas","El alfabeto de símbolos primitivos"],a:0,e:"Formalización: paso del lenguaje natural (hechos del mundo) al lenguaje formal."},
+{t:1,q:"La SEMÁNTICA de la lógica clásica es…",o:["Un mecanismo de evaluación composicional de las fbf a partir de los valores de verdad de las atómicas","El conjunto de reglas de inferencia","El alfabeto del lenguaje","La traducción del lenguaje natural"],a:0,e:"Semántica: interpretación de las fórmulas respecto a los hechos del mundo."},
+{t:1,q:"El lenguaje formal de la lógica clásica se compone de…",o:["Un alfabeto de símbolos primitivos y una sintaxis de reglas de combinación recursiva","Premisas y conclusiones","Tablas de verdad y modelos","Axiomas y teoremas únicamente"],a:0,e:"Alfabeto (símbolos no descomponibles) + sintaxis (reglas recursivas). Lo que se forma así son las fbf."},
+{t:1,q:"En el sistema de demostración axiomática, las equivalencias lógicas sirven para…",o:["Transformar o sustituir unas fórmulas por otras","Asignar valores de verdad a los átomos","Traducir el lenguaje natural","Contar interpretaciones"],a:0,e:"Equivalencias: sustituir fórmulas. Implicaciones lógicas: obtener razonamientos válidos."},
+{t:1,q:"«Todos los peces vuelan. Nemo es un pez. Luego Nemo vuela.» Este razonamiento es…",o:["Válido, aunque tiene una premisa falsa","Inválido porque la conclusión es falsa","Inválido porque una premisa es falsa","Ni válido ni inválido"],a:0,e:"La validez depende de la forma: si las premisas fueran verdaderas, la conclusión lo sería necesariamente. Que una premisa sea falsa no lo invalida."},
+{t:1,q:"Un razonamiento válido con todas sus premisas verdaderas tiene una conclusión…",o:["Necesariamente verdadera","Necesariamente falsa","Que puede ser verdadera o falsa","Sin valor de verdad"],a:0,e:"Es la definición de validez: preserva la verdad de las premisas a la conclusión."},
+
+/* ---------------- TEMA 2 ---------------- */
+{t:2,q:"La implicación `p → q` es falsa…",o:["Sólo cuando p es V y q es F","Cuando p es F","Cuando p y q son F","Cuando q es V y p es F"],a:0,e:"Es el único caso: antecedente V y consecuente F. Piénsalo como una promesa: sólo se rompe si se cumple la condición y no se cumple lo prometido.",w:{1:"Si el antecedente es F, la implicación es siempre V (la promesa no se activa).",2:"F → F = V.",3:"F → V = V."}},
+{t:2,q:"Con 4 proposiciones atómicas distintas, ¿cuántas interpretaciones hay?",o:["16","8","4","32"],a:0,e:"Con n átomos hay 2ⁿ interpretaciones (filas de la tabla de verdad): 2⁴ = 16."},
+{t:2,q:"Según la prioridad de las conectivas, `p ∧ q → r` se lee…",o:["`(p ∧ q) → r`","`p ∧ (q → r)`","`(p → r) ∧ q`","No es una fbf"],a:0,e:"Prioridad: () > ¬ > ∧,∨ > →,↔. La ∧ se agrupa antes que la →.",w:{1:"Eso exigiría que → tuviese más prioridad que ∧, y es al revés."}},
+{t:2,q:"En esta asignatura, `p → q → r` se lee…",o:["`(p → q) → r`","`p → (q → r)`","`(p ∧ q) → r`","Es ambigua y no es fbf"],a:0,e:"A igual prioridad se agrupa de izquierda a derecha. Así están resueltos los ejemplos de clase (p. ej. `p → (q∧¬r) → (p→q)`).",w:{1:"Muchos libros asocian → por la derecha, pero en esta asignatura se usa izquierda a derecha.",2:"Eso es la exportación de `p → (q → r)`, que además no es lo mismo que `(p→q)→r`."}},
+{t:2,q:"«p sólo si q» se formaliza como…",o:["`p → q`","`q → p`","`p ↔ q`","`¬p → q`"],a:0,e:"«Apruebo sólo si estudio»: si he aprobado, es que he estudiado: `aprobar → estudiar`.",w:{1:"Es el error más típico. `q → p` sería «p si q».",2:"`↔` es «si y sólo si»."}},
+{t:2,q:"«p es condición necesaria para q» se formaliza como…",o:["`q → p`","`p → q`","`p ∧ q`","`¬q → p`"],a:0,e:"Sin p no puede haber q: si se da q, se ha dado p. «Tener gasolina es necesario para que arranque»: `arranca → gasolina`.",w:{1:"`p → q` dice que p es condición suficiente para q."}},
+{t:2,q:"«p a menos que q» se formaliza como…",o:["`¬q → p`","`q → p`","`p → ¬q`","`p ∧ ¬q`"],a:0,e:"«Iré a menos que llueva»: si no llueve, iré. Equivale a `p ∨ q`."},
+{t:2,q:"«Ni p ni q» se formaliza como…",o:["`¬p ∧ ¬q`","`¬p ∨ ¬q`","`¬(p ∧ q)`","`¬p → q`"],a:0,e:"Ninguna de las dos ocurre: `¬p ∧ ¬q` (≡ `¬(p ∨ q)` por De Morgan).",w:{1:"`¬p ∨ ¬q` sólo dice que al menos una no ocurre.",2:"`¬(p ∧ q)` ≡ `¬p ∨ ¬q`: no las dos a la vez, que es más débil."}},
+{t:2,q:"¿Cuál de estas expresiones es una fbf?",o:["`¬(p ∨ q) ∧ r`","`(¬)p`","`¬p (∨ q) ∧ r`","`p (↔ q) ∨ r`"],a:0,e:"Las otras tienen conectivas sin fbf a ambos lados o paréntesis mal colocados (son los ejemplos de fórmulas mal formadas de clase)."},
+{t:2,q:"Un literal es…",o:["Una fbf atómica o su negación","Una disyunción de átomos","Cualquier fbf sin paréntesis","Una conjunción de cláusulas"],a:0,e:"Literal: `p` o `¬p`. Una cláusula es un literal o una disyunción de literales.",w:{1:"Eso sería una cláusula (sin negaciones)."}},
+{t:2,q:"La fórmula `p ∨ ¬p` es…",o:["Una tautología","Una contradicción","Contingente","Insatisfacible"],a:0,e:"Siempre V: es la ley del tercio excluido. Su opuesta `p ∧ ¬p` es la contradicción."},
+{t:2,q:"Una fórmula contingente es…",o:["Satisfacible y falseable a la vez","Satisfacible pero no falseable","Falseable pero no satisfacible","Ni satisfacible ni falseable"],a:0,e:"Contingente: V en unas interpretaciones y F en otras. Por tanto es satisfacible (hay alguna V) y falseable (hay alguna F).",w:{1:"Satisfacible y no falseable es una tautología."}},
+{t:2,q:"Si una fórmula es insatisfacible, entonces…",o:["Es falseable","Es contingente","Es satisfacible","Puede ser tautología"],a:0,e:"Insatisfacible = F en todas las interpretaciones; por tanto tiene al menos una F: es falseable. (Lo contrario no se cumple.)"},
+{t:2,q:"Si α es una contradicción, entonces `¬α` es…",o:["Una tautología","Una contradicción","Contingente","No se puede saber"],a:0,e:"Si α es F en todas las interpretaciones, ¬α es V en todas."},
+{t:2,q:"¿Cuál de estas afirmaciones es CORRECTA?",o:["Toda tautología es satisfacible","Toda fórmula satisfacible es tautología","Toda fórmula falseable es contradicción","Una tautología puede ser falseable"],a:0,e:"Tautología ⇒ satisfacible, pero no al revés (las contingentes son satisfacibles y no tautologías).",w:{1:"Las contingentes son satisfacibles y no son tautologías.",2:"Las contingentes son falseables y no son contradicciones.",3:"Una tautología no tiene ninguna interpretación F."}},
+{t:2,q:"A un conjunto satisfacible le añadimos una fbf satisfacible. El nuevo conjunto…",o:["Puede volverse insatisfacible","Sigue siendo siempre satisfacible","Pasa a ser siempre tautología","Pasa a ser siempre insatisfacible"],a:0,e:"La fbf añadida puede ser F justo en los modelos del conjunto. Ejemplo: `{p}` y `¬p` son satisfacibles, pero `{p, ¬p}` no.",w:{1:"Contraejemplo: `{p}` + `¬p`."}},
+{t:2,q:"A un conjunto insatisfacible le añadimos una tautología. El conjunto…",o:["Sigue siendo insatisfacible","Pasa a ser satisfacible","Pasa a ser tautología","Depende de la tautología"],a:0,e:"Añadir fórmulas sólo puede quitar modelos, nunca añadirlos. Si no había ninguno, sigue sin haberlo."},
+{t:2,q:"Un modelo de un conjunto de fbf es…",o:["Una interpretación que hace verdaderas a todas sus fórmulas a la vez","Una interpretación que hace verdadera al menos a una fórmula","Una fórmula que es tautología","La última columna de la tabla de verdad"],a:0,e:"El conjunto es satisfacible si existe un modelo; equivale a que la conjunción de sus fórmulas sea satisfacible.",w:{1:"Tiene que hacerlas verdaderas a todas a la vez, no a alguna."}},
+{t:2,q:"Sobre `≡` y `↔`, ¿qué es correcto?",o:["`α ≡ β` si y sólo si `α ↔ β` es una tautología","Son exactamente el mismo símbolo","`≡` es una conectiva del lenguaje L0","`α ↔ β` es una relación del metalenguaje"],a:0,e:"`↔` es una operación del lenguaje (una fórmula más). `≡` es una relación semántica entre fórmulas que pertenece al metalenguaje.",w:{2:"`≡` no está en el alfabeto de L0; pertenece al metalenguaje.",3:"Es al revés: `↔` pertenece al lenguaje y `≡` al metalenguaje."}},
+{t:2,q:"`¬(p ∧ q)` es equivalente a…",o:["`¬p ∨ ¬q`","`¬p ∧ ¬q`","`p ∨ q`","`¬p → ¬q`"],a:0,e:"De Morgan: al negar se cambia la conectiva: ∧ pasa a ∨.",w:{1:"`¬p ∧ ¬q` ≡ `¬(p ∨ q)`. Al aplicar De Morgan hay que cambiar ∧ por ∨."}},
+{t:2,q:"¿Cuál es equivalente a `p → q`?",o:["`¬q → ¬p`","`q → p`","`¬p → ¬q`","`p ∨ ¬q`"],a:0,e:"Contraposición: `p → q ≡ ¬q → ¬p`. También `p → q ≡ ¬p ∨ q`.",w:{1:"La implicación no es conmutativa: `q → p` es la recíproca.",2:"`¬p → ¬q` es la contraria; equivale a `q → p`.",3:"`p ∨ ¬q` ≡ `q → p`."}},
+{t:2,q:"`¬(p → q)` es equivalente a…",o:["`p ∧ ¬q`","`¬p → ¬q`","`¬p ∧ q`","`¬p ∨ ¬q`"],a:0,e:"`¬(p → q) ≡ ¬(¬p ∨ q) ≡ p ∧ ¬q`: la implicación sólo es falsa si p es V y q es F.",w:{1:"Error muy frecuente: negar una implicación no es negar sus partes."}},
+{t:2,q:"`(p ∧ q) → r` es equivalente a…",o:["`p → (q → r)`","`(p → q) → r`","`(p → r) ∧ (q → r)`","`p ∧ (q → r)`"],a:0,e:"Ley de exportación/importación.",w:{1:"`(p→q)→r` no es equivalente: con p=F, r=F, la de la izquierda es V y esta es F.",2:"`(p→r) ∧ (q→r)` ≡ `(p ∨ q) → r`."}},
+{t:2,q:"`p ∧ (p ∨ q)` es equivalente a…",o:["`p`","`q`","`p ∨ q`","`p ∧ q`"],a:0,e:"Ley de absorción. Por distributiva: `(p∧p) ∨ (p∧q) ≡ p ∨ (p∧q) ≡ p`."},
+{t:2,q:"¿Cuál de estas es el modus tollens?",o:["`{α → β, ¬β} ⊨ ¬α`","`{α → β, α} ⊨ β`","`{α → β, ¬α} ⊨ ¬β`","`{α ∨ β, ¬α} ⊨ β`"],a:0,e:"Modus tollens: si α implica β y β no se da, α tampoco.",w:{1:"Eso es el modus ponens.",2:"Eso es una falacia (negación del antecedente).",3:"Eso es el silogismo disyuntivo."}},
+{t:2,q:"¿Cuál de estos esquemas NO es válido?",o:["`{α → β, β} ⊨ α`","`{α → β, β → γ} ⊨ α → γ`","`{α ∧ β} ⊨ α`","`{α → β, ¬α → β} ⊨ β`"],a:0,e:"Es la falacia de afirmación del consecuente: con α=F y β=V las premisas son V y la conclusión F. Las otras son silogismo hipotético, simplificación y prueba por casos.",w:{3:"Es la prueba por casos, que sí es válida."}},
+{t:2,q:"`{α₁, …, αₙ} ⊨ β` equivale a que…",o:["`α₁ ∧ … ∧ αₙ ∧ ¬β` sea insatisfacible","`α₁ ∧ … ∧ αₙ ∧ β` sea satisfacible","`α₁ ∧ … ∧ αₙ ∧ ¬β` sea satisfacible","Cada αᵢ sea una tautología"],a:0,e:"Planteamiento por refutación: el razonamiento es válido si es imposible tener las premisas V y la conclusión F a la vez. (Directo: `α₁ ∧ … ∧ αₙ → β` tautología.)",w:{1:"Que sea satisfacible no garantiza que la conclusión se siga.",2:"Si eso fuese satisfacible habría un contraejemplo: el razonamiento sería NO válido."}},
+{t:2,q:"Según el teorema de la deducción semántica, `CP ⊨ β` si y sólo si…",o:["La conjunción de las premisas `→ β` es tautología","La conjunción de las premisas `→ β` es satisfacible","`β` es tautología","Las premisas son tautologías"],a:0,e:"Planteamiento directo: `α₁ ∧ … ∧ αₙ → β` debe ser tautología."},
+{t:2,q:"La propiedad de monotonía de `⊨` dice que…",o:["Si `CP ⊨ β` y `CP ⊆ Δ`, entonces `Δ ⊨ β`","Si `CP ⊨ β` y `β ⊨ γ`, entonces `CP ⊨ γ`","`α ⊨ α`","Si `α ⊨ β` entonces `β ⊨ α`"],a:0,e:"Añadir premisas no estropea un razonamiento válido.",w:{1:"Eso es la transitividad.",2:"Eso es la reflexividad.",3:"Falso en general; sólo ocurre cuando son equivalentes."}},
+{t:2,q:"Si el conjunto de premisas es insatisfacible, entonces…",o:["Se sigue cualquier conclusión","No se sigue ninguna conclusión","Sólo se siguen tautologías","Sólo se siguen contradicciones"],a:0,e:"Ley de inconsistencia `{β, ¬β} ⊨ α`: no hay ninguna interpretación con premisas V, así que nunca hay contraejemplo."},
+{t:2,q:"Con `ν(p)=F, ν(q)=V, ν(r)=F`, ¿cuánto vale `¬(p ∨ q) → (r ↔ ¬p)`?",o:["V","F","Depende de la prioridad","No se puede evaluar"],a:0,e:"`p ∨ q = V`, luego `¬(p∨q) = F`. Antecedente F ⇒ la implicación vale V (ni hace falta el consecuente, que es `F ↔ V = F`)."},
+{t:2,q:"«Si el agua hierve a 50 ºC, entonces los elefantes vuelan» es…",o:["Verdadera","Falsa","Ni verdadera ni falsa","Mal formada"],a:0,e:"F → F = V. La implicación lógica no es causa-efecto: con antecedente falso siempre es verdadera."},
+{t:2,q:"`⊨ β` (conjunto de premisas vacío) significa que…",o:["β es una tautología","β es una contradicción","β es satisfacible","β no se puede demostrar"],a:0,e:"β no necesita ningún fundamento para ser verdad: es verdadera en todas las interpretaciones."},
+{t:2,q:"La fórmula `(p → q) → (¬p → ¬q)` es…",o:["Contingente","Tautología","Contradicción","Insatisfacible"],a:0,e:"Es F sólo con p=F, q=V (antecedente V y consecuente `V → F = F`). En el resto es V: satisfacible, falseable, contingente.",w:{1:"Hay una fila F (p=F, q=V). Es la falacia de negar el antecedente."}},
+{t:2,q:"¿Qué conectiva NO es conmutativa?",o:["`→`","`∧`","`∨`","`↔`"],a:0,e:"`p → q` y `q → p` no son equivalentes (difieren en p=V,q=F y p=F,q=V)."},
+{t:2,q:"Para demostrar que dos fórmulas NO son equivalentes basta con…",o:["Encontrar una interpretación en la que tengan distinto valor","Hacer las dos tablas completas siempre","Ver que tienen distintos átomos","Comprobar que una es tautología"],a:0,e:"Un solo contraejemplo basta. Para demostrar que SÍ son equivalentes hay que transformar una en otra con equivalencias o comparar las tablas completas."},
+{t:2,q:"Con 3 proposiciones atómicas distintas, ¿cuántas filas tiene la tabla de verdad?",o:["8","6","9","3"],a:0,e:"2³ = 8 interpretaciones."},
+{t:2,q:"Con 5 proposiciones atómicas distintas, ¿cuántas interpretaciones hay?",o:["32","25","10","16"],a:0,e:"2⁵ = 32."},
+{t:2,q:"La fórmula `p ∧ ¬p` es…",o:["Una contradicción","Una tautología","Contingente","Satisfacible"],a:0,e:"Principio de no contradicción: siempre F."},
+{t:2,q:"`p ↔ q` es verdadera cuando…",o:["p y q tienen el mismo valor de verdad","Al menos una de las dos es verdadera","p es V y q es F","Sólo cuando ambas son falsas"],a:0,e:"Doble implicación: V si antecedente y consecuente coinciden (V,V o F,F).",w:{3:"También es V cuando ambas son V."}},
+{t:2,q:"`p ↔ q` es equivalente a…",o:["`(p → q) ∧ (q → p)`","`(p → q) ∨ (q → p)`","`p ∧ q`","`¬p ∨ q`"],a:0,e:"La doble implicación es la conjunción de las dos implicaciones.",w:{1:"Esa disyunción es una tautología."}},
+{t:2,q:"`p ∨ q` es falsa…",o:["Sólo cuando p y q son F","Cuando alguna de las dos es F","Cuando ambas son V","Nunca"],a:0,e:"La disyunción (inclusiva) sólo es F si ambas lo son."},
+{t:2,q:"La interdefinición de la implicación dice que `p → q ≡`…",o:["`¬p ∨ q`","`p ∨ ¬q`","`¬p ∧ q`","`p ∧ ¬q`"],a:0,e:"Es la equivalencia clave para pasar a FNC.",w:{3:"`p ∧ ¬q` es justo la negación de `p → q`."}},
+{t:2,q:"`¬(p ∨ q)` es equivalente a…",o:["`¬p ∧ ¬q`","`¬p ∨ ¬q`","`p ∧ q`","`¬p → q`"],a:0,e:"De Morgan: al negar, ∨ pasa a ∧ y se niega cada parte."},
+{t:2,q:"`p ∧ (q ∨ r)` es equivalente a…",o:["`(p ∧ q) ∨ (p ∧ r)`","`(p ∨ q) ∧ (p ∨ r)`","`p ∧ q ∧ r`","`(p ∧ q) ∨ r`"],a:0,e:"Distributiva de la conjunción respecto de la disyunción.",w:{1:"Esa es la distributiva de ∨ sobre ∧, que se aplica a `p ∨ (q ∧ r)`."}},
+{t:2,q:"`¬¬p` es equivalente a…",o:["`p`","`¬p`","`p ∧ ¬p`","`p ∨ ¬p`"],a:0,e:"Ley de la doble negación."},
+{t:2,q:"`p ∨ (q ∧ ¬q)` es equivalente a…",o:["`p`","`q`","Una tautología","Una contradicción"],a:0,e:"`q ∧ ¬q` es F, y F es el neutro de la disyunción: `p ∨ F ≡ p`."},
+{t:2,q:"`p ∧ (q ∨ ¬q)` es equivalente a…",o:["`p`","`q`","Una tautología","Una contradicción"],a:0,e:"`q ∨ ¬q` es V, neutro de la conjunción: `p ∧ V ≡ p`."},
+{t:2,q:"La ley de ADICIÓN es…",o:["`{α} ⊨ α ∨ β`","`{α ∧ β} ⊨ α`","`{α, β} ⊨ α ∧ β`","`{α ∨ β, ¬α} ⊨ β`"],a:0,e:"Si α es V, cualquier disyunción con α es V.",w:{1:"Esa es la simplificación.",2:"Esa es la ley de combinación.",3:"Ese es el silogismo disyuntivo."}},
+{t:2,q:"La ley de COMBINACIÓN es…",o:["`{α, β} ⊨ α ∧ β`","`{α} ⊨ α ∨ β`","`{α ∧ β} ⊨ β`","`{α → β, α} ⊨ β`"],a:0,e:"Dos fórmulas verdaderas permiten afirmar su conjunción."},
+{t:2,q:"El SILOGISMO HIPOTÉTICO es…",o:["`{α → β, β → γ} ⊨ α → γ`","`{α ∨ β, ¬β} ⊨ α`","`{α → β, ¬β} ⊨ ¬α`","`{α ↔ β} ⊨ α → β`"],a:0,e:"Es la transitividad de la implicación.",w:{1:"Ese es el silogismo disyuntivo.",2:"Ese es el modus tollens."}},
+{t:2,q:"`{α ↔ β} ⊨ α → β` es la ley de…",o:["Eliminación de la equivalencia","Introducción de la equivalencia","Modus ponens","Combinación"],a:0,e:"De la doble implicación se obtiene cada una de las implicaciones. La introducción es `{α → β, β → α} ⊨ α ↔ β`."},
+{t:2,q:"`{α → β, β → α} ⊨ α ↔ β` es la ley de…",o:["Introducción de la equivalencia","Eliminación de la equivalencia","Silogismo hipotético","Adición"],a:0,e:"Las dos implicaciones juntas dan la doble implicación."},
+{t:2,q:"`{α → β, ¬α} ⊨ ¬β` NO es válido. ¿Qué interpretación lo demuestra?",o:["α = F, β = V","α = V, β = V","α = V, β = F","α = F, β = F"],a:0,e:"Con α=F y β=V: `α → β` = V, `¬α` = V y `¬β` = F. Premisas V y conclusión F: contraejemplo (falacia de negar el antecedente)."},
+{t:2,q:"«Si llueve, el suelo se moja. El suelo está mojado. Luego ha llovido.» Es…",o:["Una falacia: afirmación del consecuente","Un modus ponens válido","Un modus tollens válido","Un silogismo disyuntivo"],a:0,e:"`{p → q, q} ⊨ p` no es válido: el suelo puede estar mojado por otro motivo (p=F, q=V)."},
+{t:2,q:"Con `ν(p)=V, ν(q)=F, ν(r)=V`, ¿cuánto vale `(p → q) ∨ ¬r`?",o:["F","V","Depende de la prioridad","No se puede evaluar"],a:0,e:"`p → q` = V → F = F; `¬r` = F. F ∨ F = F."},
+{t:2,q:"Con `ν(p)=V, ν(q)=F, ν(r)=F`, ¿cuánto vale `p ∧ ¬q → r`?",o:["F","V","Depende del orden","No es fbf"],a:0,e:"Se lee `(p ∧ ¬q) → r`. Antecedente V ∧ V = V; consecuente F. V → F = F."},
+{t:2,q:"Con `ν(p)=F, ν(q)=F`, ¿cuánto vale `¬p ↔ q`?",o:["F","V","Indeterminado","Depende de la prioridad"],a:0,e:"`¬p` = V y `q` = F: tienen valores distintos, así que la doble implicación es F."},
+{t:2,q:"Un conjunto de fbf que contiene una contradicción es…",o:["Insatisfacible","Satisfacible","Tautológico","Contingente"],a:0,e:"Ninguna interpretación puede hacer V a la contradicción, así que no hay modelo para todo el conjunto."},
+{t:2,q:"La fórmula `p → (q → p)` es…",o:["Una tautología","Contingente","Una contradicción","Insatisfacible"],a:0,e:"Para que fuese F haría falta p=V y `q → p` = F, es decir, p=F. Imposible."},
+{t:2,q:"La fórmula `(p → q) ∧ p ∧ ¬q` es…",o:["Una contradicción","Una tautología","Contingente","Satisfacible"],a:0,e:"Si p=V y q=F, la implicación vale F. No hay forma de hacer V las tres partes a la vez."},
+{t:2,q:"La fórmula `p ∨ q → p` es…",o:["Contingente","Tautología","Contradicción","Insatisfacible"],a:0,e:"Se lee `(p ∨ q) → p`. Es F con p=F, q=V y V con p=V: satisfacible y falseable."},
+{t:2,q:"De estas equivalencias, ¿cuál es CORRECTA?",o:["`p ∧ (p ∨ q) ≡ p`","`p → (q → r) ≡ (p → q) → r`","`¬(p ∧ q) ≡ ¬p ∧ ¬q`","`p → q ≡ q → p`"],a:0,e:"Es la absorción. Las demás son errores típicos.",w:{1:"Con p=F y r=F la izquierda es V y la derecha F.",2:"De Morgan cambia ∧ por ∨.",3:"La implicación no es conmutativa."}},
+{t:2,q:"«p si q» se formaliza como…",o:["`q → p`","`p → q`","`p ↔ q`","`p ∧ q`"],a:0,e:"«Te llevo si llueve»: si llueve, te llevo: `q → p`. Compárala con «p sólo si q» (`p → q`).",w:{1:"Eso es «p sólo si q»."}},
+{t:2,q:"«p si y sólo si q» se formaliza como…",o:["`p ↔ q`","`p → q`","`q → p`","`p ∨ q`"],a:0,e:"Combina «p si q» y «p sólo si q»: las dos implicaciones."},
+{t:2,q:"«p es condición suficiente para q» se formaliza como…",o:["`p → q`","`q → p`","`p ↔ q`","`¬p → ¬q`"],a:0,e:"Basta con que se dé p para que se dé q."},
+{t:2,q:"«No es cierto que llueva y haga frío» (p: llueve, q: hace frío) se formaliza como…",o:["`¬(p ∧ q)`","`¬p ∧ ¬q`","`¬p ∧ q`","`¬(p ∨ q)`"],a:0,e:"Se niega la conjunción entera; equivale a `¬p ∨ ¬q`.",w:{1:"Eso es «ni llueve ni hace frío».",3:"También significa «ni llueve ni hace frío»."}},
+{t:2,q:"«Estudio pero no apruebo» (p: estudio, q: apruebo) se formaliza como…",o:["`p ∧ ¬q`","`p → ¬q`","`p ∨ ¬q`","`¬p ∧ q`"],a:0,e:"«Pero» funciona como una conjunción. (Curiosidad: `p ∧ ¬q ≡ ¬(p → q)`.)"},
+{t:2,q:"¿Qué símbolo NO pertenece al alfabeto del lenguaje L0?",o:["`⊨`","`→`","`¬`","`(`"],a:0,e:"`⊨`, `⊢` y `≡` son símbolos del metalenguaje: hablan de las fórmulas, no forman parte de ellas."},
+{t:2,q:"Una fbf es satisfacible si…",o:["Es verdadera en al menos una interpretación","Es verdadera en todas las interpretaciones","Es falsa en al menos una interpretación","Es falsa en todas las interpretaciones"],a:0,e:"Satisfacible = tiene al menos un modelo.",w:{1:"Eso es tautología.",2:"Eso es falseable.",3:"Eso es contradicción."}},
+{t:2,q:"Una fbf es falseable si…",o:["Es falsa en al menos una interpretación","Es falsa en todas las interpretaciones","Es verdadera en alguna interpretación","Tiene algún modelo"],a:0,e:"Falseable = no es tautología.",w:{1:"Eso es contradicción (insatisfacible)."}},
+{t:2,q:"Si α es una tautología y β es cualquier fbf, `α ∨ β` es…",o:["Una tautología","Una contradicción","Equivalente a β","Siempre contingente"],a:0,e:"V ∨ lo que sea = V."},
+{t:2,q:"Si α es una tautología y β es cualquier fbf, `α ∧ β` es…",o:["Equivalente a β","Siempre una tautología","Siempre una contradicción","Equivalente a α"],a:0,e:"V es el neutro de la conjunción: `V ∧ β ≡ β`."},
+{t:2,q:"`α ⊨ β` se cumple si y sólo si…",o:["`α → β` es una tautología","`α ↔ β` es una tautología","`α ∧ β` es satisfacible","`β → α` es una tautología"],a:0,e:"Implicación lógica = implicación que es tautología.",w:{1:"Eso es la equivalencia `α ≡ β`."}},
+{t:2,q:"`α ≡ β` se cumple si y sólo si…",o:["`α ⊨ β` y `β ⊨ α`","Sólo `α ⊨ β`","α y β tienen los mismos átomos","α y β son tautologías"],a:0,e:"Equivalentes = cada una implica lógicamente a la otra (`α ↔ β` es tautología)."},
+{t:2,q:"La contrarrecíproca de «Si estudio, apruebo» es…",o:["«Si no apruebo, no he estudiado»","«Si apruebo, he estudiado»","«Si no estudio, no apruebo»","«Estudio y no apruebo»"],a:0,e:"`p → q ≡ ¬q → ¬p`. Es la única de las variantes equivalente a la original.",w:{1:"Es la recíproca `q → p`, no equivalente.",2:"Es la contraria `¬p → ¬q`, no equivalente."}},
+{t:2,q:"`¬p ∨ q`, según la prioridad de las conectivas, se lee…",o:["`(¬p) ∨ q`","`¬(p ∨ q)`","`¬p ∨ ¬q`","No es fbf"],a:0,e:"¬ tiene más prioridad que ∨: sólo afecta a p."},
+{t:2,q:"La propiedad de reflexividad de `⊨` dice que…",o:["`α ⊨ α`","Si `α ⊨ β` entonces `β ⊨ α`","Si `α ⊨ β` y `β ⊨ γ` entonces `α ⊨ γ`","Añadir premisas no estropea la validez"],a:0,e:"Toda fórmula es consecuencia de sí misma.",w:{2:"Eso es transitividad.",3:"Eso es monotonía."}},
+
+/* ---------------- TEMA 3 ---------------- */
+{t:3,q:"En el planteamiento DIRECTO, `{α₁, …, αₙ} ⊨ β` se comprueba viendo que…",o:["`α₁ ∧ … ∧ αₙ → β` es una tautología","`α₁ ∧ … ∧ αₙ ∧ ¬β` es una contradicción","`α₁ ∧ … ∧ αₙ ∧ β` es satisfacible","`β → α₁ ∧ … ∧ αₙ` es una tautología"],a:0,e:"Directo: la implicación de la conjunción de premisas a la conclusión debe ser tautología.",w:{1:"Ese es el planteamiento por refutación (también correcto, pero es el otro).",3:"Es la implicación al revés."}},
+{t:3,q:"En el planteamiento por REFUTACIÓN se comprueba que…",o:["`α₁ ∧ … ∧ αₙ ∧ ¬β` es una contradicción","`α₁ ∧ … ∧ αₙ → β` es una tautología","`¬β` es una tautología","`α₁ ∧ … ∧ αₙ ∧ ¬β` es satisfacible"],a:0,e:"Se niega la conclusión, se une a las premisas y se busca una contradicción (reducción al absurdo).",w:{3:"Si fuese satisfacible, habría un contraejemplo y el razonamiento no sería válido."}},
+{t:3,q:"En una demostración formal, cada paso es…",o:["Un axioma, una premisa o una fórmula obtenida por una regla de inferencia","Una fila de la tabla de verdad","Una interpretación","Un modelo de las premisas"],a:0,e:"Se para al llegar a la conclusión. La última fórmula es un teorema."},
+{t:3,q:"El símbolo `⊢` significa…",o:["Que la conclusión se deriva sintácticamente de las premisas","Que la conclusión es consecuencia semántica","Equivalencia lógica","Doble implicación"],a:0,e:"`⊢` (metalenguaje) es la relación sintáctica: hay una demostración. `⊨` es la relación semántica.",w:{1:"Eso es `⊨`."}},
+{t:3,q:"Un sistema deductivo es SÓLIDO (correcto) cuando…",o:["Si `⊢ β` entonces `⊨ β`","Si `⊨ β` entonces `⊢ β`","Puede demostrar β y ¬β","Siempre termina"],a:0,e:"Todo lo que se demuestra es verdad. Permite trabajar sintácticamente con rigor sin usar métodos semánticos.",w:{1:"Eso es la completitud.",2:"Eso sería una teoría inconsistente."}},
+{t:3,q:"Un sistema deductivo es COMPLETO cuando…",o:["Si `⊨ β` entonces `⊢ β`","Si `⊢ β` entonces `⊨ β`","No tiene axiomas","Todas sus fórmulas son teoremas"],a:0,e:"Todo lo que es verdad (válido) se puede demostrar. No todos los sistemas son completos.",w:{1:"Eso es la solidez (corrección)."}},
+{t:3,q:"La deducción natural es…",o:["Sólida y completa","Sólida pero no completa","Completa pero no sólida","Ni sólida ni completa"],a:0,e:"Así lo indican las diapositivas: es un sistema sólido y completo."},
+{t:3,q:"El teorema de la deducción sintáctica permite afirmar que…",o:["`{α₁,…,αₙ} ⊢ β` si y sólo si `{α₁,…,αₙ₋₁} ⊢ αₙ → β`","`{α₁,…,αₙ} ⊢ β` si y sólo si `⊨ β`","Toda tautología es un axioma","`⊢` y `⊨` son el mismo símbolo"],a:0,e:"Una premisa puede pasar al antecedente de la conclusión."},
+{t:3,q:"Para demostrar sintácticamente una conclusión de la forma `α → β`, lo más práctico es…",o:["Añadir α como supuesto y derivar β","Negar α y derivar ¬β","Hacer la tabla de verdad","Derivar β → α"],a:0,e:"Es el uso práctico del teorema de la deducción: si con α como premisa obtienes β, tienes `α → β`."},
+{t:3,q:"Un conjunto de fórmulas 𝒯 es una teoría si…",o:["Es cerrado bajo demostraciones","Todas sus fórmulas son contradicciones","Tiene un único modelo","No contiene axiomas"],a:0,e:"Si `𝒯 ⊢ β` entonces `β ∈ 𝒯`. Sus elementos son los teoremas."},
+{t:3,q:"Una teoría es inconsistente si…",o:["En ella se puede demostrar una fórmula y su negación","No tiene teoremas","Es completa","No es axiomatizable"],a:0,e:"Consistente: puede demostrarse β o ¬β, pero no ambas a la vez."},
+{t:3,q:"Una teoría es SEMIDECIDIBLE cuando…",o:["Se puede determinar la inconsistencia y sólo a veces la consistencia","Se pueden determinar siempre la consistencia y la inconsistencia","No se puede determinar ninguna de las dos","Sólo se puede determinar la consistencia"],a:0,e:"Decidible: ambas. Semidecidible: inconsistencia sí, consistencia sólo a veces. Indecidible: ninguna.",w:{1:"Eso es decidible."}},
+{t:3,q:"La lógica proposicional L0 es…",o:["Decidible","Semidecidible","Indecidible","Inconsistente"],a:0,e:"La tabla de verdad siempre termina, así que siempre se puede decidir. L1 (predicados) sólo es semidecidible."},
+{t:3,q:"En la demostración de `{p → q, q → r, ¬r} ⊢ ¬p`, ¿qué regla permite pasar de `p → r` y `¬r` a `¬p`?",o:["Modus tollens","Modus ponens","Silogismo disyuntivo","Ley de adición"],a:0,e:"`{α → β, ¬β} ⊨ ¬α`. Antes, `p → r` se obtuvo por silogismo hipotético de las dos primeras premisas."},
+{t:3,q:"De `p ∨ q` y `¬q` se deduce `p` por…",o:["Silogismo disyuntivo","Silogismo hipotético","Modus ponens","Ley de simplificación"],a:0,e:"`{α ∨ β, ¬β} ⊨ α`."},
+{t:3,q:"Que un razonamiento sea válido significa que…",o:["Toda interpretación que hace V a las premisas hace V a la conclusión","Cada premisa es satisfacible","La conclusión es una tautología","Las premisas son tautologías"],a:0,e:"La validez no dice nada de cada premisa por separado; sólo relaciona premisas y conclusión.",w:{1:"Es irrelevante para la validez: la validez relaciona premisas y conclusión.",2:"No hace falta: la conclusión sólo tiene que ser V cuando las premisas lo son."}},
+{t:3,q:"Las técnicas SAT (tablas, DPLL, resolución, árboles, tableaux) son métodos…",o:["Semánticos","Sintácticos","Axiomáticos","Retóricos"],a:0,e:"Se basan en interpretaciones y evaluación (equivalencia y consecuencia lógica), no en derivar con reglas."},
+{t:3,q:"Una teoría es axiomatizable si…",o:["Existe un conjunto de fórmulas ℱ tal que la teoría es `{β | ℱ ⊢ β}`","Todas sus fórmulas son axiomas","No tiene ningún axioma","Es inconsistente"],a:0,e:"Los elementos de ℱ son los axiomas de la teoría."},
+{t:3,q:"Sospechas que un razonamiento NO es válido. Lo más eficiente es…",o:["Buscar una interpretación con las premisas V y la conclusión F","Intentar derivar la conclusión con reglas de inferencia","Comprobar que las premisas son satisfacibles","Negar todas las premisas"],a:0,e:"Un contraejemplo demuestra la no validez. Derivar sintácticamente nunca terminaría con éxito si no es válido."},
+{t:3,q:"Un sistema deductivo está formado por…",o:["Premisas, reglas de inferencia y un método sintáctico de pasos iterativos","Tablas de verdad y modelos","Interpretaciones y contraejemplos","Sólo axiomas, sin reglas"],a:0,e:"Premisas (fórmulas aceptadas de partida) + reglas de inferencia (implicaciones lógicas) aplicadas paso a paso hasta la conclusión."},
+{t:3,q:"En un sistema deductivo, las reglas de inferencia son…",o:["Implicaciones lógicas usadas como esquemas para generar nuevas fórmulas","Interpretaciones que hacen V a las premisas","Tablas de verdad abreviadas","Contraejemplos"],a:0,e:"Establecen cómo construir nuevas expresiones a partir de unas iniciales."},
+{t:3,q:"Obtener nuevas fórmulas aplicando reglas de inferencia se denomina…",o:["Derivar o inferir","Interpretar","Satisfacer","Refutar"],a:0,e:"La secuencia de fórmulas así obtenida hasta la conclusión es la demostración."},
+{t:3,q:"Las premisas de un sistema deductivo son…",o:["Fórmulas de partida que por principio se aceptan","Fórmulas que hay que demostrar","Siempre tautologías","Las conclusiones negadas"],a:0,e:"Se aceptan sin demostración; a partir de ellas se deriva."},
+{t:3,q:"Un TEOREMA, en un sistema deductivo, es…",o:["La última fórmula de una secuencia de demostración","Cualquier premisa","Una interpretación que hace V a todas las fórmulas","Una fórmula mal formada"],a:0,e:"Un teorema o es un axioma o es el resultado de aplicar una regla de inferencia sobre otros teoremas."},
+{t:3,q:"`⊢ β` (sin premisas) significa que…",o:["β es un teorema: es demostrable","β es satisfacible","β es falsa","β es una premisa"],a:0,e:"Es la versión sintáctica de `⊨ β` (β tautología). En un sistema sólido y completo ambas coinciden."},
+{t:3,q:"¿Cuál es el criterio de parada de una demostración formal?",o:["Llegar a la conclusión","Agotar todas las reglas de inferencia","Obtener siempre una contradicción","Hacer 2ⁿ pasos"],a:0,e:"Se aplican reglas hasta obtener la fórmula que se quería demostrar."},
+{t:3,q:"Una deducción (estructura deductiva) es correcta si…",o:["Cada consecuente es un teorema obtenido de los consecuentes anteriores","Todas sus fórmulas son contingentes","Las premisas son tautologías","Tiene menos de diez pasos"],a:0,e:"De la secuencia de premisas (antecedentes) se obtiene una secuencia de conclusiones (consecuentes), cada una justificada."},
+{t:3,q:"La consecuencia lógica (`⊨`) es una relación ___ y la estructura deductiva (`⊢`) es una relación ___.",o:["Semántica; sintáctica","Sintáctica; semántica","Semántica; semántica","Sintáctica; sintáctica"],a:0,e:"`⊨` se basa en interpretaciones (valores de verdad); `⊢` en reglas de inferencia aplicadas a la forma de las fórmulas."},
+{t:3,q:"¿Por qué es tan útil que un sistema deductivo sea SÓLIDO?",o:["Permite trabajar sintácticamente con rigor sin usar métodos semánticos potencialmente ineficientes","Garantiza que se puede demostrar toda tautología","Hace que las tablas de verdad sean más cortas","Evita tener que escribir premisas"],a:0,e:"Todo lo que se demuestra con reglas es también válido semánticamente, así que no hace falta comprobarlo con técnicas SAT.",w:{1:"Eso es la completitud."}},
+{t:3,q:"Si un sistema deductivo NO es completo…",o:["Existen razonamientos válidos que no se pueden demostrar en él","Se pueden demostrar razonamientos inválidos","No tiene reglas de inferencia","Es inconsistente"],a:0,e:"Completitud: todo lo válido es demostrable. Si falla, algunas consecuencias lógicas no tienen demostración en ese sistema.",w:{1:"Eso pasaría si no fuese sólido."}},
+{t:3,q:"En L0, ¿por qué siempre es posible comprobar semánticamente si una consecuencia lógica es válida?",o:["Porque siempre se puede comprobar con técnicas SAT si una fórmula es tautología","Porque todo sistema deductivo es completo","Porque toda fórmula es satisfacible","Porque las premisas siempre son verdaderas"],a:0,e:"Hay un número finito de interpretaciones (2ⁿ), así que el procedimiento siempre termina."},
+{t:3,q:"Sobre el teorema de la deducción sintáctica, ¿qué es cierto?",o:["Hay que demostrarlo para cada sistema deductivo concreto","Es un axioma común a todos los sistemas","Sólo vale para lógica de predicados","Dice que `⊢` y `⊨` son lo mismo"],a:0,e:"Es esencial porque permite plantear la demostración de un teorema como una estructura deductiva."},
+{t:3,q:"Por el teorema de la deducción, si `{p} ⊢ q`, entonces…",o:["`⊢ p → q`","`⊢ q → p`","`⊢ p ∧ q`","`⊢ ¬p`"],a:0,e:"La premisa pasa a ser el antecedente de la conclusión."},
+{t:3,q:"Si `{p → q, r} ⊢ s`, el teorema de la deducción permite afirmar…",o:["`{p → q} ⊢ r → s`","`{r} ⊢ s → (p → q)`","`⊢ s`","`{p → q, s} ⊢ r`"],a:0,e:"Se quita la última premisa (r) y pasa al antecedente de la conclusión: `r → s`."},
+{t:3,q:"Una teoría es CONSISTENTE si…",o:["Puede demostrarse β o ¬β, pero no ambas","Puede demostrarse β y ¬β","No tiene ningún teorema","Todas sus fórmulas son contingentes"],a:0,e:"Inconsistente = se puede demostrar una fórmula y su negación."},
+{t:3,q:"Los elementos de ℱ en una teoría axiomatizable `𝒯(ℱ) = {β | ℱ ⊢ β}` se llaman…",o:["Axiomas","Teoremas derivados","Modelos","Contraejemplos"],a:0,e:"A partir de los axiomas se demuestran los teoremas de la teoría."},
+{t:3,q:"Una teoría es INDECIDIBLE cuando…",o:["No es posible determinar ni la inconsistencia ni la consistencia","Sólo se puede determinar la inconsistencia","Se pueden determinar las dos","Es siempre inconsistente"],a:0,e:"Decidible: ambas. Semidecidible: inconsistencia sí, consistencia sólo a veces. Indecidible: ninguna.",w:{1:"Eso es semidecidible."}},
+{t:3,q:"Una teoría es DECIDIBLE cuando…",o:["Existen procedimientos para determinar tanto la inconsistencia como la consistencia","Sólo se puede determinar la inconsistencia","No se puede determinar nada","No tiene axiomas"],a:0,e:"Es el caso de L0: las técnicas SAT siempre dan respuesta."},
+{t:3,q:"La lógica de predicados (L1) es…",o:["Semidecidible","Decidible","Indecidible","Inconsistente"],a:0,e:"A diferencia de L0, que es decidible."},
+{t:3,q:"Para demostrar `{p → q, q → r, p} ⊢ r`, una secuencia correcta es…",o:["Modus ponens con `p → q` y `p` da q; modus ponens con `q → r` y q da r","Modus tollens con `q → r` y p","Silogismo disyuntivo con p y r","Adición de r a p"],a:0,e:"También vale: silogismo hipotético (`p → r`) y después modus ponens."},
+{t:3,q:"De `p ∧ q` se puede derivar `p ∨ r` aplicando…",o:["Simplificación y después adición","Combinación y después modus ponens","Modus tollens","Silogismo hipotético"],a:0,e:"Simplificación: `p ∧ q ⊢ p`. Adición: `p ⊢ p ∨ r`."},
+{t:3,q:"De `p` y `q` se obtiene `p ∧ q` por la ley de…",o:["Combinación","Simplificación","Adición","Absorción"],a:0,e:"`{α, β} ⊨ α ∧ β`."},
+{t:3,q:"¿Es válido `{p ∨ q, p → r, q → r} ⊨ r`?",o:["Sí: en cualquier caso se obtiene r","No: falla con p=V, q=F","No: falla si r es F","Sólo si p y q son V"],a:0,e:"Si las tres premisas son V, o p o q es V, y ambas llevan a r. No hay contraejemplo (es la prueba por casos)."},
+{t:3,q:"¿Es válido `{p → q, ¬p} ⊨ ¬q`?",o:["No: con p=F y q=V las premisas son V y la conclusión F","Sí, es el modus tollens","Sí, por silogismo disyuntivo","No se puede saber sin la tabla completa"],a:0,e:"Es la falacia de negar el antecedente. El modus tollens niega el consecuente: `{p → q, ¬q} ⊨ ¬p`."},
+{t:3,q:"¿Es válido `{p → q, q → r} ⊨ r → p`?",o:["No: con p=F, q=F, r=V las premisas son V y la conclusión F","Sí, por silogismo hipotético","Sí, por contraposición","Sí, por modus ponens"],a:0,e:"El silogismo hipotético da `p → r`, no `r → p`. Contraejemplo: p=F, q=F, r=V."},
+{t:3,q:"¿Es válido `{p ∨ q, ¬p} ⊨ q`?",o:["Sí, es el silogismo disyuntivo","No: falla con p=V","No: falla con p=F y q=F","Sólo si q es tautología"],a:0,e:"Si p es F y `p ∨ q` es V, q tiene que ser V.",w:{2:"Con p=F y q=F la premisa `p ∨ q` es F, así que no es un contraejemplo."}},
+{t:3,q:"Para validar `{p → q, q → r, p} ⊨ r` por REFUTACIÓN se comprueba que es contradicción…",o:["`(p → q) ∧ (q → r) ∧ p ∧ ¬r`","`(p → q) ∧ (q → r) ∧ p → r`","`(p → q) ∧ (q → r) ∧ p ∧ r`","`¬((p → q) ∧ (q → r) ∧ p)`"],a:0,e:"Premisas + conclusión negada. Si no hay interpretación que las haga V a la vez, el razonamiento es válido.",w:{1:"Eso es el planteamiento directo (debe ser tautología)."}},
+{t:3,q:"Para validar `{p → q, ¬q} ⊨ ¬p` con el planteamiento DIRECTO se comprueba que es tautología…",o:["`(p → q) ∧ ¬q → ¬p`","`(p → q) ∧ ¬q ∧ p`","`¬p → (p → q) ∧ ¬q`","`(p → q) ∨ ¬q ∨ ¬p`"],a:0,e:"Conjunción de premisas → conclusión.",w:{1:"Eso es la refutación (debe ser contradicción).",2:"Es la implicación al revés."}},
+{t:3,q:"Comprobar si un razonamiento es válido se transforma en el problema de…",o:["Analizar la satisfacibilidad de una determinada fórmula","Contar las premisas","Traducir al lenguaje natural","Buscar un axioma nuevo"],a:0,e:"Por eso se usan técnicas SAT."},
+{t:3,q:"Si sabemos que `{α₁, …, αₙ} ⊨ β`, ¿qué podemos afirmar sobre β por sí sola?",o:["Nada: la validez no dice nada del tipo de satisfacibilidad de premisas o conclusión","Que β es una tautología","Que β es siempre satisfacible","Que β es contingente"],a:0,e:"Por ejemplo, si las premisas son insatisfacibles, β puede ser incluso una contradicción."},
+{t:3,q:"¿Puede un razonamiento VÁLIDO tener la conclusión falsa en el mundo real?",o:["Sí, si alguna premisa es falsa","No, nunca","Sólo si la conclusión es una tautología","Sólo en lógica de predicados"],a:0,e:"La validez sólo garantiza: premisas V ⇒ conclusión V. Con alguna premisa falsa no garantiza nada."},
+{t:3,q:"En una teoría inconsistente, ¿qué ocurre?",o:["Se puede derivar cualquier fórmula","No se puede demostrar nada","Sólo se demuestran tautologías","Es decidible seguro"],a:0,e:"Si se demuestran β y ¬β, por la ley de inconsistencia `{β, ¬β} ⊨ α` se sigue cualquier α."},
+{t:3,q:"Que 𝒯 sea cerrada bajo demostraciones significa que…",o:["Si `𝒯 ⊢ β`, entonces β pertenece a 𝒯","𝒯 no tiene premisas","Ninguna fórmula se puede demostrar desde 𝒯","𝒯 sólo contiene axiomas"],a:0,e:"Todo lo que se demuestra desde la teoría ya está en ella."},
+{t:3,q:"En deducción natural, para obtener `p ↔ q` a partir de `p → q` y `q → p` se aplica…",o:["Introducción de la equivalencia","Eliminación de la equivalencia","Modus ponens","Silogismo disyuntivo"],a:0,e:"`{α → β, β → α} ⊨ α ↔ β`."},
+
+/* ---------------- TEMA 4 ---------------- */
+{t:4,q:"¿Quién demostró en 1971 que SAT es NP-completo?",o:["Stephen Cook","George Boole","Alan Robinson","Davis y Putnam"],a:0,e:"Cook (1971). Robinson propuso el método de resolución (1965) y Davis-Putnam-Logemann-Loveland el DPLL (1962)."},
+{t:4,q:"Los problemas NP-completos se caracterizan porque…",o:["Todo problema de NP se transforma polinomialmente en ellos y sus soluciones se verifican eficientemente","Se resuelven en tiempo polinómico con una máquina determinista","No tienen solución","Sólo se resuelven con tablas de verdad"],a:0,e:"No se conoce algoritmo polinómico para ellos; los conocidos son exponenciales.",w:{1:"Eso es la clase P."}},
+{t:4,q:"¿Cuáles son algoritmos SAT NO completos?",o:["GSAT y WalkSat","DPLL y Resolución","Tablas de verdad y árboles semánticos","Tableaux semánticos"],a:0,e:"GSAT, WalkSat y SA-SAT pueden no encontrar un modelo aunque exista. Los completos determinan satisfacibilidad e insatisfacibilidad."},
+{t:4,q:"¿Qué técnicas SAT necesitan la fórmula en forma clausal (FNC)?",o:["DPLL y Resolución","Tablas de verdad y árboles semánticos","Tableaux y árboles semánticos","Todas"],a:0,e:"DPLL y resolución trabajan con cláusulas. Tablas, árboles semánticos y tableaux se aplican a cualquier fbf."},
+{t:4,q:"La cláusula vacía `□` y el conjunto vacío de cláusulas `∅` son, respectivamente…",o:["Insatisfacible y satisfacible","Satisfacible e insatisfacible","Ambos insatisfacibles","Ambos satisfacibles"],a:0,e:"`□` = he llegado a una contradicción. `∅` = no queda nada que cumplir. Confundirlos es un error grave."},
+{t:4,q:"¿Cuál es el PRIMER paso para pasar una fórmula a FNC?",o:["Eliminar `→` y `↔`","Aplicar la distributiva","Eliminar dobles negaciones","Subsumir cláusulas"],a:0,e:"Orden: 1) eliminar → y ↔; 2) De Morgan; 3) doble negación; 4) distributiva; 5) reducir paréntesis; 6) eliminar redundancias."},
+{t:4,q:"La forma clausal de `(p → q) ∧ r` es…",o:["`{{¬p, q}; {r}}`","`{{p, q}; {r}}`","`{{¬p, q, r}}`","`{{¬p}; {q}; {r}}`"],a:0,e:"`p → q ≡ ¬p ∨ q`. Cada ∧ separa cláusulas y cada disyunción va entre llaves.",w:{2:"Eso sería `¬p ∨ q ∨ r`, una sola cláusula."}},
+{t:4,q:"En el paso a FNC, `(p ∧ q) ∨ r` se transforma en…",o:["`(p ∨ r) ∧ (q ∨ r)`","`(p ∧ r) ∨ (q ∧ r)`","`p ∧ q ∧ r`","`p ∨ q ∨ r`"],a:0,e:"Distributiva de ∨ sobre ∧: `α ∨ (β ∧ γ) ≡ (α ∨ β) ∧ (α ∨ γ)`.",w:{1:"Esa sería la distributiva de ∧ sobre ∨, que lleva a la forma normal disyuntiva, no a la FNC."}},
+{t:4,q:"Una FNC es tautología si y sólo si…",o:["Todas sus cláusulas contienen un literal y su opuesto","Tiene alguna cláusula unitaria","No tiene literales puros","Contiene la cláusula vacía"],a:0,e:"Cada cláusula trivial vale V; si todas lo son, la conjunción es V. Una cláusula no trivial da un contraejemplo.",w:{3:"Si contiene `□`, es insatisfacible."}},
+{t:4,q:"Propagar un literal `l` en una FNC consiste en…",o:["Eliminar las cláusulas que contienen l y quitar ¬l de las demás","Eliminar las cláusulas que contienen ¬l y quitar l de las demás","Añadir l a todas las cláusulas","Eliminar todas las apariciones de l y de ¬l"],a:0,e:"Suponemos l = V: las cláusulas con l ya se cumplen (desaparecen) y ¬l vale F (neutro de ∨, se borra).",w:{1:"Eso es propagar ¬l."}},
+{t:4,q:"Sea `ξ = p ∧ (q ∨ r) ∧ (¬r ∨ ¬q)`. ¿Cuánto vale `ξ(q)`?",o:["`p ∧ ¬r`","`p ∧ r`","`p ∧ (q ∨ r)`","`p`"],a:0,e:"Se cancela la cláusula `(q ∨ r)` y la ocurrencia `¬q`, quedando `p ∧ ¬r`.",w:{1:"Eso es `ξ(¬q)`."}},
+{t:4,q:"La propagación de literales…",o:["Mantiene la satisfacibilidad pero no la equivalencia lógica","Mantiene la equivalencia lógica","No mantiene ni la satisfacibilidad ni la equivalencia","Convierte la fórmula en tautología"],a:0,e:"`ξ ≢ ξ(l)`, pero ξ con ν(l)=V se comporta igual que ξ(l). Si se llega a ∅, los literales propagados forman un modelo."},
+{t:4,q:"Un literal es PURO en un conjunto de cláusulas cuando…",o:["Su complementario no aparece en ninguna cláusula","Aparece en todas las cláusulas","Forma una cláusula unitaria","Aparece con y sin negación"],a:0,e:"Se puede propagar sin riesgo: al propagar un literal puro nunca se obtiene `□`."},
+{t:4,q:"En `{{p, ¬q, ¬r}; {p, r}; {¬p, ¬q}}`, ¿qué literal es puro?",o:["`¬q`","`p`","`r`","`¬p`"],a:0,e:"`q` nunca aparece sin negar. `p`/`¬p` y `r`/`¬r` aparecen con los dos signos."},
+{t:4,q:"En DPLL, una rama llega a `□`. ¿Qué se hace?",o:["Backtracking: volver a la última ramificación y probar el literal opuesto","Concluir que la fórmula es insatisfacible","Concluir que la fórmula es tautología","Eliminar la última cláusula y seguir"],a:0,e:"Sólo es insatisfacible si TODAS las ramas, incluidas las dos de la primera ramificación, acaban en `□`.",w:{1:"Sólo si no ha habido ninguna ramificación o se han explorado todas las ramas."}},
+{t:4,q:"Con DPLL podemos afirmar que una FNC es TAUTOLOGÍA cuando…",o:["La regla de la tautología aplicada al inicio deja ∅","Alguna rama llega a ∅","Todas las ramas llegan a `□`","Hay un literal puro"],a:0,e:"En cualquier otro caso, llegar a ∅ sólo indica satisfacible.",w:{1:"Eso sólo demuestra que es satisfacible."}},
+{t:4,q:"La regla de inclusión de DPLL dice que si `C₁ ⊆ C₂`…",o:["Se elimina C₂","Se elimina C₁","Se eliminan ambas","Se ramifica por C₁"],a:0,e:"C₂ está subsumida: si se cumple C₁ se cumple C₂, así que C₂ no aporta nada."},
+{t:4,q:"Orden de aplicación de las reglas de DPLL:",o:["Tautología, unitaria, literal puro, inclusión, ramificación","Ramificación, tautología, unitaria, puro, inclusión","Unitaria, ramificación, puro, tautología, inclusión","Inclusión, puro, unitaria, ramificación, tautología"],a:0,e:"Ramificar es lo último porque multiplica el trabajo."},
+{t:4,q:"La resolvente de `{¬q, r}` y `{q, r, ¬s}` respecto de q es…",o:["`{r, ¬s}`","`{¬q, r, ¬s}`","`□`","`{q, ¬q, r, ¬s}`"],a:0,e:"Se quitan q y ¬q y se unen el resto de literales (r repetida se escribe una vez)."},
+{t:4,q:"¿Qué se obtiene al resolver `{p, q}` con `{¬p, ¬q}`?",o:["Una cláusula tautológica, no `□`","La cláusula vacía `□`","`{p, ¬p}` y `{q, ¬q}` a la vez","`∅`"],a:0,e:"Se resuelve sobre UN solo literal cada vez: respecto de p sale `{q, ¬q}`, que es tautología y se descarta.",w:{1:"Error muy típico: no se pueden eliminar dos pares de literales en el mismo paso."}},
+{t:4,q:"¿Qué NO puede hacer el método de resolución?",o:["Decidir directamente si una fórmula es tautología","Demostrar que un conjunto es insatisfacible","Validar un razonamiento por refutación","Trabajar con forma clausal"],a:0,e:"Resolución no encuentra interpretaciones (ni modelos ni contramodelos); sólo garantiza insatisfacibilidad si sale `□`."},
+{t:4,q:"En la estrategia de conjunto soporte…",o:["El CS inicial son las cláusulas de la conclusión negada y un padre de cada resolución es del CS","El CS son las premisas y nunca se resuelven entre sí","Se resuelven primero todas las premisas entre sí","El CS son las cláusulas unitarias"],a:0,e:"Toda resolvente con un padre en el CS también entra en el CS. Si se obtiene `□`, el razonamiento es válido."},
+{t:4,q:"Sobre las estrategias de dirección en resolución:",o:["Saturación por niveles es completa; primero en profundidad no","Ambas son completas","Ninguna es completa","Primero en profundidad es completa; saturación no"],a:0,e:"Saturación (primero en anchura) obtiene todas las resolventes de un nivel antes de pasar al siguiente: completa pero ineficiente."},
+{t:4,q:"¿Cuáles son estrategias de SIMPLIFICACIÓN en resolución?",o:["Eliminar literales puros, tautologías y cláusulas subsumidas","Conjunto soporte y resolución lineal","Saturación por niveles y primero en profundidad","Ramificación y backtracking"],a:0,e:"Siempre se combinan con la estrategia elegida. Conjunto soporte es de restricción; saturación es de dirección."},
+{t:4,q:"Si TODAS las hojas de un árbol semántico son nodos ÉXITO, la fórmula es…",o:["Tautología","Satisfacible pero no tautología","Insatisfacible","Falseable"],a:0,e:"Al menos un éxito: satisfacible. Todos éxito: tautología. Al menos un fallo: falseable. Todos fallo: insatisfacible."},
+{t:4,q:"Si un árbol semántico tiene al menos un nodo FALLO, la fórmula es…",o:["Falseable","Insatisfacible","Tautología","Satisfacible seguro"],a:0,e:"Un nodo fallo es una interpretación que la hace F. Para ser insatisfacible tendrían que serlo todas las hojas."},
+{t:4,q:"¿Cuál de estas es una α-fórmula?",o:["`¬(p → q)`","`p ∨ q`","`p → q`","`¬(p ∧ q)`"],a:0,e:"`¬(p → q)` ≡ `p ∧ ¬q`: componentes p y ¬q en un único nodo. Las demás son β-fórmulas (abren dos ramas)."},
+{t:4,q:"En un tableau, la β-fórmula `¬(ψ ∧ φ)` se descompone en…",o:["Dos ramas: `¬ψ` | `¬φ`","Un nodo con `¬ψ, ¬φ`","Dos ramas: `ψ` | `φ`","Un nodo con `ψ, ¬φ`"],a:0,e:"`¬(ψ ∧ φ) ≡ ¬ψ ∨ ¬φ`: comportamiento disyuntivo, una componente en cada rama.",w:{1:"Eso sería `¬(ψ ∨ φ)`, que es una α-fórmula."}},
+{t:4,q:"Una hoja de un tableau está CERRADA cuando…",o:["Contiene un literal y su opuesto","Sólo contiene literales positivos","No tiene fórmulas","Contiene una β-fórmula"],a:0,e:"Tableau cerrado (todas las hojas cerradas) ⇒ insatisfacible. Abierto ⇒ satisfacible, y cada hoja abierta da un modelo."},
+{t:4,q:"¿Cómo se comprueba con tableaux que Φ es una tautología?",o:["Construyendo el tableau de `¬Φ` y viendo que se cierra","Viendo que el tableau de Φ es abierto","Viendo que el tableau de Φ es cerrado","No se puede con tableaux"],a:0,e:"Φ tautología ⟺ ¬Φ insatisfacible ⟺ tableau de ¬Φ cerrado.",w:{1:"Abierto sólo demuestra que Φ es satisfacible.",2:"Cerrado demostraría que Φ es insatisfacible."}},
+{t:4,q:"Para validar un razonamiento con tableaux, en la raíz se pone…",o:["Las premisas y la conclusión negada","Las premisas y la conclusión","Sólo la conclusión negada","La conclusión y las premisas negadas"],a:0,e:"Si el tableau se cierra, es válido; si queda una hoja abierta, esa hoja es un contraejemplo."},
+{t:4,q:"Para el planteamiento DIRECTO (ver si `α₁ ∧ … ∧ αₙ → β` es tautología), ¿qué técnicas NO son aplicables directamente?",o:["Resolución y tableaux","Tablas de verdad y árboles semánticos","DPLL y tablas de verdad","Árboles semánticos y DPLL"],a:0,e:"Resolución y tableaux sólo detectan insatisfacibilidad. Para el directo sirven tablas (todo V), árboles (todo éxito) y DPLL (regla de tautología deja ∅)."},
+{t:4,q:"¿Es satisfacible `{{¬p}; {p, q}; {p, ¬q}}`?",o:["No: es insatisfacible","Sí, con p=F y q=V","Sí, con p=V","Es una tautología"],a:0,e:"Unitaria ¬p ⇒ `{{q}; {¬q}}` ⇒ propagar q ⇒ `□`. Sin ramificaciones, no hay alternativa: insatisfacible."},
+{t:4,q:"Aplicando DPLL a `{{p, q, r}; {¬p, q}; {¬p, ¬q, ¬r, r}}` se obtiene…",o:["Satisfacible, con ν(q)=V","Insatisfacible","Tautología","Satisfacible sólo con p=V"],a:0,e:"La tercera cláusula es tautológica y se elimina. Después q es puro: `ξ(q) = ∅`.",w:{2:"Para ser tautología, la regla de la tautología tendría que eliminar TODAS las cláusulas."}},
+{t:4,q:"Como norma general, para comprobar satisfacibilidad conviene ___ y para insatisfacibilidad ___.",o:["DPLL; resolución","Resolución; DPLL","Tableaux; tablas de verdad","Árboles semánticos; DPLL"],a:0,e:"DPLL da el modelo si lo hay; resolución está pensada para llegar a `□`."},
+{t:4,q:"Al validar `{…} ⊨ r ∨ s` por resolución con conjunto soporte, el CS inicial es…",o:["`{¬r}` y `{¬s}`","`{¬r, ¬s}`","`{r, s}`","`{r}` y `{s}`"],a:0,e:"`¬(r ∨ s) ≡ ¬r ∧ ¬s`: dos cláusulas unitarias.",w:{1:"Eso sería `¬r ∨ ¬s` ≡ `¬(r ∧ s)`."}},
+{t:4,q:"En DPLL, si al propagar sucesivamente se llega a `∅`…",o:["La FNC es satisfacible y los literales propagados forman un modelo","La FNC es insatisfacible","La FNC es una tautología","Hay que hacer backtracking"],a:0,e:"Las variables no propagadas pueden tomar cualquier valor."},
+{t:4,q:"La cláusula `{p, ¬p, q}` en DPLL…",o:["Se elimina por la regla de la tautología","Se propaga por ser unitaria","Indica que la fórmula es insatisfacible","Obliga a ramificar por p"],a:0,e:"Contiene un par de literales complementarios: siempre vale V y no aporta nada."},
+{t:4,q:"La forma clausal de `¬(p ∧ q)` es…",o:["`{{¬p, ¬q}}`","`{{¬p}; {¬q}}`","`{{p, q}}`","`{{¬p, q}}`"],a:0,e:"De Morgan: `¬p ∨ ¬q`, una única cláusula.",w:{1:"Eso sería `¬p ∧ ¬q` ≡ `¬(p ∨ q)`."}},
+{t:4,q:"La forma clausal de `¬(p ∨ q)` es…",o:["`{{¬p}; {¬q}}`","`{{¬p, ¬q}}`","`{{p}; {q}}`","`{{¬p, q}}`"],a:0,e:"De Morgan: `¬p ∧ ¬q`: dos cláusulas unitarias.",w:{1:"Eso sería `¬p ∨ ¬q` ≡ `¬(p ∧ q)`."}},
+{t:4,q:"La FNC de `p ↔ q` es…",o:["`(¬p ∨ q) ∧ (¬q ∨ p)`","`(p ∨ q) ∧ (¬p ∨ ¬q)`","`(p ∧ q) ∨ (¬p ∧ ¬q)`","`¬p ∨ q`"],a:0,e:"`p ↔ q ≡ (p → q) ∧ (q → p)` y cada implicación pasa a disyunción.",w:{2:"Es equivalente, pero está en forma normal disyuntiva, no en FNC."}},
+{t:4,q:"La forma clausal de `p → (q ∧ r)` es…",o:["`{{¬p, q}; {¬p, r}}`","`{{¬p, q, r}}`","`{{p, q}; {p, r}}`","`{{¬p}; {q}; {r}}`"],a:0,e:"`¬p ∨ (q ∧ r) ≡ (¬p ∨ q) ∧ (¬p ∨ r)` por distributiva."},
+{t:4,q:"La forma clausal de `(p ∨ q) → r` es…",o:["`{{¬p, r}; {¬q, r}}`","`{{¬p, ¬q, r}}`","`{{p, q, r}}`","`{{¬p, r}; {q, r}}`"],a:0,e:"`¬(p ∨ q) ∨ r ≡ (¬p ∧ ¬q) ∨ r ≡ (¬p ∨ r) ∧ (¬q ∨ r)`.",w:{1:"Esa es la de `(p ∧ q) → r`."}},
+{t:4,q:"La forma clausal de `(p ∧ q) → r` es…",o:["`{{¬p, ¬q, r}}`","`{{¬p, r}; {¬q, r}}`","`{{p, q, r}}`","`{{¬p}; {¬q}; {r}}`"],a:0,e:"`¬(p ∧ q) ∨ r ≡ ¬p ∨ ¬q ∨ r`: una sola cláusula.",w:{1:"Esa es la de `(p ∨ q) → r`."}},
+{t:4,q:"Una cláusula unitaria es…",o:["Una cláusula con un único literal","Una cláusula sin literales","Una cláusula tautológica","Un conjunto con una sola cláusula"],a:0,e:"La cláusula sin literales es la vacía `□`.",w:{1:"Esa es la cláusula vacía `□`."}},
+{t:4,q:"Una fórmula está en Forma Normal Conjuntiva cuando es…",o:["Una conjunción de cláusulas (disyunciones de literales)","Una disyunción de conjunciones de literales","Una única implicación","Cualquier fbf sin negaciones"],a:0,e:"`(l ∨ l ∨ …) ∧ (l ∨ …) ∧ …`.",w:{1:"Esa es la forma normal disyuntiva."}},
+{t:4,q:"La cláusula vacía `□` es insatisfacible…",o:["Por definición","Sólo si se obtiene por resolución","Sólo si el conjunto es vacío","Nunca: es satisfacible"],a:0,e:"Así lo establecen las diapositivas. En cambio, el conjunto vacío de cláusulas `∅` es satisfacible."},
+{t:4,q:"En DPLL, la regla de propagación unitaria dice que…",o:["Si hay una cláusula unitaria {l}, se propaga l","Si hay un literal puro, se ramifica","Si hay una cláusula tautológica, se propaga","Si `C₁ ⊆ C₂`, se elimina C₁"],a:0,e:"Para que la cláusula `{l}` se cumpla, l tiene que ser V: no hay elección."},
+{t:4,q:"En DPLL, ¿cuándo se aplica la regla de ramificación?",o:["Cuando no se puede aplicar ninguna otra regla","Siempre al principio","Cuando aparece `□`","Cuando hay un literal puro"],a:0,e:"Se elige un literal l y se estudian `ξ ∪ {l}` y `ξ ∪ {¬l}` (con backtracking si hace falta)."},
+{t:4,q:"Aplicando DPLL a `{{p, q}; {¬p}}` se obtiene…",o:["Satisfacible, con p=F y q=V","Insatisfacible","Tautología","Satisfacible con p=V"],a:0,e:"Unitaria ¬p ⇒ `{{q}}` ⇒ unitaria q ⇒ `∅`."},
+{t:4,q:"Aplicando DPLL a `{{p}; {¬p, q}; {¬q}}` se obtiene…",o:["Insatisfacible","Satisfacible con p=V, q=V","Satisfacible con p=V, q=F","Tautología"],a:0,e:"Propagar p: `{{q}; {¬q}}`; propagar q: `□`. No hubo ramificación: insatisfacible."},
+{t:4,q:"¿Qué se obtiene al resolver `{p}` con `{¬p}`?",o:["La cláusula vacía `□`","El conjunto vacío `∅`","`{p, ¬p}`","Nada: no se pueden resolver"],a:0,e:"Dos cláusulas unitarias con literales complementarios dan `□`: el conjunto es insatisfacible."},
+{t:4,q:"La regla de resolución en L0 se basa en la consecuencia lógica…",o:["`{α ∨ p, β ∨ ¬p} ⊨ α ∨ β`","`{α ∨ p, β ∨ p} ⊨ α ∧ β`","`{α ∧ p, β ∧ ¬p} ⊨ α ∨ β`","`{α → p} ⊨ α`"],a:0,e:"Por eso la resolución tiene sentido de técnica semántica: `{C₁; C₂} ⊨ Rₗ(C₁; C₂)`."},
+{t:4,q:"¿Qué ocurre si dos cláusulas no tienen ningún par de literales complementarios?",o:["No se obtiene ninguna resolvente","Su resolvente es `□`","Su resolvente es `∅`","Se resuelven por el primer literal"],a:0,e:"La resolución exige un literal en C₁ y su complementario en C₂."},
+{t:4,q:"Con resolución por saturación, si se han obtenido todas las resolventes posibles y NO aparece `□`, el conjunto es…",o:["Satisfacible","Insatisfacible","Tautología","No se puede decir nada"],a:0,e:"Es lo que se concluye en los ejercicios resueltos. Aun así, la resolución no dice cuál es el modelo."},
+{t:4,q:"El método de resolución fue planteado por…",o:["Robinson, en 1965","Cook, en 1971","Davis y Putnam, en 1960","Boole, en 1847"],a:0,e:"Se conoce también como algoritmo de unificación de Robinson."},
+{t:4,q:"El algoritmo DPLL (1962) debe su nombre a…",o:["Davis, Putnam, Logemann y Loveland","Davis, Peano, Leibniz y Lovelace","Dijkstra, Pascal, Lamport y Liskov","Dos Procedimientos de Literales Lógicos"],a:0,e:"Antes de él existía el algoritmo DP (1960)."},
+{t:4,q:"La estrategia de saturación por niveles corresponde a una búsqueda…",o:["Primero en anchura","Primero en profundidad","Aleatoria","Por conjunto soporte"],a:0,e:"Obtiene todas las resolventes de nivel i antes de pasar al nivel i+1."},
+{t:4,q:"La estrategia de conjunto soporte se usa cuando…",o:["Queremos probar la insatisfacibilidad que surge al validar un razonamiento por refutación","Queremos encontrar todos los modelos","La fórmula no está en FNC","Queremos demostrar directamente que una fórmula es tautología"],a:0,e:"El CS parte de las cláusulas de la conclusión negada. Es una estrategia completa."},
+{t:4,q:"La cláusula `k₁` subsume a `k₂` si…",o:["`k₁ ⊆ k₂`","`k₂ ⊆ k₁`","Tienen un literal complementario","Tienen el mismo número de literales"],a:0,e:"Entonces se elimina k₂, la subsumida. Ej.: `{p}` subsume a `{p, q}`."},
+{t:4,q:"En `{{p}; {p, q}; {¬q, r}}`, por inclusión (subsunción) se elimina…",o:["`{p, q}`","`{p}`","`{¬q, r}`","Ninguna"],a:0,e:"`{p} ⊆ {p, q}`: si se cumple {p}, se cumple {p, q}."},
+{t:4,q:"La estrategia de eliminación de literales puros en resolución consiste en…",o:["Eliminar todas las cláusulas que contienen literales puros","Eliminar sólo el literal puro de cada cláusula","Añadir el complementario del literal puro","Ramificar por el literal puro"],a:0,e:"Esas cláusulas se satisfacen haciendo V el literal puro, sin afectar a las demás."},
+{t:4,q:"En un árbol semántico, cada vez que se elige una variable…",o:["Se abren dos ramas: una con la variable a V y otra a F","Se abre una única rama","Se transforma la fórmula a FNC","Se resuelven dos cláusulas"],a:0,e:"Se propaga el valor y se evalúa la fórmula resultante; las hojas sólo pueden ser V (éxito) o F (fallo)."},
+{t:4,q:"Un NODO ÉXITO en un árbol semántico refleja…",o:["La satisfacibilidad","La falseabilidad","La insatisfacibilidad","Que hay que hacer backtracking"],a:0,e:"Nodo éxito = la fórmula vale V. Nodo fallo = vale F (refleja falseabilidad)."},
+{t:4,q:"En el peor caso, un árbol semántico realiza…",o:["Tantas comprobaciones como la tabla de verdad","Una sola comprobación","La mitad de comprobaciones que la tabla","Infinitas comprobaciones"],a:0,e:"Pero suele ser más eficiente: a veces no hace falta propagar todas las variables para llegar a una hoja."},
+{t:4,q:"En un tableau, la α-fórmula `ψ ∧ φ` se descompone en…",o:["Un nodo con `ψ` y `φ`","Dos ramas: `ψ` | `φ`","Un nodo con `¬ψ, ¬φ`","Dos ramas: `¬ψ` | `¬φ`"],a:0,e:"Comportamiento conjuntivo: ambas componentes van al mismo nodo hijo."},
+{t:4,q:"En un tableau, la β-fórmula `ψ → φ` se descompone en…",o:["Dos ramas: `¬ψ` | `φ`","Dos ramas: `ψ` | `φ`","Un nodo con `¬ψ, φ`","Un nodo con `ψ, ¬φ`"],a:0,e:"`ψ → φ ≡ ¬ψ ∨ φ`: una componente en cada rama.",w:{3:"Esa es la descomposición de `¬(ψ → φ)`, que es una α-fórmula."}},
+{t:4,q:"En un tableau, `¬(ψ ∨ φ)` es…",o:["Una α-fórmula con componentes `¬ψ, ¬φ`","Una β-fórmula con ramas `¬ψ` | `¬φ`","Una β-fórmula con ramas `ψ` | `φ`","Un literal"],a:0,e:"`¬(ψ ∨ φ) ≡ ¬ψ ∧ ¬φ`: comportamiento conjuntivo."},
+{t:4,q:"En un tableau, la fórmula `ψ ↔ φ` es…",o:["Una α-fórmula con componentes `ψ → φ` y `φ → ψ`","Una β-fórmula con ramas `ψ` | `φ`","Un literal","Una β-fórmula con ramas `ψ → φ` | `φ → ψ`"],a:0,e:"`ψ ↔ φ ≡ (ψ → φ) ∧ (φ → ψ)`. Su negación `¬(ψ ↔ φ)` es β: `¬(ψ → φ)` | `¬(φ → ψ)`."},
+{t:4,q:"En un tableau, `¬¬ψ`…",o:["Se sustituye por ψ (es la única regla con una sola componente)","Abre dos ramas","Cierra la rama","Es una β-fórmula"],a:0,e:"La doble negación es la excepción: tiene una única componente."},
+{t:4,q:"Un tableau completado es ABIERTO. Entonces la fórmula raíz es…",o:["Satisfacible","Insatisfacible","Tautología seguro","Contradicción"],a:0,e:"Cada hoja abierta da un modelo."},
+{t:4,q:"Un tableau está COMPLETADO cuando…",o:["Todos sus nodos hoja contienen sólo literales","Tiene al menos una hoja cerrada","La raíz es un literal","Tiene exactamente dos ramas"],a:0,e:"Entonces se mira si cada hoja está cerrada (literal y su opuesto) o abierta."},
+{t:4,q:"La clase de complejidad P contiene los problemas de decisión resolubles…",o:["Por una máquina de Turing determinista en tiempo polinómico","Por una máquina no determinista en tiempo polinómico","Sólo en tiempo exponencial","Sin ningún algoritmo"],a:0,e:"NP: máquina NO determinista en tiempo polinómico. Ejemplos de P: buscar u ordenar un vector.",w:{1:"Esa es la clase NP."}},
+{t:4,q:"¿Cuál de estos es un problema NP-completo citado en clase?",o:["El problema de la mochila","Ordenar un vector","Buscar un elemento en un vector","Insertar un valor ordenado en un vector"],a:0,e:"También el del viajante y la suma de subconjuntos. Los otros son problemas de la clase P."},
+{t:4,q:"WalkSat es…",o:["GSAT con probabilidades, un algoritmo SAT no completo","Un algoritmo completo como DPLL","Una variante de los tableaux","Un tipo de tabla de verdad"],a:0,e:"Los algoritmos no completos pueden no encontrar un modelo aunque exista."},
+{t:4,q:"En L0, los problemas SAT y UNSAT son…",o:["Decidibles","Semidecidibles","Indecidibles","Irresolubles"],a:0,e:"Siempre hay un número finito de interpretaciones."}
+];
+BANK.forEach((b,i)=>{b.id=i;});
+
+const TOPICS = {
+  1:{name:"Introducción a la lógica",desc:"Definición, cálculo, principios, historia y componentes de la lógica clásica."},
+  2:{name:"Lógica Proposicional (L0)",desc:"Sintaxis, prioridad, formalización, tablas, clasificación, equivalencias e implicaciones."},
+  3:{name:"Razonamientos",desc:"Directo y refutación, sistema deductivo, solidez, completitud, consistencia, decidibilidad."},
+  4:{name:"Problema SAT en L0",desc:"FNC, propagación, DPLL, resolución, árboles semánticos y tableaux."}
+};
+const TOPIC_IDS = {1:[],2:[],3:[],4:[]};
+BANK.forEach(b=>TOPIC_IDS[b.t].push(b.id));
+const GENERAL_MIX = {1:5,2:10,3:6,4:9}; // 30 preguntas
+const LETTERS = ["A","B","C","D","E"];
+
+/* ======================= ESTADO ======================= */
+const S = {view:"home", key:null, qs:[], i:0, ans:[], len:"20", penalty:false, batch:1, flash:false};
+function store(k,v){try{ if(v===undefined){return JSON.parse(localStorage.getItem(k));} localStorage.setItem(k,JSON.stringify(v)); }catch(e){return null;}}
+const saved = store("fli-settings"); if(saved){S.len=saved.len||S.len; S.penalty=!!saved.penalty;}
+
+/* Registro de preguntas ya vistas: los tests nuevos y el botón «Cambiar preguntas» dan prioridad a las que aún no han salido */
+const SEEN = new Set((store("fli-seen")||[]).filter(i=>Number.isInteger(i)&&i>=0&&i<BANK.length));
+function saveSeen(){ store("fli-seen",[...SEEN]); }
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function fmt(s){ // escapa y convierte `...` en fórmula
+  const esc=String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return esc.replace(/`([^`]+)`/g,'<code class="f">$1</code>');
+}
+function prep(item){ // baraja opciones conservando correcta y notas
+  const idx=shuffle(item.o.map((_,k)=>k));
+  return {src:item, id:item.id, t:item.t, q:item.q, e:item.e, o:idx.map(k=>item.o[k]), a:idx.indexOf(item.a), w:idx.map(k=>(item.w&&item.w[k])||null)};
+}
+/* Elige n preguntas del tema t que NO estén en «exclude», priorizando las no vistas */
+function pickTopic(t,n,exclude){
+  const topic=TOPIC_IDS[t]||[];
+  const cand=topic.filter(i=>!exclude.has(i));
+  let out=shuffle(cand.filter(i=>!SEEN.has(i))).slice(0,n);
+  if(out.length<n){
+    // Ya han salido todas las del tema: empieza una ronda nueva (las de la tanda actual cuentan como vistas)
+    topic.forEach(i=>{ if(!exclude.has(i)) SEEN.delete(i); });
+    const taken=new Set(out);
+    out=out.concat(shuffle(cand.filter(i=>!taken.has(i))).slice(0,n-out.length));
+  }
+  if(out.length<n){ // el tema no tiene suficientes preguntas distintas
+    out=out.concat(shuffle(topic.filter(i=>exclude.has(i))).slice(0,n-out.length));
+  }
+  return out;
+}
+function buildFrom(counts, exclude){
+  let ids=[];
+  for(const t in counts){ ids=ids.concat(pickTopic(parseInt(t,10), counts[t], exclude)); }
+  ids=shuffle(ids);
+  ids.forEach(i=>SEEN.add(i)); saveSeen();
+  return ids.map(i=>prep(BANK[i]));
+}
+function buildTest(key){
+  let counts;
+  if(key==="G") counts=Object.assign({},GENERAL_MIX);
+  else { const n=TOPIC_IDS[key].length; counts={[key]: S.len==="all"? n : Math.min(n, parseInt(S.len,10))}; }
+  return buildFrom(counts, new Set());
+}
+function currentCounts(){ const c={}; S.qs.forEach(q=>{c[q.t]=(c[q.t]||0)+1;}); return c; }
+function newAvailable(){ // cuántas preguntas distintas de las actuales hay en el banco para estos temas
+  const cur=new Set(S.qs.map(q=>q.id)); const c=currentCounts(); let n=0;
+  for(const t in c){ n+=TOPIC_IDS[t].filter(i=>!cur.has(i)).length; }
+  return n;
+}
+function changeQuestions(){
+  if(newAvailable()===0) return;
+  const cur=new Set(S.qs.map(q=>q.id));
+  S.qs=buildFrom(currentCounts(), cur);
+  S.i=0; S.ans=new Array(S.qs.length).fill(undefined); S.batch=(S.batch||1)+1; S.flash=true;
+  quiz(); window.scrollTo(0,0);
+}
+function start(key, items){
+  S.key=key; S.qs=items?items.map(x=>prep(x.src)):buildTest(key); S.i=0; S.ans=new Array(S.qs.length).fill(undefined); S.batch=1; S.flash=false; S.view="quiz"; render(); window.scrollTo(0,0);
+}
+function grade(){
+  let ok=0,bad=0,blank=0;
+  S.qs.forEach((q,k)=>{const a=S.ans[k]; if(a===null) blank++; else if(a===q.a) ok++; else bad++;});
+  const n=S.qs.length;
+  let raw = S.penalty ? ok - bad/3 : ok;
+  if(raw<0) raw=0;
+  const nota = n? Math.round(raw/n*100)/10 : 0;
+  return {ok,bad,blank,n,nota};
+}
+
+/* ======================= VISTAS ======================= */
+const app=document.getElementById("app");
+function render(){ if(S.view==="home") home(); else if(S.view==="quiz") quiz(); else if(S.view==="sheets") sheets(); else if(S.view==="exam") examView(); else if(S.view==="examres") examResults(); else results(); }
+function openSheets(from){ S.from=from; S.view="sheets"; render(); window.scrollTo(0,0); }
+
+function testLabel(key){return key==="G"?"Test general":"Tema "+key;}
+
+function home(){
+  const rows=[1,2,3,4].map(t=>{
+    const n=TOPIC_IDS[t].length, best=store("fli-best-"+t);
+    return `<div class="test-row"><div class="num">${t}</div>
+      <div class="info"><h3>${TOPICS[t].name}</h3><p>${TOPICS[t].desc}</p>
+      <span class="best">${n} preguntas en el banco${best!=null?` · mejor nota <b>${best.toFixed(1)}</b>`:""}</span></div>
+      <button class="btn" data-start="${t}">Empezar</button></div>`;
+  }).join("");
+  const bestG=store("fli-best-G");
+  app.innerHTML=`
+  <header class="top">
+    <span class="eyebrow">Fundamentos Lógicos de la Informática · Temas 1–4</span>
+    <h1>Autotest de FLI</h1>
+    <p class="muted" style="margin:0">Elige un tema o el test general. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
+    <div class="legend"><span><span class="cell ok">V</span> acierto</span><span><span class="cell bad">F</span> fallo</span><span><span class="cell blank">–</span> en blanco</span></div>
+  </header>
+  <div class="test-row general" style="margin-top:0"><div class="num">≡</div>
+    <div class="info"><h3>Chuletas visuales</h3><p>Tablas de verdad, cómo pasar del castellano a conectivas (si, sólo si, a menos que, ni…ni…), equivalencias y reglas de inferencia, con tarjetas para memorizar.</p></div>
+    <button class="btn" id="opensheets">Abrir chuletas</button></div>
+  <div class="settings" role="group" aria-label="Opciones del test">
+    <label for="len">Preguntas por tema
+      <select id="len">
+        <option value="10"${S.len==="10"?" selected":""}>10</option>
+        <option value="20"${S.len==="20"?" selected":""}>20</option>
+        <option value="all"${S.len==="all"?" selected":""}>Todas</option>
+      </select></label>
+    <label for="pen"><input type="checkbox" id="pen"${S.penalty?" checked":""}> Restar 1/3 por fallo (como en muchos exámenes)</label>
+  </div>
+  <section class="tests" aria-label="Tests por tema">${rows}
+    <div class="test-row general"><div class="num">∀</div>
+      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los cuatro temas, con el peso de cada tema en el examen.</p>
+      <span class="best">${BANK.length} preguntas en total${bestG!=null?` · mejor nota <b>${bestG.toFixed(1)}</b>`:""}</span></div>
+      <button class="btn" data-start="G">Empezar</button></div>
+  </section>
+  <div class="sechead"><span class="eyebrow">Como el día del examen</span><h2>Exámenes completos</h2>
+    <p class="muted">Mismo formato que el 1.er parcial: 10 preguntas tipo test (+0,6 por acierto, −0,2 por fallo) y 3 ejercicios (DPLL 0,75 · Tableaux 2 · Resolución 1,25). No ves las respuestas hasta entregar; después tienes la corrección completa y la solución paso a paso de los ejercicios.</p></div>
+  <section class="tests" aria-label="Exámenes completos">
+    ${EXAMS.map((E,i)=>{ const id=i+1, best=store("fli-exam-best-"+id), cont=S.exam&&!S.exam.done&&S.exam.id===id;
+      return `<div class="test-row"><div class="num">E${id}</div>
+      <div class="info"><h3>${esc(E.title)}</h3><p>${esc(E.sub)}</p>${best!=null?`<span class="best">mejor nota <b>${fmtN(best)}</b></span>`:""}</div>
+      <button class="btn${cont?" ghost":""}" data-exam="${id}">${cont?"Continuar":"Empezar"}</button></div>`; }).join("")}
+    ${(()=>{ const best=store("fli-exam-best-0"), cont=S.exam&&!S.exam.done&&S.exam.id===0;
+      return `<div class="test-row general"><div class="num">?</div>
+      <div class="info"><h3>Examen aleatorio</h3><p>10 preguntas al azar de todos los exámenes y un ejercicio de cada tipo. Cada vez sale uno distinto.</p>${best!=null?`<span class="best">mejor nota <b>${fmtN(best)}</b></span>`:""}</div>
+      <button class="btn${cont?" ghost":""}" data-exam="0">${cont?"Continuar":"Empezar"}</button></div>`; })()}
+  </section>
+  <p class="kbd">Atajos en los tests: 1–4 o A–D para responder · 0 para dejar en blanco · Intro para pasar a la siguiente.</p>`;
+  app.querySelectorAll("[data-exam]").forEach(b=>b.onclick=()=>startExam(parseInt(b.dataset.exam,10)));
+  app.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>start(b.dataset.start==="G"?"G":parseInt(b.dataset.start,10)));
+  document.getElementById("opensheets").onclick=()=>openSheets("home");
+  document.getElementById("len").onchange=e=>{S.len=e.target.value; store("fli-settings",{len:S.len,penalty:S.penalty});};
+  document.getElementById("pen").onchange=e=>{S.penalty=e.target.checked; store("fli-settings",{len:S.len,penalty:S.penalty});};
+}
+
+function columnHTML(){
+  return S.qs.map((q,k)=>{
+    const a=S.ans[k]; let c="cell", txt=k+1;
+    if(a===null){c+=" blank";txt="–";} else if(a!==undefined){ if(a===q.a){c+=" ok";txt="V";} else {c+=" bad";txt="F";} }
+    if(k===S.i && S.view==="quiz") c+=" now";
+    return `<span class="${c}" title="Pregunta ${k+1}">${txt}</span>`;
+  }).join("");
+}
+
+function quiz(){
+  const q=S.qs[S.i], a=S.ans[S.i], answered=a!==undefined, n=S.qs.length;
+  const opts=q.o.map((o,k)=>{
+    let cls="opt";
+    if(answered){ if(k===q.a) cls+=" correct"; else if(k===a) cls+=" wrong"; else cls+=" dim"; }
+    return `<button class="${cls}" data-k="${k}" id="opt${k}"${answered?" disabled":""}><span class="k">${LETTERS[k]}</span><span class="t">${fmt(o)}</span></button>`;
+  }).join("");
+  let fb="";
+  if(answered){
+    if(a===null) fb=`<div class="feedback blank" role="status"><span class="verdict">En blanco</span><p>La correcta es la <b>${LETTERS[q.a]}</b>: ${fmt(q.o[q.a])}</p><p>${fmt(q.e)}</p></div>`;
+    else if(a===q.a) fb=`<div class="feedback ok" role="status"><span class="verdict">Correcto</span><p>${fmt(q.e)}</p></div>`;
+    else fb=`<div class="feedback bad" role="status"><span class="verdict">Incorrecto · la correcta es la ${LETTERS[q.a]}</span>
+      <p><b>${fmt(q.o[q.a])}</b></p><p>${fmt(q.e)}</p>
+      ${q.w[a]?`<p class="why"><b>Por qué tu respuesta (${LETTERS[a]}) no es correcta:</b> ${fmt(q.w[a])}</p>`:""}</div>`;
+  }
+  const last=S.i===n-1;
+  const canSwap=newAvailable()>0;
+  app.innerHTML=`
+  <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)}${S.key==="G"?" · Tema "+q.t:""}${S.batch>1?" · Tanda "+S.batch:""}</span><h2>Pregunta ${S.i+1} de ${n}</h2></div>
+    <div class="qtools">
+      <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar preguntas</button>
+      <button class="btn ghost" id="cheat">Chuletas</button>
+      <button class="btn ghost" id="quit">Salir</button>
+    </div></div>
+  ${S.flash?`<p class="swapnote" role="status">Nuevas preguntas cargadas: ninguna se repite de la tanda anterior.</p>`:""}
+  <div class="column" aria-label="Columna de evaluación">${columnHTML()}</div>
+  <article class="qcard">
+    <p class="qtext">${fmt(q.q)}</p>
+    <div class="opts">${opts}</div>
+    ${fb}
+    <div class="actions">
+      ${answered?`<span class="kbd">Intro: ${last?"ver resultados":"siguiente"}</span>`:`<button class="skip" id="blank">No lo sé (dejar en blanco)</button>`}
+      ${answered?`<button class="btn" id="next">${last?"Ver resultados":"Siguiente"}</button>`:""}
+    </div>
+  </article>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(parseInt(b.dataset.k,10)));
+  const bl=document.getElementById("blank"); if(bl) bl.onclick=()=>answer(null);
+  const nx=document.getElementById("next"); if(nx){nx.onclick=next; nx.focus({preventScroll:true});}
+  document.getElementById("swap").onclick=changeQuestions;
+  document.getElementById("cheat").onclick=()=>openSheets("quiz");
+  document.getElementById("quit").onclick=()=>{S.view="home";render();};
+}
+function answer(k){ if(S.ans[S.i]!==undefined) return; S.ans[S.i]=k; S.flash=false; quiz(); }
+function next(){ S.flash=false; if(S.i<S.qs.length-1){S.i++; quiz(); window.scrollTo({top:0});} else { finish(); } }
+function finish(){
+  const g=grade(); const prev=store("fli-best-"+S.key);
+  if(prev==null||g.nota>prev) store("fli-best-"+S.key,g.nota);
+  S.view="results"; render(); window.scrollTo(0,0);
+}
+
+function results(){
+  const g=grade();
+  const failed=S.qs.map((q,k)=>({q,k,a:S.ans[k]})).filter(x=>x.a!==x.q.a);
+  let topicBars="";
+  if(S.key==="G"){
+    topicBars=`<div class="bytopic"><h3>Por temas</h3>`+[1,2,3,4].map(t=>{
+      const qs=S.qs.map((q,k)=>({q,k})).filter(x=>x.q.t===t); const ok=qs.filter(x=>S.ans[x.k]===x.q.a).length;
+      const pct=qs.length?ok/qs.length*100:0;
+      return `<div class="bar"><span>Tema ${t}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="v">${ok}/${qs.length}</span></div>`;
+    }).join("")+`</div>`;
+  }
+  const msg = g.nota>=9?"Excelente: dominas este bloque.":g.nota>=7?"Muy bien. Repasa los fallos de abajo y estarás listo.":g.nota>=5?"Aprobado, pero hay conceptos que conviene repasar.":"Toca repasar: lee las explicaciones de los fallos y vuelve a intentarlo.";
+  const review = failed.length? failed.map(x=>{
+    const blank=x.a===null;
+    return `<div class="ritem${blank?" blank":""}"><span class="tag">Pregunta ${x.k+1}${S.key==="G"?" · Tema "+x.q.t:""}</span>
+      <p><b>${fmt(x.q.q)}</b></p>
+      <p class="yours">${blank?"La dejaste en blanco.":`Tu respuesta: ${LETTERS[x.a]}) ${fmt(x.q.o[x.a])}`}</p>
+      <p class="right">Correcta: ${LETTERS[x.q.a]}) ${fmt(x.q.o[x.q.a])}</p>
+      <p>${fmt(x.q.e)}</p>
+      ${!blank&&x.q.w[x.a]?`<p class="muted"><b>Por qué la tuya no:</b> ${fmt(x.q.w[x.a])}</p>`:""}</div>`;
+  }).join("") : `<div class="perfect"><b>Sin fallos.</b> Prueba con otro tema o con el test general.</div>`;
+  app.innerHTML=`
+  <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)} · resultados</span><h2>${msg}</h2></div></div>
+  <div class="column" aria-label="Columna de evaluación">${columnHTML()}</div>
+  <section class="score">
+    <div class="big">${g.nota.toFixed(1)}<small> / 10</small></div>
+    <div class="stats">
+      <div><b>${g.ok}</b><span>Aciertos</span></div>
+      <div><b>${g.bad}</b><span>Fallos</span></div>
+      <div><b>${g.blank}</b><span>En blanco</span></div>
+    </div>
+    <p class="muted" style="margin:0;font-size:14px;flex-basis:100%">${S.penalty?"Nota con penalización: cada fallo resta 1/3 de acierto; las preguntas en blanco no restan.":"Nota sin penalización (puedes activarla en la pantalla de inicio)."}</p>
+  </section>
+  ${topicBars}
+  <div class="actions" style="justify-content:flex-start">
+    ${failed.length?`<button class="btn" id="retry">Repetir sólo las ${failed.length} falladas</button>`:""}
+    <button class="btn ghost" id="again">Nuevo test con otras preguntas (${testLabel(S.key)})</button>
+    <button class="btn ghost" id="cheatr">Repasar con las chuletas</button>
+    <button class="btn ghost" id="home">Volver al inicio</button>
+  </div>
+  <section class="review" aria-label="Repaso de fallos"><h3>Repaso de fallos y preguntas en blanco</h3>${review}</section>`;
+  const r=document.getElementById("retry"); if(r) r.onclick=()=>start(S.key, failed.map(x=>x.q));
+  document.getElementById("again").onclick=()=>start(S.key);
+  document.getElementById("cheatr").onclick=()=>openSheets("results");
+  document.getElementById("home").onclick=()=>{S.view="home";render();window.scrollTo(0,0);};
+}
+
+/* ======================= CHULETAS ======================= */
+const CONN={"¬":"not","∧":"and","∨":"or","→":"imp","↔":"iff"};
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function paint(s){return s.replace(/[¬∧∨→↔]/g,c=>'<span class="c-'+CONN[c]+'">'+c+'</span>');}
+function F(f){return String(f).split(" · ").map(x=>'<code class="f">'+paint(esc(x))+'</code>').join(" ");}
+function fx(s){return esc(s).replace(/`([^`]+)`/g,(m,f)=>'<code class="f">'+paint(f)+'</code>');}
+
+const SHEET_TABS=[["conectivas","Conectivas"],["nexos","Nexos → fórmulas"],["equiv","Equivalencias"],["impl","Reglas de inferencia"],["clasif","Clasificación"]];
+const SYM={not:"¬",and:"∧",or:"∨",imp:"→",iff:"↔"};
+
+/* ---- Datos ---- */
+const NEXOS=[
+ {k:"not",name:"Negación",rows:[
+  ["no p · no es cierto que p · es falso que p · no ocurre que p","¬p",""]]},
+ {k:"and",name:"Conjunción",rows:[
+  ["p y q · p pero q · p aunque q · p; sin embargo, q · p; no obstante, q · tanto p como q · p, además, q","p ∧ q","«Pero», «aunque» y «sin embargo» suenan a contraste, pero en lógica sólo dicen que pasan las dos cosas."],
+  ["p pero no q · p y no q","p ∧ ¬q",""],
+  ["ni p ni q","¬p ∧ ¬q","No pasa ninguna de las dos. Equivale a ¬(p ∨ q)."]]},
+ {k:"or",name:"Disyunción",rows:[
+  ["p o q · o p o q · o bien p o bien q","p ∨ q","En lógica la «o» es inclusiva: también es V si pasan las dos."],
+  ["p a menos que q · p salvo que q · p excepto si q","¬q → p","«A menos que» = «si no». Equivale a p ∨ q."],
+  ["no ambas · no es cierto que p y q","¬(p ∧ q)","Al menos una no pasa. Equivale a ¬p ∨ ¬q."]]},
+ {k:"imp",name:"Implicación",rows:[
+  ["si p, (entonces) q · q si p · cuando p, q · siempre que p, q · en caso de que p, q","p → q","Lo que va detrás de «si / cuando / siempre que» es el ANTECEDENTE (izquierda)."],
+  ["p sólo si q · sólo si q, p","p → q","Lo que va detrás de «sólo si» es el CONSECUENTE (derecha). ¡Al revés que «si»!"],
+  ["p es suficiente para q · basta p para q","p → q","Lo suficiente va a la izquierda."],
+  ["q es necesario para p · p requiere q · no hay p sin q","p → q","Lo necesario va a la derecha."],
+  ["p implica q","p → q",""]]},
+ {k:"iff",name:"Doble implicación",rows:[
+  ["p si y sólo si q · p cuando y sólo cuando q · p equivale a q","p ↔ q","Las dos flechas a la vez: p → q y q → p."],
+  ["p es necesario y suficiente para q","p ↔ q",""]]}
+];
+const NEXO_ERR=[
+ ["Voy a la fiesta sólo si me invitan","p: voy · q: me invitan","p → q","q → p","Detrás de «sólo si» va la punta de la flecha: si he ido, es que me invitaron."],
+ ["Voy a la fiesta si me invitan","p: voy · q: me invitan","q → p","p → q","Detrás de «si» va el origen: la invitación garantiza que voy."],
+ ["Tener carnet es necesario para conducir","p: tengo carnet · q: conduzco","q → p","p → q","Lo necesario va a la derecha: si conduzco, tengo carnet (tener carnet no garantiza conducir)."],
+ ["Ni estudio ni trabajo","p: estudio · q: trabajo","¬p ∧ ¬q","¬(p ∧ q)","¬(p ∧ q) sólo dice «no las dos a la vez»: podría estudiar sin trabajar."],
+ ["No es cierto que si estudio apruebe","p: estudio · q: apruebo","¬(p → q) · p ∧ ¬q","¬p → ¬q","Negar una implicación no es negar sus partes. Significa: estudio y no apruebo."],
+ ["Salgo a menos que llueva","p: salgo · q: llueve","¬q → p","q → ¬p","«A menos que» = «si no». Si no llueve, salgo; si llueve, no se dice nada."],
+ ["Estudio pero no apruebo","p: estudio · q: apruebo","p ∧ ¬q","p ∨ ¬q","«Pero» es una ∧."]
+];
+const DRILL_NEXOS=[
+ {f:"«Voy a la fiesta sólo si me invitan»  (p: voy · q: me invitan)",b:"`p → q`",n:"Detrás de «sólo si» va el consecuente."},
+ {f:"«Voy a la fiesta si me invitan»  (p: voy · q: me invitan)",b:"`q → p`",n:"Detrás de «si» va el antecedente."},
+ {f:"«Saldré a menos que llueva»  (p: salgo · q: llueve)",b:"`¬q → p`  (≡ `p ∨ q`)",n:"«A menos que» = «si no»."},
+ {f:"«Ni estudio ni trabajo»  (p: estudio · q: trabajo)",b:"`¬p ∧ ¬q`",n:"Equivale a `¬(p ∨ q)`."},
+ {f:"«No es verdad que estudie y trabaje»  (p: estudio · q: trabajo)",b:"`¬(p ∧ q)`  (≡ `¬p ∨ ¬q`)",n:"No las dos a la vez."},
+ {f:"«Estudio pero no apruebo»  (p: estudio · q: apruebo)",b:"`p ∧ ¬q`",n:"«Pero» es una conjunción."},
+ {f:"«Apruebo aunque no estudio»  (p: estudio · q: apruebo)",b:"`q ∧ ¬p`",n:"«Aunque» también es una conjunción."},
+ {f:"«Tener carnet es necesario para conducir»  (p: tengo carnet · q: conduzco)",b:"`q → p`",n:"Lo necesario va a la derecha."},
+ {f:"«Aprobar es suficiente para pasar de curso»  (p: apruebo · q: paso de curso)",b:"`p → q`",n:"Lo suficiente va a la izquierda."},
+ {f:"«Me baño si y sólo si hace calor»  (p: me baño · q: hace calor)",b:"`p ↔ q`"},
+ {f:"«Siempre que llueve, se moja el suelo»  (p: llueve · q: el suelo se moja)",b:"`p → q`",n:"«Siempre que» funciona como «si»."},
+ {f:"«No hay humo sin fuego»  (p: hay humo · q: hay fuego)",b:"`p → q`",n:"El fuego es necesario para el humo: si hay humo, hay fuego."},
+ {f:"«Si no estudio, no apruebo»  (p: estudio · q: apruebo)",b:"`¬p → ¬q`  (≡ `q → p`)",n:"Por contraposición: si apruebo, es que he estudiado."},
+ {f:"«O llueve o hace sol»  (p: llueve · q: hace sol)",b:"`p ∨ q`"},
+ {f:"«No es cierto que si estudio apruebe»  (p: estudio · q: apruebo)",b:"`¬(p → q)`  (≡ `p ∧ ¬q`)",n:"Estudio y, aun así, no apruebo."},
+ {f:"«Sólo si hace sol, salgo»  (p: hace sol · q: salgo)",b:"`q → p`",n:"Da igual el orden de la frase: detrás de «sólo si» está p, así que p va a la derecha."},
+ {f:"«Cuando hace frío, me abrigo»  (p: hace frío · q: me abrigo)",b:"`p → q`"},
+ {f:"«Si llueve y hace frío, me quedo en casa»  (p: llueve · q: hace frío · r: me quedo)",b:"`p ∧ q → r`",n:"Por prioridad se lee `(p ∧ q) → r`."},
+ {f:"«Si llueve, me quedo en casa o voy al cine»  (p: llueve · q: me quedo · r: voy al cine)",b:"`p → q ∨ r`",n:"Se lee `p → (q ∨ r)`."},
+ {f:"«Aprobar el examen es necesario y suficiente para aprobar la asignatura»  (p: apruebo el examen · q: apruebo la asignatura)",b:"`p ↔ q`"}
+];
+const EQUIV=[
+ {g:"1 · Quitar → y ↔ (el primer paso de la FNC)",k:"imp",rows:[
+  ["Interdefinición de la implicación","α → β ≡ ¬α ∨ β · α → β ≡ ¬(α ∧ ¬β)","Niega lo de delante y cambia → por ∨.",1],
+  ["Interdefinición de la doble implicación","α ↔ β ≡ (α → β) ∧ (β → α)","Son las dos flechas a la vez.",0],
+  ["Negación de la implicación","¬(α → β) ≡ α ∧ ¬β","La única forma de romper la promesa: se da α y falla β.",0]]},
+ {g:"2 · Mover las negaciones",k:"not",rows:[
+  ["Doble negación","¬¬α ≡ α","Dos «no» se anulan.",0],
+  ["De Morgan: conjunción de negaciones","¬α ∧ ¬β ≡ ¬(α ∨ β)","La ¬ entra en el paréntesis y la ∨ se vuelve ∧.",1],
+  ["De Morgan: disyunción de negaciones","¬α ∨ ¬β ≡ ¬(α ∧ β)","La ¬ entra en el paréntesis y la ∧ se vuelve ∨.",1]]},
+ {g:"3 · Reordenar y repartir",k:"and",rows:[
+  ["Conmutativa","α ∧ β ≡ β ∧ α · α ∨ β ≡ β ∨ α · α ↔ β ≡ β ↔ α","Vale para ∧, ∨ y ↔. ¡NUNCA para →!",0],
+  ["Asociatividad","α ∧ (β ∧ γ) ≡ (α ∧ β) ∧ γ · α ∨ (β ∨ γ) ≡ (α ∨ β) ∨ γ","Si toda la cadena es de ∧ (o toda de ∨), los paréntesis dan igual.",1],
+  ["Distributiva conjunción / disyunción","α ∧ (β ∨ γ) ≡ (α ∧ β) ∨ (α ∧ γ)","Como en aritmética: a·(b+c) = a·b + a·c.",1],
+  ["Distributiva disyunción / conjunción","α ∨ (β ∧ γ) ≡ (α ∨ β) ∧ (α ∨ γ)","La que se usa para llegar a la FNC: la ∨ se reparte sobre la ∧.",1]]},
+ {g:"4 · Transformar implicaciones",k:"iff",rows:[
+  ["Contraposición","α → β ≡ ¬β → ¬α","Dale la vuelta y niega las dos.",1],
+  ["Exportación / Importación","(α ∧ β) → γ ≡ α → (β → γ)","Dos condiciones juntas = una condición dentro de la otra.",1]]},
+ {g:"5 · Simplificar",k:"or",rows:[
+  ["Epistemológicas","α ∧ ¬α ≡ F · α ∨ ¬α ≡ V","No contradicción y tercio excluido.",1],
+  ["Idempotencia","α ∧ α ≡ α · α ∨ α ≡ α","Repetir no añade nada.",0],
+  ["Absorción","α ∧ (α ∨ β) ≡ α · α ∨ (α ∧ β) ≡ α","Lo de fuera «se come» al paréntesis que lo contiene.",0],
+  ["Elemento neutro","α ∧ V ≡ α · α ∨ F ≡ α","V no cambia una ∧; F no cambia una ∨.",0],
+  ["Elemento absorbente","α ∨ V ≡ V · α ∧ F ≡ F","Un V salva la ∨; un F hunde la ∧.",0]]}
+];
+const NOT_EQUIV=[
+ ["p → q","q → p","Con p=V, q=F: la primera es F y la segunda V. (Es la recíproca.)"],
+ ["p → q","¬p → ¬q","Con p=F, q=V: la primera es V y la segunda F. (Es la contraria.)"],
+ ["¬(p ∧ q)","¬p ∧ ¬q","Con p=V, q=F: la primera es V y la segunda F. Al aplicar De Morgan hay que cambiar ∧ por ∨."],
+ ["¬(p → q)","¬p → ¬q","Con p=F, q=F: la primera es F y la segunda V. Negar una implicación da `p ∧ ¬q`."],
+ ["(p → q) → r","p → (q → r)","Con p=F, r=F: la primera es F y la segunda V. La → no es asociativa."]
+];
+const DRILL_EQUIV=[
+ {f:"`α → β` ≡ ?",b:"`¬α ∨ β`",n:"Interdefinición de la implicación."},
+ {f:"`¬(α → β)` ≡ ?",b:"`α ∧ ¬β`",n:"La implicación sólo es F si α es V y β es F."},
+ {f:"`α ↔ β` ≡ ?",b:"`(α → β) ∧ (β → α)`",n:"Interdefinición de la doble implicación."},
+ {f:"`¬(α ∧ β)` ≡ ?",b:"`¬α ∨ ¬β`",n:"De Morgan: la ∧ pasa a ∨."},
+ {f:"`¬(α ∨ β)` ≡ ?",b:"`¬α ∧ ¬β`",n:"De Morgan: la ∨ pasa a ∧."},
+ {f:"`¬¬α` ≡ ?",b:"`α`",n:"Doble negación."},
+ {f:"`α → β` ≡ ? (con otra implicación)",b:"`¬β → ¬α`",n:"Contraposición."},
+ {f:"`(α ∧ β) → γ` ≡ ?",b:"`α → (β → γ)`",n:"Exportación."},
+ {f:"`α ∨ (β ∧ γ)` ≡ ?",b:"`(α ∨ β) ∧ (α ∨ γ)`",n:"Distributiva de ∨ sobre ∧ (la de la FNC)."},
+ {f:"`α ∧ (β ∨ γ)` ≡ ?",b:"`(α ∧ β) ∨ (α ∧ γ)`",n:"Distributiva de ∧ sobre ∨."},
+ {f:"`α ∧ (α ∨ β)` ≡ ?",b:"`α`",n:"Absorción."},
+ {f:"`α ∨ ¬α` ≡ ?",b:"V",n:"Tercio excluido."},
+ {f:"`α ∧ ¬α` ≡ ?",b:"F",n:"No contradicción."},
+ {f:"`α ∨ F` ≡ ?",b:"`α`",n:"F es el neutro de la ∨."},
+ {f:"`α ∧ F` ≡ ?",b:"F",n:"F es absorbente para la ∧."},
+ {f:"¿Es cierto que `p → q` ≡ `q → p`?",b:"NO",n:"Es la recíproca. Contraejemplo: p=V, q=F."},
+ {f:"¿Es cierto que `p → q` ≡ `¬q → ¬p`?",b:"SÍ",n:"Es la contrarrecíproca (contraposición)."},
+ {f:"¿Es cierto que `(p → q) → r` ≡ `p → (q → r)`?",b:"NO",n:"Contraejemplo: p=F, r=F."}
+];
+const RULES=[
+ ["Ley de combinación","{α, β} ⊨ α ∧ β","Si tengo las dos, tengo su «y».","Llueve. Hace frío. ⇒ Llueve y hace frío."],
+ ["Leyes de simplificación","{α ∧ β} ⊨ α · {α ∧ β} ⊨ β","De una «y» me quedo con la parte que quiera.","Llueve y hace frío ⇒ Llueve."],
+ ["Leyes de adición","{α} ⊨ α ∨ β · {β} ⊨ α ∨ β","A algo verdadero le puedo añadir «o lo que sea».","Llueve ⇒ Llueve o nieva."],
+ ["Modus ponens","{α → β, α} ⊨ β","Se cumple la condición ⇒ se cumple lo prometido.","Si llueve, me mojo. Llueve. ⇒ Me mojo."],
+ ["Modus tollens","{α → β, ¬β} ⊨ ¬α","No se cumple lo prometido ⇒ no se dio la condición.","Si llueve, me mojo. No me mojo. ⇒ No llueve."],
+ ["Silogismo hipotético","{α → β, β → γ} ⊨ α → γ","Encadenar flechas (transitividad).","Si estudio, apruebo; si apruebo, lo celebro ⇒ Si estudio, lo celebro."],
+ ["Silogismos disyuntivos","{α ∨ β, ¬α} ⊨ β · {α ∨ β, ¬β} ⊨ α","De una «o», descarto una opción y me queda la otra.","Café o té. No quiero café. ⇒ Té."],
+ ["Prueba por casos","{α → β, ¬α → β} ⊨ β","Pase lo que pase con α, sale β.","Si llueve, me quedo; si no llueve, me quedo ⇒ Me quedo."],
+ ["Eliminación de la equivalencia","{α ↔ β} ⊨ α → β · {α ↔ β} ⊨ β → α","De la doble flecha saco cualquiera de las dos.",""],
+ ["Introducción de la equivalencia","{α → β, β → α} ⊨ α ↔ β","Con las dos flechas monto la doble.",""],
+ ["Ley de inconsistencia","{β, ¬β} ⊨ α","De una contradicción se sigue cualquier cosa.",""]
+];
+const DRILL_RULES=[
+ {f:"Premisas: `p → q` y `p`. ¿Qué concluyo?",b:"`q`",n:"Modus ponens."},
+ {f:"Premisas: `p → q` y `¬q`. ¿Qué concluyo?",b:"`¬p`",n:"Modus tollens."},
+ {f:"Premisas: `p → q` y `q → r`. ¿Qué concluyo?",b:"`p → r`",n:"Silogismo hipotético."},
+ {f:"Premisas: `p ∨ q` y `¬p`. ¿Qué concluyo?",b:"`q`",n:"Silogismo disyuntivo."},
+ {f:"Premisa: `p ∧ q`. ¿Qué puedo concluir?",b:"`p` (o `q`)",n:"Simplificación."},
+ {f:"Premisa: `p`. ¿Puedo concluir `p ∨ r`?",b:"SÍ",n:"Adición."},
+ {f:"Premisas: `p` y `q`. ¿Qué concluyo?",b:"`p ∧ q`",n:"Combinación."},
+ {f:"Premisas: `p → r` y `¬p → r`. ¿Qué concluyo?",b:"`r`",n:"Prueba por casos."},
+ {f:"Premisa: `p ↔ q`. ¿Puedo concluir `q → p`?",b:"SÍ",n:"Eliminación de la equivalencia."},
+ {f:"Premisas: `p → q` y `q → p`. ¿Qué concluyo?",b:"`p ↔ q`",n:"Introducción de la equivalencia."},
+ {f:"Premisas: `p` y `¬p`. ¿Qué concluyo?",b:"Cualquier fórmula",n:"Ley de inconsistencia."},
+ {f:"Premisas: `p → q` y `q`. ¿Puedo concluir `p`?",b:"NO",n:"Falacia de afirmar el consecuente. Contraejemplo: p=F, q=V."},
+ {f:"Premisas: `p → q` y `¬p`. ¿Puedo concluir `¬q`?",b:"NO",n:"Falacia de negar el antecedente. Contraejemplo: p=F, q=V."}
+];
+
+/* ---- Tarjetas de práctica ---- */
+const DRILLS={};
+function drillHTML(id,title,cards){
+  let d=DRILLS[id];
+  if(!d||d.cards!==cards){ d=DRILLS[id]={cards,order:shuffle(cards.map((_,k)=>k)),i:0,shown:false}; }
+  const c=cards[d.order[d.i]];
+  return `<section class="drill" data-drill="${id}" data-title="${esc(title)}">
+    <div class="drill-head"><h3>${title}</h3><span class="kbd">Tarjeta ${d.i+1} de ${cards.length}</span></div>
+    <p class="drill-front">${fx(c.f)}</p>
+    ${d.shown?`<div class="drill-back"><p class="ans">${fx(c.b)}</p>${c.n?`<p class="muted">${fx(c.n)}</p>`:""}</div>`:""}
+    <div class="actions">
+      ${d.shown?`<button class="btn" data-act="next">Siguiente tarjeta</button>`:`<button class="btn" data-act="show">Ver respuesta</button>`}
+      <button class="skip" data-act="shuffle">Barajar y empezar de nuevo</button>
+    </div></section>`;
+}
+function bindDrills(root){
+  root.querySelectorAll(".drill [data-act]").forEach(b=>b.onclick=()=>{
+    const sec=b.closest(".drill"), id=sec.dataset.drill, d=DRILLS[id], act=b.dataset.act;
+    if(act==="show") d.shown=true;
+    else if(act==="next"){ d.shown=false; d.i++; if(d.i>=d.cards.length){ d.order=shuffle(d.order); d.i=0; } }
+    else if(act==="shuffle"){ d.order=shuffle(d.order); d.i=0; d.shown=false; }
+    const tmp=document.createElement("div"); tmp.innerHTML=drillHTML(id,sec.dataset.title,d.cards);
+    const fresh=tmp.firstElementChild; sec.replaceWith(fresh); bindDrills(fresh);
+    const nb=fresh.querySelector('[data-act="next"],[data-act="show"]'); if(nb) nb.focus({preventScroll:true});
+  });
+}
+
+/* ---- Pestañas ---- */
+const SHEETS={
+conectivas(){
+  const R=[[1,1],[1,0],[0,1],[0,0]];
+  const cols=[["p",(p,q)=>p],["q",(p,q)=>q],["¬p",(p)=>!p],["p ∧ q",(p,q)=>p&&q],["p ∨ q",(p,q)=>p||q],["p → q",(p,q)=>!p||q],["p ↔ q",(p,q)=>p===q]];
+  const vals=cols.map(([,f])=>R.map(([p,q])=>!!f(!!p,!!q)));
+  const head=cols.map(([h],j)=>`<th>${j<2?h:F(h)}</th>`).join("");
+  const body=R.map((_,i)=>`<tr>${cols.map((c,j)=>{const v=vals[j][i]; const key=j>=3&&vals[j].filter(x=>x===v).length===1; return `<td class="tv ${v?"tv-v":"tv-f"}${key?" key":""}">${v?"V":"F"}</td>`;}).join("")}</tr>`).join("");
+  const rules=[["not","Negación","se lee «no»","Cambia el valor: V pasa a F y F pasa a V."],["and","Conjunción","se lee «y»","Sólo es <b>V</b> si las dos son V. Basta un F para que sea F."],["or","Disyunción","se lee «o»","Sólo es <b>F</b> si las dos son F. Basta un V para que sea V."],["imp","Implicación","se lee «si… entonces…»","Sólo es <b>F</b> en el caso V → F (la promesa rota). Si el antecedente es F, vale V siempre."],["iff","Doble implicación","se lee «si y sólo si»","Es <b>V</b> cuando las dos valen lo mismo (V,V o F,F)."]];
+  return `
+  <section><h3>Tabla de verdad de las conectivas</h3>
+    <p class="lead">Las casillas recuadradas son las «raras» de cada columna: si te sabes esa, te sabes toda la columna.</p>
+    <div class="tw"><table class="t truth"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
+  </section>
+  <section><h3>Una regla para cada conectiva</h3>
+    <div class="cards">${rules.map(([k,n,s,t])=>`<div class="rc k-${k}"><span class="sym">${SYM[k]}</span><h4>${n}</h4><span class="say">${s}</span><p>${t}</p></div>`).join("")}</div>
+    <p class="callout"><b class="big">Truco de la implicación:</b> piensa en una promesa, «si sacas un 10, te compro un helado». Sólo te he engañado si sacas el 10 (V) y no hay helado (F). Si no sacas el 10, haga lo que haga, no he roto la promesa. Por eso «si el agua hierve a 50 ºC, los elefantes vuelan» es <b>verdadera</b> (F → F).</p>
+  </section>
+  <section><h3>Prioridad: quién se agrupa primero</h3>
+    <div class="chain"><span class="lv">( )</span><span class="gt">›</span><span class="lv">${paint("¬")}</span><span class="gt">›</span><span class="lv">${paint("∧  ∨")}</span><span class="gt">›</span><span class="lv">${paint("→  ↔")}</span></div>
+    <p class="lead">Si empatan en prioridad, se agrupa de <b>izquierda a derecha</b>.</p>
+    <div class="tw"><table class="t"><thead><tr><th>Escrito</th><th>Se lee</th></tr></thead><tbody>
+      <tr><td>${F("¬p ∨ q")}</td><td>${F("(¬p) ∨ q")}</td></tr>
+      <tr><td>${F("p ∧ q → r")}</td><td>${F("(p ∧ q) → r")}</td></tr>
+      <tr><td>${F("p → q ∨ r")}</td><td>${F("p → (q ∨ r)")}</td></tr>
+      <tr><td>${F("p → q → r")}</td><td>${F("(p → q) → r")} <span class="note">(izquierda a derecha)</span></td></tr>
+      <tr><td>${F("¬p ∧ q ↔ r")}</td><td>${F("((¬p) ∧ q) ↔ r")}</td></tr>
+    </tbody></table></div>
+  </section>
+  <section><h3>¿Cuántas filas tiene la tabla?</h3>
+    <p>Con <b>n</b> átomos distintos hay <b>2ⁿ</b> interpretaciones: 1 → 2 · 2 → 4 · 3 → 8 · 4 → 16 · 5 → 32.</p>
+    <p class="callout">Para rellenarla sin olvidar ninguna fila (ejemplo con 3 átomos): la primera columna va de 4 en 4 (<code class="f">VVVVFFFF</code>), la segunda de 2 en 2 (<code class="f">VVFFVVFF</code>) y la última alterna (<code class="f">VFVFVFVF</code>).</p>
+  </section>`;
+},
+nexos(){
+  const rows=NEXOS.map(g=>`<tr class="grp k-${g.k}"><td colspan="3">${SYM[g.k]} · ${g.name}</td></tr>`+g.rows.map(([fr,fo,no])=>`<tr><td data-l="En castellano">${esc(fr).split(" · ").map(x=>"«"+x.replace(/\b([pq])\b/g,"<b>$1</b>")+"»").join(", ")}</td><td data-l="Fórmula" class="fcell">${F(fo)}</td><td data-l="Ojo" class="note">${esc(no)}</td></tr>`).join("")).join("");
+  const errs=NEXO_ERR.map(([fr,leg,ok,bad,why])=>`<tr><td data-l="Frase">«${esc(fr)}»<br><span class="note">${esc(leg)}</span></td><td data-l="Correcto" class="fcell">✔ ${F(ok)}</td><td data-l="Error típico" class="fcell">✘ ${F(bad)}</td><td data-l="Por qué" class="note">${esc(why)}</td></tr>`).join("");
+  return `
+  <section><h3>La flecha: qué va a cada lado</h3>
+    <div class="arrowfig">
+      <div class="node"><span class="lbl">ANTECEDENTE · IZQUIERDA</span><span class="big">p</span><span class="role">Condición SUFICIENTE</span><span class="muted" style="font-size:14px">Si se da, garantiza la otra.</span>
+        <ul><li>si <b>p</b>, …</li><li>cuando <b>p</b>, …</li><li>siempre que <b>p</b>, …</li><li><b>p</b> es suficiente para…</li><li>basta <b>p</b> para…</li></ul></div>
+      <div class="arr" aria-hidden="true">→</div>
+      <div class="node"><span class="lbl">CONSECUENTE · DERECHA</span><span class="big">q</span><span class="role">Condición NECESARIA</span><span class="muted" style="font-size:14px">Sin ella, no puede darse la otra.</span>
+        <ul><li>… entonces <b>q</b></li><li>… sólo si <b>q</b></li><li><b>q</b> es necesario para…</li><li>no hay … sin <b>q</b></li></ul></div>
+    </div>
+    <p class="callout"><b class="big">La regla de oro:</b> lo que va detrás de <b>«si»</b> es el <b>origen</b> de la flecha. Lo que va detrás de <b>«sólo si»</b> es la <b>punta</b> de la flecha. El orden de la frase no importa: busca esas palabras.<br>
+    <span class="muted">Otra forma de verlo: pregúntate «¿qué me <b>garantiza</b> qué?». Lo que garantiza va a la izquierda.</span></p>
+  </section>
+  <section><h3>Tabla de nexos</h3>
+    <div class="legendc">${Object.keys(SYM).map(k=>`<span><span class="c-${k}" style="font-family:var(--f-mono)">${SYM[k]}</span> ${{not:"no",and:"y",or:"o",imp:"si… entonces",iff:"si y sólo si"}[k]}</span>`).join("")}</div>
+    <div class="tw"><table class="t stack"><thead><tr><th>En castellano</th><th>Fórmula</th><th>Ojo</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </section>
+  <section><h3>Los errores que más se repiten</h3>
+    <div class="tw"><table class="t stack"><thead><tr><th>Frase</th><th>Correcto</th><th>Error típico</th><th>Por qué</th></tr></thead><tbody>${errs}</tbody></table></div>
+  </section>
+  ${drillHTML("nexos","Ponte a prueba: formaliza la frase",DRILL_NEXOS)}`;
+},
+equiv(){
+  const rows=EQUIV.map(g=>`<tr class="grp k-${g.k}"><td colspan="3">${esc(g.g)}</td></tr>`+g.rows.map(([n,f,t,star])=>`<tr><td data-l="Nombre"><b>${esc(n)}</b>${star?'<span class="star" title="Aparece en la tabla de equivalencias de las diapositivas">diapositiva</span>':""}</td><td data-l="Equivalencia" class="fcell">${F(f)}</td><td data-l="Truco" class="note">${paint(esc(t))}</td></tr>`).join("")).join("");
+  const neq=NOT_EQUIV.map(([a,b,w])=>`<tr><td data-l="Fórmula" class="fcell">${F(a)}</td><td data-l="NO equivale a" class="fcell">✘ ${F(b)}</td><td data-l="Contraejemplo" class="note">${fx(w)}</td></tr>`).join("");
+  return `
+  <section><h3>Tabla de equivalencias</h3>
+    <p class="lead"><code class="f">≡</code> significa que las dos fórmulas tienen la misma tabla de verdad, así que puedes <b>sustituir</b> una por otra en cualquier sitio y en los dos sentidos. Las marcadas con <span class="star">diapositiva</span> son las de la tabla de clase; las demás también te harán falta.</p>
+    <div class="tw"><table class="t stack"><thead><tr><th>Nombre</th><th>Equivalencia</th><th>Truco</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </section>
+  <section><h3>Las 4 caras de una implicación</h3>
+    <div class="sq">
+      <div class="g1"><small>Original</small>${F("p → q")}<span>Si llueve, me mojo.</span></div>
+      <div class="g2"><small>Recíproca</small>${F("q → p")}<span>Si me mojo, llueve.</span></div>
+      <div class="g1"><small>Contrarrecíproca</small>${F("¬q → ¬p")}<span>Si no me mojo, no llueve.</span></div>
+      <div class="g2"><small>Contraria</small>${F("¬p → ¬q")}<span>Si no llueve, no me mojo.</span></div>
+    </div>
+    <p class="callout">Las del <b>mismo color</b> son equivalentes entre sí: original ≡ contrarrecíproca (verde) y recíproca ≡ contraria (morado). Pero la original <b>no</b> equivale a la recíproca: puedo mojarme sin que llueva (una manguera).</p>
+  </section>
+  <section><h3>Parecen equivalentes… y NO lo son</h3>
+    <div class="tw"><table class="t stack"><thead><tr><th>Fórmula</th><th>NO equivale a</th><th>Contraejemplo</th></tr></thead><tbody>${neq}</tbody></table></div>
+    <p class="lead">Para demostrar que dos fórmulas <b>no</b> son equivalentes basta una interpretación donde valgan distinto. Para demostrar que <b>sí</b> lo son, hay que transformar una en la otra con la tabla de arriba (o comparar las tablas de verdad completas).</p>
+  </section>
+  <section><h3>Receta para pasar a FNC (en este orden)</h3>
+    <ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px">
+      <li>Eliminar ${F("↔")} y ${F("→")} (interdefiniciones).</li>
+      <li>Meter las negaciones hacia dentro (De Morgan).</li>
+      <li>Quitar dobles negaciones.</li>
+      <li>Distributiva de ${F("∨")} sobre ${F("∧")}: ${F("α ∨ (β ∧ γ) ≡ (α ∨ β) ∧ (α ∨ γ)")}.</li>
+      <li>Quitar paréntesis sobrantes (asociatividad).</li>
+      <li>Simplificar: cláusulas con ${F("p ∨ ¬p")} desaparecen (son V), literales repetidos se escriben una vez.</li>
+    </ol>
+  </section>
+  ${drillHTML("equiv","Ponte a prueba: ¿a qué equivale?",DRILL_EQUIV)}`;
+},
+impl(){
+  const rows=RULES.map(([n,f,p,e])=>`<tr><td data-l="Nombre"><b>${esc(n)}</b></td><td data-l="Esquema" class="fcell">${F(f)}</td><td data-l="En palabras">${esc(p)}${e?`<br><span class="note">${esc(e)}</span>`:""}</td></tr>`).join("");
+  return `
+  <section><h3>≡ y ⊨ no son lo mismo</h3>
+    <div class="cards">
+      <div class="rc k-iff"><span class="sym">≡</span><h4>Equivalencia lógica</h4><p>Funciona en los <b>dos sentidos</b>. Sirve para <b>sustituir</b> una fórmula por otra.</p><p>${F("α ≡ β")} ⟺ ${F("α ↔ β")} es tautología.</p></div>
+      <div class="rc k-imp"><span class="sym">⊨</span><h4>Implicación lógica</h4><p>Funciona en <b>un solo sentido</b>. Sirve para <b>deducir</b> una conclusión de unas premisas.</p><p>${F("α ⊨ β")} ⟺ ${F("α → β")} es tautología.</p></div>
+    </div>
+  </section>
+  <section><h3>Con ${F("p → q")} en la mano…</h3>
+    <div class="mp">
+      <div class="yes"><span class="v">✔ Tengo p ⇒ q</span>${F("{p → q, p} ⊨ q")}<span>Modus ponens</span></div>
+      <div class="yes"><span class="v">✔ Tengo ¬q ⇒ ¬p</span>${F("{p → q, ¬q} ⊨ ¬p")}<span>Modus tollens</span></div>
+      <div class="no"><span class="v">✘ Tengo q ⇒ ¿p?</span>${F("{p → q, q} ⊭ p")}<span>Falacia: afirmar el consecuente</span></div>
+      <div class="no"><span class="v">✘ Tengo ¬p ⇒ ¿¬q?</span>${F("{p → q, ¬p} ⊭ ¬q")}<span>Falacia: negar el antecedente</span></div>
+    </div>
+    <p class="callout warn">Las dos falacias fallan con el mismo contraejemplo: <b>p = F, q = V</b>. «Si llueve, el suelo se moja. El suelo está mojado.» No puedo concluir que haya llovido: alguien ha podido regar.</p>
+  </section>
+  <section><h3>Implicaciones lógicas de clase</h3>
+    <div class="tw"><table class="t stack"><thead><tr><th>Nombre</th><th>Esquema</th><th>En palabras</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </section>
+  ${drillHTML("impl","Ponte a prueba: ¿qué se concluye?",DRILL_RULES)}`;
+},
+clasif(){
+  const mini=s=>`<span class="mini">${s.split("").map(c=>`<span class="cell ${c==="V"?"ok":"bad"}">${c}</span>`).join("")}</span>`;
+  return `
+  <section><h3>Tipos de fórmulas según su última columna</h3>
+    <div class="spectrum">
+      <div class="brace b-sat">SATISFACIBLE · al menos una V</div>
+      <div class="box"><b>Tautología</b>${mini("VVVV")}<span class="muted">todas V</span></div>
+      <div class="box"><b>Contingente</b>${mini("VFVV")}<span class="muted">hay V y hay F</span></div>
+      <div class="box"><b>Contradicción</b>${mini("FFFF")}<span class="muted">todas F (insatisfacible)</span></div>
+      <div class="brace b-fal">FALSEABLE · al menos una F</div>
+    </div>
+    <p class="callout">Toda tautología es satisfacible · toda contradicción es falseable · contingente = satisfacible <b>y</b> falseable. Lo contrario no se cumple: una fórmula satisfacible no tiene por qué ser tautología.</p>
+  </section>
+  <section><h3>Al negar una fórmula</h3>
+    <div class="tw"><table class="t"><thead><tr><th>Si α es…</th><th>entonces ¬α es…</th></tr></thead><tbody>
+      <tr><td>Tautología</td><td>Contradicción</td></tr><tr><td>Contradicción</td><td>Tautología</td></tr><tr><td>Contingente</td><td>Contingente</td></tr>
+    </tbody></table></div>
+  </section>
+  <section><h3>Validez de un razonamiento: dos planteamientos</h3>
+    <div class="cards">
+      <div class="rc k-imp"><span class="sym">→</span><h4>Directo</h4><p>${F("α₁ ∧ … ∧ αₙ → β")} es <b>tautología</b>.</p></div>
+      <div class="rc k-not"><span class="sym">¬</span><h4>Refutación</h4><p>${F("α₁ ∧ … ∧ αₙ ∧ ¬β")} es <b>contradicción</b>.</p></div>
+    </div>
+    <p class="lead">Los dos dicen lo mismo: es imposible que las premisas sean V y la conclusión F.</p>
+  </section>
+  <section><h3>Conjuntos de fórmulas</h3>
+    <div class="tw"><table class="t stack"><thead><tr><th>Situación</th><th>Resultado</th></tr></thead><tbody>
+      <tr><td data-l="Situación">Conjunto satisfacible + otra fbf</td><td data-l="Resultado">Puede dejar de ser satisfacible (${F("{p}")} + ${F("¬p")}).</td></tr>
+      <tr><td data-l="Situación">Conjunto insatisfacible + lo que sea</td><td data-l="Resultado">Sigue siendo insatisfacible: añadir fórmulas sólo quita modelos.</td></tr>
+      <tr><td data-l="Situación">Conjunto que contiene una contradicción</td><td data-l="Resultado">Insatisfacible.</td></tr>
+      <tr><td data-l="Situación">Premisas insatisfacibles</td><td data-l="Resultado">Se sigue cualquier conclusión (ley de inconsistencia).</td></tr>
+    </tbody></table></div>
+  </section>`;
+}
+};
+
+function sheets(){
+  let tab=S.tab||store("fli-tab")||"conectivas"; if(!SHEETS[tab]) tab="conectivas"; S.tab=tab;
+  const back = S.from==="quiz"?"Volver al test":S.from==="results"?"Volver a los resultados":S.from==="examres"?"Volver a la corrección":null;
+  app.innerHTML=`
+  <div class="qhead"><div><span class="eyebrow">Chuletas visuales · Tema 2</span><h2>Para memorizar</h2></div>
+    <div class="qtools">${back?`<button class="btn" id="back">${back}</button>`:""}<button class="btn ghost" id="tohome">Inicio</button></div></div>
+  <nav class="tabs" role="tablist" aria-label="Chuletas">${SHEET_TABS.map(([k,l])=>`<button role="tab" class="tab${k===tab?" on":""}" aria-selected="${k===tab}" data-tab="${k}">${l}</button>`).join("")}</nav>
+  <div class="sheet" role="tabpanel">${SHEETS[tab]()}</div>
+  <div class="actions" style="justify-content:flex-start"><button class="btn ghost" data-start="2">Practicar con el test del Tema 2</button></div>`;
+  app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{ S.tab=b.dataset.tab; store("fli-tab",S.tab); sheets(); });
+  const bk=document.getElementById("back"); if(bk) bk.onclick=()=>{ S.view=S.from; render(); window.scrollTo(0,0); };
+  document.getElementById("tohome").onclick=()=>{ S.view="home"; render(); window.scrollTo(0,0); };
+  app.querySelector('[data-start="2"]').onclick=()=>start(2);
+  bindDrills(app);
+}
+
+/* ======================= EXÁMENES COMPLETOS =======================
+   Formato del 1er parcial: 10 preguntas tipo test (+0,6 acierto, −0,2 fallo) y 3 ejercicios (0,75 + 2 + 1,25).
+   test: {t, q, o, a, e, w?, tbl?}   ex: {kind, pts, q, f, check:{o,a}, sol:{pre?, steps? | tree? | fit?, end}} */
+const ENUN={
+  DPLL:"Aplica la técnica de DPLL, explicando las reglas que se van aplicando, e indica si el siguiente conjunto de fórmulas bien formadas es satisfacible. En caso de serlo, indica un modelo.",
+  TAB:"Demuestra si el siguiente razonamiento es válido utilizando la técnica de Tableaux Semánticos, mediante la técnica de refutación. Indica si el razonamiento es válido o no. En caso de no ser válido, indica un contraejemplo. Explica e indica todos los tipos de fórmulas que aplicas.",
+  RES:"Demuestra el siguiente razonamiento mediante el método de Resolución por estrategia conjunto soporte mediante notación fitting, aplicando también simplificación. Recuerda explicar todos los pasos realizados."
+};
+const CHK_SAT={o:["Satisfacible","Insatisfacible"]}, CHK_VAL={o:["Válido","No válido"]}, CHK_RES={o:["Válido (se llega a □)","No válido (no se llega a □)"]};
+const REFUT="Refutación: añadimos la conclusión negada a las premisas. El razonamiento es válido si el tableau se CIERRA (todas las hojas con un literal y su opuesto).";
+const EXAMS=[
+/* ---------- EXAMEN 1: el parcial real 23-24 ---------- */
+{title:"Parcial 1 · curso 23-24",sub:"El examen real del curso pasado.",
+test:[
+ {t:1,q:"La ley del tercio excluido establece que:",o:["A partir de una oración contradictoria se puede obtener cualquier oración: `¬p ⊢ q`","Las oraciones con doble implicación son verdaderas y falsas a la vez: `(p ↔ ¬p) ⊢ V ∧ F`","Una oración lógica es verdadera o es falsa, no puede existir una tercera opción: `p ∨ ¬p`","Una oración lógica no puede ser, a la vez, tanto verdadera como falsa: `¬(p ∨ ¬p)`"],a:2,e:"Tercio excluido: sólo hay dos valores posibles, V o F, sin tercera opción. Por eso `p ∨ ¬p` es siempre V.",w:{0:"Eso recuerda a la ley de inconsistencia (de una contradicción se sigue cualquier cosa), no al tercio excluido.",3:"«No puede ser a la vez V y F» es el principio de NO CONTRADICCIÓN (y además la fórmula escrita, `¬(p ∨ ¬p)`, es una contradicción)."}},
+ {t:2,q:"Si F es un conjunto satisfacible de oraciones, entonces:",o:["Al quitar una oración Fᵢ cualquiera, el conjunto F−{Fᵢ} siempre será insatisfacible.","Al añadir una oración Fᵢ cualquiera, el conjunto F∪{Fᵢ} podría ser satisfacible o insatisfacible.","Al añadir una oración Fᵢ cualquiera, el conjunto F∪{Fᵢ} seguirá siendo satisfacible.","Al quitar una oración Fᵢ cualquiera, el conjunto F−{Fᵢ} podría ser satisfacible o insatisfacible."],a:1,e:"Añadir una fórmula puede quitar todos los modelos (ej.: `{p}` + `¬p`) o no quitarlos. Quitar fórmulas nunca quita modelos: F−{Fᵢ} sigue siendo satisfacible seguro.",w:{0:"Quitar fórmulas sólo puede añadir modelos: F−{Fᵢ} sigue siendo satisfacible.",2:"Contraejemplo: `{p}` es satisfacible, pero `{p, ¬p}` no.",3:"Quitar fórmulas nunca estropea la satisfacibilidad: será satisfacible siempre."}},
+ {t:4,q:"Dada la fórmula bien formada `ε = ¬((r → ¬q) ∧ ¬p)`, realiza su forma normal conjuntiva (FNC) y selecciona la respuesta correcta:",o:["FNC: `ε = (r ∨ ¬p) ∧ (¬p ∨ ¬q)` y es una contradicción.","FNC: `ε = (r ∨ ¬p) ∧ (p ∨ q)` y es una tautología.","FNC: `ε = (r ∨ ¬p) ∧ (p ∨ ¬q)` y es contingente.","FNC: `ε = (r ∨ p) ∧ (p ∨ q)` y es contingente."],a:3,e:"`¬((¬r ∨ ¬q) ∧ ¬p)` → De Morgan: `¬(¬r ∨ ¬q) ∨ ¬¬p` → `(r ∧ q) ∨ p` → distributiva: `(r ∨ p) ∧ (q ∨ p)`. Es V con p=V y F con p=F, r=F: contingente."},
+ {t:3,q:"Un sistema deductivo es completo:",o:["Siempre y cuando también sea un sistema de razonamiento sólido.","Si se demuestra que `{α₁,…,αₙ} ⊢ β`, se puede comprobar que `{α₁,…,αₙ} ⊨ β`.","Si se comprueba que `{α₁,…,αₙ} ⊨ β`, se puede demostrar que `{α₁,…,αₙ} ⊢ β`.","Si β es una contradicción, entonces se puede demostrar que β es un teorema."],a:2,e:"Completo: todo lo que es válido semánticamente (⊨) se puede demostrar sintácticamente (⊢).",w:{1:"Eso es la SOLIDEZ (corrección): lo demostrado es válido.",0:"Solidez y completitud son propiedades independientes."}},
+ {t:4,q:"¿Cuál de las siguientes técnicas SAT vistas en clase permite demostrar de manera directa que una fórmula dada es una tautología?",o:["DPLL","Resolución","Árboles Semánticos","Tableaux Semánticos"],a:2,e:"El árbol semántico se aplica directamente a la fórmula (sin pasarla a FNC): si todas las hojas son nodos ÉXITO, es una tautología. Resolución y tableaux sólo detectan insatisfacibilidad. Ojo: los apuntes también citan DPLL para el planteamiento directo, pero sólo tras pasar a FNC y si la regla de la tautología deja ∅; por eso la opción que trabaja «de manera directa» sobre la fórmula dada es el árbol semántico.",w:{1:"Resolución sólo garantiza insatisfacibilidad; no sirve directamente para tautologías.",3:"Para ver que Φ es tautología con tableaux hay que construir el de ¬Φ y ver que se cierra: no es directo."}},
+ {t:2,q:"Dada la fórmula bien formada `(q → ¬p) ∨ (¬r → ¬p)`, ¿cuál de las siguientes fórmulas es equivalente a la fórmula dada?",o:["La fórmula equivalente es `p → (r ∨ ¬q)`","La fórmula equivalente es `¬p → (¬r ∨ ¬q)`","La fórmula equivalente es `(q → ¬p) ∨ ¬r`","La fórmula equivalente es `¬p ∨ (¬r → ¬p)`"],a:0,e:"`(¬q ∨ ¬p) ∨ (r ∨ ¬p)` ≡ `¬p ∨ ¬q ∨ r`. Y `p → (r ∨ ¬q)` ≡ `¬p ∨ r ∨ ¬q`: es la misma.",w:{1:"`¬p → (¬r ∨ ¬q)` ≡ `p ∨ ¬r ∨ ¬q`: cambia el signo de p y de r.",2:"Da `¬q ∨ ¬p ∨ ¬r`: r aparece negada.",3:"`¬p ∨ (r ∨ ¬p)` ≡ `¬p ∨ r`: se ha perdido el `¬q`."}},
+ {t:2,q:"Consideremos el conjunto insatisfacible de fórmulas C = {C1, C2} con la siguiente evaluación:",tbl:{h:["p","q","C1","C2"],r:[["V","V","V","F"],["V","F","F","V"],["F","V","F","V"],["F","F","V","F"]]},o:["La evaluación de `C1 → C2` siempre es verdadera (tautología)","La evaluación de `C1 → ¬C2` siempre es falsa (contradicción)","La evaluación de `¬C1 → ¬C2` siempre es falsa (contradicción)","La evaluación de `¬C1 → C2` siempre es verdadera (tautología)"],a:3,e:"En la tabla, C2 vale siempre lo contrario que C1 (C2 ≡ ¬C1). Entonces `¬C1 → C2` ≡ `¬C1 → ¬C1`, que es siempre V.",w:{0:"Falla en la fila 1: V → F = F.",1:"`C1 → ¬C2` ≡ `C1 → C1`: es siempre V, no F.",2:"`¬C1 → ¬C2` ≡ `¬C1 → C1` ≡ C1: es contingente."}},
+ {t:5,q:"Indica la respuesta correcta respecto a la Lógica Categórica:",o:["Nos permite expresar las relaciones entre categorías teniendo en cuenta la pertenencia de los elementos a cada categoría.","Nos permite expresar las operaciones entre objetos, no siempre teniendo en cuenta las categorías.","No nos permite expresar la relación entre el objeto y la categoría.","La respuesta a y c son correctas."],a:0,e:"La lógica categórica trabaja con categorías (clases) y las relaciones entre ellas: «todo S es P», «ningún S es P», «algún S es P», «algún S no es P», atendiendo a qué elementos pertenecen a cada categoría. Sí expresa la relación objeto-categoría (pertenencia), así que C es falsa y, con ella, D."},
+ {t:5,q:"¿Es la fórmula `∀x (S(x) → ¬P(x))` alguna de las Proposiciones Categóricas en su Forma Normal?",o:["Es una Proposición Universal Afirmativa.","Es una Proposición Universal Negativa.","Es una Proposición Particular Afirmativa.","Es una Proposición Particular Negativa."],a:1,e:"Dice «ningún S es P» (todo lo que es S no es P). Las cuatro formas: universal afirmativa `∀x (S(x) → P(x))`, universal negativa `∀x (S(x) → ¬P(x))`, particular afirmativa `∃x (S(x) ∧ P(x))`, particular negativa `∃x (S(x) ∧ ¬P(x))`."},
+ {t:2,q:"Si ε es una tautología y γ una contradicción, se puede afirmar que:",o:["`⊨ ε ∧ γ`","`⊨ ¬ε ∨ γ`","`⊨ ε ∧ ¬γ`","`⊨ ¬γ → ¬ε`"],a:2,e:"ε = V y ¬γ = V en todas las interpretaciones, así que `ε ∧ ¬γ` es una tautología.",w:{0:"V ∧ F = F siempre: es una contradicción.",1:"F ∨ F = F siempre.",3:"V → F = F siempre."}}
+],
+ex:[
+ {kind:"DPLL",pts:0.75,q:ENUN.DPLL,f:"`ε = {t ∨ p, p ∨ q, ¬q ∨ r, ¬r ∨ s, ¬s ∨ ¬p}`",check:Object.assign({a:0},CHK_SAT),sol:{
+   pre:["Forma clausal: `{{t, p}; {p, q}; {¬q, r}; {¬r, s}; {¬s, ¬p}}`."],
+   steps:["Regla de la tautología: ninguna cláusula tiene un literal y su opuesto → no se aplica.","Propagación unitaria: no hay cláusulas unitarias.","Literal puro: `t` (no aparece `¬t`). Propagamos: `ξ(t) = {{p, q}; {¬q, r}; {¬r, s}; {¬s, ¬p}}`.","Ya no hay unitarias, ni literales puros, ni cláusulas subsumidas (inclusión) → regla de RAMIFICACIÓN por `p`.",[1,"Rama `p`: `ξ(t, p) = {{¬q, r}; {¬r, s}; {¬s}}`."],[1,"Unitaria `¬s`: `ξ(t, p, ¬s) = {{¬q, r}; {¬r}}`."],[1,"Unitaria `¬r`: `ξ(t, p, ¬s, ¬r) = {{¬q}}`."],[1,"Unitaria `¬q`: `ξ(t, p, ¬s, ¬r, ¬q) = ∅`."]],
+   end:"Llegamos al conjunto vacío de cláusulas ∅ → SATISFACIBLE. Modelo: ν(t)=V, ν(p)=V, ν(s)=F, ν(r)=F, ν(q)=F. No hace falta explorar la rama `¬p`."}},
+ {kind:"Tableaux",pts:2,q:ENUN.TAB,f:"`{¬(p → q), ¬(¬p ∧ ¬r), ¬p → s, ¬r} ⊨ ¬s`",check:Object.assign({a:1},CHK_VAL),sol:{
+   pre:[REFUT],
+   tree:{steps:["Raíz: `¬(p → q)`, `¬(¬p ∧ ¬r)`, `¬p → s`, `¬r`, `¬¬s`","Doble negación: `¬¬s` → `s`.","α-fórmula `¬(p → q)` → en el mismo nodo: `p`, `¬q`."],
+     split:{why:"β-fórmula `¬(¬p ∧ ¬r)` → dos ramas: `¬¬p` | `¬¬r`",br:[
+       {lab:"`¬¬p` → `p` (doble negación)",split:{why:"β-fórmula `¬p → s` → dos ramas: `¬¬p` | `s`",br:[
+         {lab:"`¬¬p` → `p`",end:{t:"ABIERTA. Literales: `p`, `¬q`, `¬r`, `s`"}},
+         {lab:"`s`",end:{t:"ABIERTA. Literales: `p`, `¬q`, `¬r`, `s`"}}]}},
+       {lab:"`¬¬r` → `r` (doble negación)",end:{c:1,t:"CERRADA: `r` y `¬r`"}}]}},
+   end:"El tableau queda ABIERTO → el razonamiento NO es válido. Contraejemplo (hoja abierta): ν(p)=V, ν(q)=F, ν(r)=F, ν(s)=V. Con ella las cuatro premisas valen V y la conclusión `¬s` vale F."}},
+ {kind:"Resolución",pts:1.25,q:ENUN.RES,f:"`{p → (q → r), ¬(p → r)} ⊨ ¬q`",check:Object.assign({a:0},CHK_RES),sol:{
+   pre:["Premisas a FNC: `p → (q → r)` ≡ `¬p ∨ ¬q ∨ r`; `¬(p → r)` ≡ `p ∧ ¬r` (dos cláusulas).","Conclusión negada (conjunto soporte): `¬¬q` ≡ `q`."],
+   fit:[["1","{¬p, ¬q, r}","Premisa"],["2","{p}","Premisa"],["3","{¬r}","Premisa"],["4","{q}","Conjunto soporte (CS)"],["5","{¬p, r}","Rq(1, 4) · CS · Subsumida(1) · Puro q (4)"],["6","{r}","Rp(2, 5) · CS · Subsumida(5) · Puro p (2)"],["7","□","Rr(3, 6) · CS"]],
+   end:"Hemos llegado a la cláusula vacía □ usando refutación → el razonamiento es VÁLIDO."}}
+]},
+/* ---------- EXAMEN 2 ---------- */
+{title:"Simulacro 2",sub:"Mismo formato que el parcial, preguntas nuevas.",
+test:[
+ {t:1,q:"El principio de no contradicción establece que:",o:["Toda oración es verdadera o falsa, sin tercera opción: `p ∨ ¬p`","De una contradicción se puede obtener cualquier oración.","Una oración no puede ser verdadera y falsa a la vez: `¬(p ∧ ¬p)`","Dos oraciones contradictorias pueden ser verdaderas si son contingentes."],a:2,e:"No contradicción: un hecho y su contrario no pueden darse a la vez. `p ∧ ¬p` es siempre F, así que `¬(p ∧ ¬p)` es siempre V.",w:{0:"Eso es la ley del tercio excluido.",1:"Eso es la ley de inconsistencia `{β, ¬β} ⊨ α`."}},
+ {t:2,q:"Si F es un conjunto insatisfacible de oraciones, entonces:",o:["Al añadir una oración Fᵢ cualquiera, F∪{Fᵢ} podría ser satisfacible.","Al añadir una oración Fᵢ cualquiera, F∪{Fᵢ} seguirá siendo insatisfacible.","Al quitar una oración Fᵢ cualquiera, F−{Fᵢ} seguirá siendo insatisfacible.","Al quitar una oración Fᵢ cualquiera, F−{Fᵢ} será siempre satisfacible."],a:1,e:"Añadir fórmulas sólo puede quitar modelos; si no había ninguno, sigue sin haberlo. Al quitar, en cambio, puede pasar cualquier cosa.",w:{2:"Contraejemplo: `{p, ¬p}` es insatisfacible, pero quitando `¬p` queda `{p}`, satisfacible.",3:"Contraejemplo: `{p, ¬p, q ∧ ¬q}` sin `p` sigue siendo insatisfacible."}},
+ {t:4,q:"Dada la fbf `ε = ¬(p → (q ∧ ¬r))`, realiza su FNC y selecciona la respuesta correcta:",o:["FNC: `ε = (¬p ∨ ¬q) ∧ r` y es contingente.","FNC: `ε = p ∧ (¬q ∨ r)` y es una tautología.","FNC: `ε = p ∧ (¬q ∨ r)` y es contingente.","FNC: `ε = p ∧ ¬q ∧ r` y es una contradicción."],a:2,e:"`¬(¬p ∨ (q ∧ ¬r))` → De Morgan: `p ∧ ¬(q ∧ ¬r)` → De Morgan: `p ∧ (¬q ∨ r)`. Es V con p=V, q=F y F con p=F: contingente.",w:{1:"La FNC es correcta, pero con p=F vale F: no es tautología."}},
+ {t:3,q:"Un sistema deductivo es sólido (correcto):",o:["Si se comprueba que `{α₁,…,αₙ} ⊨ β`, se puede demostrar que `{α₁,…,αₙ} ⊢ β`.","Si se demuestra que `{α₁,…,αₙ} ⊢ β`, se puede comprobar que `{α₁,…,αₙ} ⊨ β`.","Si en él se pueden demostrar β y ¬β.","Sólo si también es completo."],a:1,e:"Sólido: todo lo que se demuestra (⊢) es válido (⊨). Así se puede trabajar sintácticamente con rigor sin usar técnicas SAT.",w:{0:"Eso es la COMPLETITUD.",2:"Eso sería un sistema inconsistente."}},
+ {t:4,q:"¿Cuál de las siguientes técnicas SAT NO puede aplicarse directamente para demostrar que una fórmula es una tautología?",o:["Tablas de verdad","Árboles semánticos","DPLL (tras pasar a FNC, con la regla de la tautología)","Tableaux semánticos"],a:3,e:"Los apuntes lo dicen expresamente: ni Resolución ni Tableaux sirven directamente para tautologías, porque sólo detectan insatisfacibilidad. Para ver que Φ es tautología con tableaux hay que hacer el de ¬Φ."},
+ {t:2,q:"Dada la fbf `(p → q) ∧ (p → r)`, ¿cuál es equivalente?",o:["`(p ∧ q) → r`","`p → (q ∧ r)`","`(p → q) → r`","`p ∨ (¬q ∧ ¬r)`"],a:1,e:"`(¬p ∨ q) ∧ (¬p ∨ r)` ≡ `¬p ∨ (q ∧ r)` (distributiva al revés) ≡ `p → (q ∧ r)`.",w:{0:"`(p ∧ q) → r` ≡ `¬p ∨ ¬q ∨ r`: es otra fórmula.",3:"Tiene p sin negar y q, r negadas: es justo al revés."}},
+ {t:2,q:"Sean C1 y C2 dos fórmulas con la siguiente evaluación:",tbl:{h:["p","q","C1","C2"],r:[["V","V","V","V"],["V","F","V","F"],["F","V","F","F"],["F","F","F","F"]]},o:["`{C1} ⊨ C2`","`{C2} ⊨ C1`","`C1 ≡ C2`","`C1 ∧ ¬C2` es una contradicción"],a:1,e:"En todas las filas donde C2 es V (sólo la 1.ª), C1 también es V: C1 es consecuencia de C2.",w:{0:"Fila 2: C1 = V y C2 = F. Es un contraejemplo.",2:"Valen distinto en la fila 2.",3:"En la fila 2, `C1 ∧ ¬C2` = V ∧ V = V."}},
+ {t:5,q:"La proposición categórica «Algún S no es P» se formaliza como:",o:["`∃x (S(x) ∧ ¬P(x))`","`∃x (S(x) → ¬P(x))`","`∀x (S(x) → ¬P(x))`","`¬∃x (S(x) ∧ P(x))`"],a:0,e:"Es la particular negativa: existe algún elemento que es S y no es P. Con el existencial se usa ∧, no →.",w:{1:"Con ∃ y → la fórmula se cumple con cualquier elemento que no sea S: no dice lo que queremos.",2:"Eso es la universal negativa («ningún S es P»).",3:"Equivale a «ningún S es P» (universal negativa)."}},
+ {t:3,q:"La lógica proposicional L0 es:",o:["Decidible","Semidecidible","Indecidible","Decidible sólo para fórmulas en FNC"],a:0,e:"Siempre hay un número finito de interpretaciones (2ⁿ), así que siempre se puede determinar consistencia e inconsistencia. La lógica de predicados L1 sólo es semidecidible."},
+ {t:2,q:"Si ε es una contradicción y γ es cualquier fórmula, se puede afirmar que:",o:["`⊨ γ → ε`","`⊨ ε ∨ γ`","`⊨ ε ∧ γ`","`⊨ ε → γ`"],a:3,e:"ε es F en todas las interpretaciones; una implicación con antecedente F es siempre V. Por eso `ε → γ` es tautología, sea γ lo que sea.",w:{0:"`γ → ε` ≡ `¬γ`: depende de γ.",1:"`F ∨ γ` ≡ γ: depende de γ.",2:"F ∧ γ = F siempre."}}
+],
+ex:[
+ {kind:"DPLL",pts:0.75,q:ENUN.DPLL,f:"`ε = {p ∨ q, ¬p ∨ r, ¬q ∨ r, ¬r ∨ s, ¬s ∨ ¬r}`",check:Object.assign({a:1},CHK_SAT),sol:{
+   pre:["Forma clausal: `{{p, q}; {¬p, r}; {¬q, r}; {¬r, s}; {¬s, ¬r}}`."],
+   steps:["Regla de la tautología: no se aplica.","Propagación unitaria: no hay cláusulas unitarias.","Literal puro: todos los átomos aparecen con los dos signos → no hay.","Inclusión: ninguna cláusula está contenida en otra.","RAMIFICACIÓN por `r`.",[1,"Rama `r`: `ξ(r) = {{p, q}; {s}; {¬s}}`."],[1,"Unitaria `s`: `ξ(r, s) = {{p, q}; □}` → aparece la cláusula vacía. Backtracking."],[1,"Rama `¬r`: `ξ(¬r) = {{p, q}; {¬p}; {¬q}}`."],[1,"Unitaria `¬p`: `ξ(¬r, ¬p) = {{q}; {¬q}}`."],[1,"Unitaria `q`: `ξ(¬r, ¬p, q) = {□}`."]],
+   end:"Las dos ramas de la ramificación terminan en la cláusula vacía □ → el conjunto es INSATISFACIBLE (no hay modelo)."}},
+ {kind:"Tableaux",pts:2,q:ENUN.TAB,f:"`{p → q ∨ r, ¬r, q → s, p} ⊨ s`",check:Object.assign({a:0},CHK_VAL),sol:{
+   pre:[REFUT,"Por prioridad, `p → q ∨ r` se lee `p → (q ∨ r)`."],
+   tree:{steps:["Raíz: `p → (q ∨ r)`, `¬r`, `q → s`, `p`, `¬s`"],
+     split:{why:"β-fórmula `p → (q ∨ r)` → dos ramas: `¬p` | `q ∨ r`",br:[
+       {lab:"`¬p`",end:{c:1,t:"CERRADA: `p` y `¬p`"}},
+       {lab:"`q ∨ r`",split:{why:"β-fórmula `q ∨ r` → dos ramas: `q` | `r`",br:[
+         {lab:"`q`",split:{why:"β-fórmula `q → s` → dos ramas: `¬q` | `s`",br:[
+           {lab:"`¬q`",end:{c:1,t:"CERRADA: `q` y `¬q`"}},
+           {lab:"`s`",end:{c:1,t:"CERRADA: `s` y `¬s`"}}]}},
+         {lab:"`r`",end:{c:1,t:"CERRADA: `r` y `¬r`"}}]}}]}},
+   end:"Todas las hojas están CERRADAS → la conjunción de premisas y conclusión negada es insatisfacible → el razonamiento es VÁLIDO."}},
+ {kind:"Resolución",pts:1.25,q:ENUN.RES,f:"`{p ∨ q, p → r, q → s, ¬s} ⊨ r`",check:Object.assign({a:0},CHK_RES),sol:{
+   pre:["Premisas a FNC: `p ∨ q`; `p → r` ≡ `¬p ∨ r`; `q → s` ≡ `¬q ∨ s`; `¬s`.","Conclusión negada (conjunto soporte): `¬r`."],
+   fit:[["1","{p, q}","Premisa"],["2","{¬p, r}","Premisa"],["3","{¬q, s}","Premisa"],["4","{¬s}","Premisa"],["5","{¬r}","Conjunto soporte (CS)"],["6","{¬p}","Rr(2, 5) · CS · Subsumida(2) · Puro ¬r (5)"],["7","{q}","Rp(1, 6) · CS · Subsumida(1) · Puro ¬p (6)"],["8","{s}","Rq(3, 7) · CS · Subsumida(3) · Puro q (7)"],["9","□","Rs(4, 8) · CS"]],
+   end:"Llegamos a la cláusula vacía □ → el razonamiento es VÁLIDO."}}
+]},
+/* ---------- EXAMEN 3 ---------- */
+{title:"Simulacro 3",sub:"Mismo formato que el parcial, preguntas nuevas.",
+test:[
+ {t:1,q:"Un razonamiento es válido cuando:",o:["Las premisas y la conclusión son verdaderas.","La conclusión es una tautología.","Si las premisas fueran verdaderas, la conclusión lo sería necesariamente.","Las premisas son satisfacibles."],a:2,e:"Validez = es imposible que las premisas sean V y la conclusión F. No depende de si de hecho lo son.",w:{0:"Premisas y conclusión pueden ser verdaderas sin que la conclusión se siga de las premisas.",1:"No hace falta: sólo tiene que ser V cuando las premisas lo son."}},
+ {t:2,q:"El conjunto F = {`p → q`, `p`, `¬q`} es:",o:["Satisfacible, con ν(p)=V y ν(q)=F","Satisfacible, con ν(p)=F","Insatisfacible","Un conjunto de contradicciones"],a:2,e:"`p` obliga a p=V y `¬q` a q=F; entonces `p → q` = V → F = F. No hay ninguna interpretación que haga V a las tres.",w:{0:"Con esa interpretación `p → q` vale F.",1:"Entonces la fórmula `p` vale F.",3:"Cada fórmula por separado es satisfacible; lo que es insatisfacible es el conjunto."}},
+ {t:4,q:"Dada la fbf `ε = (p ↔ q) ∨ r`, realiza su FNC y selecciona la respuesta correcta:",o:["FNC: `ε = (¬p ∨ q) ∧ (p ∨ ¬q) ∧ r` y es contingente.","FNC: `ε = (p ∨ q ∨ r) ∧ (¬p ∨ ¬q ∨ r)` y es contingente.","FNC: `ε = (¬p ∨ q ∨ r) ∧ (p ∨ ¬q ∨ r)` y es una tautología.","FNC: `ε = (¬p ∨ q ∨ r) ∧ (p ∨ ¬q ∨ r)` y es contingente."],a:3,e:"`p ↔ q` ≡ `(¬p ∨ q) ∧ (¬q ∨ p)`; distributiva con `∨ r`: `(¬p ∨ q ∨ r) ∧ (p ∨ ¬q ∨ r)`. Es F con p=V, q=F, r=F: contingente.",w:{0:"La r tiene que repartirse en cada cláusula, no quedar aparte con ∧.",2:"Con p=V, q=F, r=F vale F: no es tautología."}},
+ {t:3,q:"Una teoría es semidecidible cuando:",o:["Existen procedimientos para determinar la inconsistencia y sólo a veces la consistencia.","Existen procedimientos para determinar tanto la consistencia como la inconsistencia.","No es posible determinar ni la consistencia ni la inconsistencia.","Sólo es posible determinar la consistencia."],a:0,e:"Decidible: ambas. Semidecidible: la inconsistencia sí, la consistencia sólo a veces (es el caso de L1). Indecidible: ninguna.",w:{1:"Eso es decidible.",2:"Eso es indecidible."}},
+ {t:4,q:"En el algoritmo DPLL, tras aplicar la regla de ramificación, una rama llega a la cláusula vacía □. Entonces:",o:["La fórmula es insatisfacible.","Hay que hacer backtracking y probar la otra rama.","La fórmula es una tautología.","Se elimina la cláusula vacía y se sigue propagando."],a:1,e:"Una rama con □ sólo cierra ESA rama. Sólo es insatisfacible si todas las ramas acaban en □.",w:{0:"Sólo si todas las ramas acaban en □ (o no se ha ramificado)."}},
+ {t:2,q:"Dada la fbf `¬(p ∨ ¬q) → r`, ¿cuál es equivalente?",o:["`(¬p ∧ q) ∧ r`","`q → (p ∨ r)`","`¬p ∨ q ∨ r`","`q ∧ ¬p → ¬r`"],a:1,e:"`¬¬(p ∨ ¬q) ∨ r` ≡ `p ∨ ¬q ∨ r`. Y `q → (p ∨ r)` ≡ `¬q ∨ p ∨ r`: la misma.",w:{2:"Cambia los signos de p y q.",3:"Da `¬q ∨ p ∨ ¬r`: r aparece negada."}},
+ {t:2,q:"La fórmula `(p → q) ∨ (q → p)` es:",o:["Contingente","Una contradicción","Una tautología","Insatisfacible"],a:2,e:"`¬p ∨ q ∨ ¬q ∨ p`: contiene `q ∨ ¬q`, así que es siempre V. Curioso pero cierto: de cualquier par de proposiciones, una implica a la otra.",w:{0:"No hay ninguna fila F: para que fuese F haría falta q=F (primera) y q=V (segunda) a la vez."}},
+ {t:5,q:"«Ningún alumno está matriculado» corresponde a la forma normal categórica:",o:["Universal afirmativa","Universal negativa","Particular afirmativa","Particular negativa"],a:1,e:"«Ningún S es P»: `∀x (A(x) → ¬M(x))`, universal negativa. En un diagrama de Euler, los dos círculos no se tocan."},
+ {t:2,q:"«Iré a la playa sólo si hace sol» (p: voy a la playa, q: hace sol) se formaliza como:",o:["`q → p`","`p ↔ q`","`¬q → p`","`p → q`"],a:3,e:"Lo que va detrás de «sólo si» es el consecuente: si he ido a la playa, es que hacía sol.",w:{0:"Esa sería «iré a la playa SI hace sol».",1:"Eso sería «si y sólo si»."}},
+ {t:3,q:"Para validar `{α₁,…,αₙ} ⊨ β` por refutación hay que comprobar que:",o:["`α₁ ∧ … ∧ αₙ ∧ ¬β` es una contradicción.","`α₁ ∧ … ∧ αₙ → β` es una tautología.","`α₁ ∧ … ∧ αₙ ∧ β` es satisfacible.","`¬β` es una tautología."],a:0,e:"Refutación: premisas + conclusión negada; si es imposible que se cumplan a la vez, el razonamiento es válido.",w:{1:"Ese es el planteamiento DIRECTO (también correcto, pero es el otro)."}}
+],
+ex:[
+ {kind:"DPLL",pts:0.75,q:ENUN.DPLL,f:"`ε = {p ∨ q ∨ r, ¬p ∨ ¬q, ¬p ∨ ¬r, ¬q ∨ ¬r, p ∨ ¬q}`",check:Object.assign({a:0},CHK_SAT),sol:{
+   pre:["Forma clausal: `{{p, q, r}; {¬p, ¬q}; {¬p, ¬r}; {¬q, ¬r}; {p, ¬q}}`."],
+   steps:["Regla de la tautología: no se aplica.","Propagación unitaria: no hay cláusulas unitarias.","Literal puro: no hay (p, q y r aparecen con los dos signos).","Inclusión: no hay cláusulas subsumidas.","RAMIFICACIÓN por `q`.",[1,"Rama `q`: `ξ(q) = {{¬p}; {¬p, ¬r}; {¬r}; {p}}`."],[1,"Unitaria `¬p`: `ξ(q, ¬p) = {{¬r}; □}` → cláusula vacía (de `{p}`). Backtracking."],[1,"Rama `¬q`: `ξ(¬q) = {{p, r}; {¬p, ¬r}}`."],[1,"No hay unitarias ni puros → nueva RAMIFICACIÓN por `p`."],[1,"Rama `p`: `ξ(¬q, p) = {{¬r}}`."],[1,"Unitaria `¬r`: `ξ(¬q, p, ¬r) = ∅`."]],
+   end:"Llegamos a ∅ → SATISFACIBLE. Modelo: ν(q)=F, ν(p)=V, ν(r)=F. (Otro modelo válido: ν(q)=F, ν(p)=F, ν(r)=V.)"}},
+ {kind:"Tableaux",pts:2,q:ENUN.TAB,f:"`{p → q, ¬(q ∧ r), r ∨ s} ⊨ ¬p`",check:Object.assign({a:1},CHK_VAL),sol:{
+   pre:[REFUT],
+   tree:{steps:["Raíz: `p → q`, `¬(q ∧ r)`, `r ∨ s`, `¬¬p`","Doble negación: `¬¬p` → `p`."],
+     split:{why:"β-fórmula `p → q` → dos ramas: `¬p` | `q`",br:[
+       {lab:"`¬p`",end:{c:1,t:"CERRADA: `p` y `¬p`"}},
+       {lab:"`q`",split:{why:"β-fórmula `¬(q ∧ r)` → dos ramas: `¬q` | `¬r`",br:[
+         {lab:"`¬q`",end:{c:1,t:"CERRADA: `q` y `¬q`"}},
+         {lab:"`¬r`",split:{why:"β-fórmula `r ∨ s` → dos ramas: `r` | `s`",br:[
+           {lab:"`r`",end:{c:1,t:"CERRADA: `r` y `¬r`"}},
+           {lab:"`s`",end:{t:"ABIERTA. Literales: `p`, `q`, `¬r`, `s`"}}]}}]}}]}},
+   end:"Queda una hoja ABIERTA → el razonamiento NO es válido. Contraejemplo: ν(p)=V, ν(q)=V, ν(r)=F, ν(s)=V (premisas V, conclusión `¬p` = F)."}},
+ {kind:"Resolución",pts:1.25,q:ENUN.RES,f:"`{p → q, r → s, p ∨ r} ⊨ q ∨ s`",check:Object.assign({a:0},CHK_RES),sol:{
+   pre:["Premisas a FNC: `¬p ∨ q`; `¬r ∨ s`; `p ∨ r`.","Conclusión negada: `¬(q ∨ s)` ≡ `¬q ∧ ¬s` → el conjunto soporte tiene DOS cláusulas: `{¬q}` y `{¬s}`."],
+   fit:[["1","{¬p, q}","Premisa"],["2","{¬r, s}","Premisa"],["3","{p, r}","Premisa"],["4","{¬q}","Conjunto soporte (CS)"],["5","{¬s}","Conjunto soporte (CS)"],["6","{¬p}","Rq(1, 4) · CS · Subsumida(1) · Puro ¬q (4)"],["7","{¬r}","Rs(2, 5) · CS · Subsumida(2) · Puro ¬s (5)"],["8","{r}","Rp(3, 6) · CS · Subsumida(3) · Puro ¬p (6)"],["9","□","Rr(7, 8) · CS"]],
+   end:"Llegamos a □ → el razonamiento es VÁLIDO (es el dilema constructivo)."}}
+]},
+/* ---------- EXAMEN 4 ---------- */
+{title:"Simulacro 4",sub:"Mismo formato que el parcial, preguntas nuevas.",
+test:[
+ {t:1,q:"Los componentes de la lógica clásica son:",o:["Alfabeto, retórica, semántica y tablas de verdad.","Un lenguaje formal, una formalización, una semántica y un sistema de demostración axiomática.","Premisas, conclusión, contraejemplo y modelo.","Sintaxis, pragmática, retórica y semántica."],a:1,e:"1) Lenguaje formal (alfabeto + sintaxis → fbf), 2) formalización (del lenguaje natural al formal), 3) semántica (evaluación), 4) sistema de demostración axiomática (equivalencias e implicaciones lógicas)."},
+ {t:2,q:"Si F es un conjunto satisfacible y α es una tautología, entonces F∪{α}:",o:["Podría volverse insatisfacible.","Pasa a ser una tautología.","Sigue siendo satisfacible.","Pasa a ser insatisfacible."],a:2,e:"La tautología es V en todas las interpretaciones, así que no quita ningún modelo: los modelos de F lo siguen siendo.",w:{0:"Eso pasa al añadir una fórmula cualquiera, pero una tautología nunca quita modelos.",1:"El conjunto sólo sería «tautológico» si todas sus fórmulas lo fueran."}},
+ {t:4,q:"Dada la fbf `ε = (p → q) → r`, realiza su FNC y selecciona la respuesta correcta:",o:["FNC: `ε = (p ∨ r) ∧ (¬q ∨ r)` y es contingente.","FNC: `ε = ¬p ∨ q ∨ r` y es contingente.","FNC: `ε = (p ∨ r) ∧ (q ∨ r)` y es contingente.","FNC: `ε = (¬p ∨ r) ∧ (¬q ∨ r)` y es contingente."],a:0,e:"`¬(¬p ∨ q) ∨ r` → De Morgan: `(p ∧ ¬q) ∨ r` → distributiva: `(p ∨ r) ∧ (¬q ∨ r)`.",w:{1:"Eso sería la FNC de `p → (q → r)`. La → no es asociativa.",3:"Al negar `¬p ∨ q` queda `p ∧ ¬q`: p sin negar."}},
+ {t:3,q:"El teorema de la deducción sintáctica permite afirmar que:",o:["Si `{α₁,…,αₙ} ⊢ β`, entonces `{α₁,…,αₙ₋₁} ⊢ αₙ → β`.","Si `{α₁,…,αₙ} ⊢ β`, entonces `⊨ β`.","Toda tautología es un axioma.","`⊢` y `⊨` son el mismo símbolo."],a:0,e:"Una premisa puede pasar a ser el antecedente de la conclusión. En la práctica: para demostrar `α → β`, se añade α como premisa y se deriva β."},
+ {t:4,q:"Sobre el método de Resolución, ¿qué afirmación es correcta?",o:["Permite obtener un modelo de la fórmula.","Sirve para demostrar directamente que una fórmula es una tautología.","No necesita pasar la fórmula a forma clausal.","Si se obtiene la cláusula vacía □, el conjunto de cláusulas es insatisfacible."],a:3,e:"Resolución está pensada para la insatisfacibilidad: si aparece □, el conjunto es insatisfacible. No da interpretaciones y trabaja con forma clausal."},
+ {t:2,q:"Dada la fbf `¬(p → q) ∨ ¬(q → p)`, ¿cuál es equivalente?",o:["`¬p ↔ ¬q`","`(p ∧ q) ∨ (¬p ∧ ¬q)`","`¬(p ↔ q)`","`¬p ∨ ¬q`"],a:2,e:"`(p ∧ ¬q) ∨ (q ∧ ¬p)`: es V justo cuando p y q valen distinto, es decir, `¬(p ↔ q)`.",w:{0:"`¬p ↔ ¬q` ≡ `p ↔ q`: justo lo contrario.",1:"Eso es `p ↔ q`."}},
+ {t:2,q:"Sean α y β dos fórmulas con la siguiente evaluación:",tbl:{h:["p","q","α","β"],r:[["V","V","V","V"],["V","F","F","V"],["F","V","V","V"],["F","F","V","F"]]},o:["`α ∧ β` es una contradicción","`{α} ⊨ β`","`α ≡ β`","`α ∨ β` es una tautología"],a:3,e:"En cada fila, al menos una de las dos vale V (fila 2: β; fila 4: α), así que `α ∨ β` es siempre V. (α es `p → q` y β es `p ∨ q`.)",w:{0:"En la fila 1 ambas valen V.",1:"Fila 4: α = V y β = F.",2:"Valen distinto en las filas 2 y 4."}},
+ {t:5,q:"Dado el conjunto A = {2, {3}, 3, {5}}, ¿cuál de estas afirmaciones es FALSA?",o:["`2 ∈ A`","`{2} ⊆ A`","`{2} ∈ A`","`{5} ∈ A`"],a:2,e:"Los elementos de A son 2, {3}, 3 y {5}. El conjunto {2} no es uno de ellos (∈ falso), aunque sí es un subconjunto porque 2 ∈ A (⊆ verdadero).",w:{1:"Es verdadera: todo elemento de {2} (el 2) pertenece a A.",3:"Es verdadera: {5} aparece tal cual como elemento de A."}},
+ {t:2,q:"«Es necesario estudiar para aprobar» (p: estudio, q: apruebo) se formaliza como:",o:["`p → q`","`q → p`","`p ∧ q`","`p ↔ q`"],a:1,e:"Lo necesario va a la derecha: si apruebo, es que he estudiado. Estudiar no garantiza aprobar.",w:{0:"Eso diría que estudiar es SUFICIENTE para aprobar."}},
+ {t:3,q:"Si el conjunto de premisas {α₁,…,αₙ} es insatisfacible, entonces:",o:["No se sigue ninguna conclusión.","Sólo se siguen tautologías.","`{α₁,…,αₙ} ⊨ β` para cualquier fórmula β.","`α₁ ∧ … ∧ αₙ → β` es una contradicción."],a:2,e:"No hay ninguna interpretación con todas las premisas V, así que nunca hay contraejemplo: se sigue cualquier β (ley de inconsistencia).",w:{3:"Al revés: con antecedente siempre F, la implicación es siempre V (tautología)."}}
+],
+ex:[
+ {kind:"DPLL",pts:0.75,q:"Transforma la siguiente fórmula a forma clausal y aplica la técnica de DPLL, explicando las reglas que se van aplicando, para indicar si es satisfacible. En caso de serlo, indica un modelo.",f:"`φ = (p → q) ∧ (q → r ∨ s) ∧ (r → ¬p) ∧ p`",check:Object.assign({a:0},CHK_SAT),sol:{
+   pre:["`p → q` ≡ `¬p ∨ q`; `q → (r ∨ s)` ≡ `¬q ∨ r ∨ s`; `r → ¬p` ≡ `¬r ∨ ¬p`.","Forma clausal: `{{¬p, q}; {¬q, r, s}; {¬r, ¬p}; {p}}`."],
+   steps:["Regla de la tautología: no se aplica.","Unitaria `p`: `ξ(p) = {{q}; {¬q, r, s}; {¬r}}`.","Unitaria `q`: `ξ(p, q) = {{r, s}; {¬r}}`.","Unitaria `¬r`: `ξ(p, q, ¬r) = {{s}}`.","Unitaria `s`: `ξ(p, q, ¬r, s) = ∅`."],
+   end:"Llegamos a ∅ sin necesidad de ramificar → SATISFACIBLE. Modelo: ν(p)=V, ν(q)=V, ν(r)=F, ν(s)=V."}},
+ {kind:"Tableaux",pts:2,q:ENUN.TAB,f:"`{p ↔ q, q → r, ¬r} ⊨ ¬p`",check:Object.assign({a:0},CHK_VAL),sol:{
+   pre:[REFUT],
+   tree:{steps:["Raíz: `p ↔ q`, `q → r`, `¬r`, `¬¬p`","Doble negación: `¬¬p` → `p`.","α-fórmula `p ↔ q` → en el mismo nodo: `p → q`, `q → p`."],
+     split:{why:"β-fórmula `p → q` → dos ramas: `¬p` | `q`",br:[
+       {lab:"`¬p`",end:{c:1,t:"CERRADA: `p` y `¬p`"}},
+       {lab:"`q`",split:{why:"β-fórmula `q → r` → dos ramas: `¬q` | `r`",br:[
+         {lab:"`¬q`",end:{c:1,t:"CERRADA: `q` y `¬q`"}},
+         {lab:"`r`",end:{c:1,t:"CERRADA: `r` y `¬r`"}}]}}]}},
+   end:"Todas las hojas CERRADAS (no hace falta descomponer `q → p`) → el razonamiento es VÁLIDO."}},
+ {kind:"Resolución",pts:1.25,q:ENUN.RES,f:"`{¬p ∨ q, ¬(q ∧ ¬r), ¬r ∨ s} ⊨ p → s`",check:Object.assign({a:0},CHK_RES),sol:{
+   pre:["Premisas a FNC: `¬p ∨ q`; `¬(q ∧ ¬r)` ≡ `¬q ∨ r`; `¬r ∨ s`.","Conclusión negada: `¬(p → s)` ≡ `p ∧ ¬s` → conjunto soporte: `{p}` y `{¬s}`."],
+   fit:[["1","{¬p, q}","Premisa"],["2","{¬q, r}","Premisa"],["3","{¬r, s}","Premisa"],["4","{p}","Conjunto soporte (CS)"],["5","{¬s}","Conjunto soporte (CS)"],["6","{q}","Rp(1, 4) · CS · Subsumida(1) · Puro p (4)"],["7","{r}","Rq(2, 6) · CS · Subsumida(2) · Puro q (6)"],["8","{s}","Rr(3, 7) · CS · Subsumida(3) · Puro r (7)"],["9","□","Rs(5, 8) · CS"]],
+   end:"Llegamos a □ → el razonamiento es VÁLIDO."}}
+]},
+/* ---------- EXAMEN 5 ---------- */
+{title:"Simulacro 5",sub:"Mismo formato que el parcial, preguntas nuevas.",
+test:[
+ {t:1,q:"Una proposición es:",o:["Cualquier oración del lenguaje natural.","Una pregunta cuya respuesta es sí o no.","Un enunciado con términos referenciales.","Una fórmula mal formada."],a:2,e:"Oración (entidad lingüística) → enunciado (declarativa con pretensión de verdad) → proposición (enunciado con términos referenciales).",w:{1:"Una pregunta no es declarativa: no es verdadera ni falsa."}},
+ {t:2,q:"El conjunto F = {`p ∨ q`, `¬p`, `¬q ∨ r`} es:",o:["Insatisfacible","Satisfacible, con un único modelo: ν(p)=F, ν(q)=V, ν(r)=V","Satisfacible, con ν(p)=V","Una tautología"],a:1,e:"`¬p` obliga a p=F; entonces `p ∨ q` obliga a q=V; y `¬q ∨ r` obliga a r=V. Sólo queda una interpretación posible.",w:{2:"`¬p` sería F."}},
+ {t:4,q:"Dada la fbf `ε = ¬(p ∨ q) ∨ (p ∧ r)`, realiza su FNC y selecciona la respuesta correcta:",o:["FNC: `ε = (¬p ∨ r) ∧ (p ∨ ¬q) ∧ (¬q ∨ r)` y es una tautología.","FNC: `ε = (¬p ∨ ¬q) ∧ (p ∨ r)` y es contingente.","FNC: `ε = (p ∨ q) ∧ (¬p ∨ ¬r)` y es contingente.","FNC: `ε = (¬p ∨ r) ∧ (p ∨ ¬q) ∧ (¬q ∨ r)` y es contingente."],a:3,e:"`(¬p ∧ ¬q) ∨ (p ∧ r)` → distributiva: `(¬p ∨ p) ∧ (¬p ∨ r) ∧ (¬q ∨ p) ∧ (¬q ∨ r)` → la cláusula `¬p ∨ p` es V y se elimina. Con p=V, r=F vale F: contingente.",w:{0:"La FNC es correcta, pero con p=V, r=F vale F."}},
+ {t:3,q:"Una teoría es inconsistente si:",o:["En ella se puede demostrar una fórmula y su negación.","No tiene ningún teorema.","No es axiomatizable.","Es completa."],a:0,e:"Consistente: puede demostrarse β o ¬β, pero no las dos. Si se demuestran ambas, se sigue cualquier cosa."},
+ {t:4,q:"Si TODOS los nodos hoja de un árbol semántico son nodos FALLO, la fórmula es:",o:["Una tautología","Satisfacible","Contingente","Insatisfacible (contradicción)"],a:3,e:"Ninguna interpretación la hace V. Resumen: algún éxito → satisfacible; todos éxito → tautología; algún fallo → falseable; todos fallo → contradicción."},
+ {t:2,q:"¿Cuál de las siguientes fórmulas NO es equivalente a `p → q`?",o:["`¬q → ¬p`","`q → p`","`¬p ∨ q`","`¬(p ∧ ¬q)`"],a:1,e:"`q → p` es la recíproca: difiere con p=V, q=F (la original es F y la recíproca V). Las demás son contraposición, interdefinición y su forma con ∧.",w:{0:"Es la contrarrecíproca: sí es equivalente.",3:"`¬(p ∧ ¬q)` ≡ `¬p ∨ q`: sí es equivalente."}},
+ {t:4,q:"En un tableau semántico, la fórmula `¬(p ↔ q)` es:",o:["Una α-fórmula con componentes `p → q` y `q → p`","Una β-fórmula con ramas `¬(p → q)` | `¬(q → p)`","Una β-fórmula con ramas `p` | `q`","Un literal"],a:1,e:"`¬(p ↔ q)` ≡ `¬((p → q) ∧ (q → p))` ≡ `¬(p → q) ∨ ¬(q → p)`: comportamiento disyuntivo, una componente en cada rama.",w:{0:"Esa es la descomposición de `p ↔ q` (sin negar)."}},
+ {t:5,q:"«Todos los alumnos llegan puntuales» (A: alumno, P: llega puntual) se formaliza como:",o:["`∀x (A(x) ∧ P(x))`","`∃x (A(x) ∧ P(x))`","`∀x (A(x) → P(x))`","`∃x (A(x) → P(x))`"],a:2,e:"Universal afirmativa: todo lo que es alumno llega puntual. Con ∀ se usa →; con ∃, ∧.",w:{0:"Eso diría que TODO el universo son alumnos puntuales."}},
+ {t:2,q:"¿Cuántas interpretaciones tiene la fórmula `(p → q) ∧ (r ∨ ¬s) ∧ p`?",o:["8","12","16","4"],a:2,e:"Tiene 4 átomos distintos (p, q, r, s) → 2⁴ = 16. Que p aparezca dos veces no cuenta doble."},
+ {t:2,q:"Si ε es una tautología y γ es cualquier fórmula, se puede afirmar que:",o:["`⊨ γ → ε`","`⊨ ε → γ`","`⊨ ε ∧ γ`","`⊨ ¬ε ∨ γ`"],a:0,e:"El consecuente ε es siempre V, y una implicación con consecuente V es siempre V.",w:{1:"`V → γ` ≡ γ: depende de γ.",2:"`V ∧ γ` ≡ γ: depende de γ.",3:"`F ∨ γ` ≡ γ: depende de γ."}}
+],
+ex:[
+ {kind:"DPLL",pts:0.75,q:ENUN.DPLL,f:"`ε = {p ∨ q, p ∨ q ∨ ¬r, ¬p ∨ r, ¬q ∨ ¬r, ¬p ∨ ¬q}`",check:Object.assign({a:0},CHK_SAT),sol:{
+   pre:["Forma clausal: `{{p, q}; {p, q, ¬r}; {¬p, r}; {¬q, ¬r}; {¬p, ¬q}}`."],
+   steps:["Regla de la tautología: no se aplica.","Propagación unitaria: no hay cláusulas unitarias.","Literal puro: no hay.","Regla de INCLUSIÓN: `{p, q} ⊆ {p, q, ¬r}` → eliminamos `{p, q, ¬r}`. Queda `{{p, q}; {¬p, r}; {¬q, ¬r}; {¬p, ¬q}}`.","Sigue sin haber unitarias ni puros → RAMIFICACIÓN por `p`.",[1,"Rama `p`: `ξ(p) = {{r}; {¬q, ¬r}; {¬q}}`."],[1,"Unitaria `r`: `ξ(p, r) = {{¬q}}`."],[1,"Unitaria `¬q`: `ξ(p, r, ¬q) = ∅`."]],
+   end:"Llegamos a ∅ → SATISFACIBLE. Modelo: ν(p)=V, ν(r)=V, ν(q)=F."}},
+ {kind:"Tableaux",pts:2,q:ENUN.TAB,f:"`{p → q ∨ r, ¬q, ¬(s ∧ r)} ⊨ ¬p`",check:Object.assign({a:1},CHK_VAL),sol:{
+   pre:[REFUT,"Por prioridad, `p → q ∨ r` se lee `p → (q ∨ r)`."],
+   tree:{steps:["Raíz: `p → (q ∨ r)`, `¬q`, `¬(s ∧ r)`, `¬¬p`","Doble negación: `¬¬p` → `p`."],
+     split:{why:"β-fórmula `p → (q ∨ r)` → dos ramas: `¬p` | `q ∨ r`",br:[
+       {lab:"`¬p`",end:{c:1,t:"CERRADA: `p` y `¬p`"}},
+       {lab:"`q ∨ r`",split:{why:"β-fórmula `q ∨ r` → dos ramas: `q` | `r`",br:[
+         {lab:"`q`",end:{c:1,t:"CERRADA: `q` y `¬q`"}},
+         {lab:"`r`",split:{why:"β-fórmula `¬(s ∧ r)` → dos ramas: `¬s` | `¬r`",br:[
+           {lab:"`¬s`",end:{t:"ABIERTA. Literales: `p`, `¬q`, `r`, `¬s`"}},
+           {lab:"`¬r`",end:{c:1,t:"CERRADA: `r` y `¬r`"}}]}}]}}]}},
+   end:"Queda una hoja ABIERTA → el razonamiento NO es válido. Contraejemplo: ν(p)=V, ν(q)=F, ν(r)=V, ν(s)=F."}},
+ {kind:"Resolución",pts:1.25,q:ENUN.RES,f:"`{p → q, q → r, r → s, p ∨ t, t → s} ⊨ s`",check:Object.assign({a:0},CHK_RES),sol:{
+   pre:["Premisas a FNC: `¬p ∨ q`; `¬q ∨ r`; `¬r ∨ s`; `p ∨ t`; `¬t ∨ s`.","Conclusión negada (conjunto soporte): `¬s`."],
+   fit:[["1","{¬p, q}","Premisa"],["2","{¬q, r}","Premisa"],["3","{¬r, s}","Premisa"],["4","{p, t}","Premisa"],["5","{¬t, s}","Premisa"],["6","{¬s}","Conjunto soporte (CS)"],["7","{¬r}","Rs(3, 6) · CS · Subsumida(3)"],["8","{¬t}","Rs(5, 6) · CS · Subsumida(5) · Puro ¬s (6)"],["9","{¬q}","Rr(2, 7) · CS · Subsumida(2) · Puro ¬r (7)"],["10","{p}","Rt(4, 8) · CS · Subsumida(4) · Puro ¬t (8)"],["11","{¬p}","Rq(1, 9) · CS · Subsumida(1) · Puro ¬q (9)"],["12","□","Rp(10, 11) · CS"]],
+   end:"Llegamos a □ → el razonamiento es VÁLIDO. Fíjate en el paso 7: `¬s` todavía no es puro porque `s` sigue en la cláusula 5; sólo lo es tras el paso 8."}}
+]}
+];
+
+function fmtN(n){ return (Math.round(n*100)/100).toFixed(2).replace(".",","); }
+function examParts(X){
+  if(X.id===0) return {title:"Examen aleatorio",test:X.pick.test.map(([e,i])=>EXAMS[e].test[i]),ex:X.pick.ex.map(([e,i])=>EXAMS[e].ex[i])};
+  const E=EXAMS[X.id-1]; return {title:E.title,test:E.test,ex:E.ex};
+}
+function startExam(id,fresh){
+  if(!fresh&&S.exam&&!S.exam.done&&S.exam.id===id){ S.view="exam"; render(); window.scrollTo(0,0); return; }
+  const X={id,ans:new Array(10).fill(null),res:[null,null,null],self:[null,null,null],done:false,t0:Date.now(),el:0};
+  if(id===0){
+    const all=[]; EXAMS.forEach((E,e)=>E.test.forEach((_,i)=>all.push([e,i])));
+    X.pick={test:shuffle(all).slice(0,10),ex:[0,1,2].map(k=>[Math.floor(Math.random()*EXAMS.length),k])};
+  }
+  S.exam=X; S.view="exam"; render(); window.scrollTo(0,0);
+}
+function elapsed(){ const X=S.exam; if(!X) return 0; return X.done? X.el : Date.now()-X.t0; }
+function clock(ms){ const s=Math.floor(ms/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60), ss=s%60; return (h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(ss).padStart(2,"0"); }
+setInterval(()=>{ if(S.view==="exam"){ const t=document.getElementById("timer"); if(t) t.textContent="⏱ "+clock(elapsed()); } },1000);
+
+function tblHTML(t){ return `<div class="tw" style="align-self:center"><table class="t qtbl"><thead><tr>${t.h.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${t.r.map(r=>`<tr>${r.map(c=>`<td class="tv ${c==="V"?"tv-v":"tv-f"}">${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`; }
+function gridHTML(X,P,graded){
+  return `<div class="ansgrid" aria-label="Cuadro de respuestas">${P.test.map((q,k)=>{
+    const a=X.ans[k]; let cls="v";
+    if(graded) cls+= a==null?" blank":a===q.a?" ok":" bad";
+    return `<a href="#eq${k}"><span class="n">${k+1}</span><span class="${cls}">${a==null?(graded?"–":""):LETTERS[a]}</span></a>`;
+  }).join("")}</div>`;
+}
+function examLabel(X){ return X.id===0?"Examen aleatorio":X.id===1?"Examen 1 · real":"Examen "+X.id; }
+
+function examView(){
+  const X=S.exam, P=examParts(X);
+  const answered=X.ans.filter(a=>a!=null).length;
+  app.innerHTML=`
+  <div class="qhead"><div><span class="eyebrow">${examLabel(X)} · Fundamentos Lógicos de la Informática</span><h2>${esc(P.title)}</h2></div>
+    <div class="qtools"><span class="timer" id="timer">⏱ ${clock(elapsed())}</span><button class="btn ghost" id="exquit">Salir</button></div></div>
+  <p class="callout rules"><b>Test de teoría (6 puntos):</b> cada acierto vale 0,6 y cada fallo resta 0,2; en blanco no resta. Pulsa otra vez una respuesta para dejarla en blanco.<br><b>Ejercicios (4 puntos):</b> resuélvelos en papel. Al entregar verás la solución paso a paso y te puntuarás tú.<br><span class="muted">Si sales, tus respuestas se guardan y puedes continuar luego.</span></p>
+  <section class="sheet" style="gap:14px">
+    <h3>Test de teoría</h3>
+    <div id="grid">${gridHTML(X,P,false)}</div>
+    ${P.test.map((q,k)=>`<article class="qcard" id="eq${k}">
+      <p class="qtext"><span class="qn">${k+1}.</span>${fx(q.q)}</p>${q.tbl?tblHTML(q.tbl):""}
+      <div class="opts">${q.o.map((o,j)=>`<button class="opt${X.ans[k]===j?" sel":""}" aria-pressed="${X.ans[k]===j}" data-q="${k}" data-k="${j}"><span class="k">${LETTERS[j]}</span><span class="t">${fx(o)}</span></button>`).join("")}</div>
+    </article>`).join("")}
+    <h3 style="margin-top:12px">Ejercicios de teoría</h3>
+    ${P.ex.map((e,k)=>`<article class="qcard">
+      <div class="exh"><span class="eyebrow">Ejercicio ${k+1} · ${e.kind}</span><span class="pts">${fmtN(e.pts)} puntos</span></div>
+      <p style="margin:0">${fx(e.q)}</p><p class="bigf">${fx(e.f)}</p>
+      <p class="muted" style="margin:0">Hazlo en papel. Cuando acabes, marca el resultado que te ha salido:</p>
+      <div class="opts row">${e.check.o.map((o,j)=>`<button class="opt${X.res[k]===j?" sel":""}" aria-pressed="${X.res[k]===j}" data-x="${k}" data-k="${j}"><span class="k">${LETTERS[j]}</span><span class="t">${fx(o)}</span></button>`).join("")}</div>
+    </article>`).join("")}
+  </section>
+  <div class="actions"><span class="muted" id="count">${answered} de 10 preguntas respondidas</span><button class="btn" id="submit">Entregar examen</button></div>`;
+  app.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.q, j=+b.dataset.k; X.ans[k]= X.ans[k]===j? null : j;
+    b.parentElement.querySelectorAll(".opt").forEach(o=>{const on=X.ans[k]===+o.dataset.k; o.classList.toggle("sel",on); o.setAttribute("aria-pressed",on);});
+    document.getElementById("grid").innerHTML=gridHTML(X,P,false);
+    document.getElementById("count").textContent=X.ans.filter(a=>a!=null).length+" de 10 preguntas respondidas";
+  });
+  app.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.x, j=+b.dataset.k; X.res[k]= X.res[k]===j? null : j;
+    b.parentElement.querySelectorAll(".opt").forEach(o=>{const on=X.res[k]===+o.dataset.k; o.classList.toggle("sel",on); o.setAttribute("aria-pressed",on);});
+  });
+  document.getElementById("exquit").onclick=()=>{ S.view="home"; render(); window.scrollTo(0,0); };
+  document.getElementById("submit").onclick=()=>{ X.el=Date.now()-X.t0; X.done=true; S.view="examres"; render(); window.scrollTo(0,0); };
+}
+
+function examGrade(){
+  const X=S.exam, P=examParts(X); let ok=0,bad=0,blank=0;
+  P.test.forEach((q,k)=>{const a=X.ans[k]; if(a==null) blank++; else if(a===q.a) ok++; else bad++;});
+  const test=Math.max(0,ok*0.6-bad*0.2);
+  let exs=0,pending=0; P.ex.forEach((e,k)=>{const s=X.self[k]; if(s==null) pending++; else exs+=s*e.pts;});
+  return {ok,bad,blank,test,exs,pending,total:test+exs};
+}
+function branchHTML(b){
+  return `<div class="br">${b.lab?`<div class="blab">${fx(b.lab)}</div>`:""}${(b.steps||[]).map(s=>`<div class="bstep">${fx(s)}</div>`).join("")}${b.split?`<div class="bsplit">${fx(b.split.why)}</div><div class="kids">${b.split.br.map(branchHTML).join("")}</div>`:""}${b.end?`<div class="bend ${b.end.c?"closed":"open"}">${b.end.c?"✘ ":"○ "}${fx(b.end.t)}</div>`:""}</div>`;
+}
+function solHTML(e){
+  const s=e.sol; let h=`<div class="solbox"><h4>Solución paso a paso</h4>`;
+  if(s.pre) h+=`<ul class="solpre">${s.pre.map(x=>`<li>${fx(x)}</li>`).join("")}</ul>`;
+  if(s.steps){ let first=true; h+=`<ol class="steps">${s.steps.map(x=>{ if(Array.isArray(x)){ const lab=x[1].startsWith("Rama")?" first":""; return `<li class="lv1${lab}">${fx(x[1])}</li>`; } return `<li>${fx(x)}</li>`; }).join("")}</ol>`; }
+  if(s.tree) h+=`<div class="tree">${branchHTML(s.tree)}</div>`;
+  if(s.fit) h+=`<div class="tw"><table class="t fit"><thead><tr><th>#</th><th>Cláusula</th><th>Justificación</th></tr></thead><tbody>${s.fit.map(([n,c,j])=>`<tr><td>${n}</td><td><code class="f">${paint(esc(c))}</code></td><td>${fx(j).replace(/\bR([a-z])\(/g,"R<sub>$1</sub>(")}</td></tr>`).join("")}</tbody></table></div>`;
+  h+=`<p class="callout">${fx(s.end)}</p></div>`;
+  return h;
+}
+
+function examResults(){
+  const X=S.exam, P=examParts(X), g=examGrade();
+  if(g.pending===0){ const key="fli-exam-best-"+X.id, prev=store(key); if(prev==null||g.total>prev) store(key,Math.round(g.total*100)/100); }
+  const msg = g.pending? "Examen entregado: puntúa tus ejercicios abajo" : g.total>=9?"Sobresaliente. Estás listo.":g.total>=7?"Notable. Repasa los fallos y listo.":g.total>=5?"Aprobado. Repasa los fallos para ir más seguro.":"Suspenso por ahora: revisa las explicaciones y vuelve a intentarlo.";
+  const testHTML=P.test.map((q,k)=>{
+    const a=X.ans[k], st=a==null?"blank":a===q.a?"ok":"bad";
+    const verdict=st==="ok"?"✔ Correcta · +0,6":st==="bad"?`✘ Incorrecta · −0,2 · la correcta es la ${LETTERS[q.a]}`:`– En blanco · 0 · la correcta es la ${LETTERS[q.a]}`;
+    return `<article class="qcard" id="eq${k}">
+      <span class="tag kbd">Pregunta ${k+1} · Tema ${q.t}</span>
+      <p class="qtext"><span class="qn">${k+1}.</span>${fx(q.q)}</p>${q.tbl?tblHTML(q.tbl):""}
+      <div class="opts">${q.o.map((o,j)=>`<button class="opt ${j===q.a?"correct":j===a?"wrong":"dim"}" disabled><span class="k">${LETTERS[j]}</span><span class="t">${fx(o)}</span></button>`).join("")}</div>
+      <p class="verdict-line ${st}" style="margin:0">${verdict}</p>
+      <p style="margin:0">${fx(q.e)}</p>
+      ${a!=null&&a!==q.a&&q.w&&q.w[a]?`<p class="muted" style="margin:0"><b>Por qué la ${LETTERS[a]} no:</b> ${fx(q.w[a])}</p>`:""}
+    </article>`;
+  }).join("");
+  const exHTML=P.ex.map((e,k)=>{
+    const r=X.res[k], okr=r===e.check.a;
+    const levels=[[1,`Todo bien · ${fmtN(e.pts)}`],[0.5,`Resultado bien, pero con fallos en el procedimiento · ${fmtN(e.pts/2)}`],[0,"Mal o en blanco · 0"]];
+    return `<article class="qcard">
+      <div class="exh"><span class="eyebrow">Ejercicio ${k+1} · ${e.kind}</span><span class="pts">${fmtN(e.pts)} puntos</span></div>
+      <p style="margin:0">${fx(e.q)}</p><p class="bigf">${fx(e.f)}</p>
+      <p class="verdict-line ${r==null?"blank":okr?"ok":"bad"}" style="margin:0">${r==null?"No marcaste resultado. ":okr?"✔ Tu resultado es correcto: ":"✘ Tu resultado no es correcto. "}${r==null||!okr?"Resultado correcto: ":""}${esc(e.check.o[e.check.a])}</p>
+      ${solHTML(e)}
+      <div class="selfg"><b>¿Cuánto te pondrías?</b><span class="muted" style="font-size:14px">Compara con la solución: ¿has nombrado cada regla aplicada (tautología, unitaria, literal puro, inclusión, ramificación · α/β · subsumida/puro) y has dado el modelo o el contraejemplo cuando tocaba? Si el resultado final está mal, no te pongas más de la mitad.</span>
+        <div class="opts">${levels.map(([v,l])=>`<button class="opt${X.self[k]===v?" sel":""}" aria-pressed="${X.self[k]===v}" data-self="${k}" data-v="${v}"><span class="k">${v===1?"✔":v===0.5?"½":"✘"}</span><span class="t">${l}</span></button>`).join("")}</div></div>
+    </article>`;
+  }).join("");
+  app.innerHTML=`
+  <div class="qhead"><div><span class="eyebrow">${examLabel(X)} · corrección</span><h2>${msg}</h2></div></div>
+  <section class="score">
+    <div class="big">${g.pending?fmtN(g.test+g.exs):fmtN(g.total)}<small> / 10</small></div>
+    <div class="stats">
+      <div><b>${fmtN(g.test)}</b><span>Test / 6</span></div>
+      <div><b>${g.pending?`<span class="pending">${3-g.pending} de 3</span>`:fmtN(g.exs)}</b><span>${g.pending?"Ejercicios puntuados":"Ejercicios / 4"}</span></div>
+      <div><b>${g.ok}·${g.bad}·${g.blank}</b><span>Aciertos · fallos · blanco</span></div>
+      <div><b>${clock(elapsed())}</b><span>Tiempo</span></div>
+    </div>
+    <p class="muted" style="margin:0;font-size:14px;flex-basis:100%">${g.pending?"La nota es provisional hasta que puntúes los 3 ejercicios.":"Test: aciertos × 0,6 − fallos × 0,2. Ejercicios: tu autoevaluación."}</p>
+  </section>
+  ${gridHTML(X,P,true)}
+  <div class="actions" style="justify-content:flex-start">
+    <button class="btn" id="exagain">${X.id===0?"Otro examen aleatorio":"Repetir este examen"}</button>
+    <button class="btn ghost" id="excheat">Repasar con las chuletas</button>
+    <button class="btn ghost" id="exhome">Volver al inicio</button>
+  </div>
+  <section class="sheet" style="gap:14px"><h3>Parte 1 · Test de teoría</h3>${testHTML}<h3 style="margin-top:12px">Parte 2 · Ejercicios</h3>${exHTML}</section>`;
+  app.querySelectorAll("[data-self]").forEach(b=>b.onclick=()=>{ const y=window.scrollY; X.self[+b.dataset.self]=+b.dataset.v; examResults(); window.scrollTo(0,y); });
+  document.getElementById("exagain").onclick=()=>startExam(X.id,true);
+  document.getElementById("excheat").onclick=()=>openSheets("examres");
+  document.getElementById("exhome").onclick=()=>{ S.view="home"; render(); window.scrollTo(0,0); };
+}
+
+/* Teclado */
+document.addEventListener("keydown",e=>{
+  if(S.view!=="quiz"||e.altKey||e.ctrlKey||e.metaKey) return;
+  const q=S.qs[S.i]; const answered=S.ans[S.i]!==undefined;
+  if(!answered){
+    let k=-1; const key=e.key.toUpperCase();
+    if(/^[1-5]$/.test(key)) k=parseInt(key,10)-1; else if(LETTERS.includes(key)) k=LETTERS.indexOf(key);
+    if(k>=0&&k<q.o.length){e.preventDefault();answer(k);} else if(key==="0"){e.preventDefault();answer(null);}
+  } else if(e.key==="Enter"){ if(document.activeElement&&document.activeElement.id&&document.activeElement.id!=="next"&&document.activeElement.tagName==="BUTTON") return; e.preventDefault(); next(); }
+});
+
+/* Conserva el progreso si la página se actualiza mientras estás haciendo un test */
+window.claude?.hot?.snapshot?.(()=>({S}));
+function boot(data){
+  if(data&&data.S&&data.S.view){
+    Object.assign(S,data.S);
+    (S.qs||[]).forEach(q=>{ if(q.id==null&&q.src) q.id=q.src.id; });
+    const needsQs = S.view==="quiz"||S.view==="results"||(S.view==="sheets"&&(S.from==="quiz"||S.from==="results"));
+    if(needsQs&&(!S.qs||!S.qs.length||S.qs.some(q=>q.id==null))){ if(S.view==="sheets") S.from="home"; else S.view="home"; }
+    const needsExam = S.view==="exam"||S.view==="examres"||(S.view==="sheets"&&S.from==="examres");
+    if(needsExam&&!S.exam){ if(S.view==="sheets") S.from="home"; else S.view="home"; }
+  }
+  render();
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+</script>
+
+</body>
+</html>
