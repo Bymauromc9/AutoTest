@@ -1,0 +1,44 @@
+/* nav.css — barra superior común (la genera assets/js/core.js).
+   Es autosuficiente: define sus propios colores para poder usarse también en páginas
+   que tienen su propia hoja de estilos (Equivalencias, Ejercicios). */
+.site-nav {
+  --sn-ink: #15202C; --sn-muted: #5A6573; --sn-line: #D7DDE4; --sn-surface: #FFFFFF; --sn-accent: #27467A; --sn-accent-ink: #FFFFFF;
+  font-family: "Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--sn-ink);
+  border-bottom: 1px solid var(--sn-line);
+  margin: 0 auto 24px;
+  max-width: 1180px;
+  padding: 0 0 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-nav { --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-accent: #93B4E6; --sn-accent-ink: #10151B; }
+}
+:root[data-theme="dark"] .site-nav { --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-accent: #93B4E6; --sn-accent-ink: #10151B; }
+
+.site-nav__inner { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; }
+.site-nav__crumbs { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; font-size: 15px; }
+.site-nav a { color: inherit; text-decoration: none; }
+.site-nav a:hover { color: var(--sn-accent); }
+.site-nav a:focus-visible, .site-nav button:focus-visible { outline: 3px solid var(--sn-accent); outline-offset: 2px; border-radius: 6px; }
+.site-nav__home { display: inline-flex; align-items: center; gap: 6px; color: var(--sn-muted) !important; font-weight: 600; }
+.site-nav__home span[aria-hidden] { font-size: 18px; line-height: 1; }
+.site-nav__sep { color: var(--sn-line); }
+.site-nav__subject { font-weight: 800; font-size: 17px; }
+.site-nav__page { color: var(--sn-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.site-nav__tabs { display: inline-flex; background: var(--sn-surface); border: 1px solid var(--sn-line); border-radius: 999px; padding: 3px; gap: 2px; }
+.site-nav__tabs a { border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 15px; color: var(--sn-muted); }
+.site-nav__tabs a[aria-current="true"] { background: var(--sn-accent); color: var(--sn-accent-ink) !important; }
+.site-nav__theme {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--sn-line);
+  background: var(--sn-surface); color: var(--sn-ink); font: 18px/1 system-ui, sans-serif; cursor: pointer;
+  display: grid; place-items: center;
+}
+.site-nav__theme:hover { border-color: var(--sn-accent); }
+@media (max-width: 600px) {
+  .site-nav__label, .site-nav__page, .site-nav__sep:has(+ .site-nav__page) { display: none; }
+  .site-nav__tabs a { padding: 6px 12px; }
+}
+/* Enlace «Saltar al contenido» (accesibilidad): invisible hasta que recibe el foco con el teclado. */
+.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 50; padding: 8px 12px; border-radius: 6px; background: #27467A; color: #fff; font: 600 15px system-ui, sans-serif; }
+.skip-link:focus { left: 16px; }
+@media print { .site-nav, .skip-link { display: none; } }
