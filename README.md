@@ -47,6 +47,22 @@ fli/                        Fundamentos Lógicos de la Informática
       banco.js              Banco de preguntas del autotest
       examenes.js           Exámenes completos
       chuletas.js           Contenido de las chuletas y tarjetas
+fc/                         Fundamentos de Computadores (temas 1–6)
+  index.html                Portada de FC: Teoría y Prácticas, con el progreso guardado
+  teoria/
+    guia.html               Guía de teoría de los seis temas y formulario (enlazable: guia.html#t3-2)
+    autotest.html           Tests por tema (266 preguntas) y test general
+  practicas/
+    guia.html               Boletines 1–6 explicados, 43 ejercicios resueltos y dos herramientas
+                            (mini-okteta en #p2-3 y calculadora de red en #p6-2)
+  css/
+    fc.css                  Componentes del autotest
+    guia.css                Guías con índice lateral, cajas, mapas de Karnaugh y herramientas
+    inicio.css              Portada de FC
+  js/
+    util.js                 FC.fmt y FC.LETTERS
+    autotest.js · inicio.js · guia.js · herramientas.js
+    data/banco.js           Banco de preguntas del autotest
 ```
 
 Cada página carga sólo lo que necesita, en este orden: `core.js` (en el `<head>`, para aplicar el tema
@@ -56,7 +72,7 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 
 - **Sin módulos ES ni `fetch`**: así todo funciona abriendo los ficheros con doble clic (`file://`),
   donde los navegadores bloquean esas dos cosas. Los datos van en ficheros `.js`.
-- **Espacios de nombres**: `window.App` (común) y `window.FLI` (asignatura). Cada script está envuelto
+- **Espacios de nombres**: `window.App` (común), `window.FLI` y `window.FC` (asignaturas). Cada script está envuelto
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
 - **Barra superior**: la genera `core.js` a partir de atributos del `<body>`:
   `data-root` (ruta a la raíz: `""`, `"../"`, `"../../"`), `data-subject` (`fli`),
@@ -93,5 +109,8 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `fli-l1-clase-hechos`, `fli-l1-resueltos-hechos`, `fli-l1-niveles-hechos` | Ejercicios marcados como hechos (L1) |
 | `fli-tab`, `fli-gpart`, `fli-conv` | Última chuleta, parte de la guía y convenio de prioridad |
 | `eq-settings`, `eq-best` | Opciones y mejor nota del test de equivalencias |
+| `fc-settings`, `fc-seen`, `fc-best-1` … `fc-best-6`, `fc-best-G` | Opciones, preguntas vistas y mejores notas del autotest de FC |
+| `fc-practicas-hechos` | Ejercicios de prácticas de FC marcados como hechos |
+| `fc-teoria-visto`, `fc-practicas-visto` | Última parte vista de cada guía de FC |
 
 El test del autotest en curso se guarda en `sessionStorage` (sobrevive a recargas, no a cerrar la pestaña).

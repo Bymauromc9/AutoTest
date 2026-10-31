@@ -35,6 +35,17 @@
         { id: "l1-teoria", group: "L1", label: "Teoría", href: "fli/index.html#l1-teoria" },
         { id: "l1-practicas", group: "L1", label: "Prácticas", href: "fli/index.html#l1-practicas" }
       ]
+    },
+    {
+      id: "fc",
+      short: "FC",
+      name: "Fundamentos de Computadores",
+      desc: "Temas 1–6: guía de teoría con ejemplos resueltos, autotest por temas y guía de prácticas con los boletines resueltos y herramientas para comprobar.",
+      home: "fc/index.html",
+      sections: [
+        { id: "teoria", label: "Teoría", href: "fc/index.html#teoria" },
+        { id: "practicas", label: "Prácticas", href: "fc/index.html#practicas" }
+      ]
     }
   ];
 
