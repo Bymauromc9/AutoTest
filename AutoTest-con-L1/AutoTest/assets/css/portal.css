@@ -1,0 +1,17 @@
+/* portal.css — portada del sitio (lista de asignaturas). */
+.subjects{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.subject__link{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:20px 22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-decoration:none;transition:border-color .15s,transform .15s}
+.subject__link:hover{border-color:var(--accent);transform:translateY(-1px)}
+.subject__short{font-family:var(--f-display);font-weight:800;font-size:28px;color:var(--surface);background:var(--accent);border-radius:10px;min-width:72px;height:72px;display:grid;place-items:center;padding:0 10px}
+.subject__body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.subject__name{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2}
+.subject__desc{color:var(--muted);font-size:15px}
+.subject__sections{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.subject__sections span{font-family:var(--f-mono);font-size:12px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.subject__go{font-size:24px;color:var(--accent)}
+.portal-note{font-size:14px;margin:0}
+@media (max-width:520px){
+  .subject__link{grid-template-columns:auto 1fr;padding:16px}
+  .subject__go{display:none}
+  .subject__short{min-width:56px;height:56px;font-size:22px}
+}

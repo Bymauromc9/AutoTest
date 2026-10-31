@@ -1,0 +1,103 @@
+/* l1.css — prácticas de L1 (guía, ejercicios de clase, resueltos y propuestos, niveles).
+   Se carga después de fli/css/ejercicios.css y usa sus variables (claro y oscuro). */
+:root { --warn: #8A5A00; --warn-soft: #FBF0D9; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --warn: #E8B85C; --warn-soft: #352914; } }
+:root[data-theme="dark"] { --warn: #E8B85C; --warn-soft: #352914; }
+
+/* ---------- navegación entre las páginas de L1 ---------- */
+.l1-pages { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0 0 var(--s-5); }
+.l1-pages a { font-family: var(--f-display); font-weight: 700; font-size: 0.9rem; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px; }
+.l1-pages a:hover { border-color: var(--accent); color: var(--accent); }
+.l1-pages a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+.soltools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); margin: 0 0 var(--s-5); }
+.btn-sol { font: 600 0.85rem var(--f-display); background: var(--accent-soft); color: var(--accent); border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.btn-sol:hover { filter: brightness(0.96); }
+.soltools-note { font-size: 0.9rem; color: var(--muted); }
+
+/* ---------- tarjetas ---------- */
+.card-title { font-family: var(--f-display); font-weight: 700; color: var(--ink); letter-spacing: 0; }
+.srcs { font-family: var(--f-display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 1px 8px; margin-right: auto; }
+details.sol { margin-top: var(--s-4); border-top: 1px dashed var(--rule); padding-top: var(--s-3); }
+details.sol > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: var(--s-2); font: 700 0.9rem var(--f-display); color: var(--true); background: var(--true-soft); border-radius: 999px; padding: 5px 14px; user-select: none; }
+details.sol > summary::-webkit-details-marker { display: none; }
+details.sol > summary::before { content: "▸"; transition: transform .15s; }
+details.sol[open] > summary::before { transform: rotate(90deg); }
+details.sol > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sol-body { padding-top: var(--s-4); }
+.sol-body > :last-child { margin-bottom: 0; }
+.card.ex.is-done details.sol[open] { opacity: 1; }
+.official { display: inline-block; font-family: var(--f-display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 2px 8px; margin: 0 0 var(--s-3); }
+
+/* ---------- piezas de las explicaciones ---------- */
+.sub { font-family: var(--f-display); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.01em; margin: var(--s-5) 0 var(--s-2) !important; color: var(--ink); }
+.sol-body > .sub:first-child, .prose > .sub:first-child { margin-top: 0 !important; }
+ol.steps { list-style: none; counter-reset: st; padding-left: 0 !important; margin: 0 0 var(--s-4) !important; display: flex; flex-direction: column; gap: var(--s-2); }
+ol.steps > li { counter-increment: st; position: relative; padding-left: 2.1rem; max-width: 72ch; margin: 0; }
+ol.steps > li::before { content: counter(st); position: absolute; left: 0; top: 0.1em; width: 1.45rem; height: 1.45rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 700 0.78rem/1.45rem var(--f-mono); text-align: center; }
+.result { margin: var(--s-3) 0 var(--s-4) !important; padding: var(--s-3) var(--s-4); background: var(--true-soft); border-radius: 8px; max-width: none !important; overflow-wrap: anywhere; }
+.result-l { display: inline-block; font: 700 0.72rem var(--f-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--true); margin-right: var(--s-2); }
+.result .fx { background: transparent !important; font-size: 0.98rem; font-weight: 600; }
+.box { border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; padding: var(--s-3) var(--s-4); margin: var(--s-3) 0 var(--s-4); max-width: 76ch; }
+.box p { margin: 0 0 var(--s-2); }
+.box > :last-child { margin-bottom: 0; }
+.box .box-t { font: 700 0.75rem var(--f-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: var(--s-1); }
+.box.tip { border-color: var(--true); background: var(--true-soft); }
+.box.tip .box-t { color: var(--true); }
+.box.warn { border-color: var(--warn); background: var(--warn-soft); }
+.box.warn .box-t { color: var(--warn); }
+.box .fx { background: color-mix(in srgb, var(--surface) 55%, transparent) !important; }
+
+/* tablas de relaciones (0/1) y de evaluación */
+.mats { display: flex; flex-wrap: wrap; gap: var(--s-3); margin: var(--s-2) 0 var(--s-3); }
+.mats .tablewrap { margin: 0; width: auto; }
+table.mat { min-width: 0; }
+table.mat th, table.mat td { text-align: center; font-family: var(--f-mono); font-size: 0.85rem; padding: 3px 10px; }
+table.ev th { text-align: center; font-family: var(--f-mono); font-weight: 600; }
+table.ev td { text-align: center; }
+table.ev td.v { font-family: var(--f-mono); font-size: 0.85rem; }
+table.ev td.na { color: var(--muted); }
+table.ev tr.grp td { border-top: 2px solid color-mix(in srgb, var(--accent) 45%, var(--rule)); }
+table.ev tbody tr:first-child td { border-top: 0; }
+/* tablas de texto (no las de pruebas, evaluación ni matrices): ocupan el ancho y el texto se ajusta */
+.card-body table:not(.fit):not(.ev):not(.mat), .prose table:not(.fit):not(.ev):not(.mat) { width: 100%; }
+.card-body table:not(.fit):not(.ev):not(.mat) td, .prose table:not(.fit):not(.ev):not(.mat) td { min-width: 6.5rem; }
+.card-body table:not(.fit):not(.ev):not(.mat) td:first-child, .prose table:not(.fit):not(.ev):not(.mat) td:first-child { min-width: 5rem; }
+table.ev .fx, table.mat .fx { white-space: nowrap; }
+
+/* árbol sintáctico */
+ul.stree, ul.stree ul { list-style: none; margin: 0; padding: 0; }
+ul.stree { margin: var(--s-2) 0 var(--s-4); font-family: var(--f-mono); font-size: 0.9rem; border: 0 !important; }
+ul.stree ul { margin-left: 0.8rem !important; padding-left: 1rem !important; border-left: 1px solid var(--rule) !important; }
+ul.stree li { position: relative; padding: 2px 0; list-style: none !important; }
+ul.stree ul > li::before { content: ""; position: absolute; left: -1rem; top: 0.95em; width: 0.8rem; border-top: 1px solid var(--rule); }
+ul.stree .nd { display: inline-block; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 0 8px; }
+ul.stree > li > .nd { background: var(--accent); color: var(--surface); border-color: var(--accent); font-weight: 600; }
+
+/* ---------- guía y resumen ---------- */
+.prose { min-width: 0; max-width: 100%; }
+.prose > p, .prose > ul, .prose > ol { max-width: 72ch; }
+.prose > p { margin: 0 0 var(--s-3); }
+.prose ul, .prose ol { margin: 0 0 var(--s-3); padding-left: 1.4em; }
+.prose li { margin-bottom: var(--s-1); }
+.prose .formula { display: block; width: fit-content; }
+.guide .topic { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-4) var(--s-5) var(--s-5); gap: var(--s-3); }
+.topic.summ { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-4) var(--s-5); gap: var(--s-3); }
+.topic.summ h3 { justify-content: space-between; }
+.topic .more { font-family: var(--f-display); font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.topic .more:hover { text-decoration: underline; }
+.lvl-badge { display: inline-block; font-family: var(--f-mono); font-weight: 600; letter-spacing: 0.04em; background: var(--accent); color: var(--surface); padding: 2px 10px; border-radius: 999px; }
+.lvl .tema-head h2 { margin-top: var(--s-1); }
+
+@media (max-width: 900px) {
+  .guide .topic, .topic.summ { padding: var(--s-3) var(--s-4) var(--s-4); }
+  ol.steps > li { padding-left: 1.9rem; }
+}
+@media print {
+  .side, .soltools, .l1-pages, .done { display: none !important; }
+  .shell { display: block; }
+  details.sol > summary { display: none; }
+  .card, .topic { break-inside: avoid-page; }
+}
+/* fórmulas en línea dentro de la guía y el resumen: mismo aspecto que en las tarjetas y con ajuste de línea */
+.prose .fx { white-space: normal; -webkit-box-decoration-break: clone; box-decoration-break: clone; background: color-mix(in srgb, var(--accent-soft) 70%, transparent); padding: 0 .3em; border-radius: 4px; }
