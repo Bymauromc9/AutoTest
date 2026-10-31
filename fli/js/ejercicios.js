@@ -2,6 +2,7 @@
  * ejercicios.js — páginas de ejercicios con soluciones: marca de «Hecho» por ejercicio (guardada en
  * localStorage con la clave del atributo data-storage-key del <body>), progreso por tema en el índice,
  * botón de reiniciar, índice plegable en móvil y resaltado del tema visible.
+ * Las páginas sin ejercicios (p. ej. la guía de L1) pueden omitir el botón de reiniciar.
  */
 (function () {
   var KEY = document.body.getAttribute('data-storage-key') || 'fli-ejercicios-hechos';
@@ -36,7 +37,7 @@
   refresh();
 
   var reset = document.getElementById('reset'), armed = false, timer;
-  reset.addEventListener('click', function () {
+  if (reset) reset.addEventListener('click', function () {
     if (!armed) {
       armed = true; reset.classList.add('confirm'); reset.textContent = 'Pulsa otra vez para borrar';
       timer = setTimeout(function () { armed = false; reset.classList.remove('confirm'); reset.textContent = 'Reiniciar progreso'; }, 3000);

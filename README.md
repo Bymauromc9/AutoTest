@@ -16,7 +16,7 @@ assets/
   js/portal.js              Pinta las tarjetas de la portada a partir del registro
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
-  index.html                Portada de FLI con las secciones Teoría y Prácticas y el progreso guardado
+  index.html                Portada de FLI: bloque L0 y bloque L1, cada uno con Teoría y Prácticas, y el progreso guardado
   teoria/
     autotest.html           Tests por tema y test general
     examenes.html           Parcial real 23-24 y simulacros, con corrección
@@ -26,7 +26,16 @@ fli/                        Fundamentos Lógicos de la Informática
   practicas/
     guia.html               Guía de prácticas con analizador y comprobador (enlazable: guia.html#parte-4)
     ejercicios.html         83 ejercicios de prácticas con soluciones
+  l1/                       Lógica de predicados (L1). La teoría aún no tiene páginas.
+    practicas/
+      guia.html             Guía de prácticas de L1 explicada parte por parte (enlazable: guia.html#g6)
+      clase.html            Ejercicios de clase 12–32 (sesiones 6–12) resueltos y explicados
+      resueltos.html        Resueltos oficiales explicados y propuestos resueltos
+      niveles.html          Nivel 1 (resumen) y niveles 2–5 con todos los ejercicios por dificultad
+    css/l1.css              Estilos propios de L1 (se carga después de fli/css/ejercicios.css)
+    js/l1.js                Resoluciones plegables (abrir/cerrar todas, abrir la enlazada, abrir al imprimir)
   css/
+    inicio.css              Bloques L0 / L1 de la portada de FLI
     fli.css                 Componentes de FLI (fórmulas, autotest, chuletas, exámenes, guía)
     ejercicios.css          Páginas de ejercicios con índice lateral
     equivalencias.css       Test de equivalencias
@@ -51,7 +60,8 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
 - **Barra superior**: la genera `core.js` a partir de atributos del `<body>`:
   `data-root` (ruta a la raíz: `""`, `"../"`, `"../../"`), `data-subject` (`fli`),
-  `data-area` (`teoria` | `practicas` | `auto`) y `data-title` (miga de pan).
+  `data-area` (`teoria` | `practicas` para L0, `l1-teoria` | `l1-practicas` para L1, o `auto`) y `data-title`
+  (miga de pan). Las secciones con `group` en `SUBJECTS` se pintan agrupadas (L0 · Teoría | Prácticas, L1 · …).
 - **Tema**: claro u oscuro según el sistema; el botón de la barra lo fija para todas las páginas
   (`<html data-theme="light|dark">`). Todas las hojas de estilo definen las dos paletas.
 
@@ -79,7 +89,8 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `fli-settings`, `fli-seen` | Opciones del autotest y preguntas ya vistas |
 | `fli-best-1` … `fli-best-4`, `fli-best-G` | Mejores notas del autotest |
 | `fli-exam-current`, `fli-exam-best-N` | Examen en curso y mejores notas de cada examen |
-| `fli-ejercicios-hechos`, `fli-practicas-hechos` | Ejercicios marcados como hechos |
+| `fli-ejercicios-hechos`, `fli-practicas-hechos` | Ejercicios marcados como hechos (L0) |
+| `fli-l1-clase-hechos`, `fli-l1-resueltos-hechos`, `fli-l1-niveles-hechos` | Ejercicios marcados como hechos (L1) |
 | `fli-tab`, `fli-gpart`, `fli-conv` | Última chuleta, parte de la guía y convenio de prioridad |
 | `eq-settings`, `eq-best` | Opciones y mejor nota del test de equivalencias |
 

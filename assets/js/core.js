@@ -12,7 +12,8 @@
  * y, cuando el DOM está listo, inserta la barra superior según los data-* del <body>:
  *   data-root     ruta relativa a la raíz del sitio ("" en la raíz, "../" en fli/, "../../" en fli/teoria/)
  *   data-subject  id de la asignatura (clave de App.SUBJECTS); vacío en la portada
- *   data-area     sección activa de la asignatura ("teoria" | "practicas"), o "auto" para deducirla del hash (#practicas)
+ *   data-area     sección activa de la asignatura ("teoria" | "practicas" | "l1-teoria" | "l1-practicas"),
+ *                 o "auto" para deducirla del hash (#practicas)
  *   data-title    título corto de la página para la miga de pan (opcional)
  */
 (function () {
@@ -25,11 +26,14 @@
       id: "fli",
       short: "FLI",
       name: "Fundamentos Lógicos de la Informática",
-      desc: "Lógica proposicional, razonamientos y problema SAT: autotest, exámenes, chuletas, ejercicios de teoría y prácticas.",
+      desc: "Lógica proposicional (L0) y lógica de predicados (L1): autotest, exámenes, chuletas, guías y ejercicios resueltos de teoría y prácticas.",
       home: "fli/index.html",
+      // «group» agrupa las pestañas de la barra superior (L0 · Teoría | Prácticas, L1 · Teoría | Prácticas).
       sections: [
-        { id: "teoria", label: "Teoría", href: "fli/index.html#teoria" },
-        { id: "practicas", label: "Prácticas", href: "fli/index.html#practicas" }
+        { id: "teoria", group: "L0", label: "Teoría", href: "fli/index.html#teoria" },
+        { id: "practicas", group: "L0", label: "Prácticas", href: "fli/index.html#practicas" },
+        { id: "l1-teoria", group: "L1", label: "Teoría", href: "fli/index.html#l1-teoria" },
+        { id: "l1-practicas", group: "L1", label: "Prácticas", href: "fli/index.html#l1-practicas" }
       ]
     }
   ];
@@ -86,7 +90,10 @@
   /* ---------- Barra superior ---------- */
   function areaFromHash(subject) {
     const h = location.hash.slice(1);
-    return subject && subject.sections.some((s) => s.id === h) ? h : (subject ? subject.sections[0].id : "");
+    if (subject && subject.sections.some((s) => s.id === h)) return h;
+    // Anclas internas de un bloque (p. ej. #l1) marcan la primera sección de ese grupo.
+    const g = subject && subject.sections.find((s) => s.group && s.group.toLowerCase() === h);
+    return g ? g.id : (subject ? subject.sections[0].id : "");
   }
   function buildNav() {
     const body = document.body;
@@ -103,8 +110,22 @@
       crumbs += `<span class="site-nav__sep" aria-hidden="true">/</span><a class="site-nav__subject" href="${root}${subject.home}" title="${esc(subject.name)}">${esc(subject.short)}</a>`;
       if (title) crumbs += `<span class="site-nav__sep" aria-hidden="true">/</span><span class="site-nav__page" aria-current="page">${esc(title)}</span>`;
     }
+    const tab = (s) => `<a href="${root}${s.href}"${s.id === area ? ' aria-current="true"' : ""}${s.group ? ` aria-label="${esc(s.group + " · " + s.label)}"` : ""}>${esc(s.label)}</a>`;
+    let tabsHtml = "";
+    if (subject) {
+      // Pestañas agrupadas: un bloque por grupo (L0, L1…) con su etiqueta; sin grupo, una fila simple.
+      const groups = [];
+      subject.sections.forEach((s) => {
+        const g = s.group || "";
+        if (!groups.length || groups[groups.length - 1].g !== g) groups.push({ g, items: [] });
+        groups[groups.length - 1].items.push(s);
+      });
+      tabsHtml = groups.map((G) => G.g
+        ? `<span class="site-nav__group"><span class="site-nav__glabel" aria-hidden="true">${esc(G.g)}</span>${G.items.map(tab).join("")}</span>`
+        : G.items.map(tab).join("")).join("");
+    }
     const tabs = subject
-      ? `<nav class="site-nav__tabs" aria-label="Secciones de ${esc(subject.short)}">${subject.sections.map((s) => `<a href="${root}${s.href}"${s.id === area ? ' aria-current="true"' : ""}>${esc(s.label)}</a>`).join("")}</nav>`
+      ? `<nav class="site-nav__tabs" aria-label="Secciones de ${esc(subject.short)}">${tabsHtml}</nav>`
       : "";
     nav.innerHTML = `<div class="site-nav__inner"><div class="site-nav__crumbs">${crumbs}</div>${tabs}<button type="button" class="site-nav__theme" id="theme-toggle"></button></div>`;
     // La barra va justo después del enlace «Saltar al contenido», que debe ser lo primero al tabular.
