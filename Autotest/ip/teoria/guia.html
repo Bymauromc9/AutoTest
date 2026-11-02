@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de teoría · IP</title>
+<meta name="description" content="Guía de teoría de Introducción a la Programación: temas 0 a 4 con la notación algorítmica, su traducción a C++, problemas resueltos y un simulador de la máquina secuencial.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../css/guia.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="ip" data-area="teoria" data-title="Guía de teoría" data-visto-key="ip-teoria-visto">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">←</span> IP · Teoría</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#t0"><span class="tn">0</span><span class="tname">Algoritmos, programas y procesos</span><span></span></a><ol class="toc-topics"><li><a href="#t0-1"><span class="tnum">0.1</span>Computador y algoritmo</a></li><li><a href="#t0-2"><span class="tnum">0.2</span>Lenguajes de programación y traductores</a></li><li><a href="#t0-3"><span class="tnum">0.3</span>Programa, proceso, estado y variable</a></li><li><a href="#t0-4"><span class="tnum">0.4</span>¿Qué tareas puede realizar un ordenador?</a></li></ol></li><li><a class="toc-tema" href="#t1"><span class="tn">1</span><span class="tname">Léxico y organización de un algoritmo</span><span></span></a><ol class="toc-topics"><li><a href="#t1-1"><span class="tnum">1.1</span>Léxico y control de un algoritmo</a></li><li><a href="#t1-2"><span class="tnum">1.2</span>Tipos de datos primitivos</a></li><li><a href="#t1-3"><span class="tnum">1.3</span>Acciones primitivas: asignación, Leer y Escribir</a></li><li><a href="#t1-4"><span class="tnum">1.4</span>Composición secuencial</a></li><li><a href="#t1-5"><span class="tnum">1.5</span>Análisis de casos</a></li><li><a href="#t1-6"><span class="tnum">1.6</span>Tipos no primitivos: producto de tipos (registro)</a></li></ol></li><li><a class="toc-tema" href="#t2"><span class="tn">2</span><span class="tname">Acciones, funciones y tablas</span><span></span></a><ol class="toc-topics"><li><a href="#t2-1"><span class="tnum">2.1</span>Acciones parametrizadas</a></li><li><a href="#t2-2"><span class="tnum">2.2</span>Clases de parámetros</a></li><li><a href="#t2-3"><span class="tnum">2.3</span>Abstracción y descomposición con acciones</a></li><li><a href="#t2-4"><span class="tnum">2.4</span>Funciones</a></li><li><a href="#t2-5"><span class="tnum">2.5</span>Ejemplo: suma de duraciones</a></li><li><a href="#t2-6"><span class="tnum">2.6</span>Ámbito y visibilidad</a></li><li><a href="#t2-7"><span class="tnum">2.7</span>Tablas (arrays)</a></li></ol></li><li><a class="toc-tema" href="#t3"><span class="tn">3</span><span class="tname">La iteración y sus formas</span><span></span></a><ol class="toc-topics"><li><a href="#t3-1"><span class="tnum">3.1</span>La necesidad de iterar</a></li><li><a href="#t3-2"><span class="tnum">3.2</span>MIENTRAS</a></li><li><a href="#t3-3"><span class="tnum">3.3</span>REPETIR … HASTA</a></li><li><a href="#t3-4"><span class="tnum">3.4</span>ITERAR … DETENER</a></li><li><a href="#t3-5"><span class="tnum">3.5</span>Equivalencias</a></li><li><a href="#t3-6"><span class="tnum">3.6</span>RECORRIENDO</a></li><li><a href="#t3-7"><span class="tnum">3.7</span>Problemas iterativos resueltos</a></li></ol></li><li><a class="toc-tema" href="#t4"><span class="tn">4</span><span class="tname">Composición iterativa y noción de secuencia</span><span></span></a><ol class="toc-topics"><li><a href="#t4-1"><span class="tnum">4.1</span>Secuencias y máquina secuencial</a></li><li><a href="#t4-2"><span class="tnum">4.2</span>Análisis iterativo y el invariante</a></li><li><a href="#t4-3"><span class="tnum">4.3</span>Esquemas de recorrido</a></li><li><a href="#t4-4"><span class="tnum">4.4</span>Problemas de recorrido</a></li><li><a href="#t4-5"><span class="tnum">4.5</span>Esquema de búsqueda</a></li><li><a href="#t4-6"><span class="tnum">4.6</span>Combinación de recorrido y búsqueda</a></li><li><a href="#t4-7"><span class="tnum">4.7</span>Modelos de acceso secuencial</a></li><li><a href="#t4-8"><span class="tnum">4.8</span>Simulador: los esquemas paso a paso</a></li></ol></li><li><a class="toc-tema" href="#anexo"><span class="tn">A</span><span class="tname">Chuletas para repasar</span><span></span></a><ol class="toc-topics"><li><a href="#a-1"><span class="tnum">A.1</span>De la notación SP a C++</a></li><li><a href="#a-2"><span class="tnum">A.2</span>Esquemas para memorizar</a></li><li><a href="#a-3"><span class="tnum">A.3</span>Wooclap: cuestionarios a tu ritmo</a></li></ol></li></ol></nav>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Introducción a la Programación · 1.º GII · Teoría</p><h1>Guía de teoría <span class="ops">← ≠ ≤</span></h1><p class="lead">Los temas 0 a 4 resumidos: definiciones, la notación algorítmica (SP) con su traducción a C++, los problemas de clase resueltos y las trampas típicas. En el tema 4 tienes un simulador de la máquina secuencial y al final, las chuletas.</p><nav class="ip-pages" aria-label="Páginas de IP"><a href="guia.html" aria-current="page">Guía de teoría</a><a href="autotest.html">Autotest</a><a href="../practicas/guia.html">Guía de prácticas</a></nav></header><section class="tema guide" id="t0"><header class="tema-head"><p class="eyebrow">Tema 0</p><h2>Algoritmos, programas y procesos</h2><p class="lede">¿Qué tareas puede realizar un ordenador? Los conceptos de base: computador, algoritmo, lenguaje, programa, proceso, estado y variable.</p></header><section class="topic" id="t0-1"><h3><span class="tnum">0.1</span><span>Computador y algoritmo</span></h3><div class="prose"><p>Un <b>computador</b> es un <b>mecanismo digital de propósito general</b> que se convierte en un mecanismo para un <b>uso específico</b> cuando procesa un determinado algoritmo. El mismo hardware sirve para todo: lo que lo especializa en cada momento es el algoritmo que ejecuta.</p><p>Un <b>algoritmo</b> es una <b>secuencia de instrucciones</b> (operaciones) que especifican las acciones que debe ejecutar un computador para realizar una tarea.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Área de un triángulo rectángulo (en lenguaje natural)</p><pre><code class="lang-sp">INICIO
+  Obtener las medidas de la base (b) y la altura (h)
+  Multiplicar base por altura (b × h)
+  Dividir entre 2 el resultado (b × h) / 2
+FIN</code></pre></div><div class="codeblk sp"><p class="code-t">El mismo estilo en notación algorítmica</p><pre><code class="lang-sp">Léxico
+  a, b, c: Entero;
+Algoritmo
+  b ← 2;
+  a ← 3;
+  c ← a + b;
+  Escribir (c);
+Fin.</code></pre></div></div><p>La noción de algoritmo es <b>más general</b> que la informática: cualquier receta que resuelve un problema lo es.</p><div class="tablewrap"><table class=""><thead><tr><th>Algoritmo</th><th>Problema (tarea)</th></tr></thead><tbody><tr><td>Instrucciones para tejer un jersey</td><td>Tejer un jersey</td></tr><tr><td>Partitura</td><td>Tocar una sonata</td></tr><tr><td>Plan de trabajo</td><td>Cursar una licenciatura</td></tr><tr><td>Receta de cocina</td><td>Cocinar un bizcocho</td></tr><tr><td>Método de Newton</td><td>Calcular las raíces</td></tr></tbody></table></div></div></section><section class="topic" id="t0-2"><h3><span class="tnum">0.2</span><span>Lenguajes de programación y traductores</span></h3><div class="prose"><p>El computador sólo ejecuta <b>instrucciones máquina</b>, muy simples. Un computador está caracterizado por el conjunto de instrucciones que puede ejecutar. Formato: <b>código + [operandos]</b> (entre 0 y 3). El código indica la operación (suma, resta, comparación, salto…) y los operandos, direcciones de memoria o valores.</p><p>Los <b>lenguajes de programación</b> son notaciones que expresan las operaciones que queremos que haga el ordenador con un <b>nivel de abstracción superior</b> al del lenguaje máquina. Por eso hace falta un <b>traductor</b>: <b>compiladores</b> (traducen el programa completo a código máquina antes de ejecutarlo; es lo que hace <code>g++</code> en prácticas) e <b>intérpretes</b> (traducen y ejecutan instrucción a instrucción).</p><ul><li>El <b>mismo algoritmo</b> se puede expresar en <b>lenguajes diferentes</b> (C++, C, Python…).</li><li>En el análisis se usa una <b>notación algorítmica</b> (la de clase, que llamaremos <b>SP</b>) para evitar los detalles del lenguaje y centrarse en el proceso que debe llevar a cabo el computador.</li><li>Un <b>programa</b> es la expresión de un algoritmo en un lenguaje de programación concreto.</li></ul><div class="pair"><div class="codeblk sp"><p class="code-t">Algoritmo</p><pre><code class="lang-sp">Léxico
+  numero: Entero;
+Algoritmo
+  Escribir (&#x27;Este es el segundo programa&#x27;);
+  Escribir (&#x27;Escribe un número&#x27;);
+  Leer (numero);
+  Escribir (&#x27;La variable numero ha tomado el valor &#x27;, numero);
+Fin.</code></pre></div><div class="codeblk"><p class="code-t">Programa (C++)</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+int main ( ) {
+    int numero;
+    cout &lt;&lt; &quot;Este es el segundo programa&quot; &lt;&lt; endl;
+    cout &lt;&lt; &quot;Escribe un número &quot;;
+    cin &gt;&gt; numero;
+    cout &lt;&lt; &quot;La variable numero ha tomado el valor &quot; &lt;&lt; numero &lt;&lt; endl;
+    return 0;
+}</code></pre></div></div></div></section><section class="topic" id="t0-3"><h3><span class="tnum">0.3</span><span>Programa, proceso, estado y variable</span></h3><div class="prose"><ul><li><b>Proceso</b>: un <b>programa en ejecución</b>. Se caracteriza por una <b>sucesión de estados</b>, desde un estado inicial hasta un estado final.</li><li><b>Estado</b> de un proceso: determina su grado de progreso; viene dado por los <b>valores de las variables</b> y un <b>indicador de la siguiente instrucción</b> a ejecutar.</li><li><b>Variable</b>: magnitud o información manejada por un algoritmo a la que se da un <b>nombre</b> y que <b>registra un valor</b>. Representa una entidad del mundo real relevante para el problema (la altura, una nota…).</li></ul><p>Si ejecutamos el programa anterior cuatro veces con 5, 4, 0 y 1, tenemos <b>un programa y cuatro procesos</b>: el texto es el mismo, pero cada ejecución recorre sus propios estados.</p><div class="box warn"><p class="box-t">Ojo en el test</p><p>Programa ≠ proceso. El programa es estático (texto); el proceso es dinámico (ejecución). Y el estado no son sólo las variables: también cuenta por dónde va la ejecución.</p></div></div></section><section class="topic" id="t0-4"><h3><span class="tnum">0.4</span><span>¿Qué tareas puede realizar un ordenador?</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Clase</th><th>Definición</th></tr></thead><tbody><tr><td><b>Computable</b></td><td>Existe un algoritmo que lo resuelve.</td></tr><tr><td>· Tratable</td><td>Computable y existe un algoritmo <b>eficiente</b> (de orden polinomial) que lo resuelve.</td></tr><tr><td>· Intratable</td><td>Computable, pero no se conoce un algoritmo eficiente: los que hay crecen demasiado deprisa con el tamaño del problema.</td></tr><tr><td><b>No computable</b></td><td>No existe ningún algoritmo que lo resuelva.</td></tr></tbody></table></div></div></section></section><section class="tema guide" id="t1"><header class="tema-head"><p class="eyebrow">Tema 1</p><h2>Léxico y organización de un algoritmo</h2><p class="lede">Qué es el léxico de un algoritmo, los tipos primitivos con sus operaciones, las acciones primitivas y las dos primeras formas de organizar las acciones: secuencia y análisis de casos.</p></header><section class="topic" id="t1-1"><h3><span class="tnum">1.1</span><span>Léxico y control de un algoritmo</span></h3><div class="prose"><p>Un <b>algoritmo</b> = <b>léxico</b> (informaciones + acciones) + <b>control</b> (el orden y las condiciones en que se ejecutan las acciones: <b>secuenciación</b>, <b>análisis de casos</b> e <b>iteración</b> o recursión). Construir un algoritmo es elegir informaciones y acciones y decidir cómo organizarlas en el tiempo para obtener el resultado por acumulación de sus efectos.</p><p>Ejemplo, ir al cajero: <i>informaciones</i>: cantidad a reintegrar, cuenta, saldo; <i>acciones</i>: seleccionar cuenta, consultar saldo, reintegrar.</p><p><b>Abstracción</b>: «eliminar detalles innecesarios y considerar lo esencial». Es el mecanismo fundamental para dominar la complejidad; el léxico (variables y acciones) fija el nivel de abstracción.</p><div class="tablewrap"><table class=""><thead><tr><th>Elemento del léxico</th><th>Qué se especifica</th></tr></thead><tbody><tr><td>Información (variable)</td><td><b>nombre</b> y <b>tipo</b></td></tr><tr><td>Acción</td><td><b>nombre</b>, <b>precondición</b> (lo que debe cumplirse antes) y <b>postcondición</b> (lo que se cumple después)</td></tr><tr><td>Tipo de dato</td><td><b>dominio</b> de valores y <b>operaciones</b> posibles sobre ellos</td></tr></tbody></table></div><p>Ejemplo: para <code>retirar (cuenta, cantRet)</code>, <i>pre</i>: 0 &lt; cantRet ≤ saldo; <i>post</i>: el nuevo saldo es el anterior menos cantRet.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Estructura de un algoritmo</p><pre><code class="lang-sp">LÉXICO
+  // declaraciones de tipos, variables, constantes y acciones
+  v1 : tipo;
+  A1 : una acción
+    PRE { precondición de A1 }
+    POST { postcondición de A1 }
+    LÉXICO  … ALGORITMO … FIN
+ALGORITMO
+  PRE { precondición del algoritmo }
+  POST { postcondición del algoritmo }
+  // secuencia de instrucciones
+FIN</code></pre></div><div class="codeblk sp"><p class="code-t">Ejemplo</p><pre><code class="lang-sp">LÉXICO
+  tempFahrenheit : Real;   // dato
+  tempCelsius : Real;      // resultado
+  ConvertirFahrenheitCelsius : una acción
+    PRE { 0 ≤ tempFahrenheit ≤ 200 }
+    POST { tempCelsius es tempFahrenheit en grados Celsius }
+    ALGORITMO
+      tempCelsius ← (5.0 / 9.0) * (tempFahrenheit – 32.0)
+    FIN
+ALGORITMO
+  Leer (tempFahrenheit);
+  ConvertirFahrenheitCelsius;
+  Escribir (&quot;La temperatura en grados Celsius es:&quot;, tempCelsius)
+FIN</code></pre></div></div></div></section><section class="topic" id="t1-2"><h3><span class="tnum">1.2</span><span>Tipos de datos primitivos</span></h3><div class="prose"><p>Nuestra notación incluye <b>Entero</b>, <b>Real</b>, <b>Booleano</b>, <b>Carácter</b> e intervalos (<code>i, j: [1, 100]</code>), además de mecanismos para definir tipos nuevos. De cada tipo hay que conocer el dominio, las operaciones, la sintaxis de los literales y la de las expresiones.</p><div class="tablewrap"><table class=""><thead><tr><th>Tipo</th><th>Literales</th><th>Operaciones</th></tr></thead><tbody><tr><td>Entero</td><td><code>0, 352, –342</code></td><td><code>−</code> (cambio de signo); <code>+ − * DIV MOD</code>: Entero×Entero→Entero; <b><code>/</code>: Entero×Entero→Real</b>; <code>&lt; &gt; = ≠ ≤ ≥</code>→Booleano; Predecesor, Sucesor</td></tr><tr><td>Real</td><td><code>4.22, –23.44</code> (punto decimal)</td><td><code>− + − * /</code>; comparaciones → Booleano</td></tr><tr><td>Booleano</td><td><code>Verdadero, Falso</code></td><td><code>Y, O</code>: Booleano×Booleano→Booleano; <code>NO</code></td></tr><tr><td>Carácter</td><td><code>'A', 'a', '$', '1'</code> (entre apóstrofos)</td><td><code>Car</code>: Entero→Carácter; <code>Ord</code>: Carácter→Entero; comparaciones; Predecesor, Sucesor</td></tr></tbody></table></div><p>Con <code>númeroAlumnos = 200, cursos = 4, media = 5.0, nota = 6.0, peso = 80.0, letra = 'A', aprobado = Verdadero</code>:</p><div class="tablewrap"><table class=""><thead><tr><th>Expresión</th><th>Tipo</th><th>Valor</th></tr></thead><tbody><tr><td><code>númeroAlumnos DIV cursos</code></td><td>Entero</td><td>50</td></tr><tr><td><code>númeroAlumnos MOD cursos</code></td><td>Entero</td><td>0</td></tr><tr><td><code>1000 – númeroAlumnos * 2</code></td><td>Entero</td><td>600</td></tr><tr><td><code>nota * peso / 100.0 – 3.0</code></td><td>Real</td><td>1.8</td></tr><tr><td><code>nota * (peso / 100.0 – 3.0)</code></td><td>Real</td><td>−13.2</td></tr><tr><td><code>nota &gt; 7.0</code></td><td>Booleano</td><td>Falso</td></tr><tr><td><code>(númeroAlumnos DIV cursos) &gt; 20</code></td><td>Booleano</td><td>Verdadero</td></tr><tr><td><code>(nota &gt; 7.0) Y (media = 5.0)</code></td><td>Booleano</td><td>Falso</td></tr><tr><td><code>NO (letra = 'B') O aprobado</code></td><td>Booleano</td><td>Verdadero</td></tr><tr><td><code>Carácter (66)</code> · <code>Sucesor (letra)</code></td><td>Carácter</td><td>'B' · 'B'</td></tr></tbody></table></div><div class="box warn"><p class="box-t">Ojo: notación ≠ C++</p><p>En la notación, <code>7 / 2</code> = 3.5 (Real) y el cociente entero es <code>7 DIV 2</code> = 3. En C++, <code>7 / 2</code> con dos <code>int</code> da 3. Lo verás en la práctica 1.</p></div></div></section><section class="topic" id="t1-3"><h3><span class="tnum">1.3</span><span>Acciones primitivas: asignación, Leer y Escribir</span></h3><div class="prose"><p>La <b>asignación</b> <code>&lt;variable&gt; ← &lt;expresión&gt;</code> es la acción primitiva que caracteriza a los lenguajes imperativos: se <b>evalúa la expresión</b> de la derecha y el resultado se guarda en la variable de la izquierda (el valor anterior se pierde). El nuevo valor puede depender del anterior: <code>longitud ← longitud / 2</code>.</p><p><b>Entrada</b>: <code>Leer (lista de variables)</code> asigna a cada variable el valor introducido por teclado. <b>Salida</b>: <code>Escribir (lista de expresiones)</code> envía al terminal los valores de evaluar cada expresión.</p><div class="codeblk sp"><p class="code-t">Leer y Escribir</p><pre><code class="lang-sp">LÉXICO
+  nota : Real; nombre : Secuencia de caracteres; numexam : Entero;
+ALGORITMO
+  Leer (nota, nombre, numexam);      // teclea: 6.0 Ana 200
+  Escribir (nota, nombre, numexam)   // pantalla: 6 Ana 200
+FIN</code></pre></div></div></section><section class="topic" id="t1-4"><h3><span class="tnum">1.4</span><span>Composición secuencial</span></h3><div class="prose"><p>Para reducir la complejidad se introducen <b>estados intermedios</b>: el problema se descompone en subproblemas más simples que se resuelven de forma independiente. <code>{E0} A1 {E1} A2 {E2} … {En}</code>.</p><p><b>Problema</b>: dado un número de segundos n &lt; 10<sup>6</sup>, expresarlo en días, horas, minutos y segundos. Diseño: <span class="fx">n = 86400·d + 3600·h + 60·m + s</span>, con 0 ≤ h ≤ 23 y 0 ≤ m, s ≤ 59.</p><div class="codeblk sp"><p class="code-t">Segundos → días, horas, minutos y segundos</p><pre><code class="lang-sp">LÉXICO
+  n : Entero [0, 999999];   // dato: nº de segundos
+  d : Entero ≥ 0;           // días
+  h : Entero [0, 23];       // horas
+  m, s : Entero [0, 59];    // minutos y segundos
+  rd : Entero [0, 86399];   // resto de días
+  rh : Entero [0, 3599];    // resto de horas
+ALGORITMO
+  Leer (n);
+  d ← n DIV 86400;  rd ← n MOD 86400;   { n = 86400·d + rd, 0 ≤ rd ≤ 86399 }
+  h ← rd DIV 3600;  rh ← rd MOD 3600;   { rd = 3600·h + rh, 0 ≤ rh ≤ 3599 }
+  m ← rh DIV 60;    s ← rh MOD 60;      { n = 86400·d + 3600·h + 60·m + s }
+  Escribir (d, h, m, s)
+FIN</code></pre></div><div class="box tip"><p class="box-t">Ejemplo resuelto</p><ol class="steps"><li>d = 309639 DIV 86400 = <b>3</b>; rd = 309639 − 259200 = 50439.</li><li>h = 50439 DIV 3600 = <b>14</b>; rh = 50439 − 50400 = 39.</li><li>m = 39 DIV 60 = <b>0</b>; s = 39 MOD 60 = <b>39</b>.</li></ol><p class="result"><span class="result-l">Resultado</span>309639 s = 3 días, 14 h, 0 min, 39 s</p></div><p>Es la misma estrategia del desglose de billetes de la práctica 2: cociente con el más grande y seguir con el resto.</p></div></section><section class="topic" id="t1-5"><h3><span class="tnum">1.5</span><span>Análisis de casos</span></h3><div class="prose"><p>Técnica de descomposición que <b>particiona el dominio</b> en subdominios (casos); cada subproblema es el problema restringido a su subdominio. La partición puede estar <b>guiada por los datos</b> (porcentaje de impuesto según la renta: &lt; 12 000, 12 000–35 000, &gt; 35 000) o <b>por los resultados</b> (sobresaliente [9, 10], notable [7, 9), aprobado [5, 7), suspenso [0, 5)).</p><div class="box warn"><p class="box-t">Condiciones de corrección</p><ol><li><b>Cubrir</b> todo el dominio inicial.</li><li>Que los subdominios <b>no se solapen</b>.</li></ol><p>Además, la postcondición de cada caso debe cumplir la del problema.</p></div><div class="codeblk"><p class="code-t">Errores típicos: olvidar casos e incluir casos repetidos</p><pre><code class="lang-cpp">// DESCOMPOSICIÓN INCORRECTA (edad en [0, 120])
+if (edad &gt;= 0 &amp;&amp; edad &lt;= 12) {          // Infantil
+} else if (edad &gt;= 12 &amp;&amp; edad &lt;= 18) {  // Joven: SOLAPAMIENTO en 12
+} else if (edad &gt; 20) {                 // Adulto: FALTA COBERTURA de 19 y 20
+}</code></pre></div><p>Composiciones de la notación:</p><div class="pair"><div class="codeblk sp"><p class="code-t">SEGÚN</p><pre><code class="lang-sp">SEGÚN c1, c2, …, cn
+  e1 : a1;
+  e2 : a2;
+  …
+  en : an;
+  EN_OTRO_CASO : an+1   // si ninguna ei
+FIN_SEGÚN</code></pre></div><div class="codeblk sp"><p class="code-t">SI como caso particular</p><pre><code class="lang-sp">SI e ENTONCES a SI_NO b FIN_SI
+  ≡ SEGÚN …  e : a;  NO (e) : b  FIN_SEGÚN
+
+SI e ENTONCES a FIN_SI
+  ≡ SEGÚN …  e : a;  NO (e) : ;  FIN_SEGÚN   // acción vacía</code></pre></div></div><p><b>Máximo de dos enteros</b>. Especificación: pre {x = X, y = Y}; post {z = máx (X, Y)}. La composición secuencial no permite decidir según los datos: hace falta la alternativa.</p><div class="codeblk sp"><p class="code-t">Máximo de dos enteros</p><pre><code class="lang-sp">ALGORITMO
+  PRE { x, y : Entero; x = X, y = Y }
+  Leer (x, y);
+  SEGÚN x, y
+    x ≥ y : z ← x;
+    x &lt; y : z ← y;
+  FIN_SEGÚN;
+  Escribir (z)
+  POST { x = X, y = Y, ((z = X) O (z = Y)) Y (z ≥ X) Y (z ≥ Y) }
+FIN</code></pre></div><p><b>Ordenar tres enteros distintos</b> (pre: X ≠ Y ≠ Z ≠ X; post: (p, s, t) ∈ perm (X, Y, Z) y p &lt; s &lt; t). El resultado es una de las <b>3! = 6</b> permutaciones.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Solución 1: los seis casos (guiada por los datos)</p><pre><code class="lang-sp">Leer (a, b, c);
+SEGÚN a, b, c
+  a&lt;b&lt;c : p ← a; s ← b; t ← c;
+  a&lt;c&lt;b : p ← a; s ← c; t ← b;
+  b&lt;a&lt;c : p ← b; s ← a; t ← c;
+  b&lt;c&lt;a : p ← b; s ← c; t ← a;
+  c&lt;b&lt;a : p ← c; s ← b; t ← a;
+  c&lt;a&lt;b : p ← c; s ← a; t ← b;
+FIN_SEGÚN;
+Escribir (p, s, t)</code></pre></div><div class="codeblk sp"><p class="code-t">Solución 3: guiada por los resultados</p><pre><code class="lang-sp">p ← a; s ← b; t ← c;
+SEGÚN p, s, t
+  (p &lt; s) Y (p &lt; t) : ;                 // acción vacía
+  (s &lt; p) Y (s &lt; t) : Intercambio (p, s);
+  (t &lt; p) Y (t &lt; s) : Intercambio (p, t);
+FIN_SEGÚN;
+SI s &gt; t ENTONCES Intercambio (s, t) FIN_SI;
+Escribir (p, s, t)</code></pre></div></div><p>La solución 2 anida dos SEGÚN: primero compara a y b y después sitúa c (tres casos en cada rama).</p></div></section><section class="topic" id="t1-6"><h3><span class="tnum">1.6</span><span>Tipos no primitivos: producto de tipos (registro)</span></h3><div class="prose"><p>Los valores de un tipo pueden ser <b>atómicos</b> (escalares) o <b>estructurados</b>. Los constructores habituales son la <b>tabla</b> (array), la <b>estructura</b> (producto de tipos) y la <b>secuencia</b>.</p><p><b>Producto de tipos</b> (registro, estructura): sus valores son agregaciones de valores de otros tipos ya definidos. <code>nombre = TIPO &lt; a1: T1; a2: T2; …; aN: TN &gt;</code>. Dominio: las <b>N-tuplas</b>; cardinalidad: <span class="fx">C = C<sub>T1</sub> · C<sub>T2</sub> · … · C<sub>TN</sub></span>.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">LÉXICO
+  Estudiante = TIPO &lt; nombre : secuencia de Carácter;
+                      edad : Entero;
+                      sexo : Booleano;
+                      centro : Entero [1, 20];
+                      curso : Entero [1, 6] &gt;;
+  a1 : Estudiante;
+// a1 = &lt;&quot;J. Gómez&quot;, 21, F, 4, 3&gt;
+// acceso: a1.curso (o «curso de a1»)</code></pre></div><div class="codeblk"><p class="code-t">C++ (práctica 4)</p><pre><code class="lang-cpp">struct Estudiante {
+    string nombre;
+    int edad;
+    bool sexo;
+    int centro;    // 1..20
+    int curso;     // 1..6
+};
+Estudiante a1;
+a1.curso = 3;</code></pre></div></div></div></section></section><section class="tema guide" id="t2"><header class="tema-head"><p class="eyebrow">Tema 2</p><h2>Acciones, funciones y tablas</h2><p class="lede">Parametrización de acciones (dato, resultado, dato–resultado), funciones y composición funcional, ámbito de los identificadores y el tipo tabla.</p></header><section class="topic" id="t2-1"><h3><span class="tnum">2.1</span><span>Acciones parametrizadas</span></h3><div class="prose"><p>Una <b>acción</b> (procedimiento) describe una acción compleja en función de otras más simples y se usa igual que una primitiva. Su algoritmo combina acciones para modificar el estado del proceso y lograr la postcondición a partir de la precondición.</p><p><b>Motivación</b>: la acción <code>AñoBisiesto</code> sin parámetros sólo sirve para la variable global <code>f</code>. Si tenemos <code>hoy, mañana, ayer: Fecha</code>, ¿cómo la usamos? <b>Parametrizando</b>: «mayor parametrización supone mayor independencia del contexto: más reutilizable».</p><div class="pair"><div class="codeblk sp"><p class="code-t">Acción con un parámetro dato</p><pre><code class="lang-sp">AñoBisiesto : acción (dato f : Fecha)
+  POST { esBisiesto es Verdadero si f.año es bisiesto }
+  ALGORITMO
+    esBisiesto ← ((f.año MOD 4 = 0) Y (f.año MOD 100 ≠ 0))
+                  O (f.año MOD 400 = 0)
+  FIN
+…
+AñoBisiesto (hoy);
+AñoBisiesto (mañana);</code></pre></div><div class="codeblk sp"><p class="code-t">Intercambio</p><pre><code class="lang-sp">LÉXICO
+  a, b : Entero;
+  Intercambio : acción (dato–resultado x, y : Entero)
+    LÉXICO
+      t : Entero;           // variable local
+    ALGORITMO
+      t ← x; x ← y; y ← t
+    FIN;
+ALGORITMO
+  Leer (a, b);              { a = A, b = B }
+  Intercambio (a, b);       { a = B, b = A }
+  Escribir (a, b)
+FIN.</code></pre></div></div><p>Notación: <code>nombre : acción (clase1 p1 : tipo1; …; clasen pn : tipon)</code>, donde la clase es <b>dato</b>, <b>resultado</b> o <b>dato–resultado</b>. En la definición están los <b>parámetros formales</b>; en la llamada, los <b>argumentos</b> (parámetros reales).</p></div></section><section class="topic" id="t2-2"><h3><span class="tnum">2.2</span><span>Clases de parámetros</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Clase</th><th>Papel</th><th>En la llamada / el retorno</th><th>Argumento</th><th>C++</th></tr></thead><tbody><tr><td><b>dato</b></td><td>Entrada: se suministra y no debe modificarse</td><td>parámetro ← argumento</td><td>Cualquier <b>expresión</b> del tipo</td><td>por valor: <code>int x</code></td></tr><tr><td><b>resultado</b></td><td>Salida: valor calculado por la acción</td><td>argumento ← parámetro (al volver)</td><td>Una <b>variable</b></td><td>por referencia: <code>int &amp;x</code></td></tr><tr><td><b>dato–resultado</b></td><td>Entrada/salida: se usa su valor y se modifica</td><td>las dos cosas</td><td>Una <b>variable</b></td><td>por referencia: <code>int &amp;x</code></td></tr></tbody></table></div><p>Al emparejar parámetros formales y argumentos deben coincidir en <b>número, tipo y posición</b>. Los identificadores <b>no</b> tienen que coincidir: los parámetros son parte del léxico local, no se ven fuera y pueden enmascarar nombres del léxico superior.</p><div class="codeblk sp"><p class="code-t">Valor decimal de un binario de cuatro cifras (versión corregida de las transparencias)</p><pre><code class="lang-sp">ValDec_NumBin : acción (dato bit3, bit2, bit1, bit0 : Entero [0, 1];
+                        resultado valDec : Entero)
+  ALGORITMO
+    valDec ← bit3*8 + bit2*4 + bit1*2 + bit0
+  FIN;
+ALGORITMO
+  x ← 0; y ← 1;
+  ValDec_NumBin (1, 1, 1, 0, vD);   Escribir (vD);   // 14
+  ValDec_NumBin (y, x, y, x, vD);   Escribir (vD);   // 1010₂ = 10
+FIN.</code></pre></div><div class="box tip"><p class="box-t">Traza de la llamada</p><p>Al llamar <code>ValDec_NumBin (y, x, y, x, vD)</code>: bit3 ← 1, bit2 ← 0, bit1 ← 1, bit0 ← 0 (copias). Se calcula valDec = 8 + 2 = 10 y, <b>al volver</b>, vD ← valDec = 10. Con <code>Intercambio (a, b)</code> y a = 7, b = 4: al entrar x = 7, y = 4; al salir x = 4, y = 7, que se copian a a y b.</p></div></div></section><section class="topic" id="t2-3"><h3><span class="tnum">2.3</span><span>Abstracción y descomposición con acciones</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Abstracción</th><th>Pregunta</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Por <b>especificación</b></td><td>¿Qué hace? (frente a ¿cómo lo hace?)</td><td>Basta saber {x = X, y = Y} Intercambio {x = Y, y = X}</td></tr><tr><td>Por <b>parametrización</b></td><td>Generalidad frente a especificidad</td><td>Intercambia dos variables enteras <i>cualesquiera</i>, no sólo «x» e «y»</td></tr></tbody></table></div><p><b>Desplazamiento circular</b> de a, b, c: {a = A, b = B, c = C} → {a = B, b = C, c = A}. Con un estado intermedio y la acción Intercambio:</p><div class="codeblk sp"><p class="code-t">Dos llamadas resuelven el problema</p><pre><code class="lang-sp">Leer (a, b, c);         { a = A, b = B, c = C }    // 12 80 25
+Intercambio (a, b);     { a = B, b = A, c = C }    // 80 12 25
+Intercambio (b, c);     { a = B, b = C, c = A }    // 80 25 12
+Escribir (a, b, c)</code></pre></div><p>Definir una acción nueva <b>enriquece</b> el conjunto de acciones disponibles. Las acciones son la base de la <b>descomposición de programas</b> en el paradigma imperativo, y gracias a la <b>localidad</b> se pueden escribir y entender sin conocer el contexto donde se usan: basta su especificación.</p></div></section><section class="topic" id="t2-4"><h3><span class="tnum">2.4</span><span>Funciones</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th></th><th>Acción</th><th>Función</th></tr></thead><tbody><tr><td>Especificación</td><td>Modifica el estado del proceso (estado inicial → final)</td><td>Relación entre dominio y codominio: <span class="fx">f : A1 × … × An → B</span></td></tr><tr><td>Uso</td><td>Como una acción primitiva (instrucción)</td><td>Como un <b>operador</b>, dentro de expresiones</td></tr><tr><td>Algoritmo</td><td>Combina acciones para lograr la postcondición</td><td>Calcula el valor del codominio que corresponde a los parámetros</td></tr><tr><td>Parámetros</td><td>dato, resultado o dato–resultado</td><td><b>Todos dato</b></td></tr><tr><td>Resultado</td><td>Por los parámetros</td><td>Un único valor, asignado al <b>nombre de la función</b> como último paso</td></tr></tbody></table></div><div class="pair"><div class="codeblk sp"><p class="code-t">Max2 sin análisis de casos</p><pre><code class="lang-sp">Max2 : función (x, y : Entero) → Entero;
+  ALGORITMO
+    Max2 ← ((x + y) + abs (x – y)) DIV 2
+  FIN;
+// Max2 (8, 3) = (11 + 5) DIV 2 = 8</code></pre></div><div class="codeblk sp"><p class="code-t">Max3 por composición funcional</p><pre><code class="lang-sp">Max3 : función (x, y, z : Entero) → Entero;
+  ALGORITMO
+    Max3 ← Max2 (x, Max2 (y, z))
+  FIN;
+// Max3 (6, 3, 5) = Max2 (6, Max2 (3, 5)) = Max2 (6, 5) = 6
+t ← a + b + c – Max3 (a, b, c);
+SI Max3 (a, b, c) = a ENTONCES a ← a + 1 FIN_SI</code></pre></div></div><p>Max3 se puede resolver de cuatro formas: (1) <b>composición funcional</b> con Max2; (2) <b>análisis exhaustivo</b> de casos (x mayor que y y que z…); (3) composición funcional con análisis de casos (si x &gt; y, Max2 (x, z); si no, Max2 (y, z)); (4) análisis de casos <b>en dos etapas</b> (SEGÚN x, y y dentro SEGÚN con z). La 1 es la más legible y reutiliza lo ya hecho.</p></div></section><section class="topic" id="t2-5"><h3><span class="tnum">2.5</span><span>Ejemplo: suma de duraciones</span></h3><div class="prose"><p>Dadas dos duraciones &lt;h, m, s&gt;, obtener su suma expresada igual. Idea: pasar las dos a segundos, sumarlas y volver a pasar a duración.</p><div class="codeblk sp"><p class="code-t">SumarD</p><pre><code class="lang-sp">LÉXICO
+  Duración = TIPO &lt; h : Entero ≥ 0; m, s : Entero [0, 59] &gt;;
+  d1, d2 : Duración;
+  SumarD : función (a, b : Duración) → Duración;
+    LÉXICO
+      Cvds : función (d : Duración) → Entero;      // duración → segundos
+        ALGORITMO  Cvds ← 3600*d.h + 60*d.m + d.s  FIN;
+      Cvsd : función (n : Entero) → Duración;      // segundos → duración
+        LÉXICO  d : Duración; rh : Entero [0, 3599];
+        ALGORITMO
+          d.h ← n DIV 3600;  rh ← n MOD 3600;
+          d.m ← rh DIV 60;   d.s ← rh MOD 60;
+          Cvsd ← d
+        FIN;
+    ALGORITMO
+      SumarD ← Cvsd (Cvds (a) + Cvds (b))
+    FIN;
+ALGORITMO
+  Leer (d1, d2);
+  Escribir (SumarD (d1, d2))
+FIN</code></pre></div><div class="box tip"><p class="box-t">Comprobación</p><p>&lt;3, 30, 59&gt; = 12659 s y &lt;1, 59, 5&gt; = 7145 s. Suma 19804 s → h = 5, resto 1804 → m = 30, s = 4: <b>&lt;5, 30, 4&gt;</b>.</p></div></div></section><section class="topic" id="t2-6"><h3><span class="tnum">2.6</span><span>Ámbito y visibilidad</span></h3><div class="prose"><p>Una acción puede contener otras en su léxico. Cada identificador tiene <b>ámbito</b> en el bloque donde se declara y en los que éste contiene.</p><div class="tablewrap"><table class=""><thead><tr><th>Léxico de</th><th>Tiene ámbito en</th></tr></thead><tbody><tr><td>ALG (principal), que contiene A y B</td><td>ALG, A, A1, A2, B</td></tr><tr><td>A, que contiene A1 y A2</td><td>A, A1, A2</td></tr><tr><td>A1</td><td>A1</td></tr><tr><td>A2</td><td>A2</td></tr><tr><td>B</td><td>B</td></tr></tbody></table></div><p><b>Regla de la máxima localidad</b>: los identificadores de léxicos interiores <b>enmascaran</b> a los idénticos de niveles superiores. En C++ no se pueden definir funciones dentro de otras: todas van en el léxico global.</p></div></section><section class="topic" id="t2-7"><h3><span class="tnum">2.7</span><span>Tablas (arrays)</span></h3><div class="prose"><p>Una <b>tabla</b> asocia a cada valor de un <b>dominio</b> (un intervalo [bi, bs] de un tipo ordinal: los índices) un valor del <b>rango</b> (el tipo base, cualquiera). Número de elementos: <span class="fx">n = ordinal (bs) − ordinal (bi) + 1</span>. Se accede <b>directamente</b> a cada elemento por su índice: si <code>T: Temperatura</code>, T<sub>2</sub> es el elemento de índice 2.</p><div class="codeblk sp"><p class="code-t">Declaración y acceso</p><pre><code class="lang-sp">Notas = TIPO Tabla [1, 8] de Real;
+Temperatura = TIPO Tabla [1, 12] de Real;
+T : Temperatura;            // T = [10, 9.5, 11, 14.6, 17, 22, 27, 32, 27, 25, 16, 15]
+media ← (T1 + T2) / 2       // media de enero y febrero = 9.75</code></pre></div><p><b>Ejemplo: día del año</b> de una fecha (día, mes). Si todos los meses tuvieran 30 días sería <code>30·(mes − 1) + día</code>; una tabla guarda la <b>corrección</b> acumulada de cada mes (enero tiene un día de más: +1 a partir de febrero; febrero tiene dos de menos: −1 a partir de marzo…).</p><div class="codeblk sp"><p class="code-t">Día del año con una tabla de correcciones</p><pre><code class="lang-sp">LÉXICO
+  Día = TIPO Entero [1, 31];  Mes = TIPO Entero [1, 12];
+  Fecha = TIPO &lt; d : Día; m : Mes &gt;;
+  correc : Tabla [Mes] de Entero = [0, 1, –1, 0, 0, 1, 1, 2, 3, 3, 4, 4];
+  x : Fecha;
+ALGORITMO
+  Leer (x);
+  Escribir (30 * (x.m – 1) + x.d + correc[x.m])
+FIN.
+// (4, 2) → 30 + 4 + 1 = 35;  (30, 1) → 30;  (31, 12) → 330 + 31 + 4 = 365</code></pre></div><div class="tablewrap"><table class=""><thead><tr><th>Tabla</th><th>Producto de tipos</th></tr></thead><tbody><tr><td>Elementos de idéntica naturaleza (mismo tipo)</td><td>Campos de tipos distintos</td></tr><tr><td>Acceso por <b>indexación</b> (T<sub>i</sub>)</td><td>Acceso por <b>nombre</b> (a1.curso)</td></tr><tr><td>Nº de elementos significativos no fijo</td><td>Número fijo de campos</td></tr></tbody></table></div><p>Operaciones frecuentes: <b>recorrido</b> (la misma acción sobre todos los elementos) y <b>búsqueda</b> (encontrar uno que cumpla una propiedad). Son los esquemas del tema 4.</p></div></section></section><section class="tema guide" id="t3"><header class="tema-head"><p class="eyebrow">Tema 3</p><h2>La iteración y sus formas</h2><p class="lede">Por qué hace falta iterar, las cuatro composiciones iterativas de la notación, sus equivalencias y los problemas clásicos resueltos.</p></header><section class="topic" id="t3-1"><h3><span class="tnum">3.1</span><span>La necesidad de iterar</span></h3><div class="prose"><p>Problema: calcular la media de las notas de un grupo cuyo tamaño no se conoce; se termina con una nota negativa. Con SI anidados habría que escribir el mismo bloque «sumar, contar, leer» tantas veces como alumnos… que no sabemos. Hace falta <b>repetir</b>.</p><div class="box"><p class="box-t">Partes de toda iteración</p><ul><li><b>Inicialización</b>: tratamientos previos.</li><li><b>Cuerpo</b>: las sentencias que se repiten.</li><li><b>Finalización</b>: lo que se hace cuando la iteración se detiene.</li></ul><p>Y siempre debe tener un <b>punto de parada</b>.</p></div></div></section><section class="topic" id="t3-2"><h3><span class="tnum">3.2</span><span>MIENTRAS</span></h3><div class="prose"><p><code>MIENTRAS cond HACER S FIN_MIENTRAS</code>: comprobación de parada <b>al principio</b>; la condición es de <b>continuación</b>. El cuerpo puede ejecutarse <b>cero</b> veces.</p><div class="codeblk sp"><p class="code-t">Media de notas con MIENTRAS</p><pre><code class="lang-sp">suma ← 0; numElem ← 0; Leer (nota);
+MIENTRAS nota ≥ 0 HACER
+  suma ← suma + nota; numElem ← numElem + 1;
+  Leer (nota)
+FIN_MIENTRAS;
+SI numElem &gt; 0 ENTONCES Escribir (&quot;Valor medio de las notas: &quot;, suma / numElem)
+SI_NO Escribir (&quot;No hay notas que promediar&quot;)
+FIN_SI</code></pre></div></div></section><section class="topic" id="t3-3"><h3><span class="tnum">3.3</span><span>REPETIR … HASTA</span></h3><div class="prose"><p><code>REPETIR S HASTA cond</code>: parada <b>al final</b>; el cuerpo se ejecuta <b>al menos una vez</b>; la condición es de <b>parada</b> (al revés que en el MIENTRAS). Ideal cuando hay que hacer algo antes de poder comprobar: pedir un dato hasta que sea válido.</p><div class="codeblk sp"><p class="code-t">Validar una nota</p><pre><code class="lang-sp">REPETIR
+  Escribir (&quot;Ingrese la nota del alumno (0 a 10): &quot;);
+  Leer (nota);
+  SI (nota &lt; 0) O (nota &gt; 10) ENTONCES
+    Escribir (&quot;Error: la nota debe estar entre 0 y 10.&quot;)
+  FIN_SI
+HASTA QUE (nota ≥ 0) Y (nota ≤ 10);
+Escribir (&quot;Nota registrada con éxito: &quot;, nota)</code></pre></div></div></section><section class="topic" id="t3-4"><h3><span class="tnum">3.4</span><span>ITERAR … DETENER</span></h3><div class="prose"><p><code>ITERAR S2 DETENER cond S3 FIN_ITERAR</code>: parada <b>en medio</b>. S2 se ejecuta al menos una vez y S3 puede no ejecutarse. La condición es de <b>parada</b>. Encaja con «leer, comprobar si es el final, tratar».</p><div class="codeblk sp"><p class="code-t">Media de notas con ITERAR</p><pre><code class="lang-sp">suma ← 0; numElem ← 0;
+ITERAR
+  Leer (nota);
+  DETENER nota &lt; 0;
+  suma ← suma + nota; numElem ← numElem + 1
+FIN_ITERAR;
+SI numElem &gt; 0 ENTONCES Escribir (&quot;Valor medio: &quot;, suma / numElem)
+SI_NO Escribir (&quot;No hay notas que promediar&quot;) FIN_SI</code></pre></div></div></section><section class="topic" id="t3-5"><h3><span class="tnum">3.5</span><span>Equivalencias</span></h3><div class="prose"><p>Cualquier composición iterativa se puede expresar con cualquier otra; hay que saber elegir la adecuada.</p><div class="tablewrap"><table class=""><thead><tr><th>Composición</th><th>Equivalente con…</th><th>Equivalente con…</th></tr></thead><tbody><tr><td><code>MIENTRAS c HACER S2</code></td><td><code>SI c ENTONCES REPETIR S2 HASTA NO c FIN_SI</code></td><td><code>ITERAR DETENER NO c; S2 FIN_ITERAR</code></td></tr><tr><td><code>REPETIR S2 HASTA c</code></td><td><code>S2; MIENTRAS NO c HACER S2</code></td><td><code>ITERAR S2 DETENER c FIN_ITERAR</code></td></tr><tr><td><code>ITERAR S2 DETENER c S3</code></td><td><code>S2; MIENTRAS NO c HACER S3; S2</code></td><td><code>S2; SI NO c ENTONCES REPETIR S3; S2 HASTA c FIN_SI</code></td></tr></tbody></table></div><div class="box warn"><p class="box-t">Ojo</p><p>Al pasar de MIENTRAS a REPETIR (o al revés) la condición se <b>niega</b>: una es de continuación y la otra de parada. Y el REPETIR necesita un SI delante porque el MIENTRAS puede no entrar nunca.</p></div></div></section><section class="topic" id="t3-6"><h3><span class="tnum">3.6</span><span>RECORRIENDO</span></h3><div class="prose"><p><code>k RECORRIENDO [a, b] HACER S FIN_RECORRIENDO</code>: ejecuta S una vez por cada valor del intervalo, con k tomando a, a+1, …, b. El inicio y la parada están <b>implícitos</b>. Si a &gt; b el intervalo es vacío y S no se ejecuta. Variante: <code>EN SENTIDO INVERSO</code> (de b a a).</p><ul><li>S <b>no debe modificar</b> la variable de control k.</li><li>No debe suponerse que los límites se reevalúan en cada vuelta; es sano que no cambien.</li><li>Al terminar, el valor de k <b>no está definido</b> (como si no estuviera inicializada).</li></ul><div class="codeblk sp"><p class="code-t">Producto de dos naturales sólo con sumas</p><pre><code class="lang-sp">LÉXICO
+  a, b : Entero ≥ 0;   // datos
+  p : Entero ≥ 0;      // resultado
+  i : Entero ≥ 0;      // variable de la iteración
+ALGORITMO
+  Leer (a, b);
+  p ← 0;                         // p = 0·a
+  i RECORRIENDO [1, b] HACER
+    p ← p + a                    // siguiente múltiplo de a
+  FIN_RECORRIENDO;
+  Escribir (p)                   // p = a·b
+FIN.</code></pre></div><div class="tablewrap"><table class=""><thead><tr><th>Situación</th><th>Composición natural</th></tr></thead><tbody><tr><td>Nº de vueltas conocido antes de empezar</td><td>RECORRIENDO</td></tr><tr><td>Puede no haber que entrar (comprobar antes)</td><td>MIENTRAS</td></tr><tr><td>Hay que hacer algo al menos una vez antes de comprobar</td><td>REPETIR</td></tr><tr><td>Leer / comprobar final / tratar</td><td>ITERAR</td></tr></tbody></table></div></div></section><section class="topic" id="t3-7"><h3><span class="tnum">3.7</span><span>Problemas iterativos resueltos</span></h3><div class="prose"><h4>Factorial</h4><p>0! = 1 y n! = n · (n − 1)!. Tres versiones:</p><div class="pair"><div class="codeblk sp"><p class="code-t">Versión 1 (MIENTRAS)</p><pre><code class="lang-sp">Leer (n);
+fact ← 1; i ← 1;
+MIENTRAS i &lt; n HACER
+  i ← i + 1;
+  fact ← fact * i
+FIN_MIENTRAS;
+Escribir (fact)</code></pre></div><div class="codeblk sp"><p class="code-t">Versión 3 (RECORRIENDO)</p><pre><code class="lang-sp">Leer (n);
+fact ← 1;
+i RECORRIENDO [2, n] HACER
+  fact ← fact * i
+FIN_RECORRIENDO;
+Escribir (fact)</code></pre></div></div><details class="sol"><summary>¿Cuál de las versiones es más apropiada y por qué?</summary><div class="sol-body"><p>La de <b>RECORRIENDO</b>: el número de multiplicaciones se conoce antes de empezar (n − 1), así que la composición expresa directamente la idea y no hay que gestionar a mano el contador ni la condición. Además funciona sin casos especiales para n = 0 y n = 1 (el intervalo [2, n] es vacío y fact queda en 1).</p></div></details><h4>Divisores propios y números primos</h4><div class="pair"><div class="codeblk sp"><p class="code-t">Divisores propios de a</p><pre><code class="lang-sp">Leer (a); n ← 0;
+i RECORRIENDO [2, a – 1] HACER
+  SI a MOD i = 0 ENTONCES
+    Escribir (i); n ← n + 1
+  FIN_SI
+FIN_RECORRIENDO;
+Escribir (n)</code></pre></div><div class="codeblk sp"><p class="code-t">¿Es n primo? (búsqueda del primer divisor)</p><pre><code class="lang-sp">Leer (n);
+SI n = 1 ENTONCES Escribir (&quot;1 no es primo&quot;)
+SI_NO
+  j ← 2;
+  MIENTRAS n MOD j ≠ 0 HACER j ← j + 1 FIN_MIENTRAS;
+  SI j = n ENTONCES Escribir (n, &quot; es primo&quot;)
+  SI_NO Escribir (n, &quot; no es primo&quot;) FIN_SI
+FIN_SI</code></pre></div></div><details class="sol"><summary>¿Hay formas mejores?</summary><div class="sol-body"><ul><li><b>Divisores</b>: ningún divisor propio supera a/2, así que basta <code>i RECORRIENDO [2, a DIV 2]</code>; mejor aún, recorrer hasta √a y anotar cada pareja i y a DIV i.</li><li><b>Primos</b>: es una búsqueda <b>con garantía de éxito</b> (n siempre se divide a sí mismo), por eso no hace falta comprobar el final. Mejoras de la práctica 5: descartar los pares (salvo el 2) y probar sólo divisores impares <b>hasta √n</b>: si no hay divisor por debajo de la raíz, tampoco por encima.</li><li>Ojo: las transparencias escriben «1 es primo», pero el 1 <b>no</b> es primo por definición (sólo tiene un divisor).</li></ul></div></details><h4>Potencias de 2 en [x, y]</h4><div class="pair"><div class="codeblk sp"><p class="code-t">Solución 1: una función potencia</p><pre><code class="lang-sp">P2 : función (n : Entero) → Entero;
+  LÉXICO p, i : Entero;
+  ALGORITMO
+    p ← 1;
+    i RECORRIENDO [1, n] HACER p ← p * 2 FIN_RECORRIENDO;
+    P2 ← p
+  FIN;
+…
+i RECORRIENDO [x, y] HACER Escribir (P2 (i)) FIN_RECORRIENDO</code></pre></div><div class="codeblk sp"><p class="code-t">Solución 2: cálculo incremental</p><pre><code class="lang-sp">Leer (x, y);
+potencia2 ← 1;
+i RECORRIENDO [1, x] HACER potencia2 ← potencia2 * 2 FIN_RECORRIENDO;
+{ e1 : potencia2 = 2^x }
+i RECORRIENDO [x, y] HACER
+  Escribir (&quot;La potencia &quot;, i, &quot;-ésima de 2 es &quot;, potencia2);
+  potencia2 ← potencia2 * 2
+FIN_RECORRIENDO</code></pre></div></div><details class="sol"><summary>¿Cuál es la diferencia fundamental entre las dos versiones?</summary><div class="sol-body"><p>La primera <b>recalcula cada potencia desde cero</b> (P2 (i) hace i multiplicaciones: en total del orden de y² / 2). La segunda <b>reutiliza la anterior</b>: cada término sale del previo con una sola multiplicación (del orden de y en total). Es la idea que reaparece en la serie de e<sup>x</sup> de la práctica 5: calcular cada término a partir del anterior.</p></div></details><h4>Parte entera de la raíz cuadrada</h4><p>Se recorren los cuadrados 1, 4, 9, 16… sumando impares (1 = 1, 1 + 3 = 4, 1 + 3 + 5 = 9…: la suma de los k primeros impares es k²).</p><div class="codeblk sp"><p class="code-t">Raíz entera por suma de impares</p><pre><code class="lang-sp">Leer (n);
+rc ← 0; c ← 1; imp ← 1;
+// en cada paso c = (rc + 1)²
+MIENTRAS n ≥ c HACER
+  imp ← imp + 2;
+  c ← c + imp;
+  rc ← rc + 1
+FIN_MIENTRAS;
+Escribir (rc)       // n = 10: c = 1, 4, 9, 16 → rc = 3</code></pre></div><h4>Fibonacci</h4><p>f<sub>0</sub> = f<sub>1</sub> = 1 y f<sub>i</sub> = f<sub>i−1</sub> + f<sub>i−2</sub>: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55… Se guardan los dos términos anteriores (ult y penult) y se desplazan en cada vuelta.</p><div class="codeblk sp"><p class="code-t">Término n-ésimo de Fibonacci</p><pre><code class="lang-sp">Leer (n);
+SEGÚN n
+  n &lt; 2 : Escribir (1);
+  n &gt; 1 : penult ← 1; ult ← 1; fibo ← 2;
+          i RECORRIENDO [3, n] HACER
+            penult ← ult;
+            ult ← fibo;
+            fibo ← ult + penult
+            { (fibo = fi) Y (ult = fi–1) Y (penult = fi–2) }
+          FIN_RECORRIENDO;
+          Escribir (fibo)
+FIN_SEGÚN</code></pre></div></div></section></section><section class="tema guide" id="t4"><header class="tema-head"><p class="eyebrow">Tema 4</p><h2>Composición iterativa y noción de secuencia</h2><p class="lede">La máquina secuencial, el invariante, los esquemas de recorrido y de búsqueda, cómo se combinan y los modelos de acceso secuencial. Incluye un simulador para ver los esquemas paso a paso.</p></header><section class="topic" id="t4-1"><h3><span class="tnum">4.1</span><span>Secuencias y máquina secuencial</span></h3><div class="prose"><p>Una <b>secuencia</b> es un conjunto de valores de cualquier tipo en el que <b>importa el orden</b>: [32, 64, 85] ≠ [85, 64, 32]. Su <b>longitud</b> (nº de elementos) <b>no se conoce a priori</b>; [ ] es la secuencia vacía (long = 0).</p><p>La <b>máquina secuencial</b> es una cinta con una <b>ventana</b> que deja ver un único elemento, el <b>elemento actual</b> (EA). A su izquierda queda la <b>parte izquierda</b> (Piz, lo ya tratado) y a su derecha la <b>parte derecha</b> (Pdr, lo pendiente). En las secuencias <b>marcadas</b>, tras el último elemento hay una <b>marca de fin</b> (MarcaFin, por ejemplo '#').</p><div class="tablewrap"><table class=""><thead><tr><th>Primitiva (primer modelo)</th><th>Efecto</th></tr></thead><tbody><tr><td><code>Comenzar (S)</code></td><td>Inicia la consulta; el <b>primer elemento</b> pasa a ser el EA</td></tr><tr><td><code>Avanzar (S)</code></td><td>Avanza al siguiente elemento</td></tr><tr><td><code>EA (S)</code></td><td>Devuelve el elemento actual (MarcaFin al final)</td></tr><tr><td><code>Crear (S)</code></td><td>Crea S vacía para añadir elementos por la derecha</td></tr><tr><td><code>Registrar (S, e)</code></td><td>Graba e como último elemento</td></tr><tr><td><code>Marcar (S)</code></td><td>Graba la marca de fin</td></tr></tbody></table></div><p>En las secuencias <b>no marcadas</b> se usa una función booleana <code>FDS (S)</code> (fin de secuencia), verdadera cuando se ha sobrepasado el último elemento.</p><div class="box tip"><p class="box-t">En C++ (práctica 6)</p><p>La entrada estándar hace de secuencia del primer modelo: <code>cin &gt;&gt; EA</code> antes del bucle es <b>Comenzar</b>, <code>while (EA != MF)</code> la comprobación de la marca y otra lectura al final del cuerpo es <b>Avanzar</b>.</p></div></div></section><section class="topic" id="t4-2"><h3><span class="tnum">4.2</span><span>Análisis iterativo y el invariante</span></h3><div class="prose"><p>Una iteración se modela como el <b>tratamiento de una secuencia</b>. Los estados intermedios no son iguales, pero todos comparten una propiedad que se cumple en cada paso: el <b>invariante</b>. Al terminar, invariante + condición de parada ⇒ postcondición.</p><div class="codeblk sp"><p class="code-t">Longitud de un texto</p><pre><code class="lang-sp">Léxico
+  conta : Entero ≥ 0;
+  S : secuencia de Carácter;
+Algoritmo
+  Comenzar (S); conta ← 0;               // inicialización
+  MIENTRAS EA (S) ≠ MarcaFin HACER
+    conta ← conta + 1; Avanzar (S)       // cuerpo
+  FIN_MIENTRAS;
+  Escribir (conta)                        // finalización
+Fin.
+// Inv: conta = número de elementos de Piz (S)</code></pre></div><div class="box"><p class="box-t">Cómo se obtiene cada parte (razonamiento inductivo)</p><ul><li><b>Inicialización</b>: para cada variable v, ¿cuál es la solución para la <b>secuencia vacía</b>? (casos base: <code>conta ← 0</code>, <code>suma ← 0</code>).</li><li><b>Tratamiento elemental</b>: suponemos conocida la solución para Piz, guardada en v (<b>hipótesis de inducción</b>); ¿qué hay que hacer para tener la de Piz más el EA? <code>v ← g (v, EA)</code>: <code>suma ← suma + EA (S)</code>, <code>numElem ← numElem + 1</code>.</li></ul></div><p>Ejemplo: media de una secuencia de notas. Post: { suma = ΣS<sub>i</sub>, numElem = long (S) }. Al final, si numElem &gt; 0 se escribe suma / numElem; si no, «Secuencia vacía».</p></div></section><section class="topic" id="t4-3"><h3><span class="tnum">4.3</span><span>Esquemas de recorrido</span></h3><div class="prose"><p>Un <b>esquema algorítmico</b> es una plantilla aplicable a una <b>clase de problemas</b>. <b>Recorrido</b> (enumeración secuencial): aplicar el mismo tratamiento a <b>todos</b> los elementos. Hay que decidir si:</p><ul><li><b>H1</b>: la <b>secuencia vacía</b> se puede tratar como las demás.</li><li><b>H2</b>: el <b>primer elemento</b> se puede tratar como los demás.</li></ul><div class="pair"><div class="codeblk sp"><p class="code-t">Esquema 1 · H1 y H2</p><pre><code class="lang-sp">Comenzar;
+{ Inicialización del tratamiento }
+MIENTRAS EA ≠ MarcaFin HACER
+  { Tratamiento de EA }
+  Avanzar
+FIN_MIENTRAS;
+{ Terminación del tratamiento }</code></pre></div><div class="codeblk sp"><p class="code-t">Esquema 2 · ¬H1 y H2</p><pre><code class="lang-sp">Comenzar;
+SEGÚN EA
+  EA = MarcaFin : { Tratamiento sec. vacía }
+  EA ≠ MarcaFin :
+    { Inicialización del tratamiento }
+    REPETIR
+      { Tratamiento de EA }
+      Avanzar
+    HASTA EA = MarcaFin;
+    { Terminación del tratamiento }
+FIN_SEGÚN</code></pre></div></div><div class="codeblk sp"><p class="code-t">Esquema 3 · ¬H1 y ¬H2</p><pre><code class="lang-sp">Comenzar;
+SEGÚN EA
+  EA = MarcaFin : { Tratamiento sec. vacía }
+  EA ≠ MarcaFin :
+    { Tratamiento del 1er elemento }      // casos base: secuencia de un elemento
+    ITERAR
+      Avanzar
+      DETENER EA = MarcaFin;
+      { Tratamiento de EA }
+    FIN_ITERAR;
+    { Terminación del tratamiento }
+FIN_SEGÚN</code></pre></div><p>Con la <b>media</b>: esquema 1 (sum ← 0; n ← 0; al final SEGÚN n = 0 / n &gt; 0); esquema 2 (la secuencia vacía se trata al principio y la división se hace sin comprobar); esquema 3 (sum ← EA (S); n ← 1 como inicialización).</p></div></section><section class="topic" id="t4-4"><h3><span class="tnum">4.4</span><span>Problemas de recorrido</span></h3><div class="prose"><h4>Meseta mayor</h4><p>Meseta = sucesión de valores idénticos. En S = [35, 18, 18, 18, 5, 62, 35, 35, 11, 11, 11, 11, 9, 9] la mayor mide <b>4</b> (los 11). Inv: { p = LongMesetaMayor (Piz), u = último (Piz), m = LongÚltMeseta (Piz) }. <b>u no está definido para la secuencia vacía</b> (¬H2), así que hay dos opciones:</p><div class="pair"><div class="codeblk sp"><p class="code-t">Con H2 (esquema 1), enteros &gt; 0</p><pre><code class="lang-sp">Comenzar (S);
+p ← 0; m ← 0; u ← 0;   // «truco sucio»: 0 no aparece
+MIENTRAS EA (S) ≠ MarcaFin HACER
+  SI EA (S) = u ENTONCES m ← m + 1
+  SI_NO m ← 1 FIN_SI;
+  SI m &gt; p ENTONCES p ← m FIN_SI;
+  u ← EA (S);
+  Avanzar (S)
+FIN_MIENTRAS;
+Escribir (p)</code></pre></div><div class="codeblk sp"><p class="code-t">Con ¬H2 (esquema 3)</p><pre><code class="lang-sp">Comenzar (S);
+SEGÚN EA (S)
+  EA (S) = MarcaFin : Escribir (&quot;Secuencia vacía&quot;);
+  EA (S) ≠ MarcaFin :
+    p ← 1; m ← 1; u ← EA (S);
+    ITERAR
+      Avanzar (S)
+      DETENER EA (S) = MarcaFin;
+      SI EA (S) = u ENTONCES m ← m + 1 SI_NO m ← 1 FIN_SI;
+      SI m &gt; p ENTONCES p ← m FIN_SI;
+      u ← EA (S)
+    FIN_ITERAR;
+    Escribir (p)
+FIN_SEGÚN</code></pre></div></div><h4>Máximo</h4><p>max no está definido para la vacía: esquema 3 con <code>m ← EA (S)</code> al principio y <code>SI EA (S) &gt; m ENTONCES m ← EA (S)</code> en el cuerpo.</p><h4>Copia de una secuencia</h4><div class="codeblk sp"><p class="code-t">Recorrido de S1 con creación simultánea de S2</p><pre><code class="lang-sp">Comenzar (S1); Crear (S2);
+// Inv: Piz (S1) = Piz (S2)
+MIENTRAS EA (S1) ≠ MarcaFin HACER
+  Registrar (S2, EA (S1));
+  Avanzar (S1)
+FIN_MIENTRAS;
+Marcar (S2)</code></pre></div><h4>Máximos y mínimos con posiciones</h4><p>Para S = [34, 1, 90, 39, 1, 15, 90, 25, 1, 10]: <b>ma = 90, pma = 3, uma = 7, nma = 2</b> y <b>mi = 1, pmi = 2, umi = 9, nmi = 3</b>. Las variables dependen unas de otras (pma, uma, nma de ma y de pos), así que el orden de las actualizaciones importa: primero pos, luego un SEGÚN con ma.</p><div class="codeblk sp"><p class="code-t">Inicialización y cuerpo</p><pre><code class="lang-sp">// inicialización (esquema 3, primer elemento)
+pos ← 1; ma ← EA (S); pma ← 1; uma ← 1; nma ← 1;
+         mi ← EA (S); pmi ← 1; umi ← 1; nmi ← 1;
+// cuerpo
+pos ← pos + 1;
+SEGÚN EA (S), ma
+  EA (S) = ma : uma ← pos; nma ← nma + 1;
+  EA (S) &gt; ma : uma ← pos; pma ← pos; ma ← EA (S); nma ← 1;
+  EA (S) &lt; ma : ;
+FIN_SEGÚN;
+SEGÚN EA (S), mi      // simétrico, con &lt; y &gt;
+  …
+FIN_SEGÚN</code></pre></div><h4>Intercalación de secuencias ordenadas</h4><p>S1 = [25, 11, 11, 3, 1, 1] y S2 = [38, 25, 14, 11, 9, 9, 7], decrecientes → R = [38, 25, 25, 14, 11, 11, 11, 9, 9, 7, 3, 1, 1]. Inv: Piz (R) = Intercalar (Piz (S1), Piz (S2)). En cada paso se registra el <b>mayor</b> de los dos EA (o los dos si son iguales) y se avanza en esa secuencia; cuando una se acaba se copia el resto de la otra con la acción <code>CopiarResto</code>.</p><div class="codeblk sp"><p class="code-t">Intercalar</p><pre><code class="lang-sp">Comenzar (S1); Comenzar (S2); Crear (R);
+MIENTRAS (EA (S1) ≠ MarcaFin) Y (EA (S2) ≠ MarcaFin) HACER
+  SEGÚN EA (S1), EA (S2)
+    EA (S1) = EA (S2) : Registrar (R, EA (S1)); Registrar (R, EA (S2));
+                        Avanzar (S1); Avanzar (S2);
+    EA (S1) &gt; EA (S2) : Registrar (R, EA (S1)); Avanzar (S1);
+    EA (S1) &lt; EA (S2) : Registrar (R, EA (S2)); Avanzar (S2);
+  FIN_SEGÚN
+FIN_MIENTRAS;
+SEGÚN EA (S1), EA (S2)
+  (EA (S1) ≠ MarcaFin) Y (EA (S2) = MarcaFin) : CopiarResto (S1, R);
+  (EA (S1) = MarcaFin) Y (EA (S2) ≠ MarcaFin) : CopiarResto (S2, R);
+  EN_OTRO_CASO : ;
+FIN_SEGÚN;
+Marcar (R)</code></pre></div></div></section><section class="topic" id="t4-5"><h3><span class="tnum">4.5</span><span>Esquema de búsqueda</span></h3><div class="prose"><p><b>Búsqueda</b>: encontrar el <b>primer</b> elemento que cumple una propiedad Pro (no hace falta recorrer todo).</p><ul><li>Post: { (Pro (EA) = Verdadero O EA = MarcaFin) Y ningún e de Piz cumple Pro }</li><li>Inv: { ningún elemento de Piz cumple Pro }</li><li>Condición de continuación: <code>(EA ≠ MarcaFin) Y NO Pro (EA)</code></li></ul><div class="codeblk sp"><p class="code-t">Esquema de búsqueda</p><pre><code class="lang-sp">Comenzar;  { Establecimiento inicial del invariante }
+MIENTRAS (EA ≠ MarcaFin) Y NO Pro (EA) HACER
+  { Tratamientos para mantener el invariante }   // si Pro depende de Piz
+  Avanzar
+FIN_MIENTRAS;
+SEGÚN EA
+  EA = MarcaFin : { Tratamiento: no encontrado }
+  EA ≠ MarcaFin : { Tratamiento: EA encontrado }
+FIN_SEGÚN</code></pre></div><div class="box warn"><p class="box-t">YDESPUÉS</p><p>Si es erróneo consultar Pro en la marca (o no hay marca y se usa FDS), se usa el <b>Y condicional</b>: <code>MIENTRAS (EA ≠ MarcaFin) YDESPUÉS NO Pro (EA)</code> sólo evalúa la segunda parte si la primera es verdadera. En C++, <code>&amp;&amp;</code> ya funciona así.</p></div><p><b>Al menos x apariciones de c</b>: Pro depende de Piz (la x-ésima c). Inv: { noc = NroOcur (c, Piz) Y noc &lt; x }.</p><div class="codeblk sp"><p class="code-t">Búsqueda con tratamiento</p><pre><code class="lang-sp">Comenzar (S); Leer (x, c); noc ← 0;
+MIENTRAS (EA (S) ≠ MarcaFin) Y ((EA (S) ≠ c) O (noc ≠ x – 1)) HACER
+  SI EA (S) = c ENTONCES noc ← noc + 1 FIN_SI;   // mantener el invariante
+  Avanzar (S)
+FIN_MIENTRAS;
+SEGÚN EA (S)
+  EA (S) = MarcaFin : Escribir (c, &quot; no aparece &quot;, x, &quot; veces&quot;);
+  EA (S) ≠ MarcaFin : Escribir (c, &quot; aparece al menos &quot;, x, &quot; veces&quot;)
+FIN_SEGÚN</code></pre></div><p><b>Búsqueda con garantía de éxito</b>: si se sabe que algún elemento cumple Pro, se omite la comparación con la marca. Ejemplo: <i>¿un texto es blanco?</i> <code>MIENTRAS EA (S) = ' ' HACER Avanzar (S)</code> (la marca no es un blanco, así que para seguro).</p><p><b>Longitud de la primera palabra</b>: doble búsqueda; la del comienzo (saltar blancos, con garantía de éxito) y la del final, contando: <code>lpp ← 0; MIENTRAS (EA (S) ≠ MarcaFin) Y (EA (S) ≠ ' ') HACER lpp ← lpp + 1; Avanzar (S)</code>.</p><details class="sol"><summary>¿Se podría usar REPETIR en la segunda búsqueda?</summary><div class="sol-body"><p>Sí: cuando empieza, ya sabemos que EA no es la marca ni un blanco (hay palabra), así que el cuerpo se ejecuta al menos una vez y <code>REPETIR lpp ← lpp + 1; Avanzar (S) HASTA (EA (S) = MarcaFin) O (EA (S) = ' ')</code> es correcto y expresa esa certeza. El MIENTRAS también es correcto y sigue el esquema general de búsqueda.</p></div></details><p><b>¿Contiene 'A', 'E' e 'I' en este orden?</b> Tres búsquedas iguales: se define una acción (las secuencias se pasan como <b>dato–resultado</b>, porque avanzar cambia su estado interno).</p><div class="codeblk sp"><p class="code-t">Tres búsquedas en secuencia</p><pre><code class="lang-sp">BuscarLetra : acción (dato c : Carácter; dato–resultado S : secuencia de Carácter)
+  Pre : { Estado (S) = consulta }
+  Post : { (EA (S) = c) O (EA (S) = MarcaFin) }
+  ALGORITMO
+    MIENTRAS (EA (S) ≠ MarcaFin) Y (EA (S) ≠ c) HACER Avanzar (S) FIN_MIENTRAS
+  FIN;
+…
+Comenzar (S);
+BuscarLetra (&#x27;A&#x27;, S);
+SEGÚN EA (S)
+  EA (S) = MarcaFin : Escribir (&quot;No&quot;);
+  EA (S) ≠ MarcaFin : BuscarLetra (&#x27;E&#x27;, S);  … (igual con &#x27;I&#x27;)
+FIN_SEGÚN</code></pre></div><details class="sol"><summary>Cuestiones de la transparencia</summary><div class="sol-body"><ul class="qa"><li><b>¿Sería correcto llamar a BuscarLetra tres veces seguidas y comprobar sólo al final?</b> Sí: si una búsqueda llega a la marca, las siguientes no avanzan (su condición es falsa) y al final EA = MarcaFin → «No».</li><li><b>¿Y para 'A', 'A', 'E'?</b> Ninguna de las dos versiones sirve: tras encontrar la primera 'A', la segunda búsqueda de 'A' la encuentra en el mismo sitio sin avanzar.</li><li><b>¿Cómo arreglarlo en el algoritmo principal?</b> Haciendo <code>Avanzar (S)</code> después de cada búsqueda con éxito, antes de la siguiente.</li><li><b>¿Y modificando la acción?</b> Empezando con un Avanzar; entonces cambia su especificación: Pre { EA (S) ≠ MarcaFin } y la Post habla del primer c <i>a la derecha</i> del EA inicial (la primera búsqueda tendría que hacerse aparte o con otra acción).</li></ul></div></details><p><b>Igualdad de dos secuencias</b>: búsqueda de la primera diferencia recorriéndolas a la vez (Inv: Piz (S1) = Piz (S2)); son iguales si las dos acaban en la marca a la vez.</p></div></section><section class="topic" id="t4-6"><h3><span class="tnum">4.6</span><span>Combinación de recorrido y búsqueda</span></h3><div class="prose"><p>Hay que identificar la naturaleza de cada subproblema y cómo se combinan: <b>anidado</b> (uno forma parte del tratamiento del EA del otro) o <b>en secuencia</b> (uno detrás del otro).</p><div class="pair"><div class="codeblk sp"><p class="code-t">Anidados: elementos de S1 que están en S2 (ambas decrecientes, sin repetidos)</p><pre><code class="lang-sp">Comenzar (S1); Comenzar (S2);
+MIENTRAS EA (S1) ≠ MarcaFin HACER                       // 1) recorrido de S1
+  MIENTRAS (EA (S2) ≠ MarcaFin) Y (EA (S2) &gt; EA (S1)) HACER
+    Avanzar (S2)                                        // 2) búsqueda en S2
+  FIN_MIENTRAS;
+  SI (EA (S2) ≠ MarcaFin) Y (EA (S2) = EA (S1)) ENTONCES
+    Escribir (EA (S1), &quot; está también en S2&quot;)
+  SI_NO Escribir (EA (S1), &quot; no está en S2&quot;) FIN_SI;
+  Avanzar (S1)
+FIN_MIENTRAS</code></pre></div><div class="codeblk sp"><p class="code-t">En secuencia: ¿hay en S2 un elemento igual a la suma de S1?</p><pre><code class="lang-sp">Comenzar (S1);
+SEGÚN EA (S1)
+  EA (S1) = MarcaFin : Escribir (&quot;Secuencia S1 vacía&quot;);
+  EA (S1) ≠ MarcaFin :
+    suma ← EA (S1);
+    ITERAR                                  // 1) recorrido de S1 (¬H1, ¬H2)
+      Avanzar (S1)
+      DETENER EA (S1) = MarcaFin;
+      suma ← suma + EA (S1)
+    FIN_ITERAR;
+    Comenzar (S2);                          // 2) búsqueda en S2, en secuencia
+    MIENTRAS (EA (S2) ≠ MarcaFin) Y (EA (S2) ≠ suma) HACER
+      Avanzar (S2)
+    FIN_MIENTRAS;
+    SI EA (S2) = MarcaFin ENTONCES Escribir (&quot;No&quot;) SI_NO Escribir (&quot;Sí&quot;) FIN_SI
+FIN_SEGÚN</code></pre></div></div><details class="sol"><summary>Traza manual del primer algoritmo</summary><div class="sol-body"><p><b>a)</b> S1 = [30, 24, 12, 6, 5], S2 = [60, 58, 30, 15, 12, 3, 2]: 30 <b>sí</b> (S2 avanza 60, 58 y para en 30); 24 no (para en 15); 12 <b>sí</b>; 6 no (para en 3); 5 no.</p><p><b>b)</b> S1 = [60, 58, 30, 15, 12, 3, 2], S2 = [30, 24, 12, 6, 5]: 60 no y 58 no (S2 está en 30, que no es mayor); 30 <b>sí</b>; 15 no (S2 avanza a 12); 12 <b>sí</b>; 3 no (S2 llega a la marca); 2 no.</p><p>Como S2 está ordenada, cada búsqueda continúa donde quedó la anterior: S2 se recorre una sola vez en total.</p></div></details></div></section><section class="topic" id="t4-7"><h3><span class="tnum">4.7</span><span>Modelos de acceso secuencial</span></h3><div class="prose"><p>Dos características: si el primer elemento está <b>disponible</b> nada más iniciar (<b>DP</b>) o hace falta avanzar antes (¬DP), y si el final se detecta al <b>sobrepasar</b> el último elemento (<b>FS</b>) o estando sobre él (¬FS).</p><div class="tablewrap"><table class=""><thead><tr><th></th><th>DP</th><th>¬DP</th></tr></thead><tbody><tr><td><b>FS</b></td><td><b>Primer modelo</b> (secuencias marcadas, FDS)</td><td>Cuarto modelo</td></tr><tr><td><b>¬FS</b></td><td>Tercer modelo (búsquedas en tablas)</td><td><b>Segundo modelo</b></td></tr></tbody></table></div><p><b>Segundo modelo</b>. Primitivas: <code>Iniciar (S)</code> (el EA aún no es significativo), <code>Avanzar (S)</code>, <code>EA (S)</code>, <code>EsVacía (S)</code> y <code>EsÚltimo (S)</code> (ya no se puede avanzar). Como hay que avanzar antes de tratar y al detectar el final el EA todavía hay que tratarlo, <b>cambia el orden</b> de los tratamientos.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Segundo modelo · esquema 1 (H1 y H2)</p><pre><code class="lang-sp">Iniciar;
+{ Inicialización del tratamiento }
+MIENTRAS NO EsÚltimo HACER
+  Avanzar;
+  { Tratamiento de EA }
+FIN_MIENTRAS;
+{ Terminación del tratamiento }</code></pre></div><div class="codeblk sp"><p class="code-t">Segundo modelo · búsqueda</p><pre><code class="lang-sp">Iniciar;
+SEGÚN EsVacía
+  EsVacía : { Tratamiento: no encontrado }
+  NO EsVacía :
+    REPETIR
+      Avanzar        // y tratamientos para mantener el Inv
+    HASTA EsÚltimo O Pro (EA);
+    SEGÚN EA
+      Pro (EA) : { Tratamiento: EA encontrado }
+      NO Pro (EA) : { Tratamiento: no encontrado }
+    FIN_SEGÚN
+FIN_SEGÚN</code></pre></div></div><p>En el <b>primer modelo con FDS</b> los esquemas son los mismos cambiando <code>EA = MarcaFin</code> por <code>FDS</code>; en la búsqueda es obligatorio <code>MIENTRAS NO FDS YDESPUÉS NO Pro (EA)</code> para no consultar un EA que ya no existe.</p></div></section><section class="topic" id="t4-8"><h3><span class="tnum">4.8</span><span>Simulador: los esquemas paso a paso</span></h3><div class="prose"><p>Elige un algoritmo, escribe la cinta (lo que haya tras el primer # se ignora) y pulsa <b>Paso</b>. Verás qué línea se ejecuta, cómo avanza la ventana, cómo crece la parte izquierda y que el <b>invariante</b> se cumple antes de cada comprobación de la condición.</p>
+<section class="tool maq" id="maq" aria-labelledby="maq-h">
+  <p class="tool-h" id="maq-h">Simulador de la máquina secuencial</p>
+  <div class="row">
+    <label for="maq-alg">Algoritmo<select id="maq-alg"></select></label>
+    <label for="maq-txt">Cinta (texto; la marca de fin es #)<input type="text" id="maq-txt" spellcheck="false" autocomplete="off"></label>
+    <label for="maq-c" id="maq-c-wrap">Carácter c<input type="text" id="maq-c" maxlength="1" value="m" spellcheck="false" autocomplete="off"></label>
+  </div>
+  <div class="btns"><button type="button" class="mbtn" id="maq-paso">Paso ▸</button><button type="button" class="mbtn ghost" id="maq-fin">Hasta el final ▸▸</button><button type="button" class="mbtn ghost" id="maq-reset">Reiniciar</button></div>
+  <div class="cinta-wrap"><div class="cinta" id="maq-cinta" aria-label="Cinta"></div></div>
+  <p class="cinta-leyenda"><span class="l-piz">parte izquierda (ya tratada)</span><span class="l-ea">elemento actual</span><span class="l-pdr">parte derecha (por tratar)</span></p>
+  <div class="tool-grid">
+    <div class="tool-part"><h4>Algoritmo</h4><ol class="maq-code" id="maq-code"></ol></div>
+    <div class="tool-part tool-out" aria-live="polite"><h4>Estado</h4>
+      <div class="tablewrap"><table class="maq-vars" id="maq-vars"></table></div>
+      <p class="maq-inv" id="maq-inv"></p>
+      <h4>Salida</h4><p class="maq-out" id="maq-out"></p>
+      <p class="maq-msg" id="maq-msg"></p>
+    </div>
+  </div>
+</section></div></section></section><section class="tema guide" id="anexo"><header class="tema-head"><p class="eyebrow">Anexo</p><h2>Chuletas para repasar</h2><p class="lede">La traducción de la notación SP a C++ en una tabla, los esquemas para memorizar y el acceso a los cuestionarios de Wooclap de cada tema.</p></header><section class="topic" id="a-1"><h3><span class="tnum">A.1</span><span>De la notación SP a C++</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Notación SP</th><th>C++</th></tr></thead><tbody><tr><td><code>Entero</code> · <code>Real</code> · <code>Booleano</code> · <code>Carácter</code></td><td><code>int</code> (short, long) · <code>float</code>, <code>double</code> · <code>bool</code> · <code>char</code> (y <code>string</code> para textos)</td></tr><tr><td><code>Verdadero</code> / <code>Falso</code></td><td><code>true</code> / <code>false</code></td></tr><tr><td><code>x ← e</code></td><td><code>x = e;</code></td></tr><tr><td><code>=</code> · <code>≠</code> · <code>≤</code> · <code>≥</code></td><td><code>==</code> · <code>!=</code> · <code>&lt;=</code> · <code>&gt;=</code></td></tr><tr><td><code>DIV</code> · <code>MOD</code> · <code>/</code> (real)</td><td><code>/</code> entre enteros · <code>%</code> · <code>/</code> con algún real (<code>float (a) / b</code>)</td></tr><tr><td><code>Y</code> · <code>O</code> · <code>NO</code></td><td><code>&amp;&amp;</code> · <code>||</code> · <code>!</code> (o <code>not</code>)</td></tr><tr><td><code>Car (e)</code> · <code>Ord (c)</code> · <code>Sucesor (c)</code></td><td><code>char (e)</code> · <code>int (c)</code> · <code>char (int (c) + 1)</code></td></tr><tr><td><code>Leer (a, b)</code> · <code>Escribir ("x =", x)</code></td><td><code>cin &gt;&gt; a &gt;&gt; b;</code> · <code>cout &lt;&lt; "x =" &lt;&lt; x &lt;&lt; endl;</code></td></tr><tr><td><code>c : constante = valor</code></td><td><code>const int C = valor;</code></td></tr><tr><td><code>T = TIPO &lt; c1: T1; c2: T2 &gt;</code></td><td><code>struct T { T1 c1; T2 c2; };</code></td></tr><tr><td><code>SI c ENTONCES S SI_NO R FIN_SI</code></td><td><code>if (c) { S } else { R }</code></td></tr><tr><td><code>SEGÚN</code> con condiciones</td><td><code>if … else if … else</code> (o <code>switch</code> si es una expresión ordinal frente a constantes)</td></tr><tr><td><code>MIENTRAS c HACER S</code></td><td><code>while (c) { S }</code></td></tr><tr><td><code>REPETIR S HASTA c</code></td><td><code>do { S } while (!(c));</code></td></tr><tr><td><code>ITERAR S1 DETENER c S2</code></td><td><code>S1; while (!(c)) { S2; S1; }</code> o <code>do { S1; if (c) break; S2; } while (true);</code></td></tr><tr><td><code>i RECORRIENDO [a, b]</code> (inverso)</td><td><code>for (i = a; i &lt;= b; i = i + 1)</code> (<code>for (i = b; i &gt;= a; i = i - 1)</code>)</td></tr><tr><td><code>A : acción (dato x: T; dato–resultado y: T)</code></td><td><code>void A (T x, T &amp;y)</code></td></tr><tr><td><code>f : función (x: T) → R</code> · <code>f ← valor</code></td><td><code>R f (T x)</code> · <code>return valor;</code></td></tr></tbody></table></div></div></section><section class="topic" id="a-2"><h3><span class="tnum">A.2</span><span>Esquemas para memorizar</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Problema</th><th>Esquema</th><th>Clave</th></tr></thead><tbody><tr><td>Tratar todos los elementos; la vacía y el primero como los demás</td><td>Recorrido 1 (MIENTRAS)</td><td>Inicialización = solución de la vacía</td></tr><tr><td>La vacía es especial; el primero no</td><td>Recorrido 2 (SEGÚN + REPETIR)</td><td>Media sin dividir entre 0</td></tr><tr><td>La vacía y el primero son especiales</td><td>Recorrido 3 (SEGÚN + ITERAR)</td><td>Máximo, mínimo, meseta, pares adyacentes</td></tr><tr><td>Encontrar el primero que cumple Pro</td><td>Búsqueda</td><td><code>(EA ≠ MF) Y NO Pro (EA)</code>; al final, SEGÚN EA</td></tr><tr><td>Pro depende de lo ya visto</td><td>Búsqueda con tratamientos</td><td>Mantener en la iteración las variables del invariante</td></tr><tr><td>Se sabe que existe</td><td>Búsqueda con garantía de éxito</td><td>No hace falta comparar con la marca</td></tr><tr><td>Tratar todo y, para cada elemento, buscar en otra</td><td>Búsqueda anidada en un recorrido</td><td>Si están ordenadas, la búsqueda no recomienza</td></tr><tr><td>Calcular algo y luego buscarlo</td><td>Recorrido y búsqueda en secuencia</td><td>Suma de S1 en S2</td></tr></tbody></table></div></div></section><section class="topic" id="a-3"><h3><span class="tnum">A.3</span><span>Wooclap: cuestionarios a tu ritmo</span></h3><div class="prose"><p>Los cuestionarios de clase siguen abiertos para hacerlos a tu ritmo. Entra en <a href="https://www.wooclap.com" target="_blank" rel="noopener">wooclap.com</a> con el código de tu grupo o abre directamente el cuestionario:</p><div class="wooclap"><div class="tablewrap"><table class=""><thead><tr><th>Tema</th><th>Grupo 2</th><th>Grupo 3</th><th>Grupo 4</th></tr></thead><tbody><tr><td>Tema 0</td><td><code>TRBDNKN</code> · <a href="https://app.wooclap.com/TRBDNKN/questionnaires/6a973272197316f24f9d2ed2" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>HHGTJYZ</code> · <a href="https://app.wooclap.com/HHGTJYZ/questionnaires/6a96964c82e0bc41256ef7af" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>LGXZNGU</code> · <a href="https://app.wooclap.com/LGXZNGU/questionnaires/6a9af2cddaaf5db0572c3f15" target="_blank" rel="noopener">cuestionario ↗</a></td></tr><tr><td>Tema 1</td><td><code>ZKDMPGA</code> · <a href="https://app.wooclap.com/ZKDMPGA/questionnaires/6a96964c82e0bc41256ef7af" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>URFAGXT</code> · <a href="https://app.wooclap.com/URFAGXT/questionnaires/6a9d18e50dd9699cc92e88cd" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>AONIYYM</code> · <a href="https://app.wooclap.com/AONIYYM/questionnaires/6a9af329ec1e3035cba740d5" target="_blank" rel="noopener">cuestionario ↗</a></td></tr><tr><td>Tema 2</td><td><code>ELMPMHL</code> · <a href="https://app.wooclap.com/ELMPMHL/questionnaires/6a973454ab1313eba04e17df" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>ERBSTMQ</code> · <a href="https://app.wooclap.com/ERBSTMQ/questionnaires/6a9d192f0dd9699cc92e9ecb" target="_blank" rel="noopener">cuestionario ↗</a></td><td><code>TGJBPSI</code> · <a href="https://app.wooclap.com/TGJBPSI/questionnaires/6a9af34cdaaf5db0572c90a0" target="_blank" rel="noopener">cuestionario ↗</a></td></tr><tr><td>Tema 3</td><td><code>PNHYNRQ</code> · <a href="https://app.wooclap.com/PNHYNRQ/questionnaires/6a9db63c724fe9c05d287c0c" target="_blank" rel="noopener">cuestionario ↗</a></td><td>—</td><td>—</td></tr></tbody></table></div></div><p class="topic-note">Para practicar sin conexión tienes el <a href="autotest.html">autotest de IP</a>.</p></div></section></section>
+    <p class="foot">Basado en las transparencias de teoría de los temas 0 a 4 de la asignatura (las erratas de las transparencias están corregidas). El código de los ejemplos en C++ está compilado y probado.</p>
+  </main>
+</div>
+<script src="../js/guia.js"></script>
+<script src="../js/maquina.js"></script>
+</body>
+</html>

@@ -1,0 +1,2000 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ejercicios por tema · FLI</title>
+<meta name="description" content="94 ejercicios de teoría de FLI (temas 1–4) con soluciones.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../../fli/css/ejercicios.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="fli" data-area="teoria" data-title="Ejercicios" data-storage-key="fli-ejercicios-hechos">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">⊨</span> FLI · Temas 1–4</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Ejercicios</p><ol class="toc-temas"><li><a class="toc-tema" href="#tema-1"><span class="tn">1</span><span class="tname">Introducción: ¿qué es la lógica?</span><span class="prog" data-prog="1">0/17</span></a><ol class="toc-topics"><li><a href="#t-1-1"><span class="tnum">1.1</span>La lógica como cálculo</a></li><li><a href="#t-1-2"><span class="tnum">1.2</span>¿De qué predica la lógica? Oración, enunciado y proposición</a></li><li><a href="#t-1-3"><span class="tnum">1.3</span>Conceptos fundamentales</a></li><li><a href="#t-1-4" class="integ-link"><span class="tnum">1.4</span>Integradores</a></li></ol></li><li><a class="toc-tema" href="#tema-2"><span class="tn">2</span><span class="tname">Lógica proposicional (L0)</span><span class="prog" data-prog="2">0/33</span></a><ol class="toc-topics"><li><a href="#t-2-1"><span class="tnum">2.1</span>Sintaxis</a></li><li><a href="#t-2-2"><span class="tnum">2.2</span>Formalización del lenguaje natural</a></li><li><a href="#t-2-3"><span class="tnum">2.3</span>Semántica</a></li><li><a href="#t-2-4"><span class="tnum">2.4</span>Tablas de verdad y clasificación de fbf</a></li><li><a href="#t-2-5"><span class="tnum">2.5</span>Satisfacibilidad de conjuntos de fbf</a></li><li><a href="#t-2-6"><span class="tnum">2.6</span>Equivalencia lógica</a></li><li><a href="#t-2-7"><span class="tnum">2.7</span>Implicación lógica y consecuencia lógica</a></li><li><a href="#t-2-8" class="integ-link"><span class="tnum">2.8</span>Integradores</a></li></ol></li><li><a class="toc-tema" href="#tema-3"><span class="tn">3</span><span class="tname">Razonamientos</span><span class="prog" data-prog="3">0/17</span></a><ol class="toc-topics"><li><a href="#t-3-1"><span class="tnum">3.1</span>Razonamiento válido</a></li><li><a href="#t-3-2"><span class="tnum">3.2</span>Sistema deductivo</a></li><li><a href="#t-3-3"><span class="tnum">3.3</span>Teorema de la deducción sintáctica</a></li><li><a href="#t-3-4"><span class="tnum">3.4</span>Solidez, completitud, teorías, consistencia y decidibilidad</a></li><li><a href="#t-3-5" class="integ-link"><span class="tnum">3.5</span>Integradores</a></li></ol></li><li><a class="toc-tema" href="#tema-4"><span class="tn">4</span><span class="tname">Problema SAT en L0</span><span class="prog" data-prog="4">0/27</span></a><ol class="toc-topics"><li><a href="#t-4-1"><span class="tnum">4.1</span>El problema SAT, complejidad y clasificación de técnicas</a></li><li><a href="#t-4-2"><span class="tnum">4.2</span>Forma Normal Conjuntiva</a></li><li><a href="#t-4-3"><span class="tnum">4.3</span>Propagación de literales</a></li><li><a href="#t-4-4"><span class="tnum">4.4</span>Algoritmo DPLL</a></li><li><a href="#t-4-5"><span class="tnum">4.5</span>Método de resolución</a></li><li><a href="#t-4-6"><span class="tnum">4.6</span>Árboles semánticos</a></li><li><a href="#t-4-7"><span class="tnum">4.7</span>Tableaux semánticos</a></li><li><a href="#t-4-8" class="integ-link"><span class="tnum">4.8</span>Integradores</a></li></ol></li></ol><p class="toc-label">Soluciones</p><ol class="toc-sols"><li><a href="#sol-1"><span class="tn">1</span><span class="tname">Introducción a la lógica</span></a></li><li><a href="#sol-2"><span class="tn">2</span><span class="tname">Lógica proposicional (L0)</span></a></li><li><a href="#sol-3"><span class="tn">3</span><span class="tname">Razonamientos</span></a></li><li><a href="#sol-4"><span class="tn">4</span><span class="tname">Problema SAT en L0</span></a></li></ol></nav>
+    <button class="reset" id="reset" type="button">Reiniciar progreso</button>
+  </aside>
+
+  <main id="app" tabindex="-1">
+    <header class="hero">
+      <p class="eyebrow">Fundamentos Lógicos de la Informática · 1.º GII</p>
+      <h1>Ejercicios por tema <span class="ops">¬ ∧ ∨ → ↔</span></h1>
+      <p class="lead">La guía tiene ejercicios nuevos de los temas 1 a 4, separados por tópico, y un bloque integrador al final de cada tema. Las soluciones están al final, divididas por tema y con la misma numeración (por ejemplo, el ejercicio 2.6.3 se resuelve en «Soluciones Tema 2»).</p>
+      <ul class="stats">
+        <li class="total"><span class="stat-n">94</span><span class="stat-l">ejercicios</span></li>
+        <li><span class="stat-n">17</span><span class="stat-l">Tema 1</span></li><li><span class="stat-n">33</span><span class="stat-l">Tema 2</span></li><li><span class="stat-n">17</span><span class="stat-l">Tema 3</span></li><li><span class="stat-n">27</span><span class="stat-l">Tema 4</span></li>
+        <li><span class="stat-n" id="done-total">0</span><span class="stat-l">hechos</span></li>
+      </ul>
+      <div class="conv">
+        <h2>Convenciones de la asignatura</h2>
+        <div class="ladder" aria-label="Prioridad de las conectivas">
+          <span class="op">( )<small>1º</small></span><span class="gt">›</span>
+          <span class="op">¬<small>2º</small></span><span class="gt">›</span>
+          <span class="op">∧ ∨<small>3º</small></span><span class="gt">›</span>
+          <span class="op">→ ↔<small>4º</small></span>
+          <span class="note">Con igual prioridad se agrupa de izquierda a derecha: p → q → r se lee (p → q) → r.</span>
+        </div>
+        <ul>
+
+<li>Orden de filas de las tablas: la primera variable alterna VVVVFFFF, la segunda VVFFVVFF y la última VFVFVFVF.</li>
+<li>≡ (equivalencia lógica), ⊨ (consecuencia lógica) y ⊢ (derivación) son símbolos del metalenguaje; ↔ y → son conectivas.</li>
+<li>□ es la cláusula vacía (insatisfacible) y ∅ el conjunto vacío de cláusulas (satisfacible).</li>
+<li>Reglas de inferencia por sus siglas: MP (modus ponens), MT (modus tollens), SH (silogismo hipotético), SD (silogismo disyuntivo), Simp (simplificación), Comb (combinación), Ad (adición), Casos (prueba por casos).</li>
+</ul>
+        <p class="reco">Recomendación: haz cada bloque sin mirar las soluciones y corrige al terminar el bloque, no ejercicio por ejercicio. Los enunciados usan el mismo estilo que la hoja de ejercicios de teoría.</p>
+      </div>
+    </header>
+
+    <section class="tema exs" id="tema-1"><header class="tema-head"><p class="eyebrow">Tema 1</p><h2>Introducción: ¿qué es la lógica?</h2><p class="lede">Tres tópicos: la lógica como cálculo, de qué predica la lógica (oración, enunciado, proposición) y los conceptos fundamentales (historia, principios, McCarthy y los 4 componentes).</p></header><section class="topic" id="t-1-1"><h3><span class="tnum">1.1</span><span>La lógica como cálculo (reglas de formación y transformación)</span></h3><p class="topic-note">Usa el cálculo de juguete de clase. Primitivos: A, A′, A″, …; B, B′, B″, … y la operación X. Reglas de formación: RF1 una A con cualquier nº de apóstrofes es ebf; RF2 ídem con B; RF3 ebf de A, seguida de X, seguida de ebf de B, es ebf; RF4 ebf de B, X, ebf de A, es ebf. Reglas de transformación: RT1 AⁿXBᵐ ⇒ BᵐXAⁿ; RT2 BⁿXAᵐ ⇒ AᵐXBⁿ; RT3 AⁿXBᵐ ⇒ AⁿXBᵏ (cambia los apóstrofes de la B); RT4 BⁿXAᵐ ⇒ BⁿXAᵏ (cambia los apóstrofes de la A).</p><article class="card ex" data-tema="1" id="e-1-1-1"><div class="card-head"><span class="card-num">Ejercicio 1.1.1</span><span class="card-tools"><label class="done" for="d-1-1-1"><input data-key="1.1.1" id="d-1-1-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-1-1">Ver solución →</a></span></div><div class="card-body"><p>Indica cuáles de estas expresiones son ebf y con qué regla:</p><ol>
+<li>A″</li>
+<li>A′ X B″</li>
+<li>B X A‴</li>
+<li>A X A′</li>
+<li>X B′</li>
+<li>B′ X</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-1-2"><div class="card-head"><span class="card-num">Ejercicio 1.1.2</span><span class="card-tools"><label class="done" for="d-1-1-2"><input data-key="1.1.2" id="d-1-1-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-1-2">Ver solución →</a></span></div><div class="card-body"><p>Partiendo de A′ X B, obtén B″ X A‴. Indica la regla usada en cada paso.</p></div></article><article class="card ex" data-tema="1" id="e-1-1-3"><div class="card-head"><span class="card-num">Ejercicio 1.1.3</span><span class="card-tools"><label class="done" for="d-1-1-3"><input data-key="1.1.3" id="d-1-1-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-1-3">Ver solución →</a></span></div><div class="card-body"><p>Partiendo de A X B, obtén A‴ X B. Ninguna regla cambia directamente los apóstrofes del primer elemento: ¿cómo lo consigues?</p></div></article><article class="card ex" data-tema="1" id="e-1-1-4"><div class="card-head"><span class="card-num">Ejercicio 1.1.4</span><span class="card-tools"><label class="done" for="d-1-1-4"><input data-key="1.1.4" id="d-1-1-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-1-4">Ver solución →</a></span></div><div class="card-body"><p>¿Es posible obtener una expresión del tipo AⁿXAᵐ partiendo de A X B? Justifica tu respuesta a partir de las reglas.</p></div></article><article class="card ex" data-tema="1" id="e-1-1-5"><div class="card-head"><span class="card-num">Ejercicio 1.1.5</span><span class="card-tools"><label class="done" for="d-1-1-5"><input data-key="1.1.5" id="d-1-1-5" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-1-5">Ver solución →</a></span></div><div class="card-body"><p>Con la interpretación A = padre, A′ = hijo, A″ = nieto; B = madre, B′ = hija, B″ = nieta; X = querer:</p><ol>
+<li>Traduce al castellano B″ X A′.</li>
+<li>Escribe en el cálculo «el nieto quiere a la madre».</li>
+<li>¿Por qué, al añadir esta interpretación, deja de ser «un simple cálculo»?</li>
+</ol></div></article></section><section class="topic" id="t-1-2"><h3><span class="tnum">1.2</span><span>¿De qué predica la lógica? Oración, enunciado y proposición</span></h3><article class="card ex" data-tema="1" id="e-1-2-1"><div class="card-head"><span class="card-num">Ejercicio 1.2.1</span><span class="card-tools"><label class="done" for="d-1-2-1"><input data-key="1.2.1" id="d-1-2-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-2-1">Ver solución →</a></span></div><div class="card-body"><p>Clasifica cada expresión como: no es oración, oración (no enunciado), enunciado/proposición. Justifica brevemente.</p><ol>
+<li>¿Qué hora es?</li>
+<li>¡Cierra la ventana!</li>
+<li>Madrid es la capital de España.</li>
+<li>Ojalá apruebe FLI.</li>
+<li>Mesa.</li>
+<li>7 es un número primo.</li>
+<li>x es mayor que 3.</li>
+<li>El ordenador de la sala 2 está encendido.</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-2-2"><div class="card-head"><span class="card-num">Ejercicio 1.2.2</span><span class="card-tools"><label class="done" for="d-1-2-2"><input data-key="1.2.2" id="d-1-2-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-2-2">Ver solución →</a></span></div><div class="card-body"><p>Un compañero propone este diccionario para formalizar un texto. Señala qué átomos están mal definidos y corrígelos.</p><ul>
+<li>p: «no llueve»</li>
+<li>q: «casa»</li>
+<li>r: «¿vienes a clase?»</li>
+<li>s: «el examen es el lunes»</li>
+<li>t: «llueve y hace frío»</li>
+</ul></div></article><article class="card ex" data-tema="1" id="e-1-2-3"><div class="card-head"><span class="card-num">Ejercicio 1.2.3</span><span class="card-tools"><label class="done" for="d-1-2-3"><input data-key="1.2.3" id="d-1-2-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-2-3">Ver solución →</a></span></div><div class="card-body"><p>Explica con tus palabras la diferencia entre «enunciado» y «proposición» y pon un ejemplo de enunciado que no sea una proposición según la definición de clase.</p></div></article></section><section class="topic" id="t-1-3"><h3><span class="tnum">1.3</span><span>Conceptos fundamentales: historia, principios, McCarthy y componentes</span></h3><article class="card ex" data-tema="1" id="e-1-3-1"><div class="card-head"><span class="card-num">Ejercicio 1.3.1</span><span class="card-tools"><label class="done" for="d-1-3-1"><input data-key="1.3.1" id="d-1-3-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-3-1">Ver solución →</a></span></div><div class="card-body"><p>Ordena cronológicamente las cuatro etapas de la lógica y asocia a cada una su autor o hito y el tipo de lógica que aparece: Frege (1879), computación, Aristóteles, Boole (1847).</p></div></article><article class="card ex" data-tema="1" id="e-1-3-2"><div class="card-head"><span class="card-num">Ejercicio 1.3.2</span><span class="card-tools"><label class="done" for="d-1-3-2"><input data-key="1.3.2" id="d-1-3-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-3-2">Ver solución →</a></span></div><div class="card-body"><p>Indica qué principio de la lógica clásica expresa cada frase y formalízala en L0 (p: «está lloviendo», q: «la puerta está abierta»):</p><ol>
+<li>«Está lloviendo o no está lloviendo.»</li>
+<li>«No puede ser que la puerta esté abierta y no lo esté a la vez.»</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-3-3"><div class="card-head"><span class="card-num">Ejercicio 1.3.3</span><span class="card-tools"><label class="done" for="d-1-3-3"><input data-key="1.3.3" id="d-1-3-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-3-3">Ver solución →</a></span></div><div class="card-body"><p>Asocia cada descripción con su compromiso de McCarthy (meta-ontológico, ontológico, epistemológico, lógico, implementación):</p><ol>
+<li>Qué objetos y hechos son relevantes en el modelo.</li>
+<li>Cuánto puede expresar el lenguaje respecto a lo que queremos saber.</li>
+<li>La relación entre el mundo y el modelo que construimos.</li>
+<li>Si los hechos y las deducciones del modelo son verdaderos.</li>
+<li>Eficacia física del sistema respecto a los niveles anteriores.</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-3-4"><div class="card-head"><span class="card-num">Ejercicio 1.3.4</span><span class="card-tools"><label class="done" for="d-1-3-4"><input data-key="1.3.4" id="d-1-3-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-3-4">Ver solución →</a></span></div><div class="card-body"><p>Indica a cuál de los 4 componentes de la lógica clásica (lenguaje formal, formalización, semántica, sistema de demostración) pertenece cada tarea:</p><ol>
+<li>Decidir si (p ∧ q) → ¬r es una fórmula bien formada.</li>
+<li>Traducir «si llueve, me mojo» a p → q.</li>
+<li>Calcular el valor de p ∧ ¬q con ν(p) = V, ν(q) = F.</li>
+<li>Sustituir p → q por ¬p ∨ q dentro de una demostración.</li>
+<li>Obtener q a partir de p → q y p.</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-3-5"><div class="card-head"><span class="card-num">Ejercicio 1.3.5</span><span class="card-tools"><label class="done" for="d-1-3-5"><input data-key="1.3.5" id="d-1-3-5" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-3-5">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>La lógica es la ciencia formal que estudia los razonamientos verdaderos.</li>
+<li>Una lógica es un cálculo al que se le da una interpretación.</li>
+<li>Las equivalencias y las implicaciones lógicas del sistema de demostración son tautologías.</li>
+<li>En la lógica proposicional, los elementos más simples son los predicados.</li>
+<li>Boole formuló la lógica como un lenguaje matemático algebraico.</li>
+</ol></div></article></section><section class="topic integ" id="t-1-4"><h3><span class="tnum">1.4</span><span>Ejercicios integradores del Tema 1</span><span class="tag">Combina todo el tema</span></h3><article class="card ex" data-tema="1" id="e-1-4-1"><div class="card-head"><span class="card-num">Ejercicio 1.4.1</span><span class="card-tools"><label class="done" for="d-1-4-1"><input data-key="1.4.1" id="d-1-4-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-4-1">Ver solución →</a></span></div><div class="card-body"><p>Dado el texto: «¿Has entregado la práctica? Si entregas la práctica, apruebas. ¡Entrégala hoy! Luis ha entregado la práctica. Por tanto, Luis aprueba.»</p><ol>
+<li>Señala qué oraciones son proposiciones y cuáles no.</li>
+<li>Define un diccionario correcto (átomos afirmativos) para las proposiciones.</li>
+<li>Formaliza las proposiciones y el razonamiento.</li>
+<li>Indica qué componente de la lógica clásica has usado en cada uno de los pasos 2 y 3.</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-4-2"><div class="card-head"><span class="card-num">Ejercicio 1.4.2</span><span class="card-tools"><label class="done" for="d-1-4-2"><input data-key="1.4.2" id="d-1-4-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-4-2">Ver solución →</a></span></div><div class="card-body"><p>En el cálculo de juguete del apartado 1.1, partiendo de A″ X B′:</p><ol>
+<li>Obtén una expresión en la que la B vaya primero y la A tenga un apóstrofe.</li>
+<li>Interpreta (con la interpretación de 1.1.5) la expresión inicial y la final.</li>
+<li>¿La derivación sigue siendo correcta si cambias la interpretación (por ejemplo, X = conocer)? ¿Qué parte depende de la interpretación y qué parte no?</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-4-3"><div class="card-head"><span class="card-num">Ejercicio 1.4.3</span><span class="card-tools"><label class="done" for="d-1-4-3"><input data-key="1.4.3" id="d-1-4-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-4-3">Ver solución →</a></span></div><div class="card-body"><p>Clasifica cada procedimiento como método semántico (interpretativo) o sintáctico (axiomático/deductivo) y relaciónalo con el principio en que se apoya (la verdad de los hechos o la estructura del lenguaje):</p><ol>
+<li>Hacer la tabla de verdad de una fórmula.</li>
+<li>Aplicar modus ponens a dos premisas.</li>
+<li>Buscar una interpretación que haga falsa una implicación.</li>
+<li>Reescribir una fórmula con las leyes de De Morgan.</li>
+</ol></div></article><article class="card ex" data-tema="1" id="e-1-4-4"><div class="card-head"><span class="card-num">Ejercicio 1.4.4</span><span class="card-tools"><label class="done" for="d-1-4-4"><input data-key="1.4.4" id="d-1-4-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-1-4-4">Ver solución →</a></span></div><div class="card-body"><p>Formaliza «Hoy es lunes o no es lunes, y no es posible que hoy sea lunes y no lo sea». Indica qué dos principios aparecen y por qué la fórmula resultante es siempre verdadera en lógica bivalente.</p></div></article></section></section><section class="tema exs" id="tema-2"><header class="tema-head"><p class="eyebrow">Tema 2</p><h2>Lógica proposicional (L0)</h2><p class="lede">Siete tópicos: sintaxis, formalización, evaluación, tablas de verdad y clasificación, satisfacibilidad de conjuntos, equivalencia lógica y consecuencia lógica.</p></header><section class="topic" id="t-2-1"><h3><span class="tnum">2.1</span><span>Sintaxis: fbf, prioridad y árbol sintáctico</span></h3><article class="card ex" data-tema="2" id="e-2-1-1"><div class="card-head"><span class="card-num">Ejercicio 2.1.1</span><span class="card-tools"><label class="done" for="d-2-1-1"><input data-key="2.1.1" id="d-2-1-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-1-1">Ver solución →</a></span></div><div class="card-body"><p>Indica cuáles son fórmulas bien formadas. Si no lo son, explica por qué.</p><ol>
+<li>¬(p ∧ q) → r</li>
+<li>(p ∨ ) q</li>
+<li>p ¬∧ q</li>
+<li>¬¬p ↔ (q ∨ ¬r)</li>
+<li>(p → (q ∧ r)</li>
+<li>p ∧ ¬(q → r) ∨ s</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-1-2"><div class="card-head"><span class="card-num">Ejercicio 2.1.2</span><span class="card-tools"><label class="done" for="d-2-1-2"><input data-key="2.1.2" id="d-2-1-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-1-2">Ver solución →</a></span></div><div class="card-body"><p>Para cada fórmula: pon todos los paréntesis según la prioridad de la asignatura, indica la conectiva principal y cuenta las conectivas (columnas «extra» de su tabla).</p><ol>
+<li>¬p ∨ q ∧ r → s</li>
+<li>p → q ↔ ¬r ∨ s</li>
+<li>p → q → r ∧ ¬p</li>
+<li>¬(p ∧ q) ∨ ¬r ↔ p</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-1-3"><div class="card-head"><span class="card-num">Ejercicio 2.1.3</span><span class="card-tools"><label class="done" for="d-2-1-3"><input data-key="2.1.3" id="d-2-1-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-1-3">Ver solución →</a></span></div><div class="card-body"><p>Clasifica cada expresión como literal, cláusula, ambas o ninguna: p; ¬q; p ∨ ¬q ∨ r; ¬(p ∨ q); p ∧ q; ¬¬p.</p></div></article><article class="card ex" data-tema="2" id="e-2-1-4"><div class="card-head"><span class="card-num">Ejercicio 2.1.4</span><span class="card-tools"><label class="done" for="d-2-1-4"><input data-key="2.1.4" id="d-2-1-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-1-4">Ver solución →</a></span></div><div class="card-body"><p>Dibuja el árbol sintáctico de ¬(p → q) ∨ r ↔ q ∧ ¬s.</p></div></article></section><section class="topic" id="t-2-2"><h3><span class="tnum">2.2</span><span>Formalización del lenguaje natural</span></h3><p class="topic-note">Diccionario para 2.2.1 y 2.2.2: p: «llueve»; q: «hace frío»; r: «salgo a correr»; s: «me quedo en casa».</p><article class="card ex" data-tema="2" id="e-2-2-1"><div class="card-head"><span class="card-num">Ejercicio 2.2.1</span><span class="card-tools"><label class="done" for="d-2-2-1"><input data-key="2.2.1" id="d-2-2-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-2-1">Ver solución →</a></span></div><div class="card-body"><p>Formaliza:</p><ol>
+<li>Llueve pero no hace frío.</li>
+<li>Ni llueve ni hace frío.</li>
+<li>Salgo a correr sólo si no llueve.</li>
+<li>Que no llueva es condición necesaria para salir a correr.</li>
+<li>Me quedo en casa si llueve.</li>
+<li>Salgo a correr a menos que llueva.</li>
+<li>O salgo a correr o me quedo en casa, pero no ambas cosas.</li>
+<li>Si llueve y hace frío, me quedo en casa y no salgo a correr.</li>
+<li>Salgo a correr si y sólo si no llueve ni hace frío.</li>
+<li>No es cierto que, si hace frío, me quede en casa.</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-2-2"><div class="card-head"><span class="card-num">Ejercicio 2.2.2</span><span class="card-tools"><label class="done" for="d-2-2-2"><input data-key="2.2.2" id="d-2-2-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-2-2">Ver solución →</a></span></div><div class="card-body"><p>Traduce al castellano: a) ¬(p ∨ q); b) s → p ∨ q; c) ¬r ↔ s; d) (p → s) ∧ (¬p → r).</p></div></article><article class="card ex" data-tema="2" id="e-2-2-3"><div class="card-head"><span class="card-num">Ejercicio 2.2.3</span><span class="card-tools"><label class="done" for="d-2-2-3"><input data-key="2.2.3" id="d-2-2-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-2-3">Ver solución →</a></span></div><div class="card-body"><p>Un compañero ha formalizado estas frases. Detecta el error y corrígelo.</p><ol>
+<li>«Apruebo sólo si estudio» (a: apruebo, e: estudio) → e → a</li>
+<li>«Tener batería es condición necesaria para que el móvil encienda» (b: tiene batería, m: el móvil enciende) → b → m</li>
+<li>«Iré a la fiesta a menos que llueva» (f: voy a la fiesta, l: llueve) → f → ¬l</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-2-4"><div class="card-head"><span class="card-num">Ejercicio 2.2.4</span><span class="card-tools"><label class="done" for="d-2-2-4"><input data-key="2.2.4" id="d-2-2-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-2-4">Ver solución →</a></span></div><div class="card-body"><p>Formaliza el razonamiento (sólo formalizar; la validez se estudia en 2.8): «Si el servidor está caído, la web no carga. Si la web no carga, los clientes llaman a soporte. Los clientes no han llamado a soporte. Por tanto, el servidor no está caído.» Usa s: «el servidor está caído»; w: «la web carga»; c: «los clientes llaman a soporte».</p></div></article></section><section class="topic" id="t-2-3"><h3><span class="tnum">2.3</span><span>Semántica: interpretación y evaluación</span></h3><article class="card ex" data-tema="2" id="e-2-3-1"><div class="card-head"><span class="card-num">Ejercicio 2.3.1</span><span class="card-tools"><label class="done" for="d-2-3-1"><input data-key="2.3.1" id="d-2-3-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-3-1">Ver solución →</a></span></div><div class="card-body"><p>Con la interpretación ν(p) = V, ν(q) = F, ν(r) = F, evalúa de dentro afuera:</p><ol>
+<li>¬p ∨ q → r</li>
+<li>p → q → r</li>
+<li>¬(p ↔ q) ∧ (r ∨ ¬p)</li>
+<li>(p ∧ q) ∨ (¬r ↔ q)</li>
+<li>¬(p ∨ r) ↔ q ∧ ¬p</li>
+<li>p ∧ ¬q → r</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-3-2"><div class="card-head"><span class="card-num">Ejercicio 2.3.2</span><span class="card-tools"><label class="done" for="d-2-3-2"><input data-key="2.3.2" id="d-2-3-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-3-2">Ver solución →</a></span></div><div class="card-body"><p>Encuentra todas las interpretaciones en las que p → q → r y p → (q → r) toman valores distintos. ¿Qué conclusión sacas sobre la asociatividad de →?</p></div></article><article class="card ex" data-tema="2" id="e-2-3-3"><div class="card-head"><span class="card-num">Ejercicio 2.3.3</span><span class="card-tools"><label class="done" for="d-2-3-3"><input data-key="2.3.3" id="d-2-3-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-3-3">Ver solución →</a></span></div><div class="card-body"><p>Halla los valores de los átomos en cada caso:</p><ol>
+<li>Sabemos que (p ∧ q) → r es FALSA.</li>
+<li>Sabemos que ¬p ∨ (q ↔ r) es FALSA y que r es VERDADERA.</li>
+<li>Sabemos que p → q es VERDADERA y q es FALSA.</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-3-4"><div class="card-head"><span class="card-num">Ejercicio 2.3.4</span><span class="card-tools"><label class="done" for="d-2-3-4"><input data-key="2.3.4" id="d-2-3-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-3-4">Ver solución →</a></span></div><div class="card-body"><p>«Si apruebo el parcial, me invito a cenar.» ¿En qué situaciones he incumplido la frase? Razona con la tabla de →.</p></div></article></section><section class="topic" id="t-2-4"><h3><span class="tnum">2.4</span><span>Tablas de verdad y clasificación de fbf</span></h3><article class="card ex" data-tema="2" id="e-2-4-1"><div class="card-head"><span class="card-num">Ejercicio 2.4.1</span><span class="card-tools"><label class="done" for="d-2-4-1"><input data-key="2.4.1" id="d-2-4-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-4-1">Ver solución →</a></span></div><div class="card-body"><p>Haz la tabla de verdad y clasifica cada fbf (satisfacible, contingente, falseable, tautología, contradicción):</p><ol>
+<li>(p → q) ∧ (p ∧ ¬q)</li>
+<li>(p → q) ∨ (q → p)</li>
+<li>¬(p ∨ q) ↔ (¬p ∧ q)</li>
+<li>(p ∨ q) ∧ ¬r → p</li>
+<li>(p → (q → r)) → ((p → q) → (p → r))</li>
+<li>(p ↔ q) ∧ (q ↔ ¬p)</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-4-2"><div class="card-head"><span class="card-num">Ejercicio 2.4.2</span><span class="card-tools"><label class="done" for="d-2-4-2"><input data-key="2.4.2" id="d-2-4-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-4-2">Ver solución →</a></span></div><div class="card-body"><p>Sin hacerlas, indica cuántas filas y cuántas columnas tendrían las tablas de: a) ¬(p ∧ q) ∨ (r → ¬s); b) (p → q) ↔ ¬p.</p></div></article><article class="card ex" data-tema="2" id="e-2-4-3"><div class="card-head"><span class="card-num">Ejercicio 2.4.3</span><span class="card-tools"><label class="done" for="d-2-4-3"><input data-key="2.4.3" id="d-2-4-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-4-3">Ver solución →</a></span></div><div class="card-body"><p>Sin hacer la tabla completa, decide si ((p → q) ∧ (r → s) ∧ (p ∨ r)) → (q ∨ s) es tautología. Pista: busca una fila que la haga falsa.</p></div></article><article class="card ex" data-tema="2" id="e-2-4-4"><div class="card-head"><span class="card-num">Ejercicio 2.4.4</span><span class="card-tools"><label class="done" for="d-2-4-4"><input data-key="2.4.4" id="d-2-4-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-4-4">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>Si α es contingente, ¬α también es contingente.</li>
+<li>Si α es satisfacible, ¬α es insatisfacible.</li>
+<li>Toda fbf falseable es una contradicción.</li>
+<li>Si α es tautología, α no es falseable.</li>
+</ol></div></article></section><section class="topic" id="t-2-5"><h3><span class="tnum">2.5</span><span>Satisfacibilidad de conjuntos de fbf</span></h3><article class="card ex" data-tema="2" id="e-2-5-1"><div class="card-head"><span class="card-num">Ejercicio 2.5.1</span><span class="card-tools"><label class="done" for="d-2-5-1"><input data-key="2.5.1" id="d-2-5-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-5-1">Ver solución →</a></span></div><div class="card-body"><p>Decide si cada conjunto es satisfacible y da todos sus modelos:</p><ol>
+<li>Γ₁ = {p → q, q → r, p, ¬r}</li>
+<li>Γ₂ = {p ∨ q, ¬p ∨ r, ¬q ∨ r, ¬r ∨ p}</li>
+<li>Γ₃ = {p ↔ q, q ↔ r, p ↔ ¬r}</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-5-2"><div class="card-head"><span class="card-num">Ejercicio 2.5.2</span><span class="card-tools"><label class="done" for="d-2-5-2"><input data-key="2.5.2" id="d-2-5-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-5-2">Ver solución →</a></span></div><div class="card-body"><p>Sea Γ = {p ∨ q, ¬p}.</p><ol>
+<li>Da sus modelos.</li>
+<li>¿Qué pasa si añadimos ¬q?</li>
+<li>¿Y si en lugar de ¬q añadimos p ∨ ¬p?</li>
+<li>Al conjunto del apartado 2 le quitamos ¬p. ¿Es satisfacible?</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-5-3"><div class="card-head"><span class="card-num">Ejercicio 2.5.3</span><span class="card-tools"><label class="done" for="d-2-5-3"><input data-key="2.5.3" id="d-2-5-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-5-3">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica con un ejemplo.</p><ol>
+<li>Un conjunto formado sólo por fbf satisfacibles es satisfacible.</li>
+<li>Si un conjunto contiene una contradicción, es insatisfacible.</li>
+<li>Añadir una tautología a un conjunto insatisfacible lo vuelve satisfacible.</li>
+<li>El conjunto vacío es satisfacible.</li>
+</ol></div></article></section><section class="topic" id="t-2-6"><h3><span class="tnum">2.6</span><span>Equivalencia lógica</span></h3><article class="card ex" data-tema="2" id="e-2-6-1"><div class="card-head"><span class="card-num">Ejercicio 2.6.1</span><span class="card-tools"><label class="done" for="d-2-6-1"><input data-key="2.6.1" id="d-2-6-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-6-1">Ver solución →</a></span></div><div class="card-body"><p>Demuestra aplicando equivalencias (indica la ley en cada paso):</p><ol>
+<li>¬(p → q) ≡ p ∧ ¬q</li>
+<li>p → (q → r) ≡ q → (p → r)</li>
+<li>(p → r) ∧ (q → r) ≡ (p ∨ q) → r</li>
+<li>¬(p ∨ (¬p ∧ q)) ≡ ¬p ∧ ¬q</li>
+<li>(p → q) ∧ (p → ¬q) ≡ ¬p</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-6-2"><div class="card-head"><span class="card-num">Ejercicio 2.6.2</span><span class="card-tools"><label class="done" for="d-2-6-2"><input data-key="2.6.2" id="d-2-6-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-6-2">Ver solución →</a></span></div><div class="card-body"><p>¿Son correctas? Si lo son, demuéstralo; si no, da un contraejemplo.</p><ol>
+<li>(p ∨ q) → r ≡ (p → r) ∨ (q → r)</li>
+<li>p → (q ∧ r) ≡ (p → q) ∧ (p → r)</li>
+<li>¬(p ↔ q) ≡ ¬p ↔ ¬q</li>
+<li>¬(p ↔ q) ≡ p ↔ ¬q</li>
+<li>(p ∧ q) → r ≡ (p → r) ∧ (q → r)</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-6-3"><div class="card-head"><span class="card-num">Ejercicio 2.6.3</span><span class="card-tools"><label class="done" for="d-2-6-3"><input data-key="2.6.3" id="d-2-6-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-6-3">Ver solución →</a></span></div><div class="card-body"><p>Reescribe usando sólo ¬ y ∨: a) p ∧ q; b) p ↔ q; c) p → (q ∧ r).</p></div></article><article class="card ex" data-tema="2" id="e-2-6-4"><div class="card-head"><span class="card-num">Ejercicio 2.6.4</span><span class="card-tools"><label class="done" for="d-2-6-4"><input data-key="2.6.4" id="d-2-6-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-6-4">Ver solución →</a></span></div><div class="card-body"><p>Simplifica al máximo: a) ¬(¬p ∧ q) ∧ (p ∨ q); b) (p ∧ q) ∨ (p ∧ ¬q) ∨ (¬p ∧ q).</p></div></article></section><section class="topic" id="t-2-7"><h3><span class="tnum">2.7</span><span>Implicación lógica y consecuencia lógica</span></h3><article class="card ex" data-tema="2" id="e-2-7-1"><div class="card-head"><span class="card-num">Ejercicio 2.7.1</span><span class="card-tools"><label class="done" for="d-2-7-1"><input data-key="2.7.1" id="d-2-7-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-7-1">Ver solución →</a></span></div><div class="card-body"><p>Indica qué regla de inferencia es cada esquema, o si es una falacia (y cuál):</p><ol>
+<li>{p → q, ¬q} ⊨ ¬p</li>
+<li>{p ∨ q, ¬q} ⊨ p</li>
+<li>{p → q, q} ⊨ p</li>
+<li>{p → q, ¬p} ⊨ ¬q</li>
+<li>{p ∧ q} ⊨ q</li>
+<li>{p → q, ¬p → q} ⊨ q</li>
+<li>{p, ¬p} ⊨ r</li>
+<li>{p → q, q → p} ⊨ p ↔ q</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-7-2"><div class="card-head"><span class="card-num">Ejercicio 2.7.2</span><span class="card-tools"><label class="done" for="d-2-7-2"><input data-key="2.7.2" id="d-2-7-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-7-2">Ver solución →</a></span></div><div class="card-body"><p>Decide si son válidos (tabla o búsqueda de contraejemplo). Si no lo son, da todos los contraejemplos.</p><ol>
+<li>{p → q, q → r} ⊨ r → p</li>
+<li>{p ∨ q, p → r, q → r} ⊨ r</li>
+<li>{p → (q ∨ r), ¬q, ¬r} ⊨ ¬p</li>
+<li>{(p ∧ q) → r, ¬r} ⊨ ¬p</li>
+</ol></div></article><article class="card ex" data-tema="2" id="e-2-7-3"><div class="card-head"><span class="card-num">Ejercicio 2.7.3</span><span class="card-tools"><label class="done" for="d-2-7-3"><input data-key="2.7.3" id="d-2-7-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-7-3">Ver solución →</a></span></div><div class="card-body"><p>Comprueba {p ↔ q, q} ⊨ p con los dos planteamientos: directo (tautología) y refutación (contradicción).</p></div></article><article class="card ex" data-tema="2" id="e-2-7-4"><div class="card-head"><span class="card-num">Ejercicio 2.7.4</span><span class="card-tools"><label class="done" for="d-2-7-4"><input data-key="2.7.4" id="d-2-7-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-7-4">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>Si las premisas son insatisfacibles, el razonamiento es válido.</li>
+<li>Si {α} ⊨ β y {β} ⊨ α, entonces α ≡ β.</li>
+<li>Si CP ⊨ β, al añadir premisas a CP la conclusión puede dejar de seguirse.</li>
+<li>⊨ β significa que β es una tautología.</li>
+</ol></div></article></section><section class="topic integ" id="t-2-8"><h3><span class="tnum">2.8</span><span>Ejercicios integradores del Tema 2</span><span class="tag">Combina todo el tema</span></h3><article class="card ex" data-tema="2" id="e-2-8-1"><div class="card-head"><span class="card-num">Ejercicio 2.8.1</span><span class="card-tools"><label class="done" for="d-2-8-1"><input data-key="2.8.1" id="d-2-8-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-1">Ver solución →</a></span></div><div class="card-body"><p>«Si el sensor detecta humo, suena la alarma. La alarma suena sólo si hay corriente. No hay corriente. Por tanto, el sensor no detecta humo.» a) Formaliza (h, a, c). b) Comprueba la validez con la tabla de verdad del planteamiento directo. c) Indica qué reglas de inferencia justifican el razonamiento.</p></div></article><article class="card ex" data-tema="2" id="e-2-8-2"><div class="card-head"><span class="card-num">Ejercicio 2.8.2</span><span class="card-tools"><label class="done" for="d-2-8-2"><input data-key="2.8.2" id="d-2-8-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-2">Ver solución →</a></span></div><div class="card-body"><p>Sea α = (p → q) ∧ (¬p → r). a) Haz su tabla y clasifícala. b) Demuestra por equivalencias que α ≡ (¬p ∨ q) ∧ (p ∨ r). c) ¿Es q ∨ r consecuencia lógica de α? Justifica con la tabla del apartado a.</p></div></article><article class="card ex" data-tema="2" id="e-2-8-3"><div class="card-head"><span class="card-num">Ejercicio 2.8.3</span><span class="card-tools"><label class="done" for="d-2-8-3"><input data-key="2.8.3" id="d-2-8-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-3">Ver solución →</a></span></div><div class="card-body"><p>Sea Γ = {p → q ∨ r, ¬q, p}. a) Halla sus modelos. b) ¿Γ ⊨ r? c) ¿Es satisfacible Γ ∪ {¬r}? d) Explica la relación entre b y c.</p></div></article><article class="card ex" data-tema="2" id="e-2-8-4"><div class="card-head"><span class="card-num">Ejercicio 2.8.4</span><span class="card-tools"><label class="done" for="d-2-8-4"><input data-key="2.8.4" id="d-2-8-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-4">Ver solución →</a></span></div><div class="card-body"><p>a) Demuestra, sin tabla completa, que (p → q) ↔ (¬q → ¬p) es tautología. b) Con d: «es domingo», c: «la biblioteca cierra», ¿cuáles de estas frases son equivalentes a «si es domingo, la biblioteca cierra»? (i) «Si la biblioteca no cierra, no es domingo»; (ii) «Si la biblioteca cierra, es domingo»; (iii) «No es domingo o la biblioteca cierra».</p></div></article><article class="card ex" data-tema="2" id="e-2-8-5"><div class="card-head"><span class="card-num">Ejercicio 2.8.5</span><span class="card-tools"><label class="done" for="d-2-8-5"><input data-key="2.8.5" id="d-2-8-5" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-5">Ver solución →</a></span></div><div class="card-body"><p>En una isla cada persona dice siempre la verdad o miente siempre. Ana dice: «Benito miente». Benito dice: «Carla miente». Carla dice: «Ana y Benito mienten». Con a, b, c = «Ana / Benito / Carla dice la verdad»: a) formaliza las tres afirmaciones (cada persona dice la verdad si y sólo si lo que dice es cierto); b) halla los modelos del conjunto; c) ¿quién dice la verdad?</p></div></article><article class="card ex" data-tema="2" id="e-2-8-6"><div class="card-head"><span class="card-num">Ejercicio 2.8.6</span><span class="card-tools"><label class="done" for="d-2-8-6"><input data-key="2.8.6" id="d-2-8-6" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-2-8-6">Ver solución →</a></span></div><div class="card-body"><p>Retoma la formalización de 2.2.4. a) Decide si el razonamiento es válido. b) Si lo es, nombra las reglas que lo justifican; si no, da un contraejemplo. c) Reescribe la primera premisa usando la contraposición.</p></div></article></section></section><section class="tema exs" id="tema-3"><header class="tema-head"><p class="eyebrow">Tema 3</p><h2>Razonamientos</h2><p class="lede">Cuatro tópicos: validez semántica (directo y refutación), demostraciones en deducción natural, teorema de la deducción sintáctica y propiedades del sistema (solidez, completitud, teorías, consistencia y decidibilidad).</p></header><section class="topic" id="t-3-1"><h3><span class="tnum">3.1</span><span>Razonamiento válido: planteamiento directo y por refutación</span></h3><article class="card ex" data-tema="3" id="e-3-1-1"><div class="card-head"><span class="card-num">Ejercicio 3.1.1</span><span class="card-tools"><label class="done" for="d-3-1-1"><input data-key="3.1.1" id="d-3-1-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-1-1">Ver solución →</a></span></div><div class="card-body"><p>Para {p → q, ¬q ∨ r} ⊨ p → r: a) escribe la fórmula del planteamiento directo y la del planteamiento por refutación; b) decide la validez con una tabla de verdad que tenga ambas columnas.</p></div></article><article class="card ex" data-tema="3" id="e-3-1-2"><div class="card-head"><span class="card-num">Ejercicio 3.1.2</span><span class="card-tools"><label class="done" for="d-3-1-2"><input data-key="3.1.2" id="d-3-1-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-1-2">Ver solución →</a></span></div><div class="card-body"><p>Para {p ∨ q, p → r} ⊨ r: a) decide si es válido; b) si no lo es, da el contraejemplo y comprueba que en esa fila la fórmula directa vale F y la de refutación vale V.</p></div></article><article class="card ex" data-tema="3" id="e-3-1-3"><div class="card-head"><span class="card-num">Ejercicio 3.1.3</span><span class="card-tools"><label class="done" for="d-3-1-3"><input data-key="3.1.3" id="d-3-1-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-1-3">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>Si un razonamiento es válido, sus premisas son verdaderas.</li>
+<li>Un razonamiento cuya conclusión es una tautología siempre es válido.</li>
+<li>Si la conclusión es una contradicción, el razonamiento nunca es válido.</li>
+<li>En un razonamiento válido, la conclusión puede ser falsa en alguna interpretación.</li>
+</ol></div></article></section><section class="topic" id="t-3-2"><h3><span class="tnum">3.2</span><span>Sistema deductivo: demostraciones en deducción natural</span></h3><p class="topic-note">En cada línea indica «Premisa» o la regla y las líneas usadas, por ejemplo MT(4,3) o De Morgan(2).</p><article class="card ex" data-tema="3" id="e-3-2-1"><div class="card-head"><span class="card-num">Ejercicio 3.2.1</span><span class="card-tools"><label class="done" for="d-3-2-1"><input data-key="3.2.1" id="d-3-2-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-2-1">Ver solución →</a></span></div><div class="card-body"><p>Completa las justificaciones de esta demostración de {p ∧ q, p → r, q → s} ⊢ r ∧ s:</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Fórmula</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>p ∧ q</td>
+<td>Premisa</td>
+</tr>
+<tr>
+<td>2</td>
+<td>p → r</td>
+<td>Premisa</td>
+</tr>
+<tr>
+<td>3</td>
+<td>q → s</td>
+<td>Premisa</td>
+</tr>
+<tr>
+<td>4</td>
+<td>p</td>
+<td>?</td>
+</tr>
+<tr>
+<td>5</td>
+<td>q</td>
+<td>?</td>
+</tr>
+<tr>
+<td>6</td>
+<td>r</td>
+<td>?</td>
+</tr>
+<tr>
+<td>7</td>
+<td>s</td>
+<td>?</td>
+</tr>
+<tr>
+<td>8</td>
+<td>r ∧ s</td>
+<td>?</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card ex" data-tema="3" id="e-3-2-2"><div class="card-head"><span class="card-num">Ejercicio 3.2.2</span><span class="card-tools"><label class="done" for="d-3-2-2"><input data-key="3.2.2" id="d-3-2-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-2-2">Ver solución →</a></span></div><div class="card-body"><p>Demuestra:</p><ol>
+<li>{p → q, ¬q, p ∨ r} ⊢ r</li>
+<li>{p ∨ q, ¬p ∨ r, ¬r} ⊢ q</li>
+<li>{(p ∧ q) → r, p, q} ⊢ r</li>
+<li>{p → q, r → s, p ∨ r, ¬q} ⊢ s</li>
+<li>{¬(p ∧ ¬q), ¬q} ⊢ ¬p (necesitas una equivalencia)</li>
+<li>{p ↔ q, ¬q} ⊢ ¬p</li>
+</ol></div></article><article class="card ex" data-tema="3" id="e-3-2-3"><div class="card-head"><span class="card-num">Ejercicio 3.2.3</span><span class="card-tools"><label class="done" for="d-3-2-3"><input data-key="3.2.3" id="d-3-2-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-2-3">Ver solución →</a></span></div><div class="card-body"><p>Cada «demostración» tiene un paso incorrecto. Localízalo, di qué falacia o error es y da un contraejemplo que muestre que la conclusión no se sigue.</p><ol>
+<li>{p → q, q} ⊢ p: «1. p → q Premisa; 2. q Premisa; 3. p MP(1,2)».</li>
+<li>{p ∨ q, p} ⊢ ¬q: «1. p ∨ q Premisa; 2. p Premisa; 3. ¬q SD(1,2)».</li>
+</ol></div></article></section><section class="topic" id="t-3-3"><h3><span class="tnum">3.3</span><span>Teorema de la deducción sintáctica</span></h3><article class="card ex" data-tema="3" id="e-3-3-1"><div class="card-head"><span class="card-num">Ejercicio 3.3.1</span><span class="card-tools"><label class="done" for="d-3-3-1"><input data-key="3.3.1" id="d-3-3-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-3-1">Ver solución →</a></span></div><div class="card-body"><p>Demuestra {p → (q → r)} ⊢ q → (p → r) usando el teorema de la deducción (supuestos).</p></div></article><article class="card ex" data-tema="3" id="e-3-3-2"><div class="card-head"><span class="card-num">Ejercicio 3.3.2</span><span class="card-tools"><label class="done" for="d-3-3-2"><input data-key="3.3.2" id="d-3-3-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-3-2">Ver solución →</a></span></div><div class="card-body"><p>Demuestra {¬q → ¬p} ⊢ p → q suponiendo p.</p></div></article><article class="card ex" data-tema="3" id="e-3-3-3"><div class="card-head"><span class="card-num">Ejercicio 3.3.3</span><span class="card-tools"><label class="done" for="d-3-3-3"><input data-key="3.3.3" id="d-3-3-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-3-3">Ver solución →</a></span></div><div class="card-body"><p>Aplicando el teorema de la deducción tantas veces como haga falta, reescribe sin premisas (de la forma ⊢ β) el razonamiento {p, p → q} ⊢ q. Pon todos los paréntesis: recuerda que en la asignatura → se agrupa de izquierda a derecha.</p></div></article></section><section class="topic" id="t-3-4"><h3><span class="tnum">3.4</span><span>Solidez, completitud, teorías, consistencia y decidibilidad</span></h3><article class="card ex" data-tema="3" id="e-3-4-1"><div class="card-head"><span class="card-num">Ejercicio 3.4.1</span><span class="card-tools"><label class="done" for="d-3-4-1"><input data-key="3.4.1" id="d-3-4-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-4-1">Ver solución →</a></span></div><div class="card-body"><p>Asocia cada definición con su concepto (sólido, completo, teoría, consistente, decidible, semidecidible):</p><ol>
+<li>Todo lo que se demuestra con el sistema es semánticamente válido.</li>
+<li>Todo razonamiento válido se puede demostrar con el sistema.</li>
+<li>Conjunto de fórmulas cerrado bajo demostraciones.</li>
+<li>No se pueden demostrar a la vez β y ¬β.</li>
+<li>Hay procedimiento para determinar la inconsistencia, pero sólo a veces la consistencia.</li>
+<li>Hay procedimientos para determinar la inconsistencia y la consistencia.</li>
+</ol></div></article><article class="card ex" data-tema="3" id="e-3-4-2"><div class="card-head"><span class="card-num">Ejercicio 3.4.2</span><span class="card-tools"><label class="done" for="d-3-4-2"><input data-key="3.4.2" id="d-3-4-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-4-2">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>En un sistema sólido, todo teorema es una tautología.</li>
+<li>En un sistema completo, todo teorema es una tautología.</li>
+<li>La deducción natural es sólida pero no completa.</li>
+<li>La lógica proposicional L0 es semidecidible.</li>
+<li>La lógica de predicados L1 es decidible.</li>
+</ol></div></article><article class="card ex" data-tema="3" id="e-3-4-3"><div class="card-head"><span class="card-num">Ejercicio 3.4.3</span><span class="card-tools"><label class="done" for="d-3-4-3"><input data-key="3.4.3" id="d-3-4-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-4-3">Ver solución →</a></span></div><div class="card-body"><p>Considera dos sistemas deductivos sin axiomas:</p><ul>
+<li>S₁: su única regla es «de α → β y β, derivar α».</li>
+<li>S₂: su única regla es modus ponens.</li>
+</ul><p>a) ¿Es S₁ sólido? b) ¿Es S₂ sólido? c) ¿Es S₂ completo? Pista para c: piensa en {p} ⊨ p ∨ q.</p></div></article><article class="card ex" data-tema="3" id="e-3-4-4"><div class="card-head"><span class="card-num">Ejercicio 3.4.4</span><span class="card-tools"><label class="done" for="d-3-4-4"><input data-key="3.4.4" id="d-3-4-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-4-4">Ver solución →</a></span></div><div class="card-body"><p>Sea la teoría axiomatizada por ℱ = {p, p → q, q → ¬p}. ¿Es consistente? Justifícalo con una derivación.</p></div></article></section><section class="topic integ" id="t-3-5"><h3><span class="tnum">3.5</span><span>Ejercicios integradores del Tema 3</span><span class="tag">Combina todo el tema</span></h3><article class="card ex" data-tema="3" id="e-3-5-1"><div class="card-head"><span class="card-num">Ejercicio 3.5.1</span><span class="card-tools"><label class="done" for="d-3-5-1"><input data-key="3.5.1" id="d-3-5-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-5-1">Ver solución →</a></span></div><div class="card-body"><p>«Si el programa compila, se ejecutan los tests. Si se ejecutan los tests y pasan, se despliega. Los tests pasan. El programa compila. Por tanto, se despliega.»</p><ol>
+<li>Formaliza (c: compila; t: se ejecutan los tests; a: los tests pasan; d: se despliega).</li>
+<li>Demuéstralo en deducción natural.</li>
+<li>Comprueba la validez semántica por refutación, buscando una interpretación que haga V las premisas y F la conclusión.</li>
+<li>¿Qué propiedad del sistema garantiza que el resultado del apartado 2 implica el del apartado 3?</li>
+</ol></div></article><article class="card ex" data-tema="3" id="e-3-5-2"><div class="card-head"><span class="card-num">Ejercicio 3.5.2</span><span class="card-tools"><label class="done" for="d-3-5-2"><input data-key="3.5.2" id="d-3-5-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-5-2">Ver solución →</a></span></div><div class="card-body"><p>«Si llueve, la calle está mojada. La calle está mojada. Por tanto, llueve.» a) Formaliza (l, m). b) Da un contraejemplo. c) Explica por qué, en un sistema sólido, no puede existir una demostración de este razonamiento.</p></div></article><article class="card ex" data-tema="3" id="e-3-5-3"><div class="card-head"><span class="card-num">Ejercicio 3.5.3</span><span class="card-tools"><label class="done" for="d-3-5-3"><input data-key="3.5.3" id="d-3-5-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-5-3">Ver solución →</a></span></div><div class="card-body"><p>Para {p → q, q → r} ⊨ ¬r → ¬p: a) demuéstralo por deducción natural; b) compruébalo semánticamente sin tabla completa (busca el contraejemplo y llega a contradicción).</p></div></article><article class="card ex" data-tema="3" id="e-3-5-4"><div class="card-head"><span class="card-num">Ejercicio 3.5.4</span><span class="card-tools"><label class="done" for="d-3-5-4"><input data-key="3.5.4" id="d-3-5-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-3-5-4">Ver solución →</a></span></div><div class="card-body"><p>Sea ℱ = {p ∨ q, ¬p, q → r, ¬r}. a) Deriva una contradicción desde ℱ. b) Comprueba con una tabla que ℱ es insatisfacible. c) Relaciona inconsistencia (sintáctica) e insatisfacibilidad (semántica) usando solidez y completitud.</p></div></article></section></section><section class="tema exs" id="tema-4"><header class="tema-head"><p class="eyebrow">Tema 4</p><h2>Problema SAT en L0</h2><p class="lede">Siete tópicos: problema SAT y técnicas, FNC, propagación de literales, DPLL, resolución, árboles semánticos y tableaux semánticos.</p></header><section class="topic" id="t-4-1"><h3><span class="tnum">4.1</span><span>El problema SAT, complejidad y clasificación de técnicas</span></h3><article class="card ex" data-tema="4" id="e-4-1-1"><div class="card-head"><span class="card-num">Ejercicio 4.1.1</span><span class="card-tools"><label class="done" for="d-4-1-1"><input data-key="4.1.1" id="d-4-1-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-1-1">Ver solución →</a></span></div><div class="card-body"><p>Verdadero o falso. Justifica.</p><ol>
+<li>SAT fue el primer problema demostrado NP-completo (Cook, 1971).</li>
+<li>Ordenar un vector es un problema NP-completo.</li>
+<li>En L0, SAT y UNSAT son decidibles.</li>
+<li>GSAT y WalkSat son algoritmos completos.</li>
+<li>Si un algoritmo completo devuelve una interpretación, esa interpretación es un modelo.</li>
+</ol></div></article><article class="card ex" data-tema="4" id="e-4-1-2"><div class="card-head"><span class="card-num">Ejercicio 4.1.2</span><span class="card-tools"><label class="done" for="d-4-1-2"><input data-key="4.1.2" id="d-4-1-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-1-2">Ver solución →</a></span></div><div class="card-body"><p>Clasifica las técnicas (tablas de verdad, DPLL, resolución, árboles semánticos, tableaux) según: a) si necesitan forma clausal; b) si pueden dar modelos; c) si sirven para decidir directamente que una fórmula es tautología.</p></div></article></section><section class="topic" id="t-4-2"><h3><span class="tnum">4.2</span><span>Forma Normal Conjuntiva (FNC) y forma clausal</span></h3><article class="card ex" data-tema="4" id="e-4-2-1"><div class="card-head"><span class="card-num">Ejercicio 4.2.1</span><span class="card-tools"><label class="done" for="d-4-2-1"><input data-key="4.2.1" id="d-4-2-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-2-1">Ver solución →</a></span></div><div class="card-body"><p>Obtén la FNC y la forma clausal, indicando la equivalencia de cada paso. Di si cada fórmula es tautología.</p><ol>
+<li>(p → q) → r</li>
+<li>p ↔ (q ∧ r)</li>
+<li>¬(p ∨ q) ∨ (r ∧ ¬p)</li>
+<li>(p ∧ q) ∨ (¬p ∧ ¬q) → ¬r</li>
+<li>(p → q) ∨ (q → p)</li>
+<li>¬((p → q) ∧ (q → p))</li>
+</ol></div></article><article class="card ex" data-tema="4" id="e-4-2-2"><div class="card-head"><span class="card-num">Ejercicio 4.2.2</span><span class="card-tools"><label class="done" for="d-4-2-2"><input data-key="4.2.2" id="d-4-2-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-2-2">Ver solución →</a></span></div><div class="card-body"><p>Sin pasar a otra forma, di qué puedes concluir de cada conjunto clausal:</p><ol>
+<li>{{p, ¬p, q}; {r, ¬r}}</li>
+<li>{{p}; {¬p, q}; {¬q}}</li>
+<li>{{p, q}; {¬p}}</li>
+<li>{} (conjunto vacío) y {□}</li>
+</ol></div></article></section><section class="topic" id="t-4-3"><h3><span class="tnum">4.3</span><span>Propagación de literales</span></h3><article class="card ex" data-tema="4" id="e-4-3-1"><div class="card-head"><span class="card-num">Ejercicio 4.3.1</span><span class="card-tools"><label class="done" for="d-4-3-1"><input data-key="4.3.1" id="d-4-3-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-3-1">Ver solución →</a></span></div><div class="card-body"><p>Sea ξ = {{p, q}; {¬p, r}; {¬q, ¬r}; {q, r, s}}. Calcula:</p><ol>
+<li>ξ(p)</li>
+<li>ξ(p, r)</li>
+<li>ξ(p, r, ¬q). ¿Qué indica el resultado?</li>
+<li>ξ(p, ¬r). ¿Qué indica el resultado?</li>
+<li>ξ(¬p) y, a partir de ahí, encuentra otro modelo.</li>
+</ol></div></article><article class="card ex" data-tema="4" id="e-4-3-2"><div class="card-head"><span class="card-num">Ejercicio 4.3.2</span><span class="card-tools"><label class="done" for="d-4-3-2"><input data-key="4.3.2" id="d-4-3-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-3-2">Ver solución →</a></span></div><div class="card-body"><p>Explica por qué la propagación no mantiene la equivalencia lógica pero sí la satisfacibilidad, usando ξ(p) del ejercicio anterior.</p></div></article></section><section class="topic" id="t-4-4"><h3><span class="tnum">4.4</span><span>Algoritmo DPLL</span></h3><p class="topic-note">Aplica DPLL indicando en cada paso la regla (tautología, unitaria, literal puro, inclusión, ramificación). Dibuja el árbol si ramificas y da el modelo si es satisfacible.</p><article class="card ex" data-tema="4" id="e-4-4-1"><div class="card-head"><span class="card-num">Ejercicio 4.4.1</span><span class="card-tools"><label class="done" for="d-4-4-1"><input data-key="4.4.1" id="d-4-4-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-4-1">Ver solución →</a></span></div><div class="card-body"><p>ξ = {{p, q}; {¬p, q}; {p, ¬q}; {¬p, ¬q}}</p></div></article><article class="card ex" data-tema="4" id="e-4-4-2"><div class="card-head"><span class="card-num">Ejercicio 4.4.2</span><span class="card-tools"><label class="done" for="d-4-4-2"><input data-key="4.4.2" id="d-4-4-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-4-2">Ver solución →</a></span></div><div class="card-body"><p>ξ = {{p, ¬q}; {q, ¬r}; {r, ¬p}; {p, q, r}; {¬p, ¬q, ¬r}}</p></div></article><article class="card ex" data-tema="4" id="e-4-4-3"><div class="card-head"><span class="card-num">Ejercicio 4.4.3</span><span class="card-tools"><label class="done" for="d-4-4-3"><input data-key="4.4.3" id="d-4-4-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-4-3">Ver solución →</a></span></div><div class="card-body"><p>ξ = {{p, ¬p, r}; {q, r}; {q, r, ¬s}; {¬q, s}; {¬r, ¬s}; {s, t}}</p></div></article><article class="card ex" data-tema="4" id="e-4-4-4"><div class="card-head"><span class="card-num">Ejercicio 4.4.4</span><span class="card-tools"><label class="done" for="d-4-4-4"><input data-key="4.4.4" id="d-4-4-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-4-4">Ver solución →</a></span></div><div class="card-body"><p>ξ = {{p, q}; {¬p, r}; {¬p, ¬r}; {q, s}; {¬q, ¬s}}. Ramifica primero por p.</p></div></article></section><section class="topic" id="t-4-5"><h3><span class="tnum">4.5</span><span>Método de resolución</span></h3><p class="topic-note">Escribe en notación Fitting: número, cláusula, origen Rₗ(i, j) y simplificaciones (subsumida, puro, tautología).</p><article class="card ex" data-tema="4" id="e-4-5-1"><div class="card-head"><span class="card-num">Ejercicio 4.5.1</span><span class="card-tools"><label class="done" for="d-4-5-1"><input data-key="4.5.1" id="d-4-5-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-5-1">Ver solución →</a></span></div><div class="card-body"><p>Saturación por niveles con simplificación: ξ = {{p, q}; {¬p, r}; {¬q, r}; {¬r}}. Dibuja además el grafo de refutación.</p></div></article><article class="card ex" data-tema="4" id="e-4-5-2"><div class="card-head"><span class="card-num">Ejercicio 4.5.2</span><span class="card-tools"><label class="done" for="d-4-5-2"><input data-key="4.5.2" id="d-4-5-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-5-2">Ver solución →</a></span></div><div class="card-body"><p>Saturación con simplificación: ξ = {{p, q}; {¬p, q}; {¬q, r}; {¬r, s}}. ¿Qué puedes concluir? ¿Puede la resolución darte un modelo?</p></div></article><article class="card ex" data-tema="4" id="e-4-5-3"><div class="card-head"><span class="card-num">Ejercicio 4.5.3</span><span class="card-tools"><label class="done" for="d-4-5-3"><input data-key="4.5.3" id="d-4-5-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-5-3">Ver solución →</a></span></div><div class="card-body"><p>Resolución con conjunto soporte (refutación): {p → q, q → r ∨ s, ¬s} ⊨ p → r.</p></div></article><article class="card ex" data-tema="4" id="e-4-5-4"><div class="card-head"><span class="card-num">Ejercicio 4.5.4</span><span class="card-tools"><label class="done" for="d-4-5-4"><input data-key="4.5.4" id="d-4-5-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-5-4">Ver solución →</a></span></div><div class="card-body"><p>Resolución con conjunto soporte (refutación): {p ∨ q, p → r} ⊨ r. Si no es válido, da un contraejemplo con otra técnica.</p></div></article><article class="card ex" data-tema="4" id="e-4-5-5"><div class="card-head"><span class="card-num">Ejercicio 4.5.5</span><span class="card-tools"><label class="done" for="d-4-5-5"><input data-key="4.5.5" id="d-4-5-5" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-5-5">Ver solución →</a></span></div><div class="card-body"><p>¿Por qué de {p, q} y {¬p, ¬q} no se puede obtener □ en un solo paso?</p></div></article></section><section class="topic" id="t-4-6"><h3><span class="tnum">4.6</span><span>Árboles semánticos</span></h3><p class="topic-note">Indica los nodos <span class="mark ok">ÉXITO</span> y <span class="mark bad">FALLO</span> y clasifica la fórmula (satisfacible, falseable, tautología, insatisfacible).</p><article class="card ex" data-tema="4" id="e-4-6-1"><div class="card-head"><span class="card-num">Ejercicio 4.6.1</span><span class="card-tools"><label class="done" for="d-4-6-1"><input data-key="4.6.1" id="d-4-6-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-6-1">Ver solución →</a></span></div><div class="card-body"><p>(p → q) ∧ (q → p) → (p ↔ q)</p></div></article><article class="card ex" data-tema="4" id="e-4-6-2"><div class="card-head"><span class="card-num">Ejercicio 4.6.2</span><span class="card-tools"><label class="done" for="d-4-6-2"><input data-key="4.6.2" id="d-4-6-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-6-2">Ver solución →</a></span></div><div class="card-body"><p>(p ∨ q) ∧ (p → ¬q) ∧ (q → r). Da todos los modelos que salen del árbol.</p></div></article><article class="card ex" data-tema="4" id="e-4-6-3"><div class="card-head"><span class="card-num">Ejercicio 4.6.3</span><span class="card-tools"><label class="done" for="d-4-6-3"><input data-key="4.6.3" id="d-4-6-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-6-3">Ver solución →</a></span></div><div class="card-body"><p>(p → q) ∧ (q → r) ∧ p ∧ ¬r</p></div></article></section><section class="topic" id="t-4-7"><h3><span class="tnum">4.7</span><span>Tableaux semánticos</span></h3><p class="topic-note">Marca cada α-fórmula y β-fórmula, y cada hoja como abierta (<span class="mark ok">✓</span>) o cerrada (<span class="mark bad">×</span>).</p><article class="card ex" data-tema="4" id="e-4-7-1"><div class="card-head"><span class="card-num">Ejercicio 4.7.1</span><span class="card-tools"><label class="done" for="d-4-7-1"><input data-key="4.7.1" id="d-4-7-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-7-1">Ver solución →</a></span></div><div class="card-body"><p>¿Es satisfacible (p ∨ q) ∧ ¬p ∧ (q → r)? Da el modelo.</p></div></article><article class="card ex" data-tema="4" id="e-4-7-2"><div class="card-head"><span class="card-num">Ejercicio 4.7.2</span><span class="card-tools"><label class="done" for="d-4-7-2"><input data-key="4.7.2" id="d-4-7-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-7-2">Ver solución →</a></span></div><div class="card-body"><p>Demuestra con tableaux que ((p → q) ∧ (q → r)) → (p → r) es tautología. ¿Sobre qué fórmula construyes el tableau?</p></div></article><article class="card ex" data-tema="4" id="e-4-7-3"><div class="card-head"><span class="card-num">Ejercicio 4.7.3</span><span class="card-tools"><label class="done" for="d-4-7-3"><input data-key="4.7.3" id="d-4-7-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-7-3">Ver solución →</a></span></div><div class="card-body"><p>Valida por refutación {p → q, r → s, p ∨ r, ¬q} ⊨ s.</p></div></article><article class="card ex" data-tema="4" id="e-4-7-4"><div class="card-head"><span class="card-num">Ejercicio 4.7.4</span><span class="card-tools"><label class="done" for="d-4-7-4"><input data-key="4.7.4" id="d-4-7-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-7-4">Ver solución →</a></span></div><div class="card-body"><p>Valida por refutación {p → q ∨ r, ¬q} ⊨ ¬p. Si no es válido, lee el contraejemplo en una hoja abierta.</p></div></article></section><section class="topic integ" id="t-4-8"><h3><span class="tnum">4.8</span><span>Ejercicios integradores del Tema 4</span><span class="tag">Combina todo el tema</span></h3><article class="card ex" data-tema="4" id="e-4-8-1"><div class="card-head"><span class="card-num">Ejercicio 4.8.1</span><span class="card-tools"><label class="done" for="d-4-8-1"><input data-key="4.8.1" id="d-4-8-1" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-8-1">Ver solución →</a></span></div><div class="card-body"><p>Sea Φ = (p → q) ∧ (q → r) ∧ (r → ¬p) ∧ (p ∨ q).</p><ol>
+<li>Pasa Φ a FNC y forma clausal.</li>
+<li>Aplica DPLL.</li>
+<li>Aplica un árbol semántico.</li>
+<li>Aplica un tableau.</li>
+<li>Comprueba que las tres técnicas dan el mismo modelo.</li>
+</ol></div></article><article class="card ex" data-tema="4" id="e-4-8-2"><div class="card-head"><span class="card-num">Ejercicio 4.8.2</span><span class="card-tools"><label class="done" for="d-4-8-2"><input data-key="4.8.2" id="d-4-8-2" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-8-2">Ver solución →</a></span></div><div class="card-body"><p>«Si Ana viene a la reunión, viene Bea. Si viene Bea, Carlos no viene. Carlos viene o viene Ana. Por tanto, si Carlos no viene, viene Bea.» Formaliza (a, b, c) y valida el razonamiento por refutación con: resolución con conjunto soporte, DPLL, árbol semántico y tableau.</p></div></article><article class="card ex" data-tema="4" id="e-4-8-3"><div class="card-head"><span class="card-num">Ejercicio 4.8.3</span><span class="card-tools"><label class="done" for="d-4-8-3"><input data-key="4.8.3" id="d-4-8-3" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-8-3">Ver solución →</a></span></div><div class="card-body"><p>Valida {p → q, ¬p → r} ⊨ q ∧ r con DPLL y con tableau. Da todos los contraejemplos y explica por qué la resolución sola no los proporciona.</p></div></article><article class="card ex" data-tema="4" id="e-4-8-4"><div class="card-head"><span class="card-num">Ejercicio 4.8.4</span><span class="card-tools"><label class="done" for="d-4-8-4"><input data-key="4.8.4" id="d-4-8-4" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-8-4">Ver solución →</a></span></div><div class="card-body"><p>Hay tres luces L1, L2 y L3. Exactamente una está encendida. Además, si L1 está encendida, L2 también lo está.</p><ol>
+<li>Codifica las restricciones como cláusulas (lᵢ: «Li está encendida»). Pista: «al menos una» es una cláusula y «como mucho una» son tres.</li>
+<li>Aplica DPLL y da todos los modelos.</li>
+<li>¿Qué luces pueden estar encendidas?</li>
+</ol></div></article><article class="card ex" data-tema="4" id="e-4-8-5"><div class="card-head"><span class="card-num">Ejercicio 4.8.5</span><span class="card-tools"><label class="done" for="d-4-8-5"><input data-key="4.8.5" id="d-4-8-5" type="checkbox"/><span>Hecho</span></label><a class="jump" href="#s-4-8-5">Ver solución →</a></span></div><div class="card-body"><p>Para cada pregunta, elige la técnica más adecuada y justifica: a) ¿es tautología α? (sin pasar a FNC); b) dame un modelo de un conjunto grande de cláusulas; c) demuestra que un razonamiento es válido usando sólo las cláusulas de la conclusión negada como punto de partida; d) ¿es satisfacible α? y quiero ver todas las formas de hacerla verdadera sin pasar a FNC.</p></div></article></section></section>
+    <div class="divider" id="soluciones"><p class="eyebrow">Parte 2</p><h2>Soluciones</h2><p>Mismo orden y numeración que los enunciados. Cada solución enlaza de vuelta a su ejercicio.</p></div>
+    <section class="tema sols" id="sol-1"><header class="tema-head"><p class="eyebrow">Soluciones · Tema 1</p><h2>Introducción a la lógica</h2></header><section class="topic" id="s-1-1"><h3><span class="tnum">1.1</span><span>La lógica como cálculo</span></h3><article class="card sol" data-tema="1" id="s-1-1-1"><div class="card-head"><span class="card-num">Solución 1.1.1</span><span class="card-tools"><a class="jump" href="#e-1-1-1">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Expresión</th>
+<th>¿ebf?</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A″</td>
+<td>Sí</td>
+<td>RF1</td>
+</tr>
+<tr>
+<td>A′ X B″</td>
+<td>Sí</td>
+<td>RF3 (ebf de A, X, ebf de B)</td>
+</tr>
+<tr>
+<td>B X A‴</td>
+<td>Sí</td>
+<td>RF4</td>
+</tr>
+<tr>
+<td>A X A′</td>
+<td>No</td>
+<td>Ninguna regla combina A con A</td>
+</tr>
+<tr>
+<td>X B′</td>
+<td>No</td>
+<td>Falta la ebf a la izquierda de X</td>
+</tr>
+<tr>
+<td>B′ X</td>
+<td>No</td>
+<td>Falta la ebf a la derecha de X</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="1" id="s-1-1-2"><div class="card-head"><span class="card-num">Solución 1.1.2</span><span class="card-tools"><a class="jump" href="#e-1-1-2">← Enunciado</a></span></div><div class="card-body"><p>A′ X B ⇒ A′ X B″ (RT3) ⇒ B″ X A′ (RT1) ⇒ B″ X A‴ (RT4).</p></div></article><article class="card sol" data-tema="1" id="s-1-1-3"><div class="card-head"><span class="card-num">Solución 1.1.3</span><span class="card-tools"><a class="jump" href="#e-1-1-3">← Enunciado</a></span></div><div class="card-body"><p>Se intercambia, se cambian los apóstrofes del segundo elemento y se vuelve a intercambiar: A X B ⇒ B X A (RT1) ⇒ B X A‴ (RT4) ⇒ A‴ X B (RT2).</p></div></article><article class="card sol" data-tema="1" id="s-1-1-4"><div class="card-head"><span class="card-num">Solución 1.1.4</span><span class="card-tools"><a class="jump" href="#e-1-1-4">← Enunciado</a></span></div><div class="card-body"><p>No. Todas las reglas de transformación conservan «una A y una B»: sólo intercambian el orden o cambian apóstrofes. Es un invariante del cálculo. Además, AⁿXAᵐ ni siquiera es una ebf.</p></div></article><article class="card sol" data-tema="1" id="s-1-1-5"><div class="card-head"><span class="card-num">Solución 1.1.5</span><span class="card-tools"><a class="jump" href="#e-1-1-5">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>B″ X A′: «la nieta quiere al hijo».</li>
+<li>«El nieto quiere a la madre»: A″ X B.</li>
+<li>Porque los símbolos pasan a referirse a hechos del mundo. Un cálculo con interpretación es un lenguaje formalizado: lógica = cálculo + interpretación.</li>
+</ol></div></article></section><section class="topic" id="s-1-2"><h3><span class="tnum">1.2</span><span>Oración, enunciado y proposición</span></h3><article class="card sol" data-tema="1" id="s-1-2-1"><div class="card-head"><span class="card-num">Solución 1.2.1</span><span class="card-tools"><a class="jump" href="#e-1-2-1">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Expresión</th>
+<th>Clasificación</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>¿Qué hora es?</td>
+<td>Oración, no enunciado</td>
+<td>Interrogativa: no tiene valor de verdad</td>
+</tr>
+<tr>
+<td>¡Cierra la ventana!</td>
+<td>Oración, no enunciado</td>
+<td>Imperativa</td>
+</tr>
+<tr>
+<td>Madrid es la capital de España.</td>
+<td>Proposición</td>
+<td>Declarativa y referencial</td>
+</tr>
+<tr>
+<td>Ojalá apruebe FLI.</td>
+<td>Oración, no enunciado</td>
+<td>Desiderativa (expresa un deseo)</td>
+</tr>
+<tr>
+<td>Mesa.</td>
+<td>No es oración</td>
+<td>Nombre suelto: no describe un hecho</td>
+</tr>
+<tr>
+<td>7 es un número primo.</td>
+<td>Proposición</td>
+<td>Declarativa y referencial</td>
+</tr>
+<tr>
+<td>x es mayor que 3.</td>
+<td>Enunciado, no proposición</td>
+<td>x no refiere a nada concreto: no tiene valor de verdad hasta fijar x</td>
+</tr>
+<tr>
+<td>El ordenador de la sala 2 está encendido.</td>
+<td>Proposición</td>
+<td>Declarativa y referencial</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="1" id="s-1-2-2"><div class="card-head"><span class="card-num">Solución 1.2.2</span><span class="card-tools"><a class="jump" href="#e-1-2-2">← Enunciado</a></span></div><div class="card-body"><ul>
+<li>p: incorrecto, los átomos se definen en afirmativo. Corrección: p: «llueve», y «no llueve» se escribe ¬p.</li>
+<li>q: incorrecto, «casa» no es un hecho y no puede ser V o F. Corrección, por ejemplo: q: «la casa es blanca».</li>
+<li>r: incorrecto, una pregunta no es proposición. Corrección: r: «vienes a clase».</li>
+<li>s: correcto.</li>
+<li>t: incorrecto, no es atómica (contiene «y»). Corrección: usar p: «llueve» y t: «hace frío», y escribir p ∧ t.</li>
+</ul></div></article><article class="card sol" data-tema="1" id="s-1-2-3"><div class="card-head"><span class="card-num">Solución 1.2.3</span><span class="card-tools"><a class="jump" href="#e-1-2-3">← Enunciado</a></span></div><div class="card-body"><p>Un enunciado es una oración declarativa con pretensión de verdad. Una proposición es un enunciado con términos referenciales, es decir, que se refiere a un hecho concreto del mundo. Ejemplo de enunciado que no es proposición: «x es mayor que 3» o «él llegó ayer» sin contexto.</p></div></article></section><section class="topic" id="s-1-3"><h3><span class="tnum">1.3</span><span>Conceptos fundamentales</span></h3><article class="card sol" data-tema="1" id="s-1-3-1"><div class="card-head"><span class="card-num">Solución 1.3.1</span><span class="card-tools"><a class="jump" href="#e-1-3-1">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Época</th>
+<th>Autor o hito</th>
+<th>Lógica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1ª</td>
+<td>500 a.C. – s. XIX</td>
+<td>Aristóteles (Sócrates, Platón)</td>
+<td>Clásica</td>
+</tr>
+<tr>
+<td>2ª</td>
+<td>Mitad – final s. XIX</td>
+<td>Boole (1847)</td>
+<td>Algebraica</td>
+</tr>
+<tr>
+<td>3ª</td>
+<td>Final s. XIX – mitad s. XX</td>
+<td>Frege (1879)</td>
+<td>Matemática</td>
+</tr>
+<tr>
+<td>4ª</td>
+<td>Mitad s. XX – hoy</td>
+<td>Computación</td>
+<td>Computacional</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="1" id="s-1-3-2"><div class="card-head"><span class="card-num">Solución 1.3.2</span><span class="card-tools"><a class="jump" href="#e-1-3-2">← Enunciado</a></span></div><div class="card-body"><p>1) Ley del tercio excluido: p ∨ ¬p. 2) Principio de no contradicción: ¬(q ∧ ¬q).</p></div></article><article class="card sol" data-tema="1" id="s-1-3-3"><div class="card-head"><span class="card-num">Solución 1.3.3</span><span class="card-tools"><a class="jump" href="#e-1-3-3">← Enunciado</a></span></div><div class="card-body"><p>1 ontológico; 2 lógico; 3 meta-ontológico; 4 epistemológico; 5 implementación.</p></div></article><article class="card sol" data-tema="1" id="s-1-3-4"><div class="card-head"><span class="card-num">Solución 1.3.4</span><span class="card-tools"><a class="jump" href="#e-1-3-4">← Enunciado</a></span></div><div class="card-body"><p>1 lenguaje formal (sintaxis); 2 formalización; 3 semántica; 4 sistema de demostración (equivalencia lógica); 5 sistema de demostración (implicación lógica, modus ponens).</p></div></article><article class="card sol" data-tema="1" id="s-1-3-5"><div class="card-head"><span class="card-num">Solución 1.3.5</span><span class="card-tools"><a class="jump" href="#e-1-3-5">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>F. Estudia los razonamientos válidos: los que preservan la verdad, no los que tienen premisas verdaderas.</li>
+<li>V. Es la definición de clase.</li>
+<li>V. Por eso lo derivado sintácticamente coincide con lo deducido semánticamente.</li>
+<li>F. En L0 son las proposiciones; los predicados son los elementos de L1.</li>
+<li>V. The Mathematical Analysis of Logic (1847).</li>
+</ol></div></article></section><section class="topic integ" id="s-1-4"><h3><span class="tnum">1.4</span><span>Integradores</span></h3><article class="card sol" data-tema="1" id="s-1-4-1"><div class="card-head"><span class="card-num">Solución 1.4.1</span><span class="card-tools"><a class="jump" href="#e-1-4-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>No son proposiciones «¿Has entregado la práctica?» (pregunta) ni «¡Entrégala hoy!» (orden). Sí lo son «Si entregas la práctica, apruebas», «Luis ha entregado la práctica» y «Luis aprueba».</li>
+<li>e: «Luis entrega la práctica»; a: «Luis aprueba». La regla general se particulariza a Luis, porque L0 no tiene variables (eso llega con L1).</li>
+<li>Premisas: e → a, e. Conclusión: a. Razonamiento: {e → a, e} ⊨ a (modus ponens).</li>
+<li>Ambos pasos son formalización. El paso 2, además, fija el alfabeto del lenguaje formal (los átomos).</li>
+</ol></div></article><article class="card sol" data-tema="1" id="s-1-4-2"><div class="card-head"><span class="card-num">Solución 1.4.2</span><span class="card-tools"><a class="jump" href="#e-1-4-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>A″ X B′ ⇒ B′ X A″ (RT1) ⇒ B′ X A′ (RT4).</li>
+<li>Inicial: «el nieto quiere a la hija». Final: «la hija quiere al hijo».</li>
+<li>La derivación sigue siendo correcta: sólo depende de las reglas (la forma). Lo que cambia es el significado: «el nieto conoce a la hija». El cálculo es independiente de la interpretación; el sentido no.</li>
+</ol></div></article><article class="card sol" data-tema="1" id="s-1-4-3"><div class="card-head"><span class="card-num">Solución 1.4.3</span><span class="card-tools"><a class="jump" href="#e-1-4-3">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Procedimiento</th>
+<th>Método</th>
+<th>Se apoya en</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabla de verdad</td>
+<td>Semántico</td>
+<td>La verdad de los hechos (interpretaciones)</td>
+</tr>
+<tr>
+<td>Aplicar modus ponens</td>
+<td>Sintáctico</td>
+<td>La estructura del lenguaje (reglas de inferencia)</td>
+</tr>
+<tr>
+<td>Buscar una interpretación que haga F una implicación</td>
+<td>Semántico</td>
+<td>La verdad de los hechos</td>
+</tr>
+<tr>
+<td>Reescribir con De Morgan</td>
+<td>Sintáctico</td>
+<td>La estructura del lenguaje (equivalencias como patrones)</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="1" id="s-1-4-4"><div class="card-head"><span class="card-num">Solución 1.4.4</span><span class="card-tools"><a class="jump" href="#e-1-4-4">← Enunciado</a></span></div><div class="card-body"><p>Con l: «hoy es lunes»: (l ∨ ¬l) ∧ ¬(l ∧ ¬l). Aparecen el tercio excluido (l ∨ ¬l) y la no contradicción (¬(l ∧ ¬l)). Es siempre V: l ∨ ¬l vale V en las dos interpretaciones; l ∧ ¬l vale siempre F, así que su negación vale siempre V; y V ∧ V = V. Es una tautología.</p></div></article></section></section><section class="tema sols" id="sol-2"><header class="tema-head"><p class="eyebrow">Soluciones · Tema 2</p><h2>Lógica proposicional (L0)</h2></header><section class="topic" id="s-2-1"><h3><span class="tnum">2.1</span><span>Sintaxis</span></h3><article class="card sol" data-tema="2" id="s-2-1-1"><div class="card-head"><span class="card-num">Solución 2.1.1</span><span class="card-tools"><a class="jump" href="#e-2-1-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Sí: (¬(p ∧ q)) → r.</li>
+<li>No: dentro del paréntesis ∨ no tiene fbf a su derecha, y q queda fuera sin conectiva.</li>
+<li>No: ¬ va seguido de una conectiva binaria, y ∧ no tiene fbf a su izquierda.</li>
+<li>Sí: (¬¬p) ↔ (q ∨ ¬r).</li>
+<li>No: se abren dos paréntesis y sólo se cierra uno.</li>
+<li>Sí: (p ∧ ¬(q → r)) ∨ s (∧ y ∨ tienen igual prioridad, de izquierda a derecha).</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-1-2"><div class="card-head"><span class="card-num">Solución 2.1.2</span><span class="card-tools"><a class="jump" href="#e-2-1-2">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Fórmula</th>
+<th>Con paréntesis</th>
+<th>Conectiva principal</th>
+<th>Nº conectivas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>¬p ∨ q ∧ r → s</td>
+<td>(((¬p) ∨ q) ∧ r) → s</td>
+<td>→</td>
+<td>4</td>
+</tr>
+<tr>
+<td>p → q ↔ ¬r ∨ s</td>
+<td>(p → q) ↔ ((¬r) ∨ s)</td>
+<td>↔</td>
+<td>4</td>
+</tr>
+<tr>
+<td>p → q → r ∧ ¬p</td>
+<td>(p → q) → (r ∧ (¬p))</td>
+<td>el segundo →</td>
+<td>4</td>
+</tr>
+<tr>
+<td>¬(p ∧ q) ∨ ¬r ↔ p</td>
+<td>((¬(p ∧ q)) ∨ (¬r)) ↔ p</td>
+<td>↔</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="2" id="s-2-1-3"><div class="card-head"><span class="card-num">Solución 2.1.3</span><span class="card-tools"><a class="jump" href="#e-2-1-3">← Enunciado</a></span></div><div class="card-body"><p>p y ¬q: literal y cláusula (un literal es una cláusula de un solo literal). p ∨ ¬q ∨ r: cláusula. ¬(p ∨ q): ninguna. p ∧ q: ninguna (es una FNC de dos cláusulas). ¬¬p: ninguna; es equivalente al literal p, pero sintácticamente no es un literal.</p></div></article><article class="card sol" data-tema="2" id="s-2-1-4"><div class="card-head"><span class="card-num">Solución 2.1.4</span><span class="card-tools"><a class="jump" href="#e-2-1-4">← Enunciado</a></span></div><div class="card-body"><p>Conectiva principal ↔ (menor prioridad, fuera de paréntesis). Se lee (¬(p → q) ∨ r) ↔ (q ∧ ¬s).</p><ul>
+<li>↔<ul>
+<li>∨ : ¬(p → q) ∨ r<ul>
+<li>¬ : ¬(p → q)<ul>
+<li>→ : p → q (hojas p, q)</li>
+</ul>
+</li>
+<li>r</li>
+</ul>
+</li>
+<li>∧ : q ∧ ¬s<ul>
+<li>q</li>
+<li>¬ : ¬s (hoja s)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Tiene 6 nodos internos: 6 conectivas.</p></div></article></section><section class="topic" id="s-2-2"><h3><span class="tnum">2.2</span><span>Formalización</span></h3><article class="card sol" data-tema="2" id="s-2-2-1"><div class="card-head"><span class="card-num">Solución 2.2.1</span><span class="card-tools"><a class="jump" href="#e-2-2-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>p ∧ ¬q</li>
+<li>¬p ∧ ¬q</li>
+<li>r → ¬p</li>
+<li>r → ¬p (la condición necesaria va en el consecuente; es la misma fórmula que el 3)</li>
+<li>p → s</li>
+<li>¬p → r (≡ r ∨ p)</li>
+<li>(r ∨ s) ∧ ¬(r ∧ s)</li>
+<li>(p ∧ q) → (s ∧ ¬r)</li>
+<li>r ↔ (¬p ∧ ¬q)</li>
+<li>¬(q → s) (≡ q ∧ ¬s: hace frío y no me quedo en casa)</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-2-2"><div class="card-head"><span class="card-num">Solución 2.2.2</span><span class="card-tools"><a class="jump" href="#e-2-2-2">← Enunciado</a></span></div><div class="card-body"><p>a) No es cierto que llueva o haga frío (equivale a «ni llueve ni hace frío»). b) Si me quedo en casa, es que llueve o hace frío. c) No salgo a correr si y sólo si me quedo en casa. d) Si llueve me quedo en casa, y si no llueve salgo a correr.</p></div></article><article class="card sol" data-tema="2" id="s-2-2-3"><div class="card-head"><span class="card-num">Solución 2.2.3</span><span class="card-tools"><a class="jump" href="#e-2-2-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Lo correcto es a → e. «Sólo si» marca el consecuente.</li>
+<li>Lo correcto es m → b. La condición necesaria va en el consecuente.</li>
+<li>Lo correcto es ¬l → f (≡ f ∨ l). Lo que escribió (f → ¬l) dice «si voy a la fiesta, no llueve».</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-2-4"><div class="card-head"><span class="card-num">Solución 2.2.4</span><span class="card-tools"><a class="jump" href="#e-2-2-4">← Enunciado</a></span></div><div class="card-body"><p>Premisas: s → ¬w; ¬w → c; ¬c. Conclusión: ¬s. Razonamiento: {s → ¬w, ¬w → c, ¬c} ⊨ ¬s.</p></div></article></section><section class="topic" id="s-2-3"><h3><span class="tnum">2.3</span><span>Evaluación</span></h3><article class="card sol" data-tema="2" id="s-2-3-1"><div class="card-head"><span class="card-num">Solución 2.3.1</span><span class="card-tools"><a class="jump" href="#e-2-3-1">← Enunciado</a></span></div><div class="card-body"><p>Con ν(p) = V, ν(q) = F, ν(r) = F:</p><ol>
+<li>¬p ∨ q = F ∨ F = F; F → F = <span class="chip tv-v">V</span>.</li>
+<li>Se lee (p → q) → r: V → F = F; F → F = <span class="chip tv-v">V</span>.</li>
+<li>p ↔ q = F, su negación V; r ∨ ¬p = F ∨ F = F; V ∧ F = <span class="chip tv-f">F</span>.</li>
+<li>p ∧ q = F; ¬r = V; ¬r ↔ q = V ↔ F = F; F ∨ F = <span class="chip tv-f">F</span>.</li>
+<li>Se lee ¬(p ∨ r) ↔ (q ∧ ¬p): ¬(V) = F; F ∧ F = F; F ↔ F = <span class="chip tv-v">V</span>.</li>
+<li>Se lee (p ∧ ¬q) → r: V ∧ V = V; V → F = <span class="chip tv-f">F</span>.</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-3-2"><div class="card-head"><span class="card-num">Solución 2.3.2</span><span class="card-tools"><a class="jump" href="#e-2-3-2">← Enunciado</a></span></div><div class="card-body"><p>Difieren cuando ν(p) = F y ν(r) = F, con q cualquiera: (F, V, F) y (F, F, F). Ahí (p → q) → r = V → F = F, mientras que p → (q → r) = V (antecedente falso). La implicación no es asociativa: el orden de agrupación importa.</p></div></article><article class="card sol" data-tema="2" id="s-2-3-3"><div class="card-head"><span class="card-num">Solución 2.3.3</span><span class="card-tools"><a class="jump" href="#e-2-3-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Una implicación sólo es F con antecedente V y consecuente F: ν(p) = V, ν(q) = V, ν(r) = F.</li>
+<li>Una disyunción F tiene ambos miembros F: ¬p = F, así que ν(p) = V; q ↔ r = F con r = V, así que ν(q) = F.</li>
+<li>Con q = F, la única forma de que p → q sea V es ν(p) = F (es el modus tollens).</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-3-4"><div class="card-head"><span class="card-num">Solución 2.3.4</span><span class="card-tools"><a class="jump" href="#e-2-3-4">← Enunciado</a></span></div><div class="card-body"><p>Con s: «apruebo el parcial» y c: «me invito a cenar», la frase es s → c. Sólo la incumplo si apruebo y no me invito (s = V, c = F). Si no apruebo, la cumplo me invite o no (antecedente falso).</p></div></article></section><section class="topic" id="s-2-4"><h3><span class="tnum">2.4</span><span>Tablas de verdad y clasificación</span></h3><article class="card sol" data-tema="2" id="s-2-4-1"><div class="card-head"><span class="card-num">Solución 2.4.1</span><span class="card-tools"><a class="jump" href="#e-2-4-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>(p → q) ∧ (p ∧ ¬q): contradicción (insatisfacible y falseable).</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>p → q</th>
+<th>¬q</th>
+<th>p ∧ ¬q</th>
+<th>fórmula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><ol>
+<li>(p → q) ∨ (q → p): tautología (y satisfacible).</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>p → q</th>
+<th>q → p</th>
+<th>fórmula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+</tbody>
+</table></div><ol>
+<li>¬(p ∨ q) ↔ (¬p ∧ q): contingente (satisfacible y falseable).</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>p ∨ q</th>
+<th>¬(p ∨ q)</th>
+<th>¬p</th>
+<th>¬p ∧ q</th>
+<th>fórmula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><ol>
+<li>(p ∨ q) ∧ ¬r → p, que se lee ((p ∨ q) ∧ ¬r) → p: contingente. Sólo es F en ν(p) = F, ν(q) = V, ν(r) = F.</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>r</th>
+<th>p ∨ q</th>
+<th>¬r</th>
+<th>(p ∨ q) ∧ ¬r</th>
+<th>fórmula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+</tbody>
+</table></div><ol>
+<li>(p → (q → r)) → ((p → q) → (p → r)): tautología.</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>r</th>
+<th>q → r</th>
+<th>A = p → (q → r)</th>
+<th>p → q</th>
+<th>p → r</th>
+<th>B = (p → q) → (p → r)</th>
+<th>A → B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+</tbody>
+</table></div><ol>
+<li>(p ↔ q) ∧ (q ↔ ¬p): contradicción. La primera exige p = q y la segunda q ≠ p.</li>
+</ol><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>p ↔ q</th>
+<th>¬p</th>
+<th>q ↔ ¬p</th>
+<th>fórmula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="2" id="s-2-4-2"><div class="card-head"><span class="card-num">Solución 2.4.2</span><span class="card-tools"><a class="jump" href="#e-2-4-2">← Enunciado</a></span></div><div class="card-body"><p>a) n = 4 átomos → 2⁴ = 16 filas. Conectivas: ∧, ¬ (de p ∧ q), ¬ (de s), →, ∨ = 5. Columnas: 4 + 5 = 9. b) n = 2 → 4 filas. Conectivas: →, ¬, ↔ = 3. Columnas: 2 + 3 = 5.</p></div></article><article class="card sol" data-tema="2" id="s-2-4-3"><div class="card-head"><span class="card-num">Solución 2.4.3</span><span class="card-tools"><a class="jump" href="#e-2-4-3">← Enunciado</a></span></div><div class="card-body"><p>Para que sea F, el consecuente q ∨ s debe ser F: q = F y s = F. Para que el antecedente sea V, p → q exige p = F y r → s exige r = F. Pero entonces p ∨ r = F y el antecedente es F. Ninguna fila la hace falsa: es tautología (es el dilema constructivo).</p></div></article><article class="card sol" data-tema="2" id="s-2-4-4"><div class="card-head"><span class="card-num">Solución 2.4.4</span><span class="card-tools"><a class="jump" href="#e-2-4-4">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>V. α tiene filas V y filas F; ¬α las intercambia, así que también tiene de ambas.</li>
+<li>F. p es satisfacible y ¬p también. Sólo es cierto si α es tautología.</li>
+<li>F. Las contingentes también son falseables (por ejemplo, p).</li>
+<li>V. Una tautología no tiene ninguna fila F.</li>
+</ol></div></article></section><section class="topic" id="s-2-5"><h3><span class="tnum">2.5</span><span>Satisfacibilidad de conjuntos</span></h3><article class="card sol" data-tema="2" id="s-2-5-1"><div class="card-head"><span class="card-num">Solución 2.5.1</span><span class="card-tools"><a class="jump" href="#e-2-5-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Γ₁ es insatisfacible. p y ¬r obligan a ν(p) = V y ν(r) = F; p → q obliga a ν(q) = V; y entonces q → r = V → F = F.</li>
+<li>Γ₂ es satisfacible. Si r = F: ¬p ∨ r obliga a p = F, ¬q ∨ r obliga a q = F, y p ∨ q = F. Por tanto r = V, y ¬r ∨ p obliga a p = V. Con p = V y r = V todas son V, sea cual sea q. Modelos: (p, q, r) = (V, V, V) y (V, F, V).</li>
+<li>Γ₃ es insatisfacible. p ↔ q y q ↔ r obligan a que p, q y r tengan el mismo valor; p ↔ ¬r exige que p y r sean distintos.</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-5-2"><div class="card-head"><span class="card-num">Solución 2.5.2</span><span class="card-tools"><a class="jump" href="#e-2-5-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>¬p obliga a p = F, y p ∨ q a q = V. Modelo único: ν(p) = F, ν(q) = V.</li>
+<li>Con ¬q el conjunto es insatisfacible: ningún modelo hace V a la vez q y ¬q.</li>
+<li>Con p ∨ ¬p (tautología) sigue siendo satisfacible y con el mismo modelo.</li>
+<li>{p ∨ q, ¬q} es satisfacible: ν(p) = V, ν(q) = F. Quitar una fbf puede devolver la satisfacibilidad.</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-5-3"><div class="card-head"><span class="card-num">Solución 2.5.3</span><span class="card-tools"><a class="jump" href="#e-2-5-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>F. {p, ¬p}: cada fbf es satisfacible, pero el conjunto no.</li>
+<li>V. Ninguna interpretación hace V a la contradicción.</li>
+<li>F. Añadir fbf nunca añade modelos.</li>
+<li>V. No hay ninguna fórmula que incumplir.</li>
+</ol></div></article></section><section class="topic" id="s-2-6"><h3><span class="tnum">2.6</span><span>Equivalencia lógica</span></h3><article class="card sol" data-tema="2" id="s-2-6-1"><div class="card-head"><span class="card-num">Solución 2.6.1</span><span class="card-tools"><a class="jump" href="#e-2-6-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>¬(p → q) ≡ ¬(¬p ∨ q) (interdefinición) ≡ ¬¬p ∧ ¬q (De Morgan) ≡ p ∧ ¬q (doble negación).</li>
+<li>p → (q → r) ≡ (p ∧ q) → r (exportación) ≡ (q ∧ p) → r (conmutativa) ≡ q → (p → r) (exportación).</li>
+<li>(p → r) ∧ (q → r) ≡ (¬p ∨ r) ∧ (¬q ∨ r) (interdefinición) ≡ (¬p ∧ ¬q) ∨ r (distributiva de ∨ sobre ∧, de derecha a izquierda) ≡ ¬(p ∨ q) ∨ r (De Morgan) ≡ (p ∨ q) → r (interdefinición).</li>
+<li>¬(p ∨ (¬p ∧ q)) ≡ ¬((p ∨ ¬p) ∧ (p ∨ q)) (distributiva) ≡ ¬(V ∧ (p ∨ q)) (epistemológica) ≡ ¬(p ∨ q) (neutro) ≡ ¬p ∧ ¬q (De Morgan).</li>
+<li>(p → q) ∧ (p → ¬q) ≡ (¬p ∨ q) ∧ (¬p ∨ ¬q) (interdefinición) ≡ ¬p ∨ (q ∧ ¬q) (distributiva) ≡ ¬p ∨ F (epistemológica) ≡ ¬p (neutro).</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-6-2"><div class="card-head"><span class="card-num">Solución 2.6.2</span><span class="card-tools"><a class="jump" href="#e-2-6-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Incorrecta. Contraejemplo ν(p) = V, ν(q) = F, ν(r) = F: izquierda (V ∨ F) → F = F; derecha (V → F) ∨ (F → F) = F ∨ V = V. (También falla en p = F, q = V, r = F.)</li>
+<li>Correcta. (p → q) ∧ (p → r) ≡ (¬p ∨ q) ∧ (¬p ∨ r) ≡ ¬p ∨ (q ∧ r) ≡ p → (q ∧ r).</li>
+<li>Incorrecta. ¬p ↔ ¬q ≡ p ↔ q, que es justo la negación de la izquierda: difieren en todas las interpretaciones. Contraejemplo p = V, q = V: izquierda ¬(V) = F; derecha F ↔ F = V.</li>
+<li>Correcta. ¬(p ↔ q) ≡ ¬((¬p ∨ q) ∧ (p ∨ ¬q)) ≡ (p ∧ ¬q) ∨ (¬p ∧ q). Y p ↔ ¬q ≡ (¬p ∨ ¬q) ∧ (p ∨ q) ≡ (¬p ∧ p) ∨ (¬p ∧ q) ∨ (¬q ∧ p) ∨ (¬q ∧ q) ≡ (¬p ∧ q) ∨ (p ∧ ¬q). Coinciden (ambas son V cuando p y q difieren).</li>
+<li>Incorrecta. Contraejemplo p = V, q = F, r = F: izquierda F → F = V; derecha (V → F) ∧ (F → F) = F. Lo correcto es (p ∧ q) → r ≡ (p → r) ∨ (q → r).</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-6-3"><div class="card-head"><span class="card-num">Solución 2.6.3</span><span class="card-tools"><a class="jump" href="#e-2-6-3">← Enunciado</a></span></div><div class="card-body"><p>a) p ∧ q ≡ ¬(¬p ∨ ¬q). b) p ↔ q ≡ (¬p ∨ q) ∧ (¬q ∨ p) ≡ ¬(¬(¬p ∨ q) ∨ ¬(¬q ∨ p)). c) p → (q ∧ r) ≡ ¬p ∨ (q ∧ r) ≡ ¬p ∨ ¬(¬q ∨ ¬r).</p></div></article><article class="card sol" data-tema="2" id="s-2-6-4"><div class="card-head"><span class="card-num">Solución 2.6.4</span><span class="card-tools"><a class="jump" href="#e-2-6-4">← Enunciado</a></span></div><div class="card-body"><p>a) ¬(¬p ∧ q) ≡ p ∨ ¬q (De Morgan, doble negación); (p ∨ ¬q) ∧ (p ∨ q) ≡ p ∨ (¬q ∧ q) ≡ p ∨ F ≡ <strong>p</strong>. b) (p ∧ q) ∨ (p ∧ ¬q) ≡ p ∧ (q ∨ ¬q) ≡ p; después p ∨ (¬p ∧ q) ≡ (p ∨ ¬p) ∧ (p ∨ q) ≡ <strong>p ∨ q</strong>.</p></div></article></section><section class="topic" id="s-2-7"><h3><span class="tnum">2.7</span><span>Consecuencia lógica</span></h3><article class="card sol" data-tema="2" id="s-2-7-1"><div class="card-head"><span class="card-num">Solución 2.7.1</span><span class="card-tools"><a class="jump" href="#e-2-7-1">← Enunciado</a></span></div><div class="card-body"><p>1 Modus tollens. 2 Silogismo disyuntivo. 3 Falacia de afirmación del consecuente (contraejemplo p = F, q = V). 4 Falacia de negación del antecedente (contraejemplo p = F, q = V). 5 Simplificación. 6 Prueba por casos. 7 Ley de inconsistencia. 8 Introducción de la equivalencia.</p></div></article><article class="card sol" data-tema="2" id="s-2-7-2"><div class="card-head"><span class="card-num">Solución 2.7.2</span><span class="card-tools"><a class="jump" href="#e-2-7-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>No válido. Para que r → p sea F: r = V, p = F. Entonces p → q y q → r son V con cualquier q. Contraejemplos (p, q, r): (F, V, V) y (F, F, V).</li>
+<li>Válido. Si r = F: p → r obliga a p = F, q → r obliga a q = F, y p ∨ q = F. No hay fila con premisas V y conclusión F.</li>
+<li>Válido. Con ¬q y ¬r, q ∨ r = F; para que p → (q ∨ r) sea V, p = F. Luego ¬p es V.</li>
+<li>No válido. Contraejemplo p = V, q = F, r = F: (V ∧ F) → F = V, ¬r = V, pero ¬p = F. Lo único que se deduce es ¬(p ∧ q).</li>
+</ol></div></article><article class="card sol" data-tema="2" id="s-2-7-3"><div class="card-head"><span class="card-num">Solución 2.7.3</span><span class="card-tools"><a class="jump" href="#e-2-7-3">← Enunciado</a></span></div><div class="card-body"><p>D = ((p ↔ q) ∧ q) → p; R = (p ↔ q) ∧ q ∧ ¬p.</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>p ↔ q</th>
+<th>premisas</th>
+<th>D (directo)</th>
+<th>R (refutación)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><p>D es tautología y R contradicción: el razonamiento es válido.</p></div></article><article class="card sol" data-tema="2" id="s-2-7-4"><div class="card-head"><span class="card-num">Solución 2.7.4</span><span class="card-tools"><a class="jump" href="#e-2-7-4">← Enunciado</a></span></div><div class="card-body"><p>1 V (ley de inconsistencia: nunca hay fila con premisas V). 2 V (α ≡ β ⟺ α ⊨ β y β ⊨ α). 3 F (monotonía: añadir premisas no estropea un razonamiento válido). 4 V.</p></div></article></section><section class="topic integ" id="s-2-8"><h3><span class="tnum">2.8</span><span>Integradores</span></h3><article class="card sol" data-tema="2" id="s-2-8-1"><div class="card-head"><span class="card-num">Solución 2.8.1</span><span class="card-tools"><a class="jump" href="#e-2-8-1">← Enunciado</a></span></div><div class="card-body"><p>a) h → a; a → c («la alarma suena sólo si hay corriente»); ¬c ⊨ ¬h. b) Tabla del planteamiento directo D = (h → a) ∧ (a → c) ∧ ¬c → ¬h:</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>h</th>
+<th>a</th>
+<th>c</th>
+<th>h → a</th>
+<th>a → c</th>
+<th>¬c</th>
+<th>premisas</th>
+<th>¬h</th>
+<th>D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+</tbody>
+</table></div><p>D es tautología: VÁLIDO. c) SH(h → a, a → c) da h → c; MT(h → c, ¬c) da ¬h.</p></div></article><article class="card sol" data-tema="2" id="s-2-8-2"><div class="card-head"><span class="card-num">Solución 2.8.2</span><span class="card-tools"><a class="jump" href="#e-2-8-2">← Enunciado</a></span></div><div class="card-body"><p>a)</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>r</th>
+<th>p → q</th>
+<th>¬p</th>
+<th>¬p → r</th>
+<th>α</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><p>Contingente (satisfacible y falseable). b) p → q ≡ ¬p ∨ q y ¬p → r ≡ ¬¬p ∨ r ≡ p ∨ r (interdefinición y doble negación). c) Sí. En las 4 filas donde α es V (VVV, VVF, FVV, FFV), q ∨ r también es V. Es una prueba por casos: si p, entonces q; si ¬p, entonces r.</p></div></article><article class="card sol" data-tema="2" id="s-2-8-3"><div class="card-head"><span class="card-num">Solución 2.8.3</span><span class="card-tools"><a class="jump" href="#e-2-8-3">← Enunciado</a></span></div><div class="card-body"><p>a) p = V y q = F; para que p → (q ∨ r) sea V hace falta q ∨ r = V, luego r = V. Modelo único: (V, F, V). b) Sí: el único modelo hace V a r. c) No, Γ ∪ {¬r} es insatisfacible. d) Es la refutación: Γ ⊨ r si y sólo si Γ ∪ {¬r} es insatisfacible.</p></div></article><article class="card sol" data-tema="2" id="s-2-8-4"><div class="card-head"><span class="card-num">Solución 2.8.4</span><span class="card-tools"><a class="jump" href="#e-2-8-4">← Enunciado</a></span></div><div class="card-body"><p>a) Por contraposición, ¬q → ¬p ≡ p → q, así que la fórmula equivale a (p → q) ↔ (p → q), de la forma α ↔ α: siempre V. b) La frase es d → c. (i) ¬c → ¬d: equivalente (contraposición). (ii) c → d: no equivalente, es la recíproca (contraejemplo d = F, c = V: la original es V y la recíproca F). (iii) ¬d ∨ c: equivalente (interdefinición).</p></div></article><article class="card sol" data-tema="2" id="s-2-8-5"><div class="card-head"><span class="card-num">Solución 2.8.5</span><span class="card-tools"><a class="jump" href="#e-2-8-5">← Enunciado</a></span></div><div class="card-body"><p>a) a ↔ ¬b; b ↔ ¬c; c ↔ (¬a ∧ ¬b). b) Si a = V: b = F, y de b ↔ ¬c sale c = V; pero c ↔ (¬a ∧ ¬b) = V ↔ (F ∧ V) = V ↔ F = F. Falla. Si a = F: b = V, c = F; y c ↔ (¬a ∧ ¬b) = F ↔ (V ∧ F) = F ↔ F = V. Modelo único: a = F, b = V, c = F. c) Sólo Benito dice la verdad.</p></div></article><article class="card sol" data-tema="2" id="s-2-8-6"><div class="card-head"><span class="card-num">Solución 2.8.6</span><span class="card-tools"><a class="jump" href="#e-2-8-6">← Enunciado</a></span></div><div class="card-body"><p>a) Válido. b) SH(s → ¬w, ¬w → c) da s → c; MT(s → c, ¬c) da ¬s. También puede hacerse con dos MT: de ¬w → c y ¬c sale w (¬¬w); de s → ¬w y w sale ¬s. c) s → ¬w ≡ w → ¬s: «si la web carga, el servidor no está caído».</p></div></article></section></section><section class="tema sols" id="sol-3"><header class="tema-head"><p class="eyebrow">Soluciones · Tema 3</p><h2>Razonamientos</h2></header><section class="topic" id="s-3-1"><h3><span class="tnum">3.1</span><span>Validez semántica</span></h3><article class="card sol" data-tema="3" id="s-3-1-1"><div class="card-head"><span class="card-num">Solución 3.1.1</span><span class="card-tools"><a class="jump" href="#e-3-1-1">← Enunciado</a></span></div><div class="card-body"><p>a) Directo: D = (p → q) ∧ (¬q ∨ r) → (p → r). Refutación: R = (p → q) ∧ (¬q ∨ r) ∧ ¬(p → r). b)</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>r</th>
+<th>p → q</th>
+<th>¬q ∨ r</th>
+<th>premisas</th>
+<th>p → r</th>
+<th>D</th>
+<th>R</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><p>D es tautología y R es contradicción: VÁLIDO. Fíjate en que ¬q ∨ r ≡ q → r, así que es un silogismo hipotético.</p></div></article><article class="card sol" data-tema="3" id="s-3-1-2"><div class="card-head"><span class="card-num">Solución 3.1.2</span><span class="card-tools"><a class="jump" href="#e-3-1-2">← Enunciado</a></span></div><div class="card-body"><p>a) No es válido. b) Contraejemplo ν(p) = F, ν(q) = V, ν(r) = F: p ∨ q = V y p → r = V, pero r = F. En esa fila D = (V ∧ V) → F = F y R = V ∧ V ∧ ¬F = V. D y R son siempre una la negación de la otra.</p></div></article><article class="card sol" data-tema="3" id="s-3-1-3"><div class="card-head"><span class="card-num">Solución 3.1.3</span><span class="card-tools"><a class="jump" href="#e-3-1-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>F. La validez sólo dice que, si las premisas fueran V, la conclusión lo sería.</li>
+<li>V. La conclusión nunca es F, así que no existe contraejemplo.</li>
+<li>F. Si las premisas son insatisfacibles, el razonamiento es válido con cualquier conclusión.</li>
+<li>V. Puede ser F en filas donde alguna premisa es F.</li>
+</ol></div></article></section><section class="topic" id="s-3-2"><h3><span class="tnum">3.2</span><span>Deducción natural</span></h3><article class="card sol" data-tema="3" id="s-3-2-1"><div class="card-head"><span class="card-num">Solución 3.2.1</span><span class="card-tools"><a class="jump" href="#e-3-2-1">← Enunciado</a></span></div><div class="card-body"><p>4: Simp(1). 5: Simp(1). 6: MP(2,4). 7: MP(3,5). 8: Comb(6,7).</p></div></article><article class="card sol" data-tema="3" id="s-3-2-2"><div class="card-head"><span class="card-num">Solución 3.2.2</span><span class="card-tools"><a class="jump" href="#e-3-2-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>
+<ol>
+<li>¬p MT(1,2); 5. r SD(3,4).</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>¬p SD(2,3) (de ¬p ∨ r y ¬r); 5. q SD(1,4).</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>p ∧ q Comb(2,3); 5. r MP(1,4).</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>¬p MT(1,4); 6. r SD(3,5); 7. s MP(2,6).</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>¬p ∨ ¬¬q De Morgan(1); 4. ¬p ∨ q Doble negación(3); 5. ¬p SD(4,2). Alternativa: 3. p → q Interdefinición(1), porque ¬(α ∧ ¬β) ≡ α → β; 4. ¬p MT(3,2).</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>p → q Eliminación de la equivalencia(1); 4. ¬p MT(3,2).</li>
+</ol>
+</li>
+</ol></div></article><article class="card sol" data-tema="3" id="s-3-2-3"><div class="card-head"><span class="card-num">Solución 3.2.3</span><span class="card-tools"><a class="jump" href="#e-3-2-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>El paso 3 no es MP: MP necesita el antecedente p, no el consecuente q. Es la falacia de afirmación del consecuente. Contraejemplo ν(p) = F, ν(q) = V: premisas V, conclusión F.</li>
+<li>SD exige la negación de un disyuntivo ({α ∨ β, ¬α} ⊨ β). Con p no se puede concluir nada sobre q, porque ∨ es inclusiva. Contraejemplo ν(p) = V, ν(q) = V: premisas V, ¬q = F.</li>
+</ol></div></article></section><section class="topic" id="s-3-3"><h3><span class="tnum">3.3</span><span>Teorema de la deducción</span></h3><article class="card sol" data-tema="3" id="s-3-3-1"><div class="card-head"><span class="card-num">Solución 3.3.1</span><span class="card-tools"><a class="jump" href="#e-3-3-1">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Fórmula</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>p → (q → r)</td>
+<td>Premisa</td>
+</tr>
+<tr>
+<td>2</td>
+<td>q</td>
+<td>Supuesto</td>
+</tr>
+<tr>
+<td>3</td>
+<td>p</td>
+<td>Supuesto</td>
+</tr>
+<tr>
+<td>4</td>
+<td>q → r</td>
+<td>MP(1,3)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>r</td>
+<td>MP(4,2)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>p → r</td>
+<td>Teorema de la deducción (3–5)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>q → (p → r)</td>
+<td>Teorema de la deducción (2–6)</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="3" id="s-3-3-2"><div class="card-head"><span class="card-num">Solución 3.3.2</span><span class="card-tools"><a class="jump" href="#e-3-3-2">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Fórmula</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>¬q → ¬p</td>
+<td>Premisa</td>
+</tr>
+<tr>
+<td>2</td>
+<td>p</td>
+<td>Supuesto</td>
+</tr>
+<tr>
+<td>3</td>
+<td>¬¬p</td>
+<td>Doble negación(2)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>¬¬q</td>
+<td>MT(1,3)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>q</td>
+<td>Doble negación(4)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>p → q</td>
+<td>Teorema de la deducción (2–5)</td>
+</tr>
+</tbody>
+</table></div></div></article><article class="card sol" data-tema="3" id="s-3-3-3"><div class="card-head"><span class="card-num">Solución 3.3.3</span><span class="card-tools"><a class="jump" href="#e-3-3-3">← Enunciado</a></span></div><div class="card-body"><p>{p, p → q} ⊢ q ⟺ {p} ⊢ (p → q) → q ⟺ ⊢ p → ((p → q) → q). Los paréntesis interiores son obligatorios: p → (p → q) → q se leería (p → (p → q)) → q, que es otra fórmula.</p></div></article></section><section class="topic" id="s-3-4"><h3><span class="tnum">3.4</span><span>Solidez, completitud, teorías</span></h3><article class="card sol" data-tema="3" id="s-3-4-1"><div class="card-head"><span class="card-num">Solución 3.4.1</span><span class="card-tools"><a class="jump" href="#e-3-4-1">← Enunciado</a></span></div><div class="card-body"><p>1 sólido (correcto); 2 completo; 3 teoría; 4 consistente; 5 semidecidible; 6 decidible.</p></div></article><article class="card sol" data-tema="3" id="s-3-4-2"><div class="card-head"><span class="card-num">Solución 3.4.2</span><span class="card-tools"><a class="jump" href="#e-3-4-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>V. Solidez: si ⊢ β entonces ⊨ β.</li>
+<li>F. Eso es la solidez; la completitud dice que toda tautología es teorema.</li>
+<li>F. Es sólida y completa.</li>
+<li>F. L0 es decidible: la tabla de verdad siempre termina.</li>
+<li>F. L1 es semidecidible.</li>
+</ol></div></article><article class="card sol" data-tema="3" id="s-3-4-3"><div class="card-head"><span class="card-num">Solución 3.4.3</span><span class="card-tools"><a class="jump" href="#e-3-4-3">← Enunciado</a></span></div><div class="card-body"><p>a) S₁ no es sólido: su regla es la falacia de afirmación del consecuente. Deriva p de {p → q, q}, pero con p = F, q = V las premisas son V y p es F. b) S₂ es sólido: MP es una implicación lógica, así que todo lo derivado es consecuencia lógica. c) S₂ no es completo: {p} ⊨ p ∨ q, pero con la premisa p sola no hay ninguna implicación a la que aplicar MP, así que no se puede derivar p ∨ q (haría falta la regla de adición).</p></div></article><article class="card sol" data-tema="3" id="s-3-4-4"><div class="card-head"><span class="card-num">Solución 3.4.4</span><span class="card-tools"><a class="jump" href="#e-3-4-4">← Enunciado</a></span></div><div class="card-body"><p>No es consistente: 1. p (axioma); 2. p → q (axioma); 3. q → ¬p (axioma); 4. q MP(2,1); 5. ¬p MP(3,4). Se derivan p y ¬p.</p></div></article></section><section class="topic integ" id="s-3-5"><h3><span class="tnum">3.5</span><span>Integradores</span></h3><article class="card sol" data-tema="3" id="s-3-5-1"><div class="card-head"><span class="card-num">Solución 3.5.1</span><span class="card-tools"><a class="jump" href="#e-3-5-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>{c → t, (t ∧ a) → d, a, c} ⊢ d.</li>
+<li>
+<ol>
+<li>t MP(1,4); 6. t ∧ a Comb(5,3); 7. d MP(2,6).</li>
+</ol>
+</li>
+<li>Supongamos d = F con premisas V: c = V y a = V; c → t obliga a t = V; entonces (t ∧ a) → d = V → F = F. Contradicción: no hay contraejemplo, el razonamiento es válido.</li>
+<li>La solidez: si ⊢ d, entonces ⊨ d.</li>
+</ol></div></article><article class="card sol" data-tema="3" id="s-3-5-2"><div class="card-head"><span class="card-num">Solución 3.5.2</span><span class="card-tools"><a class="jump" href="#e-3-5-2">← Enunciado</a></span></div><div class="card-body"><p>a) Premisas l → m y m; conclusión l. b) ν(l) = F, ν(m) = V: premisas V, conclusión F (la calle puede estar mojada por otra causa). c) Por solidez, ⊢ implica ⊨. Como el razonamiento no es válido, no puede existir una demostración en un sistema sólido (contrarrecíproco de la solidez).</p></div></article><article class="card sol" data-tema="3" id="s-3-5-3"><div class="card-head"><span class="card-num">Solución 3.5.3</span><span class="card-tools"><a class="jump" href="#e-3-5-3">← Enunciado</a></span></div><div class="card-body"><p>a) 3. p → r SH(1,2); 4. ¬r → ¬p Contraposición(3). Con supuestos: suponer ¬r; ¬q MT(2); ¬p MT(1); teorema de la deducción. b) Para que ¬r → ¬p sea F: ¬r = V y ¬p = F, es decir r = F y p = V. p → q obliga a q = V; entonces q → r = V → F = F. Contradicción: es válido.</p></div></article><article class="card sol" data-tema="3" id="s-3-5-4"><div class="card-head"><span class="card-num">Solución 3.5.4</span><span class="card-tools"><a class="jump" href="#e-3-5-4">← Enunciado</a></span></div><div class="card-body"><p>a) 5. q SD(1,2); 6. r MP(3,5); 7. r ∧ ¬r Comb(6,4). Se ha derivado una contradicción: ℱ es inconsistente. b)</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>p</th>
+<th>q</th>
+<th>r</th>
+<th>p ∨ q</th>
+<th>¬p</th>
+<th>q → r</th>
+<th>¬r</th>
+<th>conjunción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+</tr>
+<tr>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-f">F</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-v">V</td>
+<td class="tv tv-f">F</td>
+</tr>
+</tbody>
+</table></div><p>Ninguna fila hace V a todas: ℱ es insatisfacible. c) En un sistema sólido y completo, como la deducción natural, inconsistente ⟺ insatisfacible. Por solidez, si se derivan β y ¬β, ningún modelo puede hacer V a ℱ. Por completitud, si ℱ es insatisfacible, ℱ ⊨ β ∧ ¬β (ley de inconsistencia) y eso se puede derivar.</p></div></article></section></section><section class="tema sols" id="sol-4"><header class="tema-head"><p class="eyebrow">Soluciones · Tema 4</p><h2>Problema SAT en L0</h2></header><section class="topic" id="s-4-1"><h3><span class="tnum">4.1</span><span>SAT y técnicas</span></h3><article class="card sol" data-tema="4" id="s-4-1-1"><div class="card-head"><span class="card-num">Solución 4.1.1</span><span class="card-tools"><a class="jump" href="#e-4-1-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>V.</li>
+<li>F. Está en P (hay algoritmos deterministas polinómicos).</li>
+<li>V.</li>
+<li>F. No son completos: pueden no encontrar un modelo aunque exista.</li>
+<li>V.</li>
+</ol></div></article><article class="card sol" data-tema="4" id="s-4-1-2"><div class="card-head"><span class="card-num">Solución 4.1.2</span><span class="card-tools"><a class="jump" href="#e-4-1-2">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Técnica</th>
+<th>¿Necesita forma clausal?</th>
+<th>¿Da modelos?</th>
+<th>¿Decide tautología directamente?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabla de verdad</td>
+<td>No</td>
+<td>Sí</td>
+<td>Sí (todas las filas V)</td>
+</tr>
+<tr>
+<td>DPLL</td>
+<td>Sí</td>
+<td>Sí</td>
+<td>Sólo si la regla de la tautología inicial deja ∅</td>
+</tr>
+<tr>
+<td>Resolución</td>
+<td>Sí</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Árbol semántico</td>
+<td>No</td>
+<td>Sí</td>
+<td>Sí (todas las hojas <span class="mark ok">ÉXITO</span>)</td>
+</tr>
+<tr>
+<td>Tableau</td>
+<td>No</td>
+<td>Sí (hojas abiertas)</td>
+<td>No: hay que cerrar el tableau de ¬α</td>
+</tr>
+</tbody>
+</table></div></div></article></section><section class="topic" id="s-4-2"><h3><span class="tnum">4.2</span><span>FNC</span></h3><article class="card sol" data-tema="4" id="s-4-2-1"><div class="card-head"><span class="card-num">Solución 4.2.1</span><span class="card-tools"><a class="jump" href="#e-4-2-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>(p → q) → r ≡ ¬(¬p ∨ q) ∨ r (eliminar →) ≡ (¬¬p ∧ ¬q) ∨ r (De Morgan) ≡ (p ∧ ¬q) ∨ r (doble negación) ≡ <strong>(p ∨ r) ∧ (¬q ∨ r)</strong> (distributiva). Forma clausal {{p, r}; {¬q, r}}. No es tautología (p = F, r = F la hace F).</li>
+<li>p ↔ (q ∧ r) ≡ (¬p ∨ (q ∧ r)) ∧ (p ∨ ¬(q ∧ r)) (eliminar ↔) ≡ (¬p ∨ (q ∧ r)) ∧ (p ∨ ¬q ∨ ¬r) (De Morgan) ≡ <strong>(¬p ∨ q) ∧ (¬p ∨ r) ∧ (p ∨ ¬q ∨ ¬r)</strong> (distributiva). Forma clausal {{¬p, q}; {¬p, r}; {p, ¬q, ¬r}}. No es tautología (p = V, q = F).</li>
+<li>¬(p ∨ q) ∨ (r ∧ ¬p) ≡ (¬p ∧ ¬q) ∨ (r ∧ ¬p) (De Morgan) ≡ (¬p ∨ r) ∧ (¬p ∨ ¬p) ∧ (¬q ∨ r) ∧ (¬q ∨ ¬p) (distributiva, todos con todos) ≡ (¬p ∨ r) ∧ ¬p ∧ (¬q ∨ r) ∧ (¬q ∨ ¬p) (idempotencia) ≡ <strong>¬p ∧ (¬q ∨ r)</strong> (¬p subsume a ¬p ∨ r y a ¬q ∨ ¬p). Forma clausal {{¬p}; {¬q, r}}. No es tautología.</li>
+<li>Se lee ((p ∧ q) ∨ (¬p ∧ ¬q)) → ¬r ≡ ¬((p ∧ q) ∨ (¬p ∧ ¬q)) ∨ ¬r (eliminar →) ≡ ((¬p ∨ ¬q) ∧ (p ∨ q)) ∨ ¬r (De Morgan y doble negación) ≡ <strong>(¬p ∨ ¬q ∨ ¬r) ∧ (p ∨ q ∨ ¬r)</strong> (distributiva). Forma clausal {{¬p, ¬q, ¬r}; {p, q, ¬r}}. No es tautología (p = q = r = V).</li>
+<li>(p → q) ∨ (q → p) ≡ ¬p ∨ q ∨ ¬q ∨ p ≡ V (literales opuestos). Forma clausal {{¬p, q, ¬q, p}}: la regla de la tautología la elimina y queda ∅. <span class="chip ok">Es tautología.</span></li>
+<li>¬((¬p ∨ q) ∧ (¬q ∨ p)) ≡ (p ∧ ¬q) ∨ (q ∧ ¬p) (De Morgan, doble negación) ≡ (p ∨ q) ∧ (p ∨ ¬p) ∧ (¬q ∨ q) ∧ (¬q ∨ ¬p) (distributiva) ≡ <strong>(p ∨ q) ∧ (¬p ∨ ¬q)</strong> (opuestos y constantes). Forma clausal {{p, q}; {¬p, ¬q}}. No es tautología (p = q = V).</li>
+</ol></div></article><article class="card sol" data-tema="4" id="s-4-2-2"><div class="card-head"><span class="card-num">Solución 4.2.2</span><span class="card-tools"><a class="jump" href="#e-4-2-2">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Todas las cláusulas son triviales: tautología (la regla de la tautología deja ∅).</li>
+<li>Insatisfacible: {p} obliga a p = V, entonces {¬p, q} obliga a q = V, que choca con {¬q}.</li>
+<li>Satisfacible (p = F, q = V) y falseable: ni tautología ni contradicción.</li>
+<li>{} = ∅ es satisfacible (no hay nada que cumplir); {□} es insatisfacible (contiene la cláusula vacía).</li>
+</ol></div></article></section><section class="topic" id="s-4-3"><h3><span class="tnum">4.3</span><span>Propagación</span></h3><article class="card sol" data-tema="4" id="s-4-3-1"><div class="card-head"><span class="card-num">Solución 4.3.1</span><span class="card-tools"><a class="jump" href="#e-4-3-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>ξ(p) = {{r}; {¬q, ¬r}; {q, r, s}}. Se elimina {p, q} y se borra ¬p de {¬p, r}.</li>
+<li>ξ(p, r) = {{¬q}}. Se eliminan {r} y {q, r, s}, y se borra ¬r de {¬q, ¬r}.</li>
+<li>ξ(p, r, ¬q) = ∅: satisfacible, con modelo ν(p) = V, ν(r) = V, ν(q) = F (s cualquiera).</li>
+<li>ξ(p, ¬r) = {□; {q, s}}: {r} pierde su único literal. Contiene □: no hay modelo con p = V y r = F.</li>
+<li>ξ(¬p) = {{q}; {¬q, ¬r}; {q, r, s}}; ξ(¬p, q) = {{¬r}}; ξ(¬p, q, ¬r) = ∅. Modelo: ν(p) = F, ν(q) = V, ν(r) = F.</li>
+</ol></div></article><article class="card sol" data-tema="4" id="s-4-3-2"><div class="card-head"><span class="card-num">Solución 4.3.2</span><span class="card-tools"><a class="jump" href="#e-4-3-2">← Enunciado</a></span></div><div class="card-body"><p>Con ν(p) = F, ν(q) = F, ν(r) = V, ν(s) = V: ξ es F (falla {p, q}) pero ξ(p) es V. Tienen valores distintos, luego ξ ≢ ξ(p). Pero cualquier modelo de ξ(p), ampliado con ν(p) = V, es modelo de ξ: se conserva la satisfacibilidad.</p></div></article></section><section class="topic" id="s-4-4"><h3><span class="tnum">4.4</span><span>DPLL</span></h3><article class="card sol" data-tema="4" id="s-4-4-1"><div class="card-head"><span class="card-num">Solución 4.4.1</span><span class="card-tools"><a class="jump" href="#e-4-4-1">← Enunciado</a></span></div><div class="card-body"><p>Sin tautologías, unitarias, puros (p y q aparecen con los dos signos) ni subsumidas. Ramificación por p:</p><ul>
+<li>Rama p: ξ(p) = {{q}; {¬q}} → unitaria q → {□}. Backtracking.</li>
+<li>Rama ¬p: ξ(¬p) = {{q}; {¬q}} → unitaria q → {□}.</li>
+</ul><p>Las dos ramas de la primera ramificación acaban en □: <span class="chip bad">INSATISFACIBLE</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-4-2"><div class="card-head"><span class="card-num">Solución 4.4.2</span><span class="card-tools"><a class="jump" href="#e-4-4-2">← Enunciado</a></span></div><div class="card-body"><p>Sin tautologías, unitarias, puros ni subsumidas. Ramificación por p:</p><ul>
+<li>Rama p: ξ(p) = {{q, ¬r}; {r}; {¬q, ¬r}} → unitaria r: {{q}; {¬q}} → unitaria q → {□}. Backtracking.</li>
+<li>Rama ¬p: ξ(¬p) = {{¬q}; {q, ¬r}; {q, r}} → unitaria ¬q: {{¬r}; {r}} → unitaria ¬r → {□}.</li>
+</ul><p><span class="chip bad">INSATISFACIBLE.</span> Interpretación: las tres primeras cláusulas dicen q → p, r → q y p → r (las tres tienen el mismo valor); la cuarta exige alguna V y la quinta alguna F.</p></div></article><article class="card sol" data-tema="4" id="s-4-4-3"><div class="card-head"><span class="card-num">Solución 4.4.3</span><span class="card-tools"><a class="jump" href="#e-4-4-3">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Tautología: se elimina {p, ¬p, r}. Queda {{q, r}; {q, r, ¬s}; {¬q, s}; {¬r, ¬s}; {s, t}}.</li>
+<li>No hay unitarias.</li>
+<li>Literal puro t (no aparece ¬t): ξ(t) = {{q, r}; {q, r, ¬s}; {¬q, s}; {¬r, ¬s}}.</li>
+<li>Inclusión: {q, r} ⊆ {q, r, ¬s}, se elimina {q, r, ¬s}. Queda {{q, r}; {¬q, s}; {¬r, ¬s}}.</li>
+<li>Sin unitarias ni puros: ramificación por q. ξ(t, q) = {{s}; {¬r, ¬s}} → unitaria s: {{¬r}} → unitaria ¬r: ∅.</li>
+</ol><p><span class="chip ok">SATISFACIBLE</span>, modelo ν(t) = V, ν(q) = V, ν(s) = V, ν(r) = F (p cualquiera). Comprobación en las originales: {p, ¬p, r} V; {q, r} V por q; {q, r, ¬s} V por q; {¬q, s} V por s; {¬r, ¬s} V por ¬r; {s, t} V. Correcto.</p></div></article><article class="card sol" data-tema="4" id="s-4-4-4"><div class="card-head"><span class="card-num">Solución 4.4.4</span><span class="card-tools"><a class="jump" href="#e-4-4-4">← Enunciado</a></span></div><div class="card-body"><p>Sin tautologías, unitarias, puros ni subsumidas. Ramificación por p:</p><ul>
+<li>Rama p: ξ(p) = {{r}; {¬r}; {q, s}; {¬q, ¬s}} → unitaria r → {□; {q, s}; {¬q, ¬s}}. Rama fallida, backtracking.</li>
+<li>Rama ¬p: ξ(¬p) = {{q}; {q, s}; {¬q, ¬s}} → unitaria q: {{¬s}} → unitaria ¬s: ∅.</li>
+</ul><p><span class="chip ok">SATISFACIBLE</span>, modelo ν(p) = F, ν(q) = V, ν(s) = F (r cualquiera). Llegar a □ en la rama p no permitía concluir nada.</p></div></article></section><section class="topic" id="s-4-5"><h3><span class="tnum">4.5</span><span>Resolución</span></h3><article class="card sol" data-tema="4" id="s-4-5-1"><div class="card-head"><span class="card-num">Solución 4.5.1</span><span class="card-tools"><a class="jump" href="#e-4-5-1">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Cláusula</th>
+<th>Origen</th>
+<th>Simplificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>{p, q}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>{¬p, r}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>{¬q, r}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>{¬r}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>{¬p}</td>
+<td>Rᵣ(2, 4)</td>
+<td>Subsumida(2)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>{¬q}</td>
+<td>Rᵣ(3, 4)</td>
+<td>Subsumida(3); r ya no aparece: Puro(¬r) en 4</td>
+</tr>
+<tr>
+<td>7</td>
+<td>{q}</td>
+<td>Rₚ(1, 5)</td>
+<td>Subsumida(1)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>□</td>
+<td>R_q(6, 7)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div><p><span class="chip bad">INSATISFACIBLE.</span> Grafo de refutación: nivel 0 = cláusulas 1 a 4; nivel 1 = {¬p} (de 2 y 4) y {¬q} (de 3 y 4); nivel 2 = {q} (de 1 y {¬p}); nivel 3 = □ (de {q} y {¬q}). En saturación estricta también salen en el nivel 1 {q, r} = Rₚ(1, 2) y {p, r} = R_q(1, 3), que quedan subsumidas después por {q} y {p}; no cambian el resultado.</p></div></article><article class="card sol" data-tema="4" id="s-4-5-2"><div class="card-head"><span class="card-num">Solución 4.5.2</span><span class="card-tools"><a class="jump" href="#e-4-5-2">← Enunciado</a></span></div><div class="card-body"><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Cláusula</th>
+<th>Origen</th>
+<th>Simplificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>{p, q}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>{¬p, q}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>{¬q, r}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>{¬r, s}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>{q}</td>
+<td>Rₚ(1, 2)</td>
+<td>Subsumida(1), Subsumida(2)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>{r}</td>
+<td>R_q(5, 3)</td>
+<td>Subsumida(3); ahora Puro(q) en 5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>{s}</td>
+<td>Rᵣ(6, 4)</td>
+<td>Subsumida(4); Puro(r) en 6; Puro(s) en 7</td>
+</tr>
+</tbody>
+</table></div><p>No quedan cláusulas y no ha salido □: <span class="chip ok">SATISFACIBLE</span>. La resolución no da modelos; uno se obtiene con DPLL: ν(q) = V, ν(r) = V, ν(s) = V, p cualquiera.</p></div></article><article class="card sol" data-tema="4" id="s-4-5-3"><div class="card-head"><span class="card-num">Solución 4.5.3</span><span class="card-tools"><a class="jump" href="#e-4-5-3">← Enunciado</a></span></div><div class="card-body"><p>Premisas en forma clausal: {¬p, q}, {¬q, r, s}, {¬s}. Conclusión negada: ¬(p → r) ≡ p ∧ ¬r, CS = {{p}; {¬r}}.</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Cláusula</th>
+<th>Origen</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>{¬p, q}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>{¬q, r, s}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>{¬s}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>{p}</td>
+<td>CS</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>{¬r}</td>
+<td>CS</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>{q}</td>
+<td>Rₚ(1, 4) CS</td>
+<td>Subsumida(1)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>{r, s}</td>
+<td>R_q(2, 6) CS</td>
+<td>Subsumida(2)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>{s}</td>
+<td>Rᵣ(7, 5) CS</td>
+<td>Subsumida(7)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>□</td>
+<td>Rₛ(3, 8) CS</td>
+<td></td>
+</tr>
+</tbody>
+</table></div><p>Se obtiene □ con un padre del CS en cada paso: el razonamiento es <span class="chip ok">VÁLIDO</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-5-4"><div class="card-head"><span class="card-num">Solución 4.5.4</span><span class="card-tools"><a class="jump" href="#e-4-5-4">← Enunciado</a></span></div><div class="card-body"><p>Cláusulas {p, q}, {¬p, r}; CS = {{¬r}}.</p><div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Cláusula</th>
+<th>Origen</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>{p, q}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>{¬p, r}</td>
+<td>Inicial</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>{¬r}</td>
+<td>CS</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>{¬p}</td>
+<td>Rᵣ(2, 3) CS</td>
+<td>Subsumida(2)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>{q}</td>
+<td>Rₚ(1, 4) CS</td>
+<td>Subsumida(1)</td>
+</tr>
+</tbody>
+</table></div><p>{q} no tiene complementario y no hay más resolventes con un padre del CS. No aparece □ y la estrategia de conjunto soporte es completa: <span class="chip bad">NO VÁLIDO</span>. Contraejemplo con DPLL sobre {{p, q}; {¬p, r}; {¬r}}: unitaria ¬r → {{p, q}; {¬p}} → unitaria ¬p → {{q}} → unitaria q → ∅. Es decir ν(p) = F, ν(q) = V, ν(r) = F: premisas V, conclusión F.</p></div></article><article class="card sol" data-tema="4" id="s-4-5-5"><div class="card-head"><span class="card-num">Solución 4.5.5</span><span class="card-tools"><a class="jump" href="#e-4-5-5">← Enunciado</a></span></div><div class="card-body"><p>La resolución actúa sobre un solo literal cada vez: Rₚ da {q, ¬q} y R_q da {p, ¬p}, ambas tautologías. Eliminar los dos pares a la vez sería incorrecto: {{p, q}; {¬p, ¬q}} es satisfacible (p = V, q = F), así que no puede producir □.</p></div></article></section><section class="topic" id="s-4-6"><h3><span class="tnum">4.6</span><span>Árboles semánticos</span></h3><article class="card sol" data-tema="4" id="s-4-6-1"><div class="card-head"><span class="card-num">Solución 4.6.1</span><span class="card-tools"><a class="jump" href="#e-4-6-1">← Enunciado</a></span></div><div class="card-body"><p>Se lee ((p → q) ∧ (q → p)) → (p ↔ q).</p><ul>
+<li>Rama p (p := V): ((V → q) ∧ (q → V)) → (V ↔ q) ≡ (q ∧ V) → q ≡ q → q ≡ V. <span class="mark ok">ÉXITO</span>.</li>
+<li>Rama ¬p (p := F): ((F → q) ∧ (q → F)) → (F ↔ q) ≡ (V ∧ ¬q) → ¬q ≡ ¬q → ¬q ≡ V. <span class="mark ok">ÉXITO</span>.</li>
+</ul><p>Todas las hojas son <span class="mark ok">ÉXITO</span>: <span class="chip ok">TAUTOLOGÍA</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-6-2"><div class="card-head"><span class="card-num">Solución 4.6.2</span><span class="card-tools"><a class="jump" href="#e-4-6-2">← Enunciado</a></span></div><div class="card-body"><ul>
+<li>Rama p: (V ∨ q) ∧ (V → ¬q) ∧ (q → r) ≡ ¬q ∧ (q → r).<ul>
+<li>Rama q: ¬V ∧ … ≡ F. <span class="mark bad">FALLO</span>.</li>
+<li>Rama ¬q: V ∧ (F → r) ≡ V. <span class="mark ok">ÉXITO</span> (p = V, q = F, r cualquiera).</li>
+</ul>
+</li>
+<li>Rama ¬p: (F ∨ q) ∧ (F → ¬q) ∧ (q → r) ≡ q ∧ (q → r).<ul>
+<li>Rama q: V ∧ (V → r) ≡ r.<ul>
+<li>Rama r: V. <span class="mark ok">ÉXITO</span> (p = F, q = V, r = V).</li>
+<li>Rama ¬r: F. <span class="mark bad">FALLO</span>.</li>
+</ul>
+</li>
+<li>Rama ¬q: F. <span class="mark bad">FALLO</span>.</li>
+</ul>
+</li>
+</ul><p>Hay <span class="mark ok">ÉXITO</span> y <span class="mark bad">FALLO</span>: satisfacible y falseable (contingente). Modelos (p, q, r): (V, F, V), (V, F, F) y (F, V, V).</p></div></article><article class="card sol" data-tema="4" id="s-4-6-3"><div class="card-head"><span class="card-num">Solución 4.6.3</span><span class="card-tools"><a class="jump" href="#e-4-6-3">← Enunciado</a></span></div><div class="card-body"><ul>
+<li>Rama p: (V → q) ∧ (q → r) ∧ V ∧ ¬r ≡ q ∧ (q → r) ∧ ¬r.<ul>
+<li>Rama q: (V → r) ∧ ¬r ≡ r ∧ ¬r ≡ F. <span class="mark bad">FALLO</span>.</li>
+<li>Rama ¬q: F. <span class="mark bad">FALLO</span>.</li>
+</ul>
+</li>
+<li>Rama ¬p: … ∧ F ∧ … ≡ F. <span class="mark bad">FALLO</span>.</li>
+</ul><p>Todas <span class="mark bad">FALLO</span>: <span class="chip bad">INSATISFACIBLE</span> (contradicción).</p></div></article></section><section class="topic" id="s-4-7"><h3><span class="tnum">4.7</span><span>Tableaux semánticos</span></h3><article class="card sol" data-tema="4" id="s-4-7-1"><div class="card-head"><span class="card-num">Solución 4.7.1</span><span class="card-tools"><a class="jump" href="#e-4-7-1">← Enunciado</a></span></div><div class="card-body"><ul>
+<li>Raíz: (p ∨ q) ∧ ¬p ∧ (q → r). Dos α (conjunciones) → {p ∨ q, ¬p, q → r}.<ul>
+<li>β p ∨ q, rama p: {p, ¬p, q → r} <span class="mark bad">×</span></li>
+<li>β p ∨ q, rama q: {q, ¬p, q → r}<ul>
+<li>β q → r, rama ¬q: {q, ¬q, ¬p} <span class="mark bad">×</span></li>
+<li>β q → r, rama r: {q, ¬p, r} <span class="mark ok">✓</span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Tableau abierto: <span class="chip ok">SATISFACIBLE</span>, modelo ν(p) = F, ν(q) = V, ν(r) = V.</p></div></article><article class="card sol" data-tema="4" id="s-4-7-2"><div class="card-head"><span class="card-num">Solución 4.7.2</span><span class="card-tools"><a class="jump" href="#e-4-7-2">← Enunciado</a></span></div><div class="card-body"><p>Se construye el tableau de ¬Φ: Φ es tautología si y sólo si el tableau de ¬Φ se cierra.</p><ul>
+<li>Raíz: ¬(((p → q) ∧ (q → r)) → (p → r)). α (negación de →) → {(p → q) ∧ (q → r), ¬(p → r)}.</li>
+<li>α → {p → q, q → r, ¬(p → r)}; α ¬(p → r) → {p → q, q → r, p, ¬r}.<ul>
+<li>β p → q, rama ¬p: {¬p, p, …} <span class="mark bad">×</span></li>
+<li>β p → q, rama q: {q, q → r, p, ¬r}<ul>
+<li>β q → r, rama ¬q: <span class="mark bad">×</span></li>
+<li>β q → r, rama r: {r, ¬r, …} <span class="mark bad">×</span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Todas las hojas cerradas: ¬Φ insatisfacible, luego <span class="chip ok">Φ es tautología</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-7-3"><div class="card-head"><span class="card-num">Solución 4.7.3</span><span class="card-tools"><a class="jump" href="#e-4-7-3">← Enunciado</a></span></div><div class="card-body"><p>Raíz: {p → q, r → s, p ∨ r, ¬q, ¬s} (premisas y conclusión negada).</p><ul>
+<li>β p → q, rama q: <span class="mark bad">×</span> (con ¬q).</li>
+<li>β p → q, rama ¬p:<ul>
+<li>β r → s, rama s: <span class="mark bad">×</span> (con ¬s).</li>
+<li>β r → s, rama ¬r:<ul>
+<li>β p ∨ r, rama p: <span class="mark bad">×</span> (con ¬p).</li>
+<li>β p ∨ r, rama r: <span class="mark bad">×</span> (con ¬r).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Tableau cerrado: <span class="chip ok">VÁLIDO</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-7-4"><div class="card-head"><span class="card-num">Solución 4.7.4</span><span class="card-tools"><a class="jump" href="#e-4-7-4">← Enunciado</a></span></div><div class="card-body"><p>Raíz: {p → (q ∨ r), ¬q, ¬¬p}. α ¬¬p → p.</p><ul>
+<li>β p → (q ∨ r), rama ¬p: <span class="mark bad">×</span> (con p).</li>
+<li>β p → (q ∨ r), rama q ∨ r:<ul>
+<li>β, rama q: <span class="mark bad">×</span> (con ¬q).</li>
+<li>β, rama r: {r, ¬q, p} <span class="mark ok">✓</span></li>
+</ul>
+</li>
+</ul><p>Hoja abierta: <span class="chip bad">NO VÁLIDO</span>. Contraejemplo ν(p) = V, ν(q) = F, ν(r) = V: p → (q ∨ r) = V, ¬q = V, pero ¬p = F.</p></div></article></section><section class="topic integ" id="s-4-8"><h3><span class="tnum">4.8</span><span>Integradores</span></h3><article class="card sol" data-tema="4" id="s-4-8-1"><div class="card-head"><span class="card-num">Solución 4.8.1</span><span class="card-tools"><a class="jump" href="#e-4-8-1">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>FNC: (¬p ∨ q) ∧ (¬q ∨ r) ∧ (¬r ∨ ¬p) ∧ (p ∨ q) (interdefinición en las tres implicaciones). Forma clausal {{¬p, q}; {¬q, r}; {¬r, ¬p}; {p, q}}.</li>
+<li>DPLL: sin tautologías, unitarias, puros ni subsumidas. Ramificación por p.<ul>
+<li>Rama p: ξ(p) = {{q}; {¬q, r}; {¬r}} → unitaria q: {{r}; {¬r}} → unitaria r → □. Backtracking.</li>
+<li>Rama ¬p: ξ(¬p) = {{¬q, r}; {q}} → unitaria q: {{r}} → unitaria r: ∅. SATISFACIBLE, modelo ν(p) = F, ν(q) = V, ν(r) = V.</li>
+</ul>
+</li>
+<li>Árbol semántico:<ul>
+<li>Rama p: (V → q) ∧ (q → r) ∧ (r → F) ∧ V ≡ q ∧ (q → r) ∧ ¬r. Rama q: r ∧ ¬r ≡ F, <span class="mark bad">FALLO</span>. Rama ¬q: F, <span class="mark bad">FALLO</span>.</li>
+<li>Rama ¬p: (F → q) ∧ (q → r) ∧ (r → V) ∧ (F ∨ q) ≡ (q → r) ∧ q. Rama q: r; rama r <span class="mark ok">ÉXITO</span>, rama ¬r <span class="mark bad">FALLO</span>. Rama ¬q: F, <span class="mark bad">FALLO</span>.</li>
+<li>Un único <span class="mark ok">ÉXITO</span>: p = F, q = V, r = V. Satisfacible, no tautología.</li>
+</ul>
+</li>
+<li>Tableau: dos α → {p → q, q → r, r → ¬p, p ∨ q}. β p ∨ q:<ul>
+<li>Rama p: β r → ¬p da ¬p (<span class="mark bad">×</span>) o ¬r; con ¬r, β q → r da r (<span class="mark bad">×</span>) o ¬q; con ¬q, β p → q da ¬p (<span class="mark bad">×</span>) o q (<span class="mark bad">×</span>). Rama p cerrada.</li>
+<li>Rama q: β q → r da ¬q (<span class="mark bad">×</span>) o r; con r, β r → ¬p da ¬r (<span class="mark bad">×</span>) o ¬p; con {q, r, ¬p}, β p → q da ¬p <span class="mark ok">✓</span> o q <span class="mark ok">✓</span>. Hojas abiertas {q, r, ¬p}.</li>
+</ul>
+</li>
+<li>Las tres técnicas dan el mismo y único modelo: ν(p) = F, ν(q) = V, ν(r) = V.</li>
+</ol></div></article><article class="card sol" data-tema="4" id="s-4-8-2"><div class="card-head"><span class="card-num">Solución 4.8.2</span><span class="card-tools"><a class="jump" href="#e-4-8-2">← Enunciado</a></span></div><div class="card-body"><p>Formalización: {a → b, b → ¬c, c ∨ a} ⊨ ¬c → b. Cláusulas: {¬a, b}, {¬b, ¬c}, {c, a}. Conclusión negada: ¬(¬c → b) ≡ ¬c ∧ ¬b, CS = {{¬c}; {¬b}}.</p><ul>
+<li>Resolución con CS: 1. {¬a, b}; 2. {¬b, ¬c}; 3. {c, a}; 4. {¬c} CS; 5. {¬b} CS; 6. {a} R_c(3, 4) CS, Subsumida(3); 7. {¬a} R_b(1, 5) CS, Subsumida(1); 8. □ Rₐ(6, 7) CS.</li>
+<li>DPLL: unitaria ¬c → {{¬a, b}; {a}; {¬b}}; unitaria a → {{b}; {¬b}}; unitaria b → □. Sin ramificar: insatisfacible.</li>
+<li>Árbol semántico sobre (¬a ∨ b) ∧ (¬b ∨ ¬c) ∧ (c ∨ a) ∧ ¬c ∧ ¬b: rama c <span class="mark bad">FALLO</span> (por ¬c). Rama ¬c: (¬a ∨ b) ∧ a ∧ ¬b; rama a: b ∧ ¬b ≡ F, <span class="mark bad">FALLO</span>; rama ¬a: F, <span class="mark bad">FALLO</span>. Todas <span class="mark bad">FALLO</span>.</li>
+<li>Tableau: raíz {a → b, b → ¬c, c ∨ a, ¬(¬c → b)}; α → ¬c, ¬b. β c ∨ a: rama c <span class="mark bad">×</span> (con ¬c); rama a: β a → b, ¬a <span class="mark bad">×</span> (con a), b <span class="mark bad">×</span> (con ¬b). Cerrado (no hace falta descomponer b → ¬c).</li>
+</ul><p>Las cuatro técnicas coinciden: <span class="chip ok">VÁLIDO</span>.</p></div></article><article class="card sol" data-tema="4" id="s-4-8-3"><div class="card-head"><span class="card-num">Solución 4.8.3</span><span class="card-tools"><a class="jump" href="#e-4-8-3">← Enunciado</a></span></div><div class="card-body"><p>Cláusulas: {¬p, q}, {p, r}; conclusión negada ¬(q ∧ r) ≡ ¬q ∨ ¬r: {¬q, ¬r}.</p><ul>
+<li>DPLL: sin unitarias ni puros. Rama p: ξ(p) = {{q}; {¬q, ¬r}} → unitaria q → {{¬r}} → unitaria ¬r → ∅. Satisfacible: contraejemplo ν(p) = V, ν(q) = V, ν(r) = F. La rama ¬p da {{r}; {¬q, ¬r}} → r → {{¬q}} → ¬q → ∅: segundo contraejemplo ν(p) = F, ν(q) = F, ν(r) = V.</li>
+<li>Tableau: raíz {p → q, ¬p → r, ¬(q ∧ r)}. β ¬(q ∧ r):<ul>
+<li>Rama ¬q: β p → q da q (<span class="mark bad">×</span>) o ¬p; con ¬p, β ¬p → r da ¬¬p (α: p, <span class="mark bad">×</span>) o r <span class="mark ok">✓</span>. Hoja {¬q, ¬p, r}.</li>
+<li>Rama ¬r: β ¬p → r da r (<span class="mark bad">×</span>) o ¬¬p (α: p); con p, β p → q da ¬p (<span class="mark bad">×</span>) o q <span class="mark ok">✓</span>. Hoja {¬r, p, q}.</li>
+</ul>
+</li>
+</ul><p><span class="chip bad">NO VÁLIDO</span>, con contraejemplos (p, q, r) = (V, V, F) y (F, F, V). La resolución sólo puede demostrar insatisfacibilidad: si no sale □ sabemos que no es válido, pero no obtenemos ninguna interpretación.</p></div></article><article class="card sol" data-tema="4" id="s-4-8-4"><div class="card-head"><span class="card-num">Solución 4.8.4</span><span class="card-tools"><a class="jump" href="#e-4-8-4">← Enunciado</a></span></div><div class="card-body"><ol>
+<li>Al menos una: {l1, l2, l3}. Como mucho una: {¬l1, ¬l2}, {¬l1, ¬l3}, {¬l2, ¬l3}. L1 → L2: {¬l1, l2}.</li>
+<li>DPLL: sin tautologías, unitarias, puros ni subsumidas. Ramificación por l1.<ul>
+<li>Rama l1: {{¬l2}; {¬l3}; {¬l2, ¬l3}; {l2}} → unitaria ¬l2 → aparece □ (por {l2}). Backtracking.</li>
+<li>Rama ¬l1: {{l2, l3}; {¬l2, ¬l3}}. Ramificación por l2: rama l2 → {{¬l3}} → ¬l3 → ∅, modelo (l1, l2, l3) = (F, V, F). Para obtener todos, rama ¬l2 → {{l3}} → l3 → ∅, modelo (F, F, V).</li>
+</ul>
+</li>
+<li>L1 nunca puede estar encendida; puede estarlo L2 sola o L3 sola.</li>
+</ol></div></article><article class="card sol" data-tema="4" id="s-4-8-5"><div class="card-head"><span class="card-num">Solución 4.8.5</span><span class="card-tools"><a class="jump" href="#e-4-8-5">← Enunciado</a></span></div><div class="card-body"><p>a) Árbol semántico (o tabla de verdad): tautología si todas las hojas son <span class="mark ok">ÉXITO</span>; con tableau habría que hacerlo sobre ¬α. b) DPLL: trabaja sobre cláusulas y devuelve un modelo sin explorar todas las interpretaciones. c) Resolución con estrategia de conjunto soporte. d) Árbol semántico (cada <span class="mark ok">ÉXITO</span> da interpretaciones) o tableau (cada hoja abierta da un modelo); la tabla también sirve, pero cuesta 2ⁿ filas.</p></div></article></section></section>
+
+    <p class="foot">Ejercicios elaborados a partir de los apuntes y la hoja de teoría de FLI (temas 1–4). Tablas, equivalencias, modelos y validez comprobados por computadora. Las marcas de «Hecho» se guardan sólo en este navegador.</p>
+  </main>
+</div>
+<script src="../../fli/js/ejercicios.js"></script>
+</body>
+</html>

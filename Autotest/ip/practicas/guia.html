@@ -1,0 +1,1580 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de prácticas · IP</title>
+<meta name="description" content="Guía de prácticas de Introducción a la Programación: prácticas 1 a 6 en C++ explicadas, con todos los ejercicios resueltos y probados.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../css/guia.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="ip" data-area="practicas" data-title="Guía de prácticas" data-storage-key="ip-practicas-hechos" data-visto-key="ip-practicas-visto">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">$</span> IP · Prácticas</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#p1"><span class="tn">1</span><span class="tname">Entorno de programación</span><span class="prog" data-prog="p1"></span></a><ol class="toc-topics"><li><a href="#p1-1"><span class="tnum">1.1</span>Editar, compilar y ejecutar con Geany</a></li><li><a href="#p1-2"><span class="tnum">1.2</span>Estructura de un programa C++</a></li><li><a href="#p1-3"><span class="tnum">1.3</span>Ejercicios</a></li></ol></li><li><a class="toc-tema" href="#p2"><span class="tn">2</span><span class="tname">Léxico y estados</span><span class="prog" data-prog="p2"></span></a><ol class="toc-topics"><li><a href="#p2-1"><span class="tnum">2.1</span>Tipos, operadores y conversiones</a></li><li><a href="#p2-2"><span class="tnum">2.2</span>Entrada y salida: el buffer del teclado</a></li><li><a href="#p2-3"><span class="tnum">2.3</span>Ejercicios de clase</a></li><li><a href="#p2-4"><span class="tnum">2.4</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p3"><span class="tn">3</span><span class="tname">Análisis de casos</span><span class="prog" data-prog="p3"></span></a><ol class="toc-topics"><li><a href="#p3-1"><span class="tnum">3.1</span>De SI y SEGÚN a if y switch</a></li><li><a href="#p3-2"><span class="tnum">3.2</span>Ejercicios de clase</a></li><li><a href="#p3-3"><span class="tnum">3.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p4"><span class="tn">4</span><span class="tname">Productos de tipos y subprogramas</span><span class="prog" data-prog="p4"></span></a><ol class="toc-topics"><li><a href="#p4-1"><span class="tnum">4.1</span>struct, acciones y funciones</a></li><li><a href="#p4-2"><span class="tnum">4.2</span>Ejercicios de clase</a></li><li><a href="#p4-3"><span class="tnum">4.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p5"><span class="tn">5</span><span class="tname">Iteraciones</span><span class="prog" data-prog="p5"></span></a><ol class="toc-topics"><li><a href="#p5-1"><span class="tnum">5.1</span>Las composiciones iterativas en C++</a></li><li><a href="#p5-2"><span class="tnum">5.2</span>Ejercicios de clase</a></li><li><a href="#p5-3"><span class="tnum">5.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p6"><span class="tn">6</span><span class="tname">Primer modelo de acceso secuencial</span><span class="prog" data-prog="p6"></span></a><ol class="toc-topics"><li><a href="#p6-1"><span class="tnum">6.1</span>Secuencias desde la entrada estándar</a></li><li><a href="#p6-2"><span class="tnum">6.2</span>Ejercicios de clase</a></li><li><a href="#p6-3"><span class="tnum">6.3</span>Trabajo personal</a></li></ol></li></ol></nav><button class="reset" id="reset" type="button">Reiniciar progreso</button>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Introducción a la Programación · 1.º GII · Prácticas</p><h1>Guía de prácticas <span class="ops">g++ ⏎</span></h1><p class="lead">Las seis prácticas explicadas: lo que hay que saber de C++ en cada una y <b>44 ejercicios resueltos</b> (los de clase y los de trabajo personal) con el análisis, la notación SP cuando ayuda, el programa en C++ y una ejecución real. Todo el código está compilado con g++ y probado.</p><nav class="ip-pages" aria-label="Páginas de IP"><a href="guia.html" aria-current="page">Guía de prácticas</a><a href="../teoria/guia.html">Guía de teoría</a><a href="../teoria/autotest.html">Autotest</a></nav></header><div class="soltools"><button type="button" class="btn-sol" data-sol="open">Abrir todas las resoluciones</button><button type="button" class="btn-sol" data-sol="close">Cerrarlas</button><span class="soltools-note">Intenta cada ejercicio antes de abrir su resolución y márcalo como hecho.</span></div><section class="tema guide" id="p1"><header class="tema-head"><p class="eyebrow">Práctica 1</p><h2>Entorno de programación</h2><p class="lede">Geany y g++: editar, compilar y ejecutar un programa C++, y la estructura de un programa.</p></header><section class="topic" id="p1-1"><h3><span class="tnum">1.1</span><span>Editar, compilar y ejecutar con Geany</span></h3><div class="prose"><p>En el laboratorio se arranca <b>Ubuntu</b> desde el menú de GRUB (usuario y contraseña <code>alumno</code>) y se abre Geany desde «Programación → Geany». En casa: Geany (Linux, Windows) o Dev‑C++ (Windows), que se usan casi igual. El compilador es <b>GNU g++</b>.</p><div class="tablewrap"><table class=""><thead><tr><th>Paso</th><th>Cómo</th><th>Detalles</th></tr></thead><tbody><tr><td>1. Nuevo</td><td>Archivo → Nuevo</td><td>Se abre una pestaña «sin título».</td></tr><tr><td>2. Guardar</td><td>Archivo → Guardar</td><td>Nombre acabado en <b>.cpp</b>, significativo (<code>Saludos.cpp</code>), <b>sin espacios ni tildes</b> en el nombre ni en las carpetas. Al guardarlo, Geany reconoce C++ y colorea la sintaxis.</td></tr><tr><td>3. Compilar</td><td><b>F9</b> (Construir → Construir)</td><td>La pestaña «Compilador» dice si ha ido bien; si hay errores, al pulsar en uno se marca la línea (la barra inferior indica línea y columna).</td></tr><tr><td>4. Ejecutar</td><td><b>F5</b> (Construir → Ejecutar)</td><td>Se abre una terminal con la salida; las líneas finales («Pulse Intro…») las añade Geany, no tu programa.</td></tr></tbody></table></div><p>Las cuatro zonas de Geany: barra de menús y botones (arriba), símbolos del archivo (izquierda), edición (centro‑derecha) y mensajes / compilador (abajo).</p></div></section><section class="topic" id="p1-2"><h3><span class="tnum">1.2</span><span>Estructura de un programa C++</span></h3><div class="prose"><p>Igual que un algoritmo: <b>léxico</b> (bibliotecas con <code>#include</code>, tipos, constantes, variables y subprogramas globales) y <b>algoritmo principal</b>, que en C++ es la función <code>main</code>. <code>main</code> devuelve un <code>int</code> al sistema operativo: <b>0 = terminación normal</b> (si no hay <code>return</code>, se devuelve 0). En C++ no se pueden definir funciones dentro de otras.</p><ul><li><b>Bloque</b>: instrucciones entre <code>{ }</code>, cada una acabada en <code>;</code>.</li><li><b>Identificadores</b>: letras y dígitos empezando por letra (el <code>_</code> cuenta como letra, pero no empieces por él). C++ <b>distingue mayúsculas</b>: <code>notaFinal</code> ≠ <code>notafinal</code>.</li><li><b>Palabras reservadas</b> (no se pueden usar como nombres: <code>using</code>, <code>int</code>…), <b>literales</b>, <b>operadores</b> y <b>delimitadores</b>.</li><li><b>Comentarios</b>: <code>// hasta el final de la línea</code> y <code>/* varias líneas */</code>. Los blancos y saltos de línea sólo separan.</li><li><code>using namespace std;</code>: cin, cout y el resto de la biblioteca estándar están en el espacio de nombres <code>std</code>.</li></ul></div></section><section class="topic" id="p1-3"><h3><span class="tnum">1.3</span><span>Ejercicios</span></h3><div class="prose"><article class="card ex" data-tema="p1" id="e-p1a"><div class="card-head"><span class="card-num">Ejercicio 1 <span class="card-title">· El primer programa (Saludos.cpp)</span></span><span class="card-tools"><label class="done" for="d-p1a"><input data-key="p1a" id="d-p1a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Escribe, guarda, compila y ejecuta el programa de la primera página del boletín.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">C++ · Saludos.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main () {
+    string nombre;
+
+    cout &lt;&lt; &quot;¿Cómo te llamas? &quot;;
+    getline (cin, nombre);
+    cout &lt;&lt; &quot;Hola, &quot; &lt;&lt; nombre &lt;&lt; &quot;, vamos a trabajar&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>¿Cómo te llamas? Ana García
+Hola, Ana García, vamos a trabajar</code></pre></div><p><code>getline (cin, nombre)</code> lee la <b>línea completa</b> (nombre y apellidos). Con <code>cin &gt;&gt; nombre</code> sólo se leería la primera palabra.</p></div></details></div></article><article class="card ex" data-tema="p1" id="e-p1b"><div class="card-head"><span class="card-num">Ejercicio 2 <span class="card-title">· Suma, resta y división de dos enteros</span></span><span class="card-tools"><label class="done" for="d-p1b"><input data-key="p1b" id="d-p1b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Tras escribir y ampliar el «segundo programa» (que lee dos números y escribe su suma), modifícalo para que lea dos enteros y muestre la <b>suma</b>, la <b>resta</b> y la <b>división</b>.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">C++ · operaciones.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int numero1, numero2;
+
+    cout &lt;&lt; &quot;Escribe un número: &quot;;
+    cin &gt;&gt; numero1;
+    cout &lt;&lt; &quot;Escribe otro número: &quot;;
+    cin &gt;&gt; numero2;
+    cout &lt;&lt; &quot;La suma es: &quot; &lt;&lt; numero1 + numero2 &lt;&lt; endl;
+    cout &lt;&lt; &quot;La resta es: &quot; &lt;&lt; numero1 - numero2 &lt;&lt; endl;
+    cout &lt;&lt; &quot;La división entera es: &quot; &lt;&lt; numero1 / numero2 &lt;&lt; endl;      // 17 / 5 = 3
+    cout &lt;&lt; &quot;El resto es: &quot; &lt;&lt; numero1 % numero2 &lt;&lt; endl;                // 17 % 5 = 2
+    cout &lt;&lt; &quot;La división real es: &quot; &lt;&lt; float(numero1) / numero2 &lt;&lt; endl; // 3.4
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Escribe un número: 17
+Escribe otro número: 5
+La suma es: 22
+La resta es: 12
+La división entera es: 3
+El resto es: 2
+La división real es: 3.4</code></pre></div><div class="box warn"><p class="box-t">Ojo con la división</p><p>Con dos <code>int</code>, <code>/</code> es la <b>división entera</b> (el DIV de la notación) y <code>%</code> el resto (MOD). Para la división real hay que convertir uno de los operandos: <code>float(numero1) / numero2</code>. Si el segundo número es 0, la división entera hace que el programa termine con error: más adelante (práctica 3) se puede comprobar con un <code>if</code>.</p></div></div></details></div></article><article class="card ex" data-tema="p1" id="e-p1c"><div class="card-head"><span class="card-num">Ejercicio 3 <span class="card-title">· Algoritmo 2.1: nota final</span></span><span class="card-tools"><label class="done" for="d-p1c"><input data-key="p1c" id="d-p1c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Codifica el algoritmo 2.1 del libro: la nota final es el 70 % de teoría y el 30 % de prácticas.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">C++ · nota.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    float notaTeoria;
+    float notaPractica;
+    float notaFinal;
+
+    cout &lt;&lt; &quot;Introduce la nota de teoría y la de prácticas: &quot;;
+    cin &gt;&gt; notaTeoria &gt;&gt; notaPractica;
+    notaFinal = notaTeoria * 0.7 + notaPractica * 0.3;
+    cout &lt;&lt; notaFinal &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Introduce la nota de teoría y la de prácticas: 6.5 8
+6.95</code></pre></div><p>6.5 · 0.7 + 8 · 0.3 = 4.55 + 2.4 = <b>6.95</b>. Fíjate en la correspondencia con la notación: <code>float</code> = Real, <code>cin &gt;&gt;</code> = Leer, <code>=</code> = ←, <code>cout &lt;&lt;</code> = Escribir.</p></div></details></div></article></div></section></section><section class="tema guide" id="p2"><header class="tema-head"><p class="eyebrow">Práctica 2</p><h2>Léxico y estados</h2><p class="lede">Variables y constantes de un problema, tipos, secuenciación, estados intermedios, asignación y entrada/salida.</p></header><section class="topic" id="p2-1"><h3><span class="tnum">2.1</span><span>Tipos, operadores y conversiones</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Notación</th><th>C++</th><th>Rango / tamaño típico</th></tr></thead><tbody><tr><td>Entero</td><td><code>short</code>, <code>int</code>, <code>long</code>, <code>long long</code></td><td><code>int</code>: −2 147 483 648 … 2 147 483 647 (4 bytes); <code>short</code>: −32 768 … 32 767 (2)</td></tr><tr><td>Real</td><td><code>float</code>, <code>double</code></td><td>Aproximados: cada valor representa un intervalo de la recta real</td></tr><tr><td>Booleano</td><td><code>bool</code> (<code>true</code>, <code>false</code>)</td><td>—</td></tr><tr><td>Carácter</td><td><code>char</code></td><td>−128 … 127 (1 byte); <code>int ('B')</code> = 66, <code>char (66)</code> = 'B'</td></tr></tbody></table></div><div class="tablewrap"><table class=""><thead><tr><th>Notación</th><th>×</th><th>DIV</th><th>MOD</th><th>/</th><th>≠</th><th>=</th><th>Y</th><th>O</th><th>NO</th><th>Pred / Suc</th></tr></thead><tbody><tr><td>C++</td><td><code>*</code></td><td><code>/</code></td><td><code>%</code></td><td><code>/</code></td><td><code>!=</code></td><td><code>==</code></td><td><code>&amp;&amp;</code></td><td><code>||</code></td><td><code>!</code></td><td><code>-1</code> / <code>+1</code></td></tr></tbody></table></div><div class="box warn"><p class="box-t">Reales: no compares con ==</p><p>Los cálculos con reales son aproximados. Con <code>float</code>, <code>1.0 − 0.2 − 0.8</code> da 0 pero <code>1.0 − 0.8 − 0.2</code> da −1.49·10<sup>−8</sup>. En vez de <code>a == b</code>, comprueba <code>fabs (a − b) &lt; EPS</code> con una constante pequeña.</p></div><p><b>Conversiones implícitas</b> (evítalas): con <code>int i; bool text;</code>, <code>i = 3.6;</code> deja 3 y <code>text = 'A';</code> deja <code>true</code> (se escribe 1). Lo único admitido en la notación es asignar una expresión entera a una variable real.</p><p><b>Constantes</b>: <code>const &lt;tipo&gt; &lt;nombre&gt; = &lt;valor&gt;;</code>. Ojo: el anexo pone <code>const int PI = 3.14159;</code>, que vale <b>3</b> por ser <code>int</code>; debe ser <code>const float PI = 3.14159;</code>.</p></div></section><section class="topic" id="p2-2"><h3><span class="tnum">2.2</span><span>Entrada y salida: el buffer del teclado</span></h3><div class="prose"><p><code>cin &gt;&gt;</code> toma los valores del <b>buffer</b> del teclado (si está vacío, espera a que se pulse Intro). Se salta los blancos iniciales y convierte el texto en número automáticamente.</p><div class="tablewrap"><table class=""><thead><tr><th>Buffer</th><th>Lecturas</th><th>Resultado</th></tr></thead><tbody><tr><td><code>1234␣␣␣␣⏎</code></td><td><code>int v; cin &gt;&gt; v;</code></td><td>v = 1234 (quedan 4 blancos y el ⏎ en el buffer)</td></tr><tr><td><code>1234⏎</code></td><td><code>float v; cin &gt;&gt; v;</code></td><td>v = 1234.0</td></tr><tr><td><code>1234␣␣␣␣⏎</code></td><td><code>char c; int i; cin &gt;&gt; c; cin &gt;&gt; i;</code></td><td>c = '1', i = 234</td></tr><tr><td><code>La Luna del Valle.⏎</code></td><td>tres <code>cin &gt;&gt; c</code> con char</td><td>'L', 'a', 'L' (el blanco se salta); queda «una del Valle.⏎»</td></tr></tbody></table></div><ul><li>Para leer <b>todos</b> los caracteres, incluidos blancos y saltos de línea: <code>cin.get (c)</code> (prácticas 5 y 6).</li><li>Para leer una <b>línea</b> en un <code>string</code>: <code>getline (cin, cadena)</code>; <code>cin &gt;&gt; cadena</code> lee sólo una palabra.</li><li>En programas interactivos, cada lectura debe ir precedida de un mensaje que diga qué hay que teclear.</li><li>La asignación es <code>=</code>; sólo puede haber una variable a la izquierda, y deben ser del mismo tipo (salvo entero → real).</li></ul></div></section><section class="topic" id="p2-3"><h3><span class="tnum">2.3</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p2" id="e-p2a"><div class="card-head"><span class="card-num">Ejercicio 1 <span class="card-title">· Intercambio circular de tres variables</span></span><span class="card-tools"><label class="done" for="d-p2a"><input data-key="p2a" id="d-p2a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dadas A, B y C: B toma el valor de A, C el de B y A el de C. Haz una traza, piensa qué pasa si se cambia el orden de las asignaciones y codifícalo mostrando los estados intermedios.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Léxico
+  a, b, c : Carácter;   (datos de entrada y de salida)
+  aux : Carácter;       (variable auxiliar)
+Algoritmo
+  Leer (a, b, c);   {e1: los valores introducidos}
+  aux ← b;          {e2: aux = b}
+  b ← a;            {e3: b = a}
+  a ← c;            {e4: a = c inicial, b = a inicial}
+  c ← aux;          {e5: desplazamiento circular hecho}
+  Escribir (a, b, c)
+Fin</code></pre></div><h4>Traza con a = 'x', b = 'y', c = 'z'</h4><div class="tablewrap"><table class=""><thead><tr><th>Estado</th><th>a</th><th>b</th><th>c</th><th>aux</th></tr></thead><tbody><tr><td>e1</td><td>x</td><td>y</td><td>z</td><td>?</td></tr><tr><td>e2</td><td>x</td><td>y</td><td>z</td><td>y</td></tr><tr><td>e3</td><td>x</td><td>x</td><td>z</td><td>y</td></tr><tr><td>e4</td><td>z</td><td>x</td><td>z</td><td>y</td></tr><tr><td>e5</td><td>z</td><td>x</td><td>y</td><td>y</td></tr></tbody></table></div><p><b>¿Y si se cambia el orden?</b> Cada asignación <b>destruye</b> el valor anterior de la variable. Por ejemplo, si se hace <code>b ← a</code> antes de <code>aux ← b</code>, el valor original de b se pierde y al final c recibe el de a. El orden correcto guarda primero (en aux) el valor que se va a pisar.</p><div class="codeblk"><p class="code-t">C++ · intercambio.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    char a, b, c;   // datos de entrada y de salida
+    char aux;       // variable auxiliar
+
+    cout &lt;&lt; &quot;Introduce tres caracteres: &quot;;
+    cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+    cout &lt;&lt; &quot;e1: a=&quot; &lt;&lt; a &lt;&lt; &quot; b=&quot; &lt;&lt; b &lt;&lt; &quot; c=&quot; &lt;&lt; c &lt;&lt; endl;
+    aux = b;
+    cout &lt;&lt; &quot;e2: a=&quot; &lt;&lt; a &lt;&lt; &quot; b=&quot; &lt;&lt; b &lt;&lt; &quot; c=&quot; &lt;&lt; c &lt;&lt; &quot; aux=&quot; &lt;&lt; aux &lt;&lt; endl;
+    b = a;
+    cout &lt;&lt; &quot;e3: a=&quot; &lt;&lt; a &lt;&lt; &quot; b=&quot; &lt;&lt; b &lt;&lt; &quot; c=&quot; &lt;&lt; c &lt;&lt; &quot; aux=&quot; &lt;&lt; aux &lt;&lt; endl;
+    a = c;
+    cout &lt;&lt; &quot;e4: a=&quot; &lt;&lt; a &lt;&lt; &quot; b=&quot; &lt;&lt; b &lt;&lt; &quot; c=&quot; &lt;&lt; c &lt;&lt; &quot; aux=&quot; &lt;&lt; aux &lt;&lt; endl;
+    c = aux;
+    cout &lt;&lt; &quot;e5: a=&quot; &lt;&lt; a &lt;&lt; &quot; b=&quot; &lt;&lt; b &lt;&lt; &quot; c=&quot; &lt;&lt; c &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Introduce tres caracteres: x y z
+e1: a=x b=y c=z
+e2: a=x b=y c=z aux=y
+e3: a=x b=x c=z aux=y
+e4: a=z b=x c=z aux=y
+e5: a=z b=x c=y</code></pre></div></div></details></div></article><article class="card ex" data-tema="p2" id="e-p2b"><div class="card-head"><span class="card-num">Ejercicio 2 <span class="card-title">· Desglose de dinero</span></span><span class="card-tools"><label class="done" for="d-p2b"><input data-key="p2b" id="d-p2b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Desglosa una cantidad en el mínimo número de billetes de 500, 100, 50, 20, 10 y 5 euros; el resto, en monedas.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Misma estrategia que «segundos → días, horas, minutos y segundos» del tema 1: cociente (DIV) por el billete más grande y seguir con el resto (MOD).</p><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Leer (cantidad);
+quinientos ← cantidad DIV 500;   resto ← cantidad MOD 500;
+cien ← resto DIV 100;            resto ← resto MOD 100;
+cincuenta ← resto DIV 50;        resto ← resto MOD 50;
+veinte ← resto DIV 20;           resto ← resto MOD 20;
+diez ← resto DIV 10;             resto ← resto MOD 10;
+cinco ← resto DIV 5;             resto ← resto MOD 5;
+Escribir (quinientos, cien, cincuenta, veinte, diez, cinco, resto)</code></pre></div><div class="codeblk"><p class="code-t">C++ · desglose.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int cantidad, resto;
+    int quinientos, cien, cincuenta, veinte, diez, cinco;
+
+    cout &lt;&lt; &quot;Cantidad en euros: &quot;;
+    cin &gt;&gt; cantidad;
+    quinientos = cantidad / 500;   resto = cantidad % 500;
+    cout &lt;&lt; &quot;  quinientos=&quot; &lt;&lt; quinientos &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+    cien = resto / 100;            resto = resto % 100;
+    cout &lt;&lt; &quot;  cien=&quot; &lt;&lt; cien &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+    cincuenta = resto / 50;        resto = resto % 50;
+    cout &lt;&lt; &quot;  cincuenta=&quot; &lt;&lt; cincuenta &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+    veinte = resto / 20;           resto = resto % 20;
+    cout &lt;&lt; &quot;  veinte=&quot; &lt;&lt; veinte &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+    diez = resto / 10;             resto = resto % 10;
+    cout &lt;&lt; &quot;  diez=&quot; &lt;&lt; diez &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+    cinco = resto / 5;             resto = resto % 5;
+    cout &lt;&lt; &quot;  cinco=&quot; &lt;&lt; cinco &lt;&lt; &quot; resto=&quot; &lt;&lt; resto &lt;&lt; endl;
+
+    cout &lt;&lt; quinientos &lt;&lt; &quot; de quinientos euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; cien &lt;&lt; &quot; de cien euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; cincuenta &lt;&lt; &quot; de cincuenta euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; veinte &lt;&lt; &quot; de veinte euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; diez &lt;&lt; &quot; de diez euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; cinco &lt;&lt; &quot; de cinco euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; resto &lt;&lt; &quot; en monedas&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Cantidad en euros: 1789
+  quinientos=3 resto=289
+  cien=2 resto=89
+  cincuenta=1 resto=39
+  veinte=1 resto=19
+  diez=1 resto=9
+  cinco=1 resto=4
+3 de quinientos euros
+2 de cien euros
+1 de cincuenta euros
+1 de veinte euros
+1 de diez euros
+1 de cinco euros
+4 en monedas</code></pre></div><p><b>¿Y si se cambia el orden?</b> Si se calcula <code>resto</code> antes que el cociente del mismo billete, el cociente se calcula con un resto ya reducido (sale 0). Y si se empieza por los billetes pequeños deja de ser el número mínimo de billetes (1789 serían 357 de 5).</p></div></details></div></article><article class="card ex" data-tema="p2" id="e-p2c"><div class="card-head"><span class="card-num">Ejercicio 3 <span class="card-title">· Binario a decimal</span></span><span class="card-tools"><label class="done" for="d-p2c"><input data-key="p2c" id="d-p2c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dado un binario de cuatro cifras (cuatro enteros 0 o 1, por ejemplo 1, 1, 0, 1), escribe su valor en base 10. ¿Qué variables hacen falta?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Variables: cuatro enteros para las cifras (de la más significativa a la menos) y uno para el resultado. Cada cifra se multiplica por su peso: 8, 4, 2, 1.</p><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Léxico
+  b3, b2, b1, b0 : Entero [0, 1];
+  decimal : Entero [0, 15];
+Algoritmo
+  Leer (b3, b2, b1, b0);
+  decimal ← b3 * 8 + b2 * 4 + b1 * 2 + b0;
+  Escribir (decimal)
+Fin</code></pre></div><div class="codeblk"><p class="code-t">C++ · binario.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int b3, b2, b1, b0;   // cifras binarias, de la más significativa a la menos
+    int decimal;
+
+    cout &lt;&lt; &quot;Introduce las cuatro cifras binarias separadas por espacios: &quot;;
+    cin &gt;&gt; b3 &gt;&gt; b2 &gt;&gt; b1 &gt;&gt; b0;
+    decimal = b3 * 8 + b2 * 4 + b1 * 2 + b0;
+    cout &lt;&lt; &quot;En base 10 vale &quot; &lt;&lt; decimal &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Introduce las cuatro cifras binarias separadas por espacios: 1 1 0 1
+En base 10 vale 13</code></pre></div><p>1101₂ = 8 + 4 + 0 + 1 = 13.</p></div></details></div></article></div></section><section class="topic" id="p2-4"><h3><span class="tnum">2.4</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p2" id="e-p2d"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· JetLag: coste de un vuelo</span></span><span class="card-tools"><label class="done" for="d-p2d"><input data-key="p2d" id="d-p2d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Por cada vuelo se anotan los kilómetros y los litros gastados; el precio del litro es propio de cada vuelo y hay un gasto fijo de mantenimiento por kilómetro. Calcula el coste total, los kilómetros por litro y el coste por kilómetro.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Entrada</b>: km, litros, precioLitro, gastoKm (todos reales).</li><li><b>Salida</b>: coste = litros · precioLitro + km · gastoKm; kmPorLitro = km / litros; costeKm = coste / km.</li></ul><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Léxico
+  km, litros, precioLitro, gastoKm : Real;   // datos
+  coste, kmPorLitro, costeKm : Real;         // resultados
+Algoritmo
+  Leer (km, litros, precioLitro, gastoKm);
+  coste ← litros * precioLitro + km * gastoKm;
+  kmPorLitro ← km / litros;
+  costeKm ← coste / km;
+  Escribir (coste, kmPorLitro, costeKm)
+Fin</code></pre></div><p>Traza a mano con 1200 km, 3000 l, 0.85 €/l y 1.5 €/km: coste = 2550 + 1800 = 4350 €, 0.4 km/l, 3.625 €/km.</p><div class="codeblk"><p class="code-t">C++ · jetlag.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    float km, litros, precioLitro, gastoKm;   // datos de un vuelo
+    float coste, kmPorLitro, costeKm;         // resultados
+
+    cout &lt;&lt; &quot;Kilómetros recorridos: &quot;;               cin &gt;&gt; km;
+    cout &lt;&lt; &quot;Litros de combustible: &quot;;               cin &gt;&gt; litros;
+    cout &lt;&lt; &quot;Precio del litro en este vuelo: &quot;;      cin &gt;&gt; precioLitro;
+    cout &lt;&lt; &quot;Gasto fijo de mantenimiento por km: &quot;;  cin &gt;&gt; gastoKm;
+
+    coste = litros * precioLitro + km * gastoKm;
+    kmPorLitro = km / litros;
+    costeKm = coste / km;
+
+    cout &lt;&lt; &quot;Coste total del viaje: &quot; &lt;&lt; coste &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+    cout &lt;&lt; &quot;Kilómetros por litro: &quot; &lt;&lt; kmPorLitro &lt;&lt; endl;
+    cout &lt;&lt; &quot;Coste por kilómetro: &quot; &lt;&lt; costeKm &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Kilómetros recorridos: 1200
+Litros de combustible: 3000
+Precio del litro en este vuelo: 0.85
+Gasto fijo de mantenimiento por km: 1.5
+Coste total del viaje: 4350 euros
+Kilómetros por litro: 0.4
+Coste por kilómetro: 3.625 euros</code></pre></div></div></details></div></article><article class="card ex" data-tema="p2" id="e-p2e"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Nota final ponderada (50 %, 30 %, 20 %)</span></span><span class="card-tools"><label class="done" for="d-p2e"><input data-key="p2e" id="d-p2e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dadas las notas del examen, del trabajo y del test, muestra la nota final.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Entrada: tres reales. Salida: <code>examen · 0.5 + trabajo · 0.3 + test · 0.2</code>. Con 6, 8 y 5: 3 + 2.4 + 1 = 6.4.</p><div class="codeblk"><p class="code-t">C++ · ponderada.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    float examen, trabajo, test, notaFinal;
+
+    cout &lt;&lt; &quot;Nota del examen, del trabajo y del test: &quot;;
+    cin &gt;&gt; examen &gt;&gt; trabajo &gt;&gt; test;
+    notaFinal = examen * 0.5 + trabajo * 0.3 + test * 0.2;
+    cout &lt;&lt; &quot;Nota final: &quot; &lt;&lt; notaFinal &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Nota del examen, del trabajo y del test: 6 8 5
+Nota final: 6.4</code></pre></div></div></details></div></article><article class="card ex" data-tema="p2" id="e-p2f"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Contenedores para cerdos ibéricos</span></span><span class="card-tools"><label class="done" for="d-p2f"><input data-key="p2f" id="d-p2f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Hay contenedores para 50, 25, 5 y 1 cerdos. Dado el número de animales, calcula cuántos contenedores de cada tipo hacen falta usando el menor número posible y, si sobra espacio, que sea el menor posible.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Es el desglose de dinero con otros «billetes». Como existe el contenedor de 1, el reparto es exacto y <b>no sobra espacio</b>; el método voraz (empezar por el más grande) da además el mínimo número de contenedores, porque cada tamaño es múltiplo del siguiente.</p><div class="codeblk"><p class="code-t">C++ · cerdos.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int cerdos, resto;
+    int c50, c25, c5, c1;   // contenedores de cada tamaño
+
+    cout &lt;&lt; &quot;Número de cerdos: &quot;;
+    cin &gt;&gt; cerdos;
+    c50 = cerdos / 50;  resto = cerdos % 50;
+    c25 = resto / 25;   resto = resto % 25;
+    c5 = resto / 5;     resto = resto % 5;
+    c1 = resto;
+    cout &lt;&lt; c50 &lt;&lt; &quot; de 50, &quot; &lt;&lt; c25 &lt;&lt; &quot; de 25, &quot; &lt;&lt; c5 &lt;&lt; &quot; de 5 y &quot; &lt;&lt; c1 &lt;&lt; &quot; de 1&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Número de cerdos: 138
+2 de 50, 1 de 25, 2 de 5 y 3 de 1</code></pre></div><p>138 = 2·50 + 1·25 + 2·5 + 3·1.</p></div></details></div></article></div></section></section><section class="tema guide" id="p3"><header class="tema-head"><p class="eyebrow">Práctica 3</p><h2>Análisis de casos</h2><p class="lede">if, if–else y switch en C++, expresiones booleanas y problemas con análisis de casos.</p></header><section class="topic" id="p3-1"><h3><span class="tnum">3.1</span><span>De SI y SEGÚN a if y switch</span></h3><div class="prose"><div class="pair"><div class="codeblk sp"><p class="code-t">Notación</p><pre><code class="lang-sp">SI cond ENTONCES S FIN_SI
+SI cond ENTONCES S SI_NO R FIN_SI
+SEGÚN c1, …, cn
+  e1 : S1;
+  e2 : S2;
+  …
+  EN_OTRO_CASO : Sn+1
+FIN_SEGÚN</code></pre></div><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">if (cond) { S }
+if (cond) { S } else { R }
+if (e1) { S1; }
+else if (e2) { S2; }
+…
+else { Sn+1; }</code></pre></div></div><p>El <code>switch</code> se parece al SEGÚN pero es más limitado: selecciona según el valor de <b>una única expresión</b> de <b>tipo ordinal</b> (entero, char, bool…) comparada con valores <b>estáticos</b> (literales o constantes conocidas al compilar). Cuando entra en un <code>case</code> ejecuta todo lo que encuentra hasta un <code>break</code>; así se asocian varios valores a un mismo tratamiento.</p><div class="codeblk"><p class="code-t">switch</p><pre><code class="lang-cpp">switch (PermisoConducir) {
+    case &#x27;A&#x27;:
+        cout &lt;&lt; &quot;Motocicletas y triciclos de motor&quot;; break;
+    case &#x27;B&#x27;:
+        cout &lt;&lt; &quot;Automóviles masa máxima autorizada &lt;= 3500 kg&quot;; break;
+    case &#x27;C&#x27;:
+        cout &lt;&lt; &quot;Automóviles masa máxima autorizada &gt; 3500 kg&quot;; break;
+    default:
+        cout &lt;&lt; &quot;No contemplado&quot;; break;
+}</code></pre></div><div class="box warn"><p class="box-t">Erratas del boletín</p><ul><li>Los ejemplos usan comillas tipográficas (‘A’, “No contemplado") que el compilador no acepta: escribe siempre <code>'A'</code> y <code>"…"</code> rectas.</li><li>En el ejemplo de <code>if–else</code> la rama de las mayúsculas aparece dos veces; la segunda nunca se ejecuta (casos solapados).</li></ul></div></div></section><section class="topic" id="p3-2"><h3><span class="tnum">3.2</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p3" id="e-p3a"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Algoritmos 2.8 (calificación) y 2.10 (máximo)</span></span><span class="card-tools"><label class="done" for="d-p3a"><input data-key="p3a" id="d-p3a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Transcribe a C++ los dos algoritmos y comprueba su comportamiento con varias ejecuciones.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>El 2.8 compara una única expresión ordinal (la nota entera) con constantes: es el caso ideal para <code>switch</code>, agrupando valores con <code>case</code> consecutivos. El 2.10 es un SI–SI_NO.</p><div class="codeblk"><p class="code-t">C++ · alg28.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int nota;
+
+    cout &lt;&lt; &quot;Nota (sobre 20): &quot;;
+    cin &gt;&gt; nota;
+    switch (nota) {
+        case 20:
+            cout &lt;&lt; &quot;M. de Honor&quot; &lt;&lt; endl; break;
+        case 19:
+        case 18:
+            cout &lt;&lt; &quot;Sobresaliente&quot; &lt;&lt; endl; break;
+        case 17:
+        case 16:
+            cout &lt;&lt; &quot;Notable&quot; &lt;&lt; endl; break;
+        case 15:
+        case 14:
+            cout &lt;&lt; &quot;Aprobado&quot; &lt;&lt; endl; break;
+        default:
+            cout &lt;&lt; &quot;Suspenso&quot; &lt;&lt; endl; break;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Nota (sobre 20): 17
+Notable</code></pre></div><div class="codeblk"><p class="code-t">C++ · alg210.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int n1, n2;
+
+    cin &gt;&gt; n1 &gt;&gt; n2;
+    if (n1 &gt; n2) {
+        cout &lt;&lt; &quot;El máximo es &quot; &lt;&lt; n1 &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;El máximo es &quot; &lt;&lt; n2 &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>4 9
+El máximo es 9</code></pre></div><p>Pruébalos con los casos frontera: 20, 18, 14, 13 y un valor fuera de rango (25 → «Suspenso» por el default); y en el máximo, con dos números iguales (escribe el segundo, que es el mismo valor).</p></div></details></div></article><article class="card ex" data-tema="p3" id="e-p3b"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Préstamo rápido</span></span><span class="card-tools"><label class="done" for="d-p3b"><input data-key="p3b" id="d-p3b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Un préstamo de 1 a 24 meses: interés total = cantidad · meses · interés mensual. Si el cliente tiene otras deudas se le aplica un recargo del 1 % sobre cantidad + intereses. El total se paga en cuotas mensuales iguales. Calcula la cuota.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Léxico
+  cantidad, interes : Real;      // interés mensual en %
+  meses : Entero [1, 24];
+  riesgo : Booleano;
+  interesTotal, total, cuota : Real;
+Algoritmo
+  Leer (cantidad, meses, interes, riesgo);
+  interesTotal ← cantidad * meses * interes / 100;
+  total ← cantidad + interesTotal;
+  SI riesgo ENTONCES total ← total + total * 0.01 FIN_SI;
+  cuota ← total / meses;
+  Escribir (cuota)
+Fin</code></pre></div><div class="codeblk"><p class="code-t">C++ · prestamo.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const float RECARGO = 0.01;     // 1 % para clientes de riesgo
+    float cantidad, interes;        // euros y % mensual
+    int meses;                      // entre 1 y 24
+    char respuesta;
+    bool riesgo;
+    float interesTotal, total, cuota;
+
+    cout &lt;&lt; &quot;Cantidad prestada: &quot;;               cin &gt;&gt; cantidad;
+    cout &lt;&lt; &quot;Número de meses (1-24): &quot;;          cin &gt;&gt; meses;
+    cout &lt;&lt; &quot;Interés mensual (%): &quot;;             cin &gt;&gt; interes;
+    cout &lt;&lt; &quot;¿Tiene otras deudas? (S/N): &quot;;      cin &gt;&gt; respuesta;
+    riesgo = (respuesta == &#x27;S&#x27;) || (respuesta == &#x27;s&#x27;);
+
+    interesTotal = cantidad * meses * interes / 100;
+    total = cantidad + interesTotal;
+    if (riesgo) {
+        total = total + total * RECARGO;
+    }
+    cuota = total / meses;
+    cout &lt;&lt; &quot;Cuota mensual: &quot; &lt;&lt; cuota &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Cantidad prestada: 1000
+Número de meses (1-24): 10
+Interés mensual (%): 1.5
+¿Tiene otras deudas? (S/N): S
+Cuota mensual: 116.15 euros</code></pre></div><p>1000 · 10 · 1.5 / 100 = 150; total 1150; con recargo 1161.5; cuota 116.15 €. El interés se lee en tanto por ciento, por eso se divide entre 100.</p></div></details></div></article><article class="card ex" data-tema="p3" id="e-p3c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Fecha del día siguiente</span></span><span class="card-tools"><label class="done" for="d-p3c"><input data-key="p3c" id="d-p3c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Lee una fecha (día, mes, año) y escribe la del día siguiente. El año no es bisiesto. Ejemplos: 29 6 2005 → 30 6 2005; 30 4 1990 → 1 5 1990; 31 12 2010 → 1 1 2011.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Análisis de casos guiado por los datos: (1) no es el último día del mes; (2) es el último día de un mes que no es diciembre; (3) es el 31 de diciembre. Antes se calcula cuántos días tiene el mes (un <code>switch</code> sobre el mes).</p><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Leer (dia, mes, anyo);
+SEGÚN mes
+  mes = 4, 6, 9, 11 : diasMes ← 30;
+  mes = 2           : diasMes ← 28;
+  EN_OTRO_CASO      : diasMes ← 31
+FIN_SEGÚN;
+SEGÚN dia, mes
+  dia &lt; diasMes                  : dia ← dia + 1;
+  (dia = diasMes) Y (mes &lt; 12)   : dia ← 1; mes ← mes + 1;
+  (dia = diasMes) Y (mes = 12)   : dia ← 1; mes ← 1; anyo ← anyo + 1
+FIN_SEGÚN;
+Escribir (dia, mes, anyo)</code></pre></div><div class="codeblk"><p class="code-t">C++ · fecha.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int dia, mes, anyo;
+    int diasMes;   // días que tiene el mes leído (año no bisiesto)
+
+    cout &lt;&lt; &quot;Fecha (día mes año): &quot;;
+    cin &gt;&gt; dia &gt;&gt; mes &gt;&gt; anyo;
+    switch (mes) {
+        case 4: case 6: case 9: case 11:
+            diasMes = 30; break;
+        case 2:
+            diasMes = 28; break;
+        default:
+            diasMes = 31; break;
+    }
+    if (dia &lt; diasMes) {            // caso 1: no se acaba el mes
+        dia = dia + 1;
+    } else if (mes &lt; 12) {          // caso 2: último día de un mes que no es diciembre
+        dia = 1;
+        mes = mes + 1;
+    } else {                        // caso 3: 31 de diciembre
+        dia = 1;
+        mes = 1;
+        anyo = anyo + 1;
+    }
+    cout &lt;&lt; dia &lt;&lt; &quot; &quot; &lt;&lt; mes &lt;&lt; &quot; &quot; &lt;&lt; anyo &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Fecha (día mes año): 31 12 2010
+1 1 2011</code></pre></div><p>Los tres casos cubren todo el dominio (fechas válidas) y no se solapan. En la práctica 4 se reescribe con un <code>struct Fecha</code>.</p></div></details></div></article></div></section><section class="topic" id="p3-3"><h3><span class="tnum">3.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p3" id="e-p3d"><div class="card-head"><span class="card-num">La compañía de seguros <span class="card-title">· Contrato A, B, experto o rechazado</span></span><span class="card-tools"><label class="done" for="d-p3d"><input data-key="p3d" id="d-p3d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Menos de 30 años, buena salud y sin accidentes → contrato A; mala salud <i>o</i> algún accidente → llamar a un experto; mala salud <i>y</i> accidente → rechazado. Con más de 30 años igual pero contrato B. Codifica el algoritmo del boletín.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>La tabla de 8 casos del boletín se agrupa por salida. ¿Se cubren todos? Sí: las cuatro condiciones del SEGÚN abarcan las 8 combinaciones. ¿Se solapan? No: «salud y accidentes» o «ninguna de las dos» → experto; «mala salud y accidente» → rechazado; «buena salud sin accidentes» → A o B según la edad.</p><div class="codeblk"><p class="code-t">C++ · seguros.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    bool salud, accidentes, edad;
+    char respuesta;
+
+    cout &lt;&lt; &quot;¿Tiene el cliente buena salud? S/N &quot;;  cin &gt;&gt; respuesta;
+    salud = respuesta == &#x27;S&#x27;;
+    cout &lt;&lt; &quot;¿Ha sufrido accidentes? S/N &quot;;         cin &gt;&gt; respuesta;
+    accidentes = respuesta == &#x27;S&#x27;;
+    cout &lt;&lt; &quot;¿Tiene más de 30 años? S/N &quot;;          cin &gt;&gt; respuesta;
+    edad = respuesta == &#x27;S&#x27;;
+
+    if ((salud &amp;&amp; accidentes) || (!salud &amp;&amp; !accidentes)) {
+        cout &lt;&lt; &quot;Llamar a un experto&quot; &lt;&lt; endl;
+    } else if (!salud &amp;&amp; accidentes) {
+        cout &lt;&lt; &quot;Rechazado&quot; &lt;&lt; endl;
+    } else if (edad) {              // aquí ya sabemos que salud Y NO accidentes
+        cout &lt;&lt; &quot;Contrato B&quot; &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;Contrato A&quot; &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>¿Tiene el cliente buena salud? S/N S
+¿Ha sufrido accidentes? S/N N
+¿Tiene más de 30 años? S/N N
+Contrato A</code></pre></div><p>En la cadena <code>if … else if</code>, al llegar al tercer caso ya se sabe que salud es verdadera y accidentes falso, así que basta mirar la edad.</p></div></details></div></article><article class="card ex" data-tema="p3" id="e-p3e"><div class="card-head"><span class="card-num">Triángulos <span class="card-title">· Triángulo, equilátero, isósceles y escaleno</span></span><span class="card-tools"><label class="done" for="d-p3e"><input data-key="p3e" id="d-p3e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Lee tres reales y asigna true o false a Triangulo (cada lado menor que la suma de los otros dos), Equilatero, Isosceles (al menos dos iguales) y Escaleno (ninguno igual).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>No hace falta ningún <code>if</code>: cada variable booleana es el resultado de una expresión booleana. Las tres últimas exigen además <code>triangulo</code>.</p><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">Leer (a, b, c);
+triangulo ← (a + b &gt; c) Y (a + c &gt; b) Y (b + c &gt; a);
+equilatero ← triangulo Y (a = b) Y (b = c);
+isosceles ← triangulo Y ((a = b) O (b = c) O (a = c));
+escaleno ← triangulo Y (a ≠ b) Y (b ≠ c) Y (a ≠ c)</code></pre></div><div class="codeblk"><p class="code-t">C++ · triangulos.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    float a, b, c;
+    bool triangulo, equilatero, isosceles, escaleno;
+
+    cout &lt;&lt; &quot;Tres longitudes: &quot;;
+    cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+    triangulo = (a + b &gt; c) &amp;&amp; (a + c &gt; b) &amp;&amp; (b + c &gt; a);
+    equilatero = triangulo &amp;&amp; (a == b) &amp;&amp; (b == c);
+    isosceles = triangulo &amp;&amp; ((a == b) || (b == c) || (a == c));
+    escaleno = triangulo &amp;&amp; (a != b) &amp;&amp; (b != c) &amp;&amp; (a != c);
+
+    cout &lt;&lt; boolalpha;   // escribe true / false en lugar de 1 / 0
+    cout &lt;&lt; &quot;Triángulo: &quot; &lt;&lt; triangulo &lt;&lt; endl;
+    cout &lt;&lt; &quot;Equilátero: &quot; &lt;&lt; equilatero &lt;&lt; endl;
+    cout &lt;&lt; &quot;Isósceles: &quot; &lt;&lt; isosceles &lt;&lt; endl;
+    cout &lt;&lt; &quot;Escaleno: &quot; &lt;&lt; escaleno &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Tres longitudes: 3 4 4
+Triángulo: true
+Equilátero: false
+Isósceles: true
+Escaleno: false</code></pre></div><p>Según la definición del boletín («al menos dos iguales») un equilátero también es isósceles. <code>boolalpha</code> hace que <code>cout</code> escriba true/false en vez de 1/0. (Al comparar lados reales con <code>==</code> vale lo dicho en la práctica 2 sobre la precisión; con valores tecleados y sin cálculos previos no hay problema.)</p></div></details></div></article><article class="card ex" data-tema="p3" id="e-p3f"><div class="card-head"><span class="card-num">Codificación de caracteres <span class="card-title">· Siguiente letra o dígito, con vuelta</span></span><span class="card-tools"><label class="done" for="d-p3f"><input data-key="p3f" id="d-p3f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Lee un carácter y escribe el codificado: si es letra o dígito, el siguiente de su juego (Z → A, z → a, 9 → 0); cualquier otro, un asterisco.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Casos: los tres «de vuelta» (Z, z, 9), el caso general de letra o dígito (Sucesor = <code>char (int (c) + 1)</code>) y el resto. Los casos especiales van antes para que no los recoja el general (o se excluyen con rangos <code>'A'..'Y'</code>, como aquí, para que no se solapen).</p><div class="codeblk"><p class="code-t">C++ · codifica.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    char c, cod;
+
+    cout &lt;&lt; &quot;Carácter: &quot;;
+    cin &gt;&gt; c;
+    if (c == &#x27;Z&#x27;) {
+        cod = &#x27;A&#x27;;
+    } else if (c == &#x27;z&#x27;) {
+        cod = &#x27;a&#x27;;
+    } else if (c == &#x27;9&#x27;) {
+        cod = &#x27;0&#x27;;
+    } else if (((c &gt;= &#x27;A&#x27;) &amp;&amp; (c &lt;= &#x27;Y&#x27;)) || ((c &gt;= &#x27;a&#x27;) &amp;&amp; (c &lt;= &#x27;y&#x27;)) || ((c &gt;= &#x27;0&#x27;) &amp;&amp; (c &lt;= &#x27;8&#x27;))) {
+        cod = char(int(c) + 1);     // Sucesor (c)
+    } else {
+        cod = &#x27;*&#x27;;
+    }
+    cout &lt;&lt; &quot;Codificado: &quot; &lt;&lt; cod &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Carácter: Z
+Codificado: A</code></pre></div></div></details></div></article><article class="card ex" data-tema="p3" id="e-p3g"><div class="card-head"><span class="card-num">Calificaciones <span class="card-title">· Nota ponderada en formato alfabético</span></span><span class="card-tools"><label class="done" for="d-p3g"><input data-key="p3g" id="d-p3g" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Con las tres notas ponderadas al 50 %, 30 % y 20 %, escribe Suspenso (&lt; 5), Aprobado [5, 7), Notable [7, 9), Sobresaliente [9, 10) o Matrícula (10).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Partición guiada por el resultado. Encadenando <code>else if</code> sólo hace falta comparar con el límite superior de cada intervalo. Para la matrícula se compara con 10 usando una tolerancia, por la precisión de los reales.</p><div class="codeblk"><p class="code-t">C++ · calif.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+int main ( ) {
+    const float EPS = 0.0001;   // tolerancia para comparar reales
+    float examen, trabajo, test, nota;
+
+    cout &lt;&lt; &quot;Nota del examen, del trabajo y del test: &quot;;
+    cin &gt;&gt; examen &gt;&gt; trabajo &gt;&gt; test;
+    nota = examen * 0.5 + trabajo * 0.3 + test * 0.2;
+
+    if (nota &lt; 5) {
+        cout &lt;&lt; &quot;Suspenso&quot; &lt;&lt; endl;
+    } else if (nota &lt; 7) {
+        cout &lt;&lt; &quot;Aprobado&quot; &lt;&lt; endl;
+    } else if (nota &lt; 9) {
+        cout &lt;&lt; &quot;Notable&quot; &lt;&lt; endl;
+    } else if (fabs (nota - 10) &gt; EPS) {   // 9 &lt;= nota &lt; 10
+        cout &lt;&lt; &quot;Sobresaliente&quot; &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;Matrícula&quot; &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Nota del examen, del trabajo y del test: 10 10 10
+Matrícula</code></pre></div></div></details></div></article></div></section></section><section class="tema guide" id="p4"><header class="tema-head"><p class="eyebrow">Práctica 4</p><h2>Productos de tipos y subprogramas</h2><p class="lede">struct, acciones (void) con parámetros por valor y por referencia, funciones y léxico local.</p></header><section class="topic" id="p4-1"><h3><span class="tnum">4.1</span><span>struct, acciones y funciones</span></h3><div class="prose"><div class="pair"><div class="codeblk sp"><p class="code-t">Notación</p><pre><code class="lang-sp">Punto = TIPO &lt; abscisa, ordenada : Real &gt;;
+Cuadrado = TIPO &lt; p1, p2, p3, p4 : Punto &gt;;
+Intercambio : acción (dato–resultado a, b : Real);
+Mayor : función (a, b : Real) → Real;</code></pre></div><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">struct Punto {
+    float abscisa, ordenada;
+};
+struct Cuadrado {
+    Punto p1, p2, p3, p4;
+};
+void Intercambio (float &amp;a, float &amp;b);
+float Mayor (float a, float b);</code></pre></div></div><ul><li>Acceso a campos con punto, encadenable: <code>c.p3.abscisa = c.p3.abscisa * 2;</code> (el boletín escribe «abcisa» en la definición y «abscisa» en el uso: tienen que coincidir).</li><li>Faltan los <code>;</code> tras las llaves de cada <code>struct</code> en el boletín: <code>struct Punto { … };</code>.</li><li><b>Acción</b> = <code>void</code> + nombre + parámetros. Parámetro <b>dato</b> = por <b>valor</b> (<code>float a</code>); <b>dato–resultado</b> y <b>resultado</b> = por <b>referencia</b> (<code>float &amp;a</code>).</li><li><b>Función</b> = tipo del resultado + nombre + parámetros por valor; devuelve con <code>return</code>. Puede devolver escalares o structs (un Punto, una Fecha…).</li><li>Los tipos que usan varias funciones se declaran en el <b>léxico global</b>, antes de ellas.</li></ul></div></section><section class="topic" id="p4-2"><h3><span class="tnum">4.2</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p4" id="e-p4a"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Fecha del día siguiente con struct</span></span><span class="card-tools"><label class="done" for="d-p4a"><input data-key="p4a" id="d-p4a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Reescribe «la fecha del día siguiente» definiendo un tipo Fecha con el producto de tipos.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Además del tipo, se aprovecha para separar dos subprogramas: la función <code>DiasMes</code> y la función <code>DiaSiguiente</code>, que recibe una Fecha y <b>devuelve</b> otra (las funciones pueden devolver structs).</p><div class="codeblk"><p class="code-t">C++ · fecha.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Fecha {
+    int dia, mes, anyo;
+};
+
+/* Pre: 1 &lt;= mes &lt;= 12.  Post: días del mes en un año no bisiesto */
+int DiasMes (int mes)
+{
+    int d;
+    switch (mes) {
+        case 4: case 6: case 9: case 11: d = 30; break;
+        case 2:                          d = 28; break;
+        default:                         d = 31; break;
+    }
+    return d;
+}
+
+/* Pre: f es una fecha válida de un año no bisiesto.  Post: devuelve la fecha del día siguiente */
+Fecha DiaSiguiente (Fecha f)
+{
+    if (f.dia &lt; DiasMes (f.mes)) {
+        f.dia = f.dia + 1;
+    } else if (f.mes &lt; 12) {
+        f.dia = 1;
+        f.mes = f.mes + 1;
+    } else {
+        f.dia = 1;
+        f.mes = 1;
+        f.anyo = f.anyo + 1;
+    }
+    return f;
+}
+
+int main ( ) {
+    Fecha hoy, manyana;
+
+    cout &lt;&lt; &quot;Fecha (día mes año): &quot;;
+    cin &gt;&gt; hoy.dia &gt;&gt; hoy.mes &gt;&gt; hoy.anyo;
+    manyana = DiaSiguiente (hoy);
+    cout &lt;&lt; manyana.dia &lt;&lt; &quot; &quot; &lt;&lt; manyana.mes &lt;&lt; &quot; &quot; &lt;&lt; manyana.anyo &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Fecha (día mes año): 28 2 2023
+1 3 2023</code></pre></div></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4b"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Identificar elementos, predecir la salida y modificarla</span></span><span class="card-tools"><label class="done" for="d-p4b"><input data-key="p4b" id="d-p4b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>En el listado con <code>BinDec</code> e <code>Intercambio</code>: identifica acciones, parámetros dato y dato–resultado, formales y reales; ponles pre y postcondición; predice la salida sin ejecutar y modifícalo para que escriba «CBA», 13 y 0.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="tablewrap"><table class=""><thead><tr><th>Elemento</th><th>En el listado</th></tr></thead><tbody><tr><td>Acciones</td><td><code>BinDec</code> e <code>Intercambio</code></td></tr><tr><td>Parámetros dato (valor)</td><td><code>b1, b2, b3, b4</code> de BinDec</td></tr><tr><td>Parámetros dato–resultado / resultado (referencia)</td><td><code>a, b</code> de Intercambio (dato–resultado); <code>dec</code> de BinDec (resultado)</td></tr><tr><td>Parámetros formales</td><td><code>b1, b2, b3, b4, dec</code> y <code>a, b</code></td></tr><tr><td>Parámetros reales (argumentos)</td><td><code>(x, y)</code>, <code>(y, z)</code>, <code>(b1, b2, b1, b2, decimal1)</code>, <code>(0, 1, b1, b1, decimal2)</code></td></tr></tbody></table></div><p>Pre/post: <code>BinDec</code> — Pre {b1…b4 ∈ {0, 1}}, Post {dec = b1 + 2·b2 + 4·b3 + 8·b4}; <code>Intercambio</code> — Pre {a = A, b = B}, Post {a = B, b = A}. Ojo: los parámetros <code>b1, b2</code> de BinDec <b>enmascaran</b> a las variables <code>b1, b2</code> de main (máxima localidad): son otras variables.</p><h4>Predicción</h4><ol class="steps"><li>(x, y, z) = ('O', 'P', 'Q') → Intercambio (x, y) → ('P', 'O', 'Q') → Intercambio (y, z) → ('P', 'Q', 'O'): «<b>PQO</b>».</li><li>BinDec (0, 1, 0, 1): 0 + 2 + 0 + 8 = <b>10</b>.</li><li>BinDec (0, 1, 0, 0): 0 + 2 + 0 + 0 = <b>2</b>.</li></ol><h4>Modificación</h4><p>Las dos llamadas a Intercambio convierten (a, b, c) en (b, c, a); para obtener (C, B, A) hay que empezar con x = 'A', y = 'C', z = 'B'. 13 = 1101₂ → dec = 1·1 + 0·2 + 1·4 + 1·8: argumentos (1, 0, 1, 1) = <code>(b2, b1, b2, b2)</code>. Y 0 con todo ceros. (Otra opción válida: dejar 'A', 'B', 'C' y llamar sólo a <code>Intercambio (x, z)</code>.)</p><div class="codeblk"><p class="code-t">C++ · acciones.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+/* Pre: b1, b2, b3, b4 valen 0 o 1.  Post: dec = b1 + 2·b2 + 4·b3 + 8·b4 */
+void BinDec (int b1, int b2, int b3, int b4, int&amp; dec)
+{
+    dec = b1*1 + b2*2 + b3*4 + b4*8;
+}
+
+/* Pre: a = A, b = B.  Post: a = B, b = A */
+void Intercambio (char&amp; a, char&amp; b)
+{
+    char aux;
+    aux = a;
+    a = b;
+    b = aux;
+}
+
+int main( ) {
+    int b1, b2, decimal1, decimal2;
+    char x, y, z;
+    b1 = 0;
+    b2 = 1;
+    x = &#x27;A&#x27;;                         // antes &#x27;O&#x27;
+    y = &#x27;C&#x27;;                         // antes &#x27;P&#x27;
+    z = &#x27;B&#x27;;                         // antes &#x27;Q&#x27;
+    Intercambio (x, y);              // x=&#x27;C&#x27;, y=&#x27;A&#x27;, z=&#x27;B&#x27;
+    Intercambio (y, z);              // x=&#x27;C&#x27;, y=&#x27;B&#x27;, z=&#x27;A&#x27;
+    BinDec (b2, b1, b2, b2, decimal1);   // 1 + 0 + 4 + 8 = 13
+    BinDec (0, b1, b1, b1, decimal2);    // 0
+    cout &lt;&lt; &quot;El valor de las variables x, y, z es: &quot; &lt;&lt; x &lt;&lt; y &lt;&lt; z &lt;&lt; endl;
+    cout &lt;&lt; &quot;El valor del número 1 es: &quot; &lt;&lt; decimal1 &lt;&lt; endl;
+    cout &lt;&lt; &quot;El valor del número 2 es: &quot; &lt;&lt; decimal2 &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>El valor de las variables x, y, z es: CBA
+El valor del número 1 es: 13
+El valor del número 2 es: 0</code></pre></div></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Acción de división entera y desglose</span></span><span class="card-tools"><label class="done" for="d-p4c"><input data-key="p4c" id="d-p4c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Diseña una acción que reciba dividendo y divisor y devuelva cociente y resto; úsala para el desglose de dinero.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk sp"><p class="code-t">Notación SP</p><pre><code class="lang-sp">DivisionEntera : acción (dato dividendo, divisor : Entero;
+                         resultado cociente, resto : Entero)
+  PRE { dividendo ≥ 0, divisor &gt; 0 }
+  POST { dividendo = divisor · cociente + resto, 0 ≤ resto &lt; divisor }
+  ALGORITMO
+    cociente ← dividendo DIV divisor;
+    resto ← dividendo MOD divisor
+  FIN;
+…
+DivisionEntera (cantidad, 500, quinientos, resto);
+DivisionEntera (resto, 100, cien, resto);   // resto es dato y resultado a la vez
+…</code></pre></div><div class="codeblk"><p class="code-t">C++ · division.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+/* Pre: dividendo &gt;= 0, divisor &gt; 0
+   Post: dividendo = divisor * cociente + resto, 0 &lt;= resto &lt; divisor */
+void DivisionEntera (int dividendo, int divisor, int &amp;cociente, int &amp;resto)
+{
+    cociente = dividendo / divisor;
+    resto = dividendo % divisor;
+}
+
+int main ( ) {
+    int cantidad, resto;
+    int quinientos, cien, cincuenta, veinte, diez, cinco;
+
+    cout &lt;&lt; &quot;Cantidad en euros: &quot;;
+    cin &gt;&gt; cantidad;
+    DivisionEntera (cantidad, 500, quinientos, resto);
+    DivisionEntera (resto, 100, cien, resto);
+    DivisionEntera (resto, 50, cincuenta, resto);
+    DivisionEntera (resto, 20, veinte, resto);
+    DivisionEntera (resto, 10, diez, resto);
+    DivisionEntera (resto, 5, cinco, resto);
+    cout &lt;&lt; quinientos &lt;&lt; &quot; de 500, &quot; &lt;&lt; cien &lt;&lt; &quot; de 100, &quot; &lt;&lt; cincuenta &lt;&lt; &quot; de 50, &quot;
+         &lt;&lt; veinte &lt;&lt; &quot; de 20, &quot; &lt;&lt; diez &lt;&lt; &quot; de 10, &quot; &lt;&lt; cinco &lt;&lt; &quot; de 5 y &quot;
+         &lt;&lt; resto &lt;&lt; &quot; en monedas&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Cantidad en euros: 1789
+3 de 500, 2 de 100, 1 de 50, 1 de 20, 1 de 10, 1 de 5 y 4 en monedas</code></pre></div><p>En <code>DivisionEntera (resto, 100, cien, resto)</code> el primer argumento se copia (valor) antes de que el último (referencia) lo modifique, así que funciona.</p></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4d"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Max3 por composición funcional</span></span><span class="card-tools"><label class="done" for="d-p4d"><input data-key="p4d" id="d-p4d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Con la función <code>Max2</code> dada, construye <code>Max3</code> mediante composición funcional.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>El resultado de una función es un valor que puede ser argumento de otra: <code>Max3 = Max2 (a, Max2 (b, c))</code>.</p><div class="codeblk"><p class="code-t">C++ · max3.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int Max2 (int a, int b)
+{
+    int mayor;
+    if (a &gt; b) {
+        mayor = a; }
+    else {
+        mayor = b; }
+    return mayor;
+}
+
+/* Post: devuelve el mayor de a, b y c (composición funcional) */
+int Max3 (int a, int b, int c)
+{
+    return Max2 (a, Max2 (b, c));
+}
+
+int main ( ) {
+    int x, y, z;
+    cout &lt;&lt; &quot;Tres enteros: &quot;;
+    cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+    cout &lt;&lt; &quot;El máximo es &quot; &lt;&lt; Max3 (x, y, z) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Tres enteros: 6 3 5
+El máximo es 6</code></pre></div></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4e"><div class="card-head"><span class="card-num">Problema 5 <span class="card-title">· Perímetro de un triángulo</span></span><span class="card-tools"><label class="done" for="d-p4e"><input data-key="p4e" id="d-p4e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Identifica en el listado el tipo, la función, las variables, los parámetros y las llamadas. Después define Punto y Triangulo, una acción que lea un triángulo (parámetro resultado), una función Distancia y un algoritmo que calcule el perímetro.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>En el listado: tipo <code>Punto</code>; función <code>sqr</code> (parámetro formal <code>x</code>); variables <code>p1, p2</code> (Punto) y <code>distancia</code>; llamadas <code>sqr (p1.abscisa − p2.abscisa)</code> y <code>sqr (p1.ordenada − p2.ordenada)</code> (esas expresiones son los parámetros reales), además de <code>sqrt</code> de <code>&lt;cmath&gt;</code>. Problema: <code>struct Punto</code> está <b>dentro de main</b>, así que no se puede usar en funciones definidas fuera: hay que sacarlo al léxico global.</p><p>Fórmula: <span class="fx">d = √((x1 − x2)² + (y1 − y2)²)</span>. Perímetro = d(A, B) + d(B, C) + d(C, A).</p><div class="codeblk"><p class="code-t">C++ · perimetro.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+struct Punto {
+    float abscisa, ordenada;
+};
+struct Triangulo {
+    Punto a, b, c;      // vértices
+};
+
+/* Post: devuelve el cuadrado de x */
+float sqr (float x)
+{
+    return x * x;
+}
+
+/* Post: devuelve la distancia entre p y q */
+float Distancia (Punto p, Punto q)
+{
+    return sqrt (sqr (p.abscisa - q.abscisa) + sqr (p.ordenada - q.ordenada));
+}
+
+/* Post: lee un punto de la entrada estándar */
+void LeerPunto (Punto &amp;p)
+{
+    cout &lt;&lt; &quot;  abscisa: &quot;;   cin &gt;&gt; p.abscisa;
+    cout &lt;&lt; &quot;  ordenada: &quot;;  cin &gt;&gt; p.ordenada;
+}
+
+/* Post: t contiene el triángulo leído de la entrada (parámetro resultado) */
+void LeerTriangulo (Triangulo &amp;t)
+{
+    cout &lt;&lt; &quot;Vértice A&quot; &lt;&lt; endl;  LeerPunto (t.a);
+    cout &lt;&lt; &quot;Vértice B&quot; &lt;&lt; endl;  LeerPunto (t.b);
+    cout &lt;&lt; &quot;Vértice C&quot; &lt;&lt; endl;  LeerPunto (t.c);
+}
+
+float Perimetro (Triangulo t)
+{
+    return Distancia (t.a, t.b) + Distancia (t.b, t.c) + Distancia (t.c, t.a);
+}
+
+int main ( ) {
+    Triangulo t;
+    LeerTriangulo (t);
+    cout &lt;&lt; &quot;El perímetro es &quot; &lt;&lt; Perimetro (t) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Vértice A
+  abscisa: 0
+  ordenada: 0
+Vértice B
+  abscisa: 3
+  ordenada: 0
+Vértice C
+  abscisa: 0
+  ordenada: 4
+El perímetro es 12</code></pre></div><p>Triángulo rectángulo 3‑4‑5: 3 + 5 + 4 = 12.</p></div></details></div></article></div></section><section class="topic" id="p4-3"><h3><span class="tnum">4.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p4" id="e-p4f"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· El programa lleno de errores</span></span><span class="card-tools"><label class="done" for="d-p4f"><input data-key="p4f" id="d-p4f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Área y perímetro de un rectángulo y área y diámetro de un círculo. Encuentra sobre el papel los errores sintácticos, semánticos y lógicos y corrígelos.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="tablewrap"><table class=""><thead><tr><th>Error</th><th>Tipo</th><th>Corrección</th></tr></thead><tbody><tr><td><code>arearec</code> y <code>areacir</code> se declaran <code>float</code> pero no devuelven nada</td><td>Semántico</td><td>Calculan dos resultados: son <b>acciones</b> → <code>void</code></td></tr><tr><td><code>area</code>, <code>perimetro</code> pasados por valor en arearec</td><td>Lógico</td><td>Son resultados: <code>float &amp;area, float &amp;perimetro</code></td></tr><tr><td><code>&amp; area, &amp;diametro</code> sin tipo</td><td>Sintáctico</td><td><code>float &amp;area, float &amp;diametro</code></td></tr><tr><td><code>cinlen</code>, <code>cinin</code>, <code>ci</code></td><td>Sintáctico</td><td><code>cin</code></td></tr><tr><td><code>cout &gt;&gt;</code> y <code>cinin &lt;&lt;</code></td><td>Sintáctico</td><td><code>cout &lt;&lt;</code> y <code>cin &gt;&gt;</code></td></tr><tr><td><code>)</code> sobrante en el segundo mensaje y <code>;</code> que falta tras <code>areacir (…)</code></td><td>Sintáctico</td><td>Quitar / añadir</td></tr><tr><td><code>Dato1</code> declarado, <code>dato1</code> usado; <code>Resul</code> declarado, <code>Resul1</code> / <code>resul1</code> usados</td><td>Sintáctico (mayúsculas)</td><td>Nombres coherentes</td></tr><tr><td><code>area</code> y <code>perimetro</code> usados en main sin declarar</td><td>Sintáctico</td><td>Variables propias de main</td></tr><tr><td>Se asigna el resultado de una acción (<code>Resul1 = arearec (…)</code>)</td><td>Semántico</td><td>Llamarla como instrucción</td></tr><tr><td>El radio se lee en <code>dato2</code> y los resultados del círculo se guardan en las mismas variables que los del rectángulo antes de escribir estos</td><td>Lógico</td><td>Variables distintas para cada resultado</td></tr><tr><td>Se escribe <code>resul2</code> como área del círculo y como diámetro</td><td>Lógico</td><td>Escribir cada valor en su sitio</td></tr></tbody></table></div><div class="codeblk"><p class="code-t">C++ · corregido</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const float PI = 3.1416;
+
+/* Pre: lado1, lado2 &gt; 0.  Post: área y perímetro del rectángulo */
+void AreaRec (float lado1, float lado2, float &amp;area, float &amp;perimetro)
+{
+    area = lado1 * lado2;
+    perimetro = 2 * (lado1 + lado2);
+}
+
+/* Pre: radio &gt; 0.  Post: área y diámetro del círculo */
+void AreaCir (float radio, float &amp;area, float &amp;diametro)
+{
+    area = radio * radio * PI;
+    diametro = 2 * radio;
+}
+
+int main( ) {
+    float lado1, lado2, radio;        /* datos de entrada */
+    float areaR, perimR, areaC, diam; /* datos de salida */
+
+    cout &lt;&lt; &quot;Introduce la longitud de un lado: &quot;;
+    cin &gt;&gt; lado1;
+    cout &lt;&lt; &quot;Introduce la longitud del otro lado: &quot;;
+    cin &gt;&gt; lado2;
+    AreaRec (lado1, lado2, areaR, perimR);
+    cout &lt;&lt; &quot;Introduce el radio del círculo: &quot;;
+    cin &gt;&gt; radio;
+    AreaCir (radio, areaC, diam);
+    cout &lt;&lt; &quot;El área del rectángulo es &quot; &lt;&lt; areaR &lt;&lt; &quot; y el perímetro &quot; &lt;&lt; perimR &lt;&lt; endl;
+    cout &lt;&lt; &quot;El área del círculo es &quot; &lt;&lt; areaC &lt;&lt; &quot; y el diámetro &quot; &lt;&lt; diam &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Introduce la longitud de un lado: 3
+Introduce la longitud del otro lado: 4
+Introduce el radio del círculo: 1
+El área del rectángulo es 12 y el perímetro 14
+El área del círculo es 3.1416 y el diámetro 2</code></pre></div><p>3 × 4: área 12, perímetro 14. Radio 1: área 3.1416, diámetro 2. Como dice el boletín: corrige sobre el papel; cambiar cosas al azar hasta que compile no hace un programa correcto.</p></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4g"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Clasificación energética de una lavadora</span></span><span class="card-tools"><label class="done" for="d-p4g"><input data-key="p4g" id="d-p4g" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Define el tipo Lavadora (marca, año, peso, motor inverter o convencional, consumo por ciclo en kWh, duración del ciclo en minutos), una acción que la lea (sólo valores escalares), una acción que devuelva el consumo por minuto y la eficiencia relativa, una función con la etiqueta (A: &lt; 0.5 e inverter; B: [0.5, 0.8); C: [0.8, 1.2); D: ≥ 1.2) y el algoritmo principal.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>El tipo de motor tiene dos valores: un <code>bool inverter</code>. La acción de lectura lee un carácter (I/C) y lo convierte. Los indicadores son dos resultados → una acción con dos parámetros por referencia; la etiqueta es un único valor → una función que devuelve <code>char</code>.</p><div class="box warn"><p class="box-t">Un caso que el enunciado no cubre</p><p>Una lavadora con consumo &lt; 0.5 y motor <b>convencional</b> no cumple la A ni entra en el intervalo de la B. Es justo el error de <b>cobertura</b> del análisis de casos del tema 1. Aquí se ha decidido darle la B (no puede ser A, y consume menos que el límite de la B); indícalo en tu solución si eliges otra cosa.</p></div><div class="codeblk"><p class="code-t">C++ · lavadora.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Lavadora {
+    string marca;
+    int anyo;              // año de fabricación
+    float peso;            // kg
+    bool inverter;         // true: inverter, false: convencional
+    float consumo;         // kWh por ciclo
+    int duracion;          // minutos del ciclo estándar
+};
+
+/* Post: l contiene la lavadora leída (sólo se leen valores escalares) */
+void LeerLavadora (Lavadora &amp;l)
+{
+    char motor;
+    cout &lt;&lt; &quot;Marca: &quot;;                          cin &gt;&gt; l.marca;
+    cout &lt;&lt; &quot;Año de fabricación: &quot;;             cin &gt;&gt; l.anyo;
+    cout &lt;&lt; &quot;Peso (kg): &quot;;                      cin &gt;&gt; l.peso;
+    cout &lt;&lt; &quot;Motor (I = inverter, C = convencional): &quot;;  cin &gt;&gt; motor;
+    l.inverter = (motor == &#x27;I&#x27;) || (motor == &#x27;i&#x27;);
+    cout &lt;&lt; &quot;Consumo por ciclo (kWh): &quot;;        cin &gt;&gt; l.consumo;
+    cout &lt;&lt; &quot;Duración del ciclo (min): &quot;;       cin &gt;&gt; l.duracion;
+}
+
+/* Pre: l.duracion &gt; 0, l.consumo &gt; 0
+   Post: consumoMin = l.consumo / l.duracion, eficiencia = 1 / consumoMin */
+void Indicadores (Lavadora l, float &amp;consumoMin, float &amp;eficiencia)
+{
+    consumoMin = l.consumo / l.duracion;
+    eficiencia = 1 / consumoMin;
+}
+
+/* Post: etiqueta energética de l (&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27; o &#x27;D&#x27;) */
+char Etiqueta (Lavadora l)
+{
+    char e;
+    if (l.consumo &lt; 0.5 &amp;&amp; l.inverter) {
+        e = &#x27;A&#x27;;
+    } else if (l.consumo &lt; 0.8) {      // incluye &lt; 0.5 sin inverter (caso no cubierto por el enunciado)
+        e = &#x27;B&#x27;;
+    } else if (l.consumo &lt; 1.2) {
+        e = &#x27;C&#x27;;
+    } else {
+        e = &#x27;D&#x27;;
+    }
+    return e;
+}
+
+int main ( ) {
+    Lavadora lav;
+    float consumoMin, eficiencia;
+
+    LeerLavadora (lav);
+    Indicadores (lav, consumoMin, eficiencia);
+    cout &lt;&lt; &quot;Marca: &quot; &lt;&lt; lav.marca &lt;&lt; endl;
+    cout &lt;&lt; &quot;Etiqueta energética: &quot; &lt;&lt; Etiqueta (lav) &lt;&lt; endl;
+    cout &lt;&lt; &quot;Consumo por minuto: &quot; &lt;&lt; consumoMin &lt;&lt; &quot; kWh/min&quot; &lt;&lt; endl;
+    cout &lt;&lt; &quot;Eficiencia relativa: &quot; &lt;&lt; eficiencia &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Marca: Bosch
+Año de fabricación: 2023
+Peso (kg): 70.5
+Motor (I = inverter, C = convencional): I
+Consumo por ciclo (kWh): 0.6
+Duración del ciclo (min): 60
+Marca: Bosch
+Etiqueta energética: B
+Consumo por minuto: 0.01 kWh/min
+Eficiencia relativa: 100</code></pre></div><p>Con el ejemplo del enunciado (0.6 kWh en 60 min): 0.01 kWh/min y eficiencia 100, etiqueta B.</p></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4h"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Autonomía de una bicicleta eléctrica</span></span><span class="card-tools"><label class="done" for="d-p4h"><input data-key="p4h" id="d-p4h" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Tipo Bicicleta (marca, freno de disco o de llanta, año, peso, autonomía en km, tiempo de carga en minutos), acción de lectura, acción con velocidad de recarga (autonomía / tiempo de carga) y autonomía por kg (autonomía / peso), función con la etiqueta (A ≥ 100; M 60–99; B 30–59; L &lt; 30) y algoritmo principal.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Misma estructura que la lavadora. Si la autonomía es real, los intervalos «60–99» y «30–59» dejan huecos (¿99.5 km?): comparando sólo con el límite inferior en una cadena de <code>else if</code> se cubre todo el dominio sin solapes.</p><div class="codeblk"><p class="code-t">C++ · bici.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Bicicleta {
+    string marca;
+    bool disco;            // true: freno de disco, false: de llanta
+    int anyo;
+    float peso;            // kg
+    float autonomia;       // km
+    float tiempoCarga;     // minutos
+};
+
+void LeerBicicleta (Bicicleta &amp;b)
+{
+    char freno;
+    cout &lt;&lt; &quot;Marca: &quot;;                               cin &gt;&gt; b.marca;
+    cout &lt;&lt; &quot;Freno (D = disco, L = llanta): &quot;;       cin &gt;&gt; freno;
+    b.disco = (freno == &#x27;D&#x27;) || (freno == &#x27;d&#x27;);
+    cout &lt;&lt; &quot;Año de fabricación: &quot;;                  cin &gt;&gt; b.anyo;
+    cout &lt;&lt; &quot;Peso (kg): &quot;;                           cin &gt;&gt; b.peso;
+    cout &lt;&lt; &quot;Autonomía (km): &quot;;                      cin &gt;&gt; b.autonomia;
+    cout &lt;&lt; &quot;Tiempo de carga (min): &quot;;               cin &gt;&gt; b.tiempoCarga;
+}
+
+/* Pre: b.tiempoCarga &gt; 0, b.peso &gt; 0 */
+void Indicadores (Bicicleta b, float &amp;velRecarga, float &amp;autonomiaKg)
+{
+    velRecarga = b.autonomia / b.tiempoCarga;
+    autonomiaKg = b.autonomia / b.peso;
+}
+
+char Etiqueta (Bicicleta b)
+{
+    char e;
+    if (b.autonomia &gt;= 100) {
+        e = &#x27;A&#x27;;
+    } else if (b.autonomia &gt;= 60) {
+        e = &#x27;M&#x27;;
+    } else if (b.autonomia &gt;= 30) {
+        e = &#x27;B&#x27;;
+    } else {
+        e = &#x27;L&#x27;;
+    }
+    return e;
+}
+
+int main ( ) {
+    Bicicleta bici;
+    float velRecarga, autonomiaKg;
+
+    LeerBicicleta (bici);
+    Indicadores (bici, velRecarga, autonomiaKg);
+    cout &lt;&lt; &quot;Marca: &quot; &lt;&lt; bici.marca &lt;&lt; endl;
+    cout &lt;&lt; &quot;Etiqueta de autonomía: &quot; &lt;&lt; Etiqueta (bici) &lt;&lt; endl;
+    cout &lt;&lt; &quot;Velocidad de recarga: &quot; &lt;&lt; velRecarga &lt;&lt; &quot; km/min&quot; &lt;&lt; endl;
+    cout &lt;&lt; &quot;Autonomía por kg: &quot; &lt;&lt; autonomiaKg &lt;&lt; &quot; km/kg&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Marca: Orbea
+Freno (D = disco, L = llanta): D
+Año de fabricación: 2024
+Peso (kg): 25
+Autonomía (km): 80
+Tiempo de carga (min): 40
+Marca: Orbea
+Etiqueta de autonomía: M
+Velocidad de recarga: 2 km/min
+Autonomía por kg: 3.2 km/kg</code></pre></div><p>Ejemplo del enunciado: 80 km, 40 min, 25 kg → 2 km/min y 3.2 km/kg, etiqueta M.</p></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4i"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Rectángulos: validez y contención</span></span><span class="card-tools"><label class="done" for="d-p4i"><input data-key="p4i" id="d-p4i" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Tipo Punto y tipo Rectángulo (esquina superior izquierda e inferior derecha); acción de lectura; función que diga si es válido; acción que diga si r2 está contenido en r1 y devuelva la diferencia de áreas; algoritmo principal.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Se toma el plano con el eje y hacia arriba: «por encima y a la izquierda» es <code>supIzq.x &lt; infDer.x</code> y <code>supIzq.y &gt; infDer.y</code>. r2 está dentro de r1 si sus dos esquinas están dentro de los límites de r1. La diferencia de áreas es el valor absoluto de la resta (área mayor − menor).</p><div class="codeblk"><p class="code-t">C++ · rectangulos.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+struct Punto {
+    float x, y;
+};
+struct Rectangulo {
+    Punto supIzq, infDer;   // esquina superior izquierda e inferior derecha
+};
+
+void LeerRectangulo (Rectangulo &amp;r)
+{
+    cout &lt;&lt; &quot;Esquina superior izquierda (x y): &quot;;  cin &gt;&gt; r.supIzq.x &gt;&gt; r.supIzq.y;
+    cout &lt;&lt; &quot;Esquina inferior derecha (x y): &quot;;    cin &gt;&gt; r.infDer.x &gt;&gt; r.infDer.y;
+}
+
+/* Post: Verdadero si supIzq está por encima y a la izquierda de infDer (eje y hacia arriba) */
+bool EsValido (Rectangulo r)
+{
+    return (r.supIzq.x &lt; r.infDer.x) &amp;&amp; (r.supIzq.y &gt; r.infDer.y);
+}
+
+float Area (Rectangulo r)
+{
+    return (r.infDer.x - r.supIzq.x) * (r.supIzq.y - r.infDer.y);
+}
+
+/* Pre: r1 y r2 válidos
+   Post: contenido = r2 está dentro de r1; difArea = área mayor − área menor */
+void Relacion (Rectangulo r1, Rectangulo r2, bool &amp;contenido, float &amp;difArea)
+{
+    contenido = (r2.supIzq.x &gt;= r1.supIzq.x) &amp;&amp; (r2.infDer.x &lt;= r1.infDer.x)
+             &amp;&amp; (r2.supIzq.y &lt;= r1.supIzq.y) &amp;&amp; (r2.infDer.y &gt;= r1.infDer.y);
+    difArea = fabs (Area (r1) - Area (r2));
+}
+
+int main ( ) {
+    Rectangulo r1, r2;
+    bool contenido;
+    float dif;
+
+    cout &lt;&lt; &quot;Rectángulo 1&quot; &lt;&lt; endl;  LeerRectangulo (r1);
+    cout &lt;&lt; &quot;Rectángulo 2&quot; &lt;&lt; endl;  LeerRectangulo (r2);
+    if (EsValido (r1)) { cout &lt;&lt; &quot;El rectángulo 1 es válido&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;El rectángulo 1 no es válido&quot; &lt;&lt; endl; }
+    if (EsValido (r2)) { cout &lt;&lt; &quot;El rectángulo 2 es válido&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;El rectángulo 2 no es válido&quot; &lt;&lt; endl; }
+    if (EsValido (r1) &amp;&amp; EsValido (r2)) {
+        Relacion (r1, r2, contenido, dif);
+        if (contenido) { cout &lt;&lt; &quot;El segundo está contenido en el primero&quot; &lt;&lt; endl; }
+        else { cout &lt;&lt; &quot;El segundo no está contenido en el primero&quot; &lt;&lt; endl; }
+        cout &lt;&lt; &quot;Diferencia de áreas: &quot; &lt;&lt; dif &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Rectángulo 1
+Esquina superior izquierda (x y): 0 10
+Esquina inferior derecha (x y): 10 0
+Rectángulo 2
+Esquina superior izquierda (x y): 2 8
+Esquina inferior derecha (x y): 5 3
+El rectángulo 1 es válido
+El rectángulo 2 es válido
+El segundo está contenido en el primero
+Diferencia de áreas: 85</code></pre></div><p>r1 = (0, 10)–(10, 0), área 100; r2 = (2, 8)–(5, 3), área 15: contenido, diferencia 85.</p></div></details></div></article><article class="card ex" data-tema="p4" id="e-p4j"><div class="card-head"><span class="card-num">Problema 5 <span class="card-title">· Circunferencias: perímetro e intersección</span></span><span class="card-tools"><label class="done" for="d-p4j"><input data-key="p4j" id="d-p4j" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Tipos Punto y Circunferencia; acción de lectura; función con el perímetro (2·π·r); acción que diga si dos circunferencias intersecan; algoritmo principal.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Dos <b>circunferencias</b> (las curvas) tienen algún punto en común cuando la distancia d entre centros cumple <span class="fx">|r1 − r2| ≤ d ≤ r1 + r2</span>. Si d &gt; r1 + r2 están separadas; si d &lt; |r1 − r2|, una está dentro de la otra sin tocarse. (Si el enunciado se refiriera a los <i>círculos</i>, bastaría d ≤ r1 + r2.)</p><div class="codeblk"><p class="code-t">C++ · circunferencias.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+const float PI = 3.14159;
+
+struct Punto {
+    float x, y;
+};
+struct Circunferencia {
+    Punto centro;
+    float radio;
+};
+
+void LeerCircunferencia (Circunferencia &amp;c)
+{
+    cout &lt;&lt; &quot;Centro (x y): &quot;;  cin &gt;&gt; c.centro.x &gt;&gt; c.centro.y;
+    cout &lt;&lt; &quot;Radio: &quot;;         cin &gt;&gt; c.radio;
+}
+
+float Perimetro (Circunferencia c)
+{
+    return 2 * PI * c.radio;
+}
+
+/* Post: corta = las dos circunferencias tienen algún punto en común
+         ( |r1 − r2| &lt;= d &lt;= r1 + r2 ) */
+void Intersecan (Circunferencia c1, Circunferencia c2, bool &amp;corta)
+{
+    float dx, dy, d;
+    dx = c1.centro.x - c2.centro.x;
+    dy = c1.centro.y - c2.centro.y;
+    d = sqrt (dx * dx + dy * dy);
+    corta = (d &lt;= c1.radio + c2.radio) &amp;&amp; (d &gt;= fabs (c1.radio - c2.radio));
+}
+
+int main ( ) {
+    Circunferencia c1, c2;
+    bool corta;
+
+    cout &lt;&lt; &quot;Circunferencia 1&quot; &lt;&lt; endl;  LeerCircunferencia (c1);
+    cout &lt;&lt; &quot;Circunferencia 2&quot; &lt;&lt; endl;  LeerCircunferencia (c2);
+    cout &lt;&lt; &quot;Perímetro de la 1: &quot; &lt;&lt; Perimetro (c1) &lt;&lt; endl;
+    cout &lt;&lt; &quot;Perímetro de la 2: &quot; &lt;&lt; Perimetro (c2) &lt;&lt; endl;
+    Intersecan (c1, c2, corta);
+    if (corta) { cout &lt;&lt; &quot;Las circunferencias intersecan&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;Las circunferencias no intersecan&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Circunferencia 1
+Centro (x y): 0 0
+Radio: 5
+Circunferencia 2
+Centro (x y): 8 0
+Radio: 4
+Perímetro de la 1: 31.4159
+Perímetro de la 2: 25.1327
+Las circunferencias intersecan</code></pre></div><p>Centros a distancia 8, radios 5 y 4: 1 ≤ 8 ≤ 9 → intersecan.</p></div></details></div></article></div></section></section><section class="tema guide" id="p5"><header class="tema-head"><p class="eyebrow">Práctica 5</p><h2>Iteraciones</h2><p class="lede">while, do–while y for frente a MIENTRAS, REPETIR, ITERAR y RECORRIENDO; recorridos, búsquedas, sucesiones y series.</p></header><section class="topic" id="p5-1"><h3><span class="tnum">5.1</span><span>Las composiciones iterativas en C++</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Notación</th><th>C++</th></tr></thead><tbody><tr><td><code>MIENTRAS cond HACER S FIN_MIENTRAS</code></td><td><code>while (cond) { S; }</code></td></tr><tr><td><code>REPETIR S HASTA QUE cond</code></td><td><code>do { S; } while (!(cond));</code></td></tr><tr><td><code>ITERAR S1 DETENER cond S2 FIN_ITERAR</code></td><td><code>S1; while (!(cond)) { S2; S1; }</code></td></tr><tr><td><code>i RECORRIENDO [a, b] HACER S</code></td><td><code>for (i = a; i &lt;= b; i = i + 1) { S; }</code></td></tr><tr><td><code>… EN SENTIDO INVERSO</code></td><td><code>for (i = b; i &gt;= a; i = i - 1) { S; }</code></td></tr></tbody></table></div><p>C++ no tiene ITERAR. Además de la equivalencia de la tabla, se puede escribir como iteración infinita con parada central:</p><div class="codeblk"><p class="code-t">ITERAR con break</p><pre><code class="lang-cpp">do {
+    S1;
+    if (cond) break;      // el boletín pone «then»: en C++ no existe
+    S2;
+} while (true);</code></pre></div><div class="box warn"><p class="box-t">break sólo para esto</p><p>Según el boletín, <code>break</code> sólo se puede usar en este tipo de iteraciones. Usarlo para salir de cualquier otro bucle se considera un <b>grave fallo de concepto</b> y se penaliza.</p></div><p>Los ejemplos del boletín: contar blancos de una línea leyendo con <code>cin.get (c)</code> hasta <code>'\n'</code> (while), contar los términos de la serie armónica hasta superar un límite (do–while) y las potencias de 2 en [x, y] calculando cada una a partir de la anterior (for).</p></div></section><section class="topic" id="p5-2"><h3><span class="tnum">5.2</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p5" id="e-p5a"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Codificar una frase</span></span><span class="card-tools"><label class="done" for="d-p5a"><input data-key="p5a" id="d-p5a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Como la codificación de un carácter de la práctica 3, pero para una frase completa, leyendo carácter a carácter (como en el ejemplo 1).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Se mete la codificación en una función <code>Codificar</code> y se recorre la línea: <code>cin.get</code> antes del bucle (Comenzar) y al final del cuerpo (Avanzar). Con <code>cin &gt;&gt; c</code> no funcionaría: se salta los blancos y el <code>'\n'</code>, así que el bucle no acabaría al final de la línea.</p><div class="codeblk"><p class="code-t">C++ · frase.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+/* Post: devuelve el carácter codificado de c (siguiente del juego, con vuelta; &#x27;*&#x27; si no es letra ni dígito) */
+char Codificar (char c)
+{
+    char cod;
+    if (c == &#x27;Z&#x27;) { cod = &#x27;A&#x27;; }
+    else if (c == &#x27;z&#x27;) { cod = &#x27;a&#x27;; }
+    else if (c == &#x27;9&#x27;) { cod = &#x27;0&#x27;; }
+    else if (((c &gt;= &#x27;A&#x27;) &amp;&amp; (c &lt;= &#x27;Y&#x27;)) || ((c &gt;= &#x27;a&#x27;) &amp;&amp; (c &lt;= &#x27;y&#x27;)) || ((c &gt;= &#x27;0&#x27;) &amp;&amp; (c &lt;= &#x27;8&#x27;))) {
+        cod = char(int(c) + 1);
+    } else { cod = &#x27;*&#x27;; }
+    return cod;
+}
+
+int main( ) {
+    char c;    // carácter actual
+
+    cout &lt;&lt; &quot;Escribe una frase: &quot;;
+    cin.get(c);                          // Comenzar
+    while (c != &#x27;\n&#x27;) {                  // fin de línea
+        cout &lt;&lt; Codificar (c);           // tratamiento
+        cin.get(c);                      // Avanzar
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Escribe una frase: Hola Zoe, son las 9!
+Ipmb*Apf**tpo*mbt*0*</code></pre></div></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5b"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Cociente y resto por restas sucesivas</span></span><span class="card-tools"><label class="done" for="d-p5b"><input data-key="p5b" id="d-p5b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dados x ≥ 0 e y &gt; 0, calcula c = x DIV y y r = x MOD y restando. Al acabar: x = y·c + r con 0 ≤ r &lt; y. ¿Valores iniciales? ¿Actualización? ¿Condición de fin?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Inicial</b>: c ← 0, r ← x (x = y·0 + x: el invariante se cumple).</li><li><b>Cuerpo</b>: r ← r − y; c ← c + 1 (sigue cumpliéndose x = y·c + r).</li><li><b>Continuación</b>: r ≥ y. Al salir r &lt; y y, como sólo se resta cuando r ≥ y, r ≥ 0: postcondición.</li></ul><div class="codeblk"><p class="code-t">C++ · restas.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int x, y;      // dividendo &gt;= 0 y divisor &gt; 0
+    int c, r;      // cociente y resto
+
+    cout &lt;&lt; &quot;Dividendo y divisor: &quot;;
+    cin &gt;&gt; x &gt;&gt; y;
+    c = 0;                       // x = y*0 + x
+    r = x;
+    while (r &gt;= y) {             // Inv: x = y*c + r, r &gt;= 0
+        r = r - y;
+        c = c + 1;
+    }
+    // r &lt; y: x = y*c + r, 0 &lt;= r &lt; y
+    cout &lt;&lt; &quot;Cociente &quot; &lt;&lt; c &lt;&lt; &quot;, resto &quot; &lt;&lt; r &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Dividendo y divisor: 17 5
+Cociente 3, resto 2</code></pre></div></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Cuenta de ahorro</span></span><span class="card-tools"><label class="done" for="d-p5c"><input data-key="p5c" id="d-p5c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>a<sub>0</sub> = 125 y a<sub>n</sub> = a<sub>n−1</sub> + (0.04/12)·a<sub>n−1</sub> + 180. (a) ¿Cuántos meses hay que esperar para tener E euros? (b) ¿Cuánto habrá en el mes M?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>(a) es una <b>búsqueda</b> del primer término ≥ E: no se sabe cuántas vueltas hará → <code>while</code>. (b) es un <b>recorrido</b> de M términos conocidos de antemano → <code>for</code>. En los dos sólo hace falta el término anterior, no toda la sucesión.</p><div class="codeblk"><p class="code-t">C++ · ahorro.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const double INICIAL = 125, INTERES = 0.04, INGRESO = 180;
+    double E, saldo;
+    int n, M, i;
+
+    cout &lt;&lt; &quot;Euros que quieres reunir: &quot;;
+    cin &gt;&gt; E;
+    cout &lt;&lt; &quot;Mes que quieres consultar: &quot;;
+    cin &gt;&gt; M;
+
+    // a) número de meses hasta tener al menos E euros
+    n = 0;
+    saldo = INICIAL;                      // a0
+    while (saldo &lt; E) {
+        n = n + 1;
+        saldo = saldo + (INTERES / 12) * saldo + INGRESO;   // an
+    }
+    cout &lt;&lt; &quot;a) Hay que esperar &quot; &lt;&lt; n &lt;&lt; &quot; meses (saldo &quot; &lt;&lt; saldo &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+
+    // b) saldo del mes M
+    saldo = INICIAL;
+    for (i = 1; i &lt;= M; i = i + 1) {
+        saldo = saldo + (INTERES / 12) * saldo + INGRESO;
+    }
+    cout &lt;&lt; &quot;b) En el mes &quot; &lt;&lt; M &lt;&lt; &quot; habrá &quot; &lt;&lt; saldo &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Euros que quieres reunir: 3000
+Mes que quieres consultar: 12
+a) Hay que esperar 16 meses (saldo 3084.97)
+b) En el mes 12 habrá 2330.14 euros</code></pre></div></div></details></div></article></div></section><section class="topic" id="p5-3"><h3><span class="tnum">5.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p5" id="e-p5d"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Los ejemplos 1 y 2 con la otra composición</span></span><span class="card-tools"><label class="done" for="d-p5d"><input data-key="p5d" id="d-p5d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Resuelve el ejemplo 1 con do–while y el 2 con while. ¿Hacen falta otras composiciones de control para ajustar la semántica?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">C++ · ej1dowhile.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main( ) {
+    int cont;   // Contador de blancos
+    char c;     // Carácter actual
+    cont = 0;
+    do {
+        cin.get(c);
+        if (c == &#x27; &#x27;) {
+            cont = cont + 1;
+        }
+    } while (c != &#x27;\n&#x27;);   // el &#x27;\n&#x27; se «trata», pero no es un blanco: no altera cont
+    cout &lt;&lt; &quot;El número de blancos es : &quot; &lt;&lt; cont &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>a b  c d
+El número de blancos es : 4</code></pre></div><div class="codeblk"><p class="code-t">C++ · ej2while.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main( ) {
+    const int LIMITE = 5;
+    float suma;
+    int cuenta;
+    cuenta = 0;
+    suma = 0;
+    while (suma &lt;= LIMITE) {     // al principio 0 &lt;= LIMITE: entra al menos una vez
+        cuenta = cuenta + 1;
+        suma = suma + 1.0/cuenta;
+    }
+    cout &lt;&lt; &quot;El número de términos es : &quot; &lt;&lt; cuenta &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>El número de términos es : 83</code></pre></div><p><b>No hacen falta</b> en estos dos casos, por suerte: en el 1, el do–while «trata» también el <code>'\n'</code>, pero no es un blanco y no altera el contador; en el 2, la condición es cierta al principio (suma = 0 ≤ 5), así que el while entra al menos una vez, igual que el do–while. En general, pasar de while a do–while exige un <code>if</code> delante (por si no hay que entrar) y al revés, repetir el cuerpo antes del bucle (tema 3, equivalencias).</p></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5e"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· ¿Es primo? (versión mejorada)</span></span><span class="card-tools"><label class="done" for="d-p5e"><input data-key="p5e" id="d-p5e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Mejora el algoritmo de clase: los pares no son primos (salvo el 2) y basta buscar divisores hasta la raíz cuadrada.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Búsqueda del primer divisor impar d con d·d ≤ a. Si no se encuentra (d·d &gt; a), es primo. Se compara <code>d * d &lt;= a</code> para no usar reales (<code>sqrt</code>). El 1 no es primo y el 2 es el único par primo.</p><div class="codeblk"><p class="code-t">C++ · primo.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int a, d;
+    bool primo;
+
+    cout &lt;&lt; &quot;Entero a &gt; 0: &quot;;
+    cin &gt;&gt; a;
+    if (a &lt; 2) {
+        primo = false;                 // 1 no es primo
+    } else if (a % 2 == 0) {
+        primo = (a == 2);              // el único par primo es el 2
+    } else {
+        d = 3;                         // sólo divisores impares hasta la raíz
+        while ((d * d &lt;= a) &amp;&amp; (a % d != 0)) {
+            d = d + 2;
+        }
+        primo = d * d &gt; a;             // no se encontró divisor por debajo de la raíz
+    }
+    if (primo) { cout &lt;&lt; a &lt;&lt; &quot; es primo&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; a &lt;&lt; &quot; no es primo&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Entero a &gt; 0: 97
+97 es primo</code></pre></div><p>Para 97 sólo se prueban 3, 5, 7 y 9 (11² = 121 &gt; 97), frente a 95 divisiones del algoritmo inicial.</p></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5f"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Serie de e<sup>x</sup></span></span><span class="card-tools"><label class="done" for="d-p5f"><input data-key="p5f" id="d-p5f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Suma <span class="fx">eˣ = Σ xⁱ / i!</span> de dos formas: (1) con funciones Factorial y Potencia; (2) calculando cada término a partir del anterior. Termina tras n términos y compara con <code>exp</code>.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Término siguiente a partir del actual: <span class="fx">xⁱ⁺¹ / (i+1)! = (xⁱ / i!) · x / (i + 1)</span>: una multiplicación y una división por vuelta, frente a las i + i que hace la versión 1. Elementos del esquema: inicialización (suma ← 0, término ← 1), tratamiento (suma ← suma + término), avance (término ← término · x / (i + 1)) y parada tras n términos.</p><div class="codeblk"><p class="code-t">C++ · exp.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+
+/* Pre: n &gt;= 0.  Post: n! */
+double Factorial (int n)
+{
+    double f;
+    int i;
+    f = 1;
+    for (i = 2; i &lt;= n; i = i + 1) {
+        f = f * i;
+    }
+    return f;
+}
+
+/* Pre: y &gt;= 0.  Post: x elevado a y */
+double Potencia (double x, int y)
+{
+    double p;
+    int i;
+    p = 1;
+    for (i = 1; i &lt;= y; i = i + 1) {
+        p = p * x;
+    }
+    return p;
+}
+
+int main ( ) {
+    double x, suma1, suma2, termino;
+    int n, i;
+
+    cout &lt;&lt; &quot;x y número de términos n: &quot;;
+    cin &gt;&gt; x &gt;&gt; n;
+
+    // Versión 1: cada término desde cero con las dos funciones
+    suma1 = 0;
+    for (i = 0; i &lt; n; i = i + 1) {
+        suma1 = suma1 + Potencia (x, i) / Factorial (i);
+    }
+
+    // Versión 2: cada término a partir del anterior
+    termino = 1;                 // x^0 / 0!
+    suma2 = 0;
+    for (i = 0; i &lt; n; i = i + 1) {
+        suma2 = suma2 + termino;
+        termino = termino * x / (i + 1);   // x^(i+1)/(i+1)! = x^i/i! · x/(i+1)
+    }
+
+    cout.precision(12);
+    cout &lt;&lt; &quot;Versión 1: &quot; &lt;&lt; suma1 &lt;&lt; endl;
+    cout &lt;&lt; &quot;Versión 2: &quot; &lt;&lt; suma2 &lt;&lt; endl;
+    cout &lt;&lt; &quot;exp(x):    &quot; &lt;&lt; exp (x) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>x y número de términos n: 1 15
+Versión 1: 2.71828182846
+Versión 2: 2.71828182846
+exp(x):    2.71828182846</code></pre></div><p>Con 15 términos las dos versiones coinciden con <code>exp (1)</code> en 12 cifras. Se usa <code>double</code> porque los factoriales crecen muy deprisa (13! ya no cabe en un <code>int</code>).</p></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5g"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Sucesión a<sub>n</sub> = 3a<sub>n−1</sub> − 2a<sub>n−3</sub></span></span><span class="card-tools"><label class="done" for="d-p5g"><input data-key="p5g" id="d-p5g" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>a<sub>0</sub> = 1, a<sub>1</sub> = 2, a<sub>2</sub> = 3. (a) El menor n tal que a<sub>n</sub> &gt; m. (b) El término n‑ésimo.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Hacen falta los <b>tres</b> términos anteriores, en tres variables que se «desplazan» en cada vuelta (como ult y penult en Fibonacci). Términos: 1, 2, 3, 7, 17, 45, 121, 319… (a) es una búsqueda (while), (b) un recorrido (for de 3 a n).</p><div class="codeblk"><p class="code-t">C++ · recurrencia.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    long long m, a3, a2, a1, an;   // a3 = a(n-3), a2 = a(n-2), a1 = a(n-1)
+    int n, k;
+
+    // a) menor n con a(n) &gt; m
+    cout &lt;&lt; &quot;m (&gt;= 0): &quot;;
+    cin &gt;&gt; m;
+    a3 = 1; a2 = 2; a1 = 3;       // a0, a1, a2
+    if (1 &gt; m) { n = 0; }
+    else if (2 &gt; m) { n = 1; }
+    else if (3 &gt; m) { n = 2; }
+    else {
+        n = 2;
+        an = a1;
+        while (an &lt;= m) {
+            n = n + 1;
+            an = 3 * a1 - 2 * a3;
+            a3 = a2; a2 = a1; a1 = an;   // desplazar la «ventana» de términos
+        }
+    }
+    cout &lt;&lt; &quot;a) n = &quot; &lt;&lt; n &lt;&lt; endl;
+
+    // b) término n-ésimo
+    cout &lt;&lt; &quot;n (&gt;= 0): &quot;;
+    cin &gt;&gt; k;
+    a3 = 1; a2 = 2; a1 = 3;
+    if (k == 0) { an = 1; }
+    else if (k == 1) { an = 2; }
+    else if (k == 2) { an = 3; }
+    else {
+        for (n = 3; n &lt;= k; n = n + 1) {
+            an = 3 * a1 - 2 * a3;
+            a3 = a2; a2 = a1; a1 = an;
+        }
+    }
+    cout &lt;&lt; &quot;b) a(&quot; &lt;&lt; k &lt;&lt; &quot;) = &quot; &lt;&lt; an &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>m (&gt;= 0): 100
+a) n = 6
+n (&gt;= 0): 6
+b) a(6) = 121</code></pre></div></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5h"><div class="card-head"><span class="card-num">Problema 5 <span class="card-title">· Factorial</span></span><span class="card-tools"><label class="done" for="d-p5h"><input data-key="p5h" id="d-p5h" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Implementa el factorial estudiado en teoría.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>La versión con RECORRIENDO [2, n] pasa a un <code>for</code>. Con <code>long long</code> cabe hasta 20!; con <code>int</code>, sólo hasta 12!.</p><div class="codeblk"><p class="code-t">C++ · factorial.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int n, i;
+    long long fact;
+
+    cout &lt;&lt; &quot;n (&gt;= 0): &quot;;
+    cin &gt;&gt; n;
+    fact = 1;                              // 0! = 1
+    for (i = 2; i &lt;= n; i = i + 1) {       // i RECORRIENDO [2, n]
+        fact = fact * i;
+    }
+    cout &lt;&lt; n &lt;&lt; &quot;! = &quot; &lt;&lt; fact &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>n (&gt;= 0): 10
+10! = 3628800</code></pre></div></div></details></div></article><article class="card ex" data-tema="p5" id="e-p5i"><div class="card-head"><span class="card-num">Problema 6 <span class="card-title">· Fibonacci</span></span><span class="card-tools"><label class="done" for="d-p5i"><input data-key="p5i" id="d-p5i" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Implementa el término n‑ésimo de Fibonacci estudiado en teoría (f<sub>0</sub> = f<sub>1</sub> = 1).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">C++ · fibonacci.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    int n, i;
+    long long penult, ult, fibo;
+
+    cout &lt;&lt; &quot;n (&gt;= 0): &quot;;
+    cin &gt;&gt; n;
+    if (n &lt; 2) {
+        fibo = 1;                           // f0 = f1 = 1
+    } else {
+        penult = 1; ult = 1; fibo = 2;      // f2
+        for (i = 3; i &lt;= n; i = i + 1) {
+            penult = ult;
+            ult = fibo;
+            fibo = ult + penult;
+        }
+    }
+    cout &lt;&lt; &quot;f(&quot; &lt;&lt; n &lt;&lt; &quot;) = &quot; &lt;&lt; fibo &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>n (&gt;= 0): 9
+f(9) = 55</code></pre></div><p>1, 1, 2, 3, 5, 8, 13, 21, 34, <b>55</b>: f<sub>9</sub> = 55.</p></div></details></div></article></div></section></section><section class="tema guide" id="p6"><header class="tema-head"><p class="eyebrow">Práctica 6</p><h2>Primer modelo de acceso secuencial</h2><p class="lede">Secuencias marcadas leídas de la entrada estándar: esquemas de recorrido y búsqueda en C++.</p></header><section class="topic" id="p6-1"><h3><span class="tnum">6.1</span><span>Secuencias desde la entrada estándar</span></h3><div class="prose"><p>C++ no tiene el tipo «máquina secuencial»; usamos la entrada estándar como secuencia del primer modelo, terminada en una <b>marca</b> (MF) que no puede ser un dato.</p><div class="pair"><div class="codeblk sp"><p class="code-t">Recorrido (esquema 1)</p><pre><code class="lang-sp">Comenzar (S);
+{ inicialización }
+MIENTRAS EA (S) ≠ MarcaFin HACER
+  { tratamiento de EA }
+  Avanzar (S)
+FIN_MIENTRAS;
+{ terminación }</code></pre></div><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">cin &gt;&gt; EA;                 // Comenzar (cin.get (EA) si importan los blancos)
+// inicialización
+while (EA != MF) {         // condición de continuación
+    // tratamiento de EA
+    cin &gt;&gt; EA;             // Avanzar
+}
+// terminación</code></pre></div></div><p>Los ejemplos del boletín: pasar a mayúsculas un texto terminado en '#' (<code>char (int (EA) − Distancia)</code>, con <code>Distancia = int ('a') − int ('A')</code>), escribir el cuadrado de cada entero de [−99, 99] (marca −100) y contar las notas aprobadas (marca −1).</p><div class="box warn"><p class="box-t">Erratas del boletín</p><p>En los ejemplos aparece el guion largo «–» en lugar del signo menos y <code>{cont = cont + 1};</code> con el punto y coma fuera de la llave; escríbelo <code>{ cont = cont + 1; }</code>. Y el contador del ejemplo 3 debería ser <code>int</code>, no <code>float</code>.</p></div><p>Para ver los esquemas paso a paso tienes el <a href="../teoria/guia.html#t4-8">simulador de la máquina secuencial</a> de la guía de teoría.</p></div></section><section class="topic" id="p6-2"><h3><span class="tnum">6.2</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p6" id="e-p6a"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· ¿Cuál de las dos versiones es correcta?</span></span><span class="card-tools"><label class="done" for="d-p6a"><input data-key="p6a" id="d-p6a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dos versiones de un programa que trata enteros positivos con marca −1: la de la izquierda lee antes del bucle y al final del cuerpo; la de la derecha lee al principio del cuerpo. ¿Qué esquema se intenta usar? ¿Cuál es correcta? Predice qué pasará al compilar y ejecutar.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Esquema</b>: recorrido del primer modelo (esquema 1): escribir cada dato y contarlos.</li><li><b>Al compilar</b>: <b>ninguna compila</b>, porque usan <code>EA_S</code>, que no está declarada (debería ser <code>EA</code>).</li><li><b>Corregido eso</b>, la de la izquierda es la correcta: Comenzar antes del bucle y Avanzar al final del cuerpo.</li><li>La de la derecha <b>compara EA sin haberle dado valor</b> (comportamiento indefinido: puede que ni entre) y, cuando lee el −1, lo escribe y lo cuenta antes de comprobar la condición: <b>trata la marca como un dato</b> y cuenta uno de más.</li></ul><div class="codeblk"><p class="code-t">C++ · versión correcta</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main( )
+{
+    const int MF = -1;
+    int EA;
+    int cont;
+    cout &lt;&lt; &quot;Introduce una serie de enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                     // Comenzar
+    cont = 0;
+    while (EA != MF) {
+        cout &lt;&lt; EA &lt;&lt; &quot;, &quot;;        // tratamiento (EA_S no existe: es EA)
+        cont = cont + 1;
+        cin &gt;&gt; EA;                 // Avanzar
+    }
+    cout &lt;&lt; endl &lt;&lt; &quot;El número de datos recogidos es: &quot; &lt;&lt; cont &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Introduce una serie de enteros positivos, para terminar -1
+4 8 15 -1
+4, 8, 15, 
+El número de datos recogidos es: 3</code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6b"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Sumas parciales</span></span><span class="card-tools"><label class="done" for="d-p6b"><input data-key="p6b" id="d-p6b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dada una secuencia de enteros positivos con marca −1, escribe S1, S1+S2, S1+S2+S3… Para 1, 4, 5, 3, 5, 6 → 1, 5, 10, 13, 18, 24.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Recorrido con H1 y H2 (esquema 1). Inv: suma = Σ Piz. Inicialización: suma de la vacía = 0. Tratamiento: suma ← suma + EA y registrar suma.</p><div class="codeblk"><p class="code-t">C++ · parciales.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -1;
+    int EA;        // elemento actual
+    int suma;      // suma de la parte izquierda
+
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    suma = 0;                      // suma de la secuencia vacía
+    cin &gt;&gt; EA;                     // Comenzar
+    while (EA != MF) {
+        suma = suma + EA;          // suma de Piz + EA
+        cout &lt;&lt; suma &lt;&lt; &quot; &quot;;       // Registrar
+        cin &gt;&gt; EA;                 // Avanzar
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
+1 4 5 3 5 6 -1
+1 5 10 13 18 24 </code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Sumas de elementos adyacentes</span></span><span class="card-tools"><label class="done" for="d-p6c"><input data-key="p6c" id="d-p6c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>De S = [S1, …, Sn] obtén R = [S1+S2, S2+S3, …, Sn−1+Sn]. Si S está vacía o tiene un único elemento, «La secuencia está vacía». ¿Qué tipo de problema es? ¿Qué esquema? Postcondición, invariante y diseño.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Tipo</b>: recorrido (todos los pares adyacentes).</li><li><b>Esquema 3</b> (¬H1 y ¬H2): la vacía es un caso aparte y el primer elemento no genera salida (no tiene anterior). Aquí además hay que distinguir la secuencia de un solo elemento.</li><li><b>Post</b>: R = SumasAdy (S). <b>Inv</b>: lo escrito = SumasAdy (Piz) y ant = último (Piz).</li><li><b>Definición inductiva</b>: SumasAdy ([e]) = [ ]; SumasAdy (T·u·e) = SumasAdy (T·u) &amp; [u + e].</li></ul><div class="codeblk"><p class="code-t">C++ · adyacentes.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -1;
+    int EA, ant;     // elemento actual y el anterior (último de Piz)
+
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                                  // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;La secuencia está vacía&quot; &lt;&lt; endl;
+    } else {
+        ant = EA;                               // tratamiento del primer elemento
+        cin &gt;&gt; EA;                              // Avanzar
+        if (EA == MF) {
+            cout &lt;&lt; &quot;La secuencia está vacía&quot; &lt;&lt; endl;   // sólo un elemento
+        } else {
+            do {
+                cout &lt;&lt; ant + EA &lt;&lt; &quot; &quot;;        // Registrar la suma del par (ant, EA)
+                ant = EA;
+                cin &gt;&gt; EA;                      // Avanzar
+            } while (EA != MF);
+            cout &lt;&lt; endl;
+        }
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
+3 1 4 1 5 -1
+4 5 5 6 </code></pre></div><p>Se ha supuesto, como en el resto de la práctica, enteros positivos con marca −1 (el enunciado no fija la marca).</p></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6d"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Primer número par</span></span><span class="card-tools"><label class="done" for="d-p6d"><input data-key="p6d" id="d-p6d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Secuencia de enteros de [−99, 99] con marca −1: ¿cuál es el primer par, si hay alguno? ¿Recorrido o búsqueda? ¿Condición para detener?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><b>Búsqueda</b>: se para en cuanto aparece un par (o en la marca). Condición de continuación: <code>(EA != MF) &amp;&amp; (EA % 2 != 0)</code>. Al salir, se mira si se paró en la marca (no hay) o en un par.</p><div class="box warn"><p class="box-t">Dos detalles</p><ul><li>Con negativos, <code>-3 % 2</code> vale −1, así que «impar» es <code>EA % 2 != 0</code>, no <code>EA % 2 == 1</code>.</li><li>El −1 está dentro de [−99, 99] pero es la marca: no puede aparecer como dato (y al ser impar no afecta a la búsqueda).</li></ul></div><div class="codeblk"><p class="code-t">C++ · primerpar.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -1;
+    int EA;
+
+    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                                   // Comenzar
+    while ((EA != MF) &amp;&amp; (EA % 2 != 0)) {       // continuar: no es el final Y no es par
+        cin &gt;&gt; EA;                               // Avanzar
+    }
+    if (EA == MF) {
+        cout &lt;&lt; &quot;No hay ningún número par&quot; &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;El primer par es &quot; &lt;&lt; EA &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -1
+7 -3 15 -8 4 -1
+El primer par es -8</code></pre></div></div></details></div></article></div></section><section class="topic" id="p6-3"><h3><span class="tnum">6.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p6" id="e-p6e"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Marcador de tenis</span></span><span class="card-tools"><label class="done" for="d-p6e"><input data-key="p6e" id="d-p6e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Una función que, dado el marcador y quién gana el punto, muestre el nuevo marcador; y un algoritmo que simule el partido con una secuencia de '1' y '2' terminada en '0'. Gana el partido quien llegue a seis juegos. Para «112211221»: quince–nada, treinta–nada, treinta–quince, iguales a treinta, cuarenta–treinta, juego para el jugador 1, nada–quince, nada–treinta, quince–treinta.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Como modifica el marcador, en la notación es una <b>acción</b> (dato–resultado marcador, dato ganador). Puntos 0, 1, 2, 3 = nada, quince, treinta, cuarenta; con 3–3 o más: «iguales a cuarenta» y «ventaja»; se gana el juego con 4 puntos o más y 2 de diferencia. El algoritmo principal es un recorrido que además <b>para</b> si alguien llega a seis juegos (una búsqueda).</p><div class="codeblk"><p class="code-t">C++ · tenis.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Marcador {
+    int puntos1, puntos2;     // puntos del juego en curso (0, 1, 2, 3, 4…)
+    int juegos1, juegos2;
+};
+
+/* Post: nombre del tanteo correspondiente a p puntos (p &lt;= 3) */
+string Nombre (int p)
+{
+    string s;
+    switch (p) {
+        case 0: s = &quot;nada&quot;; break;
+        case 1: s = &quot;quince&quot;; break;
+        case 2: s = &quot;treinta&quot;; break;
+        default: s = &quot;cuarenta&quot;; break;
+    }
+    return s;
+}
+
+/* Pre: ganador es &#x27;1&#x27; o &#x27;2&#x27;
+   Post: m actualizado con el punto y el nuevo marcador escrito en pantalla */
+void AnotarPunto (Marcador &amp;m, char ganador)
+{
+    if (ganador == &#x27;1&#x27;) { m.puntos1 = m.puntos1 + 1; }
+    else { m.puntos2 = m.puntos2 + 1; }
+
+    if ((m.puntos1 &gt;= 4) &amp;&amp; (m.puntos1 - m.puntos2 &gt;= 2)) {
+        m.juegos1 = m.juegos1 + 1;  m.puntos1 = 0;  m.puntos2 = 0;
+        cout &lt;&lt; &quot;juego para el jugador 1 (juegos &quot; &lt;&lt; m.juegos1 &lt;&lt; &quot;-&quot; &lt;&lt; m.juegos2 &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+    } else if ((m.puntos2 &gt;= 4) &amp;&amp; (m.puntos2 - m.puntos1 &gt;= 2)) {
+        m.juegos2 = m.juegos2 + 1;  m.puntos1 = 0;  m.puntos2 = 0;
+        cout &lt;&lt; &quot;juego para el jugador 2 (juegos &quot; &lt;&lt; m.juegos1 &lt;&lt; &quot;-&quot; &lt;&lt; m.juegos2 &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+    } else if ((m.puntos1 &gt;= 3) &amp;&amp; (m.puntos1 == m.puntos2)) {
+        cout &lt;&lt; &quot;iguales a cuarenta&quot; &lt;&lt; endl;
+    } else if ((m.puntos1 &gt;= 3) &amp;&amp; (m.puntos2 &gt;= 3)) {
+        if (m.puntos1 &gt; m.puntos2) { cout &lt;&lt; &quot;ventaja para el jugador 1&quot; &lt;&lt; endl; }
+        else { cout &lt;&lt; &quot;ventaja para el jugador 2&quot; &lt;&lt; endl; }
+    } else if (m.puntos1 == m.puntos2) {
+        cout &lt;&lt; &quot;iguales a &quot; &lt;&lt; Nombre (m.puntos1) &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; Nombre (m.puntos1) &lt;&lt; &quot;-&quot; &lt;&lt; Nombre (m.puntos2) &lt;&lt; endl;
+    }
+}
+
+int main ( ) {
+    const char MF = &#x27;0&#x27;;
+    const int JUEGOS = 6;
+    Marcador m;
+    char EA;
+
+    m.puntos1 = 0; m.puntos2 = 0; m.juegos1 = 0; m.juegos2 = 0;
+    cin &gt;&gt; EA;                                                     // Comenzar
+    while ((EA != MF) &amp;&amp; (m.juegos1 &lt; JUEGOS) &amp;&amp; (m.juegos2 &lt; JUEGOS)) {
+        AnotarPunto (m, EA);
+        cin &gt;&gt; EA;                                                 // Avanzar
+    }
+    if (m.juegos1 == JUEGOS) { cout &lt;&lt; &quot;Partido para el jugador 1&quot; &lt;&lt; endl; }
+    else if (m.juegos2 == JUEGOS) { cout &lt;&lt; &quot;Partido para el jugador 2&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>1122112210
+quince-nada
+treinta-nada
+treinta-quince
+iguales a treinta
+cuarenta-treinta
+juego para el jugador 1 (juegos 1-0)
+nada-quince
+nada-treinta
+quince-treinta</code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6f"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Ventanillas de la caja de ahorros</span></span><span class="card-tools"><label class="done" for="d-p6f"><input data-key="p6f" id="d-p6f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>N ventanillas. Secuencia de enteros terminada en 0: «1» = llega un cliente («Pase» si hay ventanilla libre; si no, «Espere por favor» y a la cola); «2» = queda libre una ventanilla («Pase» si hay cola). Al principio todas libres.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Recorrido con dos contadores: ventanillas libres y clientes en cola. Inv: libres + ocupadas = N y cola &gt; 0 ⇒ libres = 0.</p><div class="codeblk"><p class="code-t">C++ · ventanillas.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int N = 3;        // número de ventanillas
+    const int MF = 0;
+    int EA;
+    int libres, cola;       // ventanillas libres y clientes esperando
+
+    libres = N;
+    cola = 0;
+    cin &gt;&gt; EA;                                  // Comenzar
+    while (EA != MF) {
+        if (EA == 1) {                          // llega un cliente
+            if (libres &gt; 0) {
+                libres = libres - 1;
+                cout &lt;&lt; &quot;Pase&quot; &lt;&lt; endl;
+            } else {
+                cola = cola + 1;
+                cout &lt;&lt; &quot;Espere por favor&quot; &lt;&lt; endl;
+            }
+        } else {                                // EA == 2: se libera una ventanilla
+            if (cola &gt; 0) {
+                cola = cola - 1;                // la ocupa el primero de la cola
+                cout &lt;&lt; &quot;Pase&quot; &lt;&lt; endl;
+            } else {
+                libres = libres + 1;
+            }
+        }
+        cin &gt;&gt; EA;                              // Avanzar
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>1 1 1 1 2 1 2 2 2 0
+Pase
+Pase
+Pase
+Espere por favor
+Pase
+Espere por favor
+Pase</code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6g"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Estadística de pesos</span></span><span class="card-tools"><label class="done" for="d-p6g"><input data-key="p6g" id="d-p6g" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Pesos con marca −1.0: cuántos pesan menos de 40 kg, entre 40 y 50 y más de 50, y la media.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Recorrido</b> (hay que mirar todos).</li><li>La vacía no necesita tratamiento aparte <b>dentro</b> del bucle (H1 y H2: contadores a 0), pero sí al final: la media de la vacía no existe.</li><li><b>Tras la iteración</b>: calcular la media sólo si n &gt; 0.</li></ul><div class="codeblk"><p class="code-t">C++ · pesos.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const float MF = -1.0;
+    float EA, suma;
+    int menos40, entre40y50, mas50, n;
+
+    menos40 = 0; entre40y50 = 0; mas50 = 0; suma = 0;
+    cout &lt;&lt; &quot;Pesos, para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                               // Comenzar
+    while (EA != MF) {
+        if (EA &lt; 40) { menos40 = menos40 + 1; }
+        else if (EA &lt;= 50) { entre40y50 = entre40y50 + 1; }
+        else { mas50 = mas50 + 1; }
+        suma = suma + EA;
+        cin &gt;&gt; EA;                           // Avanzar
+    }
+    n = menos40 + entre40y50 + mas50;
+    cout &lt;&lt; &quot;Menos de 40 kg: &quot; &lt;&lt; menos40 &lt;&lt; endl;
+    cout &lt;&lt; &quot;Entre 40 y 50 kg: &quot; &lt;&lt; entre40y50 &lt;&lt; endl;
+    cout &lt;&lt; &quot;Más de 50 kg: &quot; &lt;&lt; mas50 &lt;&lt; endl;
+    if (n &gt; 0) { cout &lt;&lt; &quot;Peso medio: &quot; &lt;&lt; suma / n &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;No hay alumnos&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Pesos, para terminar -1
+38.5 45 52.3 61 40 50 -1.0
+Menos de 40 kg: 1
+Entre 40 y 50 kg: 3
+Más de 50 kg: 2
+Peso medio: 47.8</code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6h"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· ¿Al menos x apariciones de c?</span></span><span class="card-tools"><label class="done" for="d-p6h"><input data-key="p6h" id="d-p6h" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Texto terminado en '#' (sin contar blancos ni saltos de línea). Se leen antes x y c. Salida «sí» o «no».</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Búsqueda</b> de la x‑ésima aparición de c: no hace falta leer el resto en cuanto se encuentra.</li><li><b>Fin</b>: EA = '#' o (EA = c y noc = x − 1).</li><li><b>Tratamiento</b> para mantener el invariante (noc = apariciones de c en Piz): si EA = c, noc ← noc + 1.</li><li>Es el ejemplo del tema 4 con <code>cin &gt;&gt;</code>, que ya se salta blancos y saltos de línea.</li></ul><div class="codeblk"><p class="code-t">C++ · ocurrencias.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const char MF = &#x27;#&#x27;;
+    int x, noc;      // ocurrencias pedidas y ocurrencias en Piz
+    char c, EA;
+
+    cout &lt;&lt; &quot;Número de veces y carácter: &quot;;
+    cin &gt;&gt; x &gt;&gt; c;
+    cout &lt;&lt; &quot;Texto terminado en #: &quot;;
+    noc = 0;
+    cin &gt;&gt; EA;                                         // Comenzar (&gt;&gt; se salta los blancos)
+    while ((EA != MF) &amp;&amp; ((EA != c) || (noc != x - 1))) {
+        if (EA == c) { noc = noc + 1; }                // mantener Inv: noc = NroOcur (c, Piz)
+        cin &gt;&gt; EA;                                     // Avanzar
+    }
+    if (EA != MF) { cout &lt;&lt; &quot;sí&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;no&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Número de veces y carácter: 3 a
+Texto terminado en #: la casa de mi abuela #
+sí</code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6i"><div class="card-head"><span class="card-num">Problema 5 <span class="card-title">· Igual a la suma de los anteriores</span></span><span class="card-tools"><label class="done" for="d-p6i"><input data-key="p6i" id="d-p6i" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Enteros de [−99, 99] con marca −100: el primero que sea igual a la suma de los anteriores. (a) Suponiendo que la suma de la vacía es 0; (b) suponiendo que no está definida.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>Búsqueda</b> con una propiedad que depende de Piz.</li><li><b>Post</b>: (EA = MF o EA = Σ Piz) y ningún elemento anterior cumple la propiedad. <b>Inv</b>: suma = Σ Piz y ninguno de Piz es igual a la suma de los suyos anteriores.</li><li><b>Continuación</b>: (EA ≠ MF) y (EA ≠ suma). <b>Definición inductiva</b>: Σ [ ] = 0; Σ (T·e) = Σ T + e.</li></ul><div class="codeblk"><p class="code-t">C++ · (a) la suma de la vacía es 0</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -100;
+    int EA, suma;    // suma de la parte izquierda
+
+    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -100&quot; &lt;&lt; endl;
+    suma = 0;                                    // suma de la secuencia vacía
+    cin &gt;&gt; EA;                                   // Comenzar
+    while ((EA != MF) &amp;&amp; (EA != suma)) {
+        suma = suma + EA;                        // Inv: suma = Σ Piz
+        cin &gt;&gt; EA;                               // Avanzar
+    }
+    if (EA == MF) { cout &lt;&lt; &quot;Ningún elemento es igual a la suma de los anteriores&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;El primero es &quot; &lt;&lt; EA &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -100
+3 5 2 10 20 -100
+El primero es 10</code></pre></div><p>(b) Si la suma de la vacía no está definida, el primer elemento no es candidato: se trata aparte (¬H1, ¬H2) y la búsqueda empieza en el segundo.</p><div class="codeblk"><p class="code-t">C++ · (b) el primero no es candidato</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -100;
+    int EA, suma;
+
+    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -100&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                                   // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;Secuencia vacía&quot; &lt;&lt; endl;
+    } else {
+        suma = EA;                               // el primero no es candidato
+        cin &gt;&gt; EA;                               // Avanzar
+        while ((EA != MF) &amp;&amp; (EA != suma)) {
+            suma = suma + EA;
+            cin &gt;&gt; EA;
+        }
+        if (EA == MF) { cout &lt;&lt; &quot;Ningún elemento es igual a la suma de los anteriores&quot; &lt;&lt; endl; }
+        else { cout &lt;&lt; &quot;El primero es &quot; &lt;&lt; EA &lt;&lt; endl; }
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -100
+0 4 1 5 10 -100
+El primero es 5</code></pre></div></div></details></div></article></div></section></section>
+    <p class="foot">Basado en los boletines de las prácticas 1 a 6 de la asignatura. Cada programa se ha compilado con g++ -Wall -Wextra sin avisos y las ejecuciones de ejemplo son salidas reales.</p>
+  </main>
+</div>
+<script src="../js/guia.js"></script>
+</body>
+</html>
