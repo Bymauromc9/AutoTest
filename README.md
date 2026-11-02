@@ -63,6 +63,24 @@ fc/                         Fundamentos de Computadores (temas 1–6)
     util.js                 FC.fmt y FC.LETTERS
     autotest.js · inicio.js · guia.js · herramientas.js
     data/banco.js           Banco de preguntas del autotest
+ip/                         Introducción a la Programación (temas 0–4 y prácticas 1–6)
+  index.html                Portada de IP: Teoría y Prácticas, con el progreso guardado
+  teoria/
+    guia.html               Guía de teoría de los temas 0–4, simulador de la máquina secuencial (#t4-8)
+                            y anexos: SP → C++ (#a-1), esquemas (#a-2) y códigos de Wooclap (#a-3)
+    autotest.html           Tests de cada tema, del C++ de prácticas (170 preguntas) y test general
+  practicas/
+    guia.html               Prácticas 1–6 explicadas con 44 ejercicios resueltos (SP, C++ y ejecución real)
+  css/
+    guia.css                Guías (copia de fc/css/guia.css sin Karnaugh) + resaltado de código y simulador
+    ip.css                  Componentes del autotest
+    inicio.css              Portada de IP
+  js/
+    util.js                 IP.fmt y IP.LETTERS
+    autotest.js · inicio.js
+    guia.js                 Índice, progreso, resoluciones plegables y resaltado de C++ y de la notación SP
+    maquina.js              Simulador de la máquina secuencial (primer modelo)
+    data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4 y bloque 5 = C++)
 ```
 
 Cada página carga sólo lo que necesita, en este orden: `core.js` (en el `<head>`, para aplicar el tema
@@ -72,7 +90,7 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 
 - **Sin módulos ES ni `fetch`**: así todo funciona abriendo los ficheros con doble clic (`file://`),
   donde los navegadores bloquean esas dos cosas. Los datos van en ficheros `.js`.
-- **Espacios de nombres**: `window.App` (común), `window.FLI` y `window.FC` (asignaturas). Cada script está envuelto
+- **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC` y `window.IP` (asignaturas). Cada script está envuelto
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
 - **Barra superior**: la genera `core.js` a partir de atributos del `<body>`:
   `data-root` (ruta a la raíz: `""`, `"../"`, `"../../"`), `data-subject` (`fli`),
@@ -112,5 +130,8 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `fc-settings`, `fc-seen`, `fc-best-1` … `fc-best-6`, `fc-best-G` | Opciones, preguntas vistas y mejores notas del autotest de FC |
 | `fc-practicas-hechos` | Ejercicios de prácticas de FC marcados como hechos |
 | `fc-teoria-visto`, `fc-practicas-visto` | Última parte vista de cada guía de FC |
+| `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
+| `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
+| `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
 
 El test del autotest en curso se guarda en `sessionStorage` (sobrevive a recargas, no a cerrar la pestaña).

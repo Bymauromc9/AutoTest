@@ -46,6 +46,17 @@
         { id: "teoria", label: "Teoría", href: "fc/index.html#teoria" },
         { id: "practicas", label: "Prácticas", href: "fc/index.html#practicas" }
       ]
+    },
+    {
+      id: "ip",
+      short: "IP",
+      name: "Introducción a la Programación",
+      desc: "Temas 0–4 (algoritmos, casos, acciones y funciones, iteración y secuencias): guía de teoría con simulador, autotest y las prácticas 1–6 en C++ resueltas y probadas.",
+      home: "ip/index.html",
+      sections: [
+        { id: "teoria", label: "Teoría", href: "ip/index.html#teoria" },
+        { id: "practicas", label: "Prácticas", href: "ip/index.html#practicas" }
+      ]
     }
   ];
 
