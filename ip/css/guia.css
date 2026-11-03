@@ -437,3 +437,15 @@ ul.stree > li > .nd { background: var(--accent); color: var(--surface); border-c
 .maq-inv { font-family: var(--f-display); }
 .pair { margin: var(--s-2) 0 var(--s-4); }
 .maq select { font-family: var(--f-display); }
+
+/* ---------- explicaciones paso a paso y bloques «Explicado despacio» ---------- */
+.expl { margin: 0 0 var(--s-4); padding: var(--s-3) var(--s-4); border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+.expl > .expl-t, .deep > .deep-t { font: 700 .74rem var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 var(--s-2); }
+.expl h4, .deep h4 { font: 700 .98rem var(--f-display); margin: var(--s-4) 0 var(--s-2); }
+.expl > h4:first-of-type, .deep > h4:first-of-type { margin-top: var(--s-2); }
+.expl p, .expl ul, .expl ol { max-width: 74ch; }
+.expl > :last-child, .deep > :last-child { margin-bottom: 0; }
+.expl .tablewrap, .expl .codeblk { background: var(--surface); }
+.expl .formula { background: color-mix(in srgb, var(--surface) 65%, transparent); }
+.deep { margin: var(--s-5) 0 var(--s-2); padding: var(--s-4) var(--s-4) var(--s-3); border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--rule)); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.expl ol.steps > li::before { background: var(--surface); }
