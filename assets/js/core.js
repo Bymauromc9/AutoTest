@@ -57,6 +57,7 @@
       name: "Fundamentos Lógicos de la Informática",
       desc: "Lógica proposicional (L0) y lógica de predicados (L1).",
       home: "fli/index.html",
+      exam: { date: "2026-12-04", label: "4 de diciembre de 2026", href: "fli/teoria/examenes.html", cta: "practica con el parcial real y los simulacros" },
       intro: "La asignatura tiene dos bloques: lógica proposicional (L0, temas 1–4 y sesiones 1–5) y lógica de predicados (L1, sesiones 6–12). Aquí tienes la teoría, las prácticas y la preparación del examen de los dos.",
       groups: { L0: "Lógica proposicional", L1: "Lógica de predicados" },
       sub: { teoria: "Temas 1–4", practicas: "Sesiones 1–12", examen: "Parcial y simulacros" },
