@@ -18,6 +18,8 @@
  */
 (function () {
   "use strict";
+  // Ruta de este script (sirve para cargar el asistente desde cualquier carpeta).
+  const CORE_SRC = document.currentScript && document.currentScript.src;
 
   /* ---------- Registro de asignaturas ----------
      Para añadir una asignatura: crea su carpeta (p. ej. "mates/") con su index.html y añade aquí una entrada. */
@@ -163,6 +165,19 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildNav);
   else buildNav();
+
+  /* ---------- Asistente de IA (panel paralelo; ver assets/js/asistente.js) ---------- */
+  (function cargarAsistente() {
+    const src = CORE_SRC || "";
+    const base = src.replace(/js\/core\.js(\?.*)?$/, "");
+    if (!base || base === src) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet"; css.href = base + "css/asistente.css";
+    document.head.appendChild(css);
+    const js = document.createElement("script");
+    js.src = base + "js/asistente.js"; js.defer = true;
+    document.head.appendChild(js);
+  })();
 
   window.App = Object.freeze({
     SUBJECTS, store, session, shuffle, esc,

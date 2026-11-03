@@ -14,6 +14,11 @@ assets/
   css/portal.css            Estilos de la portada
   js/core.js                Registro de asignaturas, tema claro/oscuro, almacenamiento y barra superior
   js/portal.js              Pinta las tarjetas de la portada a partir del registro
+  js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
+  css/asistente.css         Estilos del panel del asistente
+api/
+  chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
+vercel.json                 Tiempo máximo de la función del asistente
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
   index.html                Portada de FLI: bloque L0 y bloque L1, cada uno con Teoría y Prácticas, y el progreso guardado
@@ -63,6 +68,7 @@ fc/                         Fundamentos de Computadores (temas 1–6)
     util.js                 FC.fmt y FC.LETTERS
     autotest.js · inicio.js · guia.js · herramientas.js
     data/banco.js           Banco de preguntas del autotest
+  img/                      Figuras de los apuntes (buses, placas base de la tarea 1)
 ip/                         Introducción a la Programación (temas 0–4 y prácticas 1–6)
   index.html                Portada de IP: Teoría y Prácticas, con el progreso guardado
   teoria/
@@ -135,3 +141,33 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
 
 El test del autotest en curso se guarda en `sessionStorage` (sobrevive a recargas, no a cerrar la pestaña).
+
+
+## Asistente de IA
+
+Todas las páginas tienen un botón **«Pregunta a la IA»** (abajo a la derecha). Abre un panel al lado
+de la página (abajo en el móvil), así que se ven las dos cosas a la vez; el panel se puede
+redimensionar arrastrando su borde y sigue abierto al cambiar de página.
+
+- Cada pregunta se envía con el **contexto de lo que se está viendo**: el título de la página, la
+  sección que hay en pantalla (incluidas las resoluciones plegadas) y el índice de la página.
+- Al **seleccionar texto** aparece un botón «Preguntar a la IA» que manda ese fragmento.
+- Atajos: «Explícamelo con otras palabras», «Paso a paso», «Un ejemplo», «¿De dónde sale la
+  fórmula?», «Errores típicos» y «Ponme a prueba».
+- La conversación se guarda en la pestaña (sessionStorage); el botón ⟲ empieza una nueva.
+
+### Configuración en Vercel
+
+El navegador nunca ve la clave: la página llama a `/api/chat` y esa función habla con la API de
+Anthropic.
+
+1. Crea una clave en https://console.anthropic.com (API Keys) y añade saldo.
+2. En Vercel → el proyecto → **Settings → Environment Variables**, añade `ANTHROPIC_API_KEY`.
+3. Opcional: `ASISTENTE_MODEL` (por defecto `claude-sonnet-5-5`; `claude-haiku-5-5` es más barato) y
+   `ASISTENTE_ORIGENES` (otros dominios desde los que se permite usarlo, separados por comas).
+4. Vuelve a desplegar (Deployments → Redeploy) para que la función lea la variable.
+
+`GET /api/chat` devuelve `{ configurado: true|false }` para comprobarlo. La función limita la
+longitud de los mensajes y el número de preguntas por IP, y sólo acepta peticiones de la propia web.
+Abierta con doble clic (`file://`) la web funciona igual, pero el asistente avisa de que necesita
+estar publicada. Para desactivarlo en una página: `<body data-ai="off">`.

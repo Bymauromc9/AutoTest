@@ -415,3 +415,14 @@ table.dumpt button.cur { background: var(--accent); color: var(--surface); }
 table.dumpt td { padding: 1px !important; text-align: left !important; }
 table.dumpt th { padding: 1px 8px !important; }
 table.tt7 { width: 100%; }
+
+/* ---------- ampliación «Más a fondo» y figuras ---------- */
+.deep { margin: var(--s-5) 0 var(--s-2); padding: var(--s-4) var(--s-4) var(--s-3); border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--rule)); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.deep > .deep-t { font: 700 .74rem var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 var(--s-3); }
+.deep h4 { font: 700 1rem var(--f-display); margin: var(--s-4) 0 var(--s-2); }
+.deep h4:first-of-type { margin-top: var(--s-2); }
+.deep > :last-child { margin-bottom: 0; }
+.fig { margin: var(--s-3) 0 var(--s-4); max-width: 640px; }
+.fig img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--rule); background: #fff; }
+.fig figcaption { font-size: .88rem; color: var(--muted); margin-top: var(--s-2); }
+.kms > .codeblk { flex: 1 1 220px; min-width: 0; }
