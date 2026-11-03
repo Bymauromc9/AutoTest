@@ -152,7 +152,7 @@ function list(){
       <div class="info"><h3>${esc(title)}</h3><p>${esc(sub)}</p>${cont?`<span class="best"><b>En curso</b> · ${S.exam.ans.filter(a=>a!=null).length} de 10 respondidas</span>`:best!=null?`<span class="best">mejor nota <b>${fmtN(best)}</b></span>`:""}</div>
       <button class="btn${cont?" ghost":""}" data-exam="${id}">${cont?"Continuar":"Empezar"}</button></div>`; };
   app.innerHTML=`
-  <header class="top"><span class="eyebrow">Teoría · Como el día del examen</span><h1>Exámenes completos</h1>
+  <header class="top"><span class="eyebrow">Examen · Como el día del examen</span><h1>Exámenes completos</h1>
     <p class="muted">Mismo formato que el 1.er parcial: 10 preguntas tipo test (+0,6 por acierto, −0,2 por fallo) y 3 ejercicios (DPLL 0,75 · Tableaux 2 · Resolución 1,25). No ves las respuestas hasta entregar; después tienes la corrección completa y la solución paso a paso de los ejercicios.</p></header>
   <section class="tests" aria-label="Exámenes completos">
     ${EXAMS.map((E,i)=>row(i+1,"E"+(i+1),E.title,E.sub,false)).join("")}

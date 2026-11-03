@@ -254,5 +254,11 @@ document.addEventListener("keydown",e=>{
 
 /* ---------- Arranque ---------- */
 restore();
-render();
+/* Enlace directo a un test (#test-G, #test-3…), p. ej. desde la sección «Examen» de la portada de la asignatura. */
+(function(){
+  const m=location.hash.match(/^#test-(G|\d+)$/);
+  if(m){ const key=m[1]==="G"?"G":parseInt(m[1],10);
+    if(key==="G"||TOPIC_IDS[key]){ history.replaceState(null,"",location.pathname+location.search); start(key); return; } }
+  render();
+})();
 })();

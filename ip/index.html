@@ -2,58 +2,25 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>IP · Introducción a la Programación</title>
-<meta name="description" content="Teoría y prácticas de Introducción a la Programación: guía de teoría, autotest y guía de prácticas en C++ con los boletines resueltos.">
+<meta name="description" content="Teoría, prácticas y examen de Introducción a la Programación: guía con simulador, autotest y prácticas en C++ resueltas.">
+<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10151B" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/nav.css">
-<link rel="stylesheet" href="css/inicio.css">
+<link rel="stylesheet" href="../assets/css/hub.css">
 <script src="../assets/js/core.js"></script>
 </head>
-<body data-root="../" data-subject="ip" data-area="auto">
+<body data-root="../" data-subject="ip" data-hub>
 <a class="skip-link" href="#app">Saltar al contenido</a>
-<main class="wrap" id="app" tabindex="-1">
-  <header class="top">
-    <span class="eyebrow">1.º Grado en Ingeniería Informática · Universidad de Murcia</span>
-    <h1>Introducción a la Programación</h1>
-    <p class="muted">Cinco temas de teoría (algoritmos, léxico y casos, acciones y funciones, iteración y secuencias) con la notación algorítmica de clase, y seis prácticas en C++ con Geany y g++.</p>
-    <nav class="blocks" aria-label="Partes de la asignatura">
-      <a class="block-link" href="#teoria"><span class="block-tag">T</span><span><b>Teoría</b><small>Guía de los temas 0–4 · autotest</small></span></a>
-      <a class="block-link" href="#practicas"><span class="block-tag">P</span><span><b>Prácticas</b><small>Prácticas 1–6 resueltas en C++</small></span></a>
-    </nav>
-  </header>
-
-  <section class="block" id="teoria" aria-labelledby="h-teoria">
-  <header class="block-head"><span class="block-tag" aria-hidden="true">T</span><div><span class="eyebrow">Temas 0–4</span><h2 id="h-teoria">Teoría</h2></div></header>
-  <ul class="tests" aria-label="Recursos de teoría">
-    <li class="test-row"><span class="num" aria-hidden="true">←</span>
-      <div class="info"><h3>Guía de teoría</h3><p>Los cinco temas resumidos con la notación SP y su traducción a C++: tipos y expresiones, análisis de casos, acciones y funciones, las cuatro iteraciones y los esquemas de recorrido y búsqueda, con los problemas de clase resueltos y las chuletas finales.</p><span class="best" data-progress="visto" data-key="ip-teoria-visto" hidden></span></div>
-      <a class="btn" href="teoria/guia.html">Abrir<span class="visually-hidden"> Guía de teoría</span></a></li>
-    <li class="test-row"><span class="num" aria-hidden="true">?</span>
-      <div class="info"><h3>Autotest por temas</h3><p>170 preguntas en tests de cada tema, un bloque del C++ de prácticas y un test general, con corrección inmediata, la explicación de cada respuesta y el botón para cambiar de tanda.</p><span class="best" data-progress="autotest" hidden></span></div>
-      <a class="btn" href="teoria/autotest.html">Abrir<span class="visually-hidden"> Autotest</span></a></li>
-    <li class="test-row"><span class="num" aria-hidden="true">▸</span>
-      <div class="info"><h3>Simulador de la máquina secuencial</h3><p>Ejecuta paso a paso un recorrido, una búsqueda y la meseta mayor sobre la cinta que escribas: verás la parte izquierda, el elemento actual, las variables y el invariante.</p></div>
-      <a class="btn ghost" href="teoria/guia.html#t4-8">Abrir<span class="visually-hidden"> Simulador</span></a></li>
-  </ul>
-  </section>
-
-  <section class="block" id="practicas" aria-labelledby="h-practicas">
-  <header class="block-head"><span class="block-tag" aria-hidden="true">P</span><div><span class="eyebrow">Prácticas 1–6</span><h2 id="h-practicas">Prácticas</h2></div></header>
-  <ul class="tests" aria-label="Recursos de prácticas">
-    <li class="test-row"><span class="num" aria-hidden="true">$</span>
-      <div class="info"><h3>Guía de prácticas</h3><p>Entorno (Geany y g++), léxico y estados, análisis de casos, struct y subprogramas, iteraciones y secuencias del primer modelo: 44 ejercicios resueltos y explicados, con el programa en C++ y una ejecución real de cada uno.</p><span class="best" data-progress="hechos" data-key="ip-practicas-hechos" data-total="44" hidden></span></div>
-      <a class="btn" href="practicas/guia.html">Abrir<span class="visually-hidden"> Guía de prácticas</span></a></li>
-    <li class="test-row"><span class="num" aria-hidden="true">⇄</span>
-      <div class="info"><h3>De la notación SP a C++</h3><p>Todas las equivalencias en una tabla: tipos, operadores, Leer y Escribir, SI y SEGÚN, las cuatro iteraciones, acciones y funciones.</p></div>
-      <a class="btn ghost" href="teoria/guia.html#a-1">Abrir<span class="visually-hidden"> Chuleta SP a C++</span></a></li>
-  </ul>
-  </section>
+<main class="wrap hub" id="app" tabindex="-1">
+<noscript><p class="callout warn">Esta página necesita JavaScript activado para mostrar los recursos de la asignatura.</p></noscript>
 </main>
-<script src="js/inicio.js"></script>
+<script src="../assets/js/hub.js"></script>
 </body>
 </html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Herramientas · FC</title>
+<meta name="description" content="Calculadoras de Fundamentos de Computadores: mini-okteta, bases, complemento a 2, PPM, Karnaugh, chmod, subredes y rendimiento.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../css/guia.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="fc" data-title="Herramientas">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">⚙</span> FC · Herramientas</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#h1"><span class="tn">1</span><span class="tname">Rendimiento y buses</span><span></span></a><ol class="toc-topics"><li><a href="#h-cpu"><span class="tnum">1.1</span>Tiempo de CPU</a></li><li><a href="#h-bus"><span class="tnum">1.2</span>Bloque por un bus</a></li></ol></li><li><a class="toc-tema" href="#h2"><span class="tn">2</span><span class="tname">Representación de la información</span><span></span></a><ol class="toc-topics"><li><a href="#h-okteta"><span class="tnum">2.1</span>Mini‑okteta</a></li><li><a href="#h-bases"><span class="tnum">2.2</span>Conversor de bases</a></li><li><a href="#h-c2"><span class="tnum">2.3</span>Complemento a 2 con pasos</a></li><li><a href="#h-ppm"><span class="tnum">2.4</span>Píxel de un PPM</a></li></ol></li><li><a class="toc-tema" href="#h3"><span class="tn">3</span><span class="tname">Circuitos combinacionales</span><span></span></a><ol class="toc-topics"><li><a href="#h-karnaugh"><span class="tnum">3.1</span>Mapa de Karnaugh de 4 variables</a></li></ol></li><li><a class="toc-tema" href="#h4"><span class="tn">4</span><span class="tname">Linux</span><span></span></a><ol class="toc-topics"><li><a href="#h-chmod"><span class="tnum">4.1</span>Permisos (chmod)</a></li></ol></li><li><a class="toc-tema" href="#h6"><span class="tn">6</span><span class="tname">Redes</span><span></span></a><ol class="toc-topics"><li><a href="#h-ip"><span class="tnum">6.1</span>Calculadora IP / CIDR</a></li></ol></li></ol></nav>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Fundamentos de Computadores · Prácticas</p><h1>Herramientas <span class="ops">⚙</span></h1><p class="lead">Para comprobar lo que hayas hecho a mano. En el examen no las tendrás: haz primero el ejercicio en papel y luego compruébalo aquí, nunca al revés.</p></header>
+<section class="tema guide" id="h1"><header class="tema-head"><p class="eyebrow">Tema 1</p><h2>Rendimiento y buses</h2><p class="lede">Tiempo de CPU y tiempo de transmitir un bloque por un bus.</p></header><section class="topic" id="h-cpu"><h3><span class="tnum">1.1</span><span>Tiempo de CPU</span></h3><div class="prose"><div class="tool"><p class="tool-h">t = N × CPI ÷ f</p><div id="calc-cpu"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section><section class="topic" id="h-bus"><h3><span class="tnum">1.2</span><span>Bloque por un bus</span></h3><div class="prose"><div class="tool"><p class="tool-h">Transferencias y ancho de banda</p><div id="calc-bus"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section></section>
+<section class="tema guide" id="h2"><header class="tema-head"><p class="eyebrow">Tema 2 · P1</p><h2>Representación de la información</h2><p class="lede">Todo lo que hace falta para comprobar un problema de okteta.</p></header><section class="topic" id="h-okteta"><h3><span class="tnum">2.1</span><span>Mini‑okteta</span></h3><div class="prose"><div class="tool"><p class="tool-h">Mini‑okteta</p><p class="tool-note">Codifica un valor en bytes little o big endian, o pega bytes y mira cómo se interpretan desde un desplazamiento.</p><div id="tool-bytes"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section><section class="topic" id="h-bases"><h3><span class="tnum">2.2</span><span>Conversor de bases</span></h3><div class="prose"><div class="tool"><p class="tool-h">Decimal, binario, octal y hexadecimal</p><p class="tool-note">Admite parte fraccionaria con coma.</p><div id="calc-bases"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section><section class="topic" id="h-c2"><h3><span class="tnum">2.3</span><span>Complemento a 2 con pasos</span></h3><div class="prose"><div class="tool"><p class="tool-h">Complemento a 2</p><p class="tool-note">Muestra |N|, la inversión y el +1, como hay que escribirlo en el examen.</p><div id="calc-c2"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section><section class="topic" id="h-ppm"><h3><span class="tnum">2.4</span><span>Píxel de un PPM</span></h3><div class="prose"><div class="tool"><p class="tool-h">Dirección ↔ coordenadas</p><p class="tool-note">El inicio de los píxeles es el byte siguiente al 0a que cierra la cabecera.</p><div id="calc-ppm"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section></section>
+<section class="tema guide" id="h3"><header class="tema-head"><p class="eyebrow">Tema 3</p><h2>Circuitos combinacionales</h2><p class="lede">Simplificación por unos con implicantes primos y esenciales.</p></header><section class="topic" id="h-karnaugh"><h3><span class="tnum">3.1</span><span>Mapa de Karnaugh de 4 variables</span></h3><div class="prose"><div class="tool"><p class="tool-h">Karnaugh</p><div id="calc-km"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section></section>
+<section class="tema guide" id="h4"><header class="tema-head"><p class="eyebrow">Tema 4</p><h2>Linux</h2><p class="lede">Del octal a rwx y lo que significa en ficheros y directorios.</p></header><section class="topic" id="h-chmod"><h3><span class="tnum">4.1</span><span>Permisos (chmod)</span></h3><div class="prose"><div class="tool"><p class="tool-h">chmod ↔ rwx</p><div id="calc-chmod"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section></section>
+<section class="tema guide" id="h6"><header class="tema-head"><p class="eyebrow">Tema 6</p><h2>Redes</h2><p class="lede">Máscara, red, broadcast y hosts de una subred.</p></header><section class="topic" id="h-ip"><h3><span class="tnum">6.1</span><span>Calculadora IP / CIDR</span></h3><div class="prose"><div class="tool"><p class="tool-h">IP / CIDR</p><p class="tool-note">Escribe una IP con su prefijo (o su máscara) y, si quieres, otra IP para saber si están en la misma red.</p><div id="tool-ip"><noscript><p>Esta herramienta necesita JavaScript.</p></noscript></div></div></div></section></section>
+    <p class="foot">Todas las calculadoras funcionan sin conexión, en el propio navegador.</p>
+  </main>
+</div>
+<script src="../js/guia.js"></script>
+<script src="../js/herramientas.js"></script>
+<script src="../js/calculadoras.js"></script>
+</body>
+</html>

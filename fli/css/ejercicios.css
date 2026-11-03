@@ -227,3 +227,18 @@ td.tv.main,th.main{box-shadow:inset 2px 0 0 var(--accent),inset -2px 0 0 var(--a
 /* ---------- Integración con la barra superior del sitio ---------- */
 .has-site-nav .shell{padding-top:var(--s-5)}
 .has-site-nav .site-nav{max-width:1180px}
+
+/* ---------- Móvil: índice fijo arriba (siempre a mano en guías largas) ---------- */
+@media (max-width: 900px) {
+  .side { position: sticky; top: 0; z-index: 30; margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); border-radius: 0; border-width: 0 0 1px;
+    padding: calc(var(--s-2) + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) var(--s-2) max(16px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--surface) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .side.open { box-shadow: 0 12px 28px -18px rgba(0, 0, 0, .45); }
+  .side.open .toc { max-height: calc(100dvh - 190px); overflow-y: auto; overscroll-behavior: contain; padding-bottom: var(--s-3); }
+  .side-brand { min-width: 0; flex: 1 1 auto; font-size: .98rem; white-space: nowrap; overflow: hidden; }
+  .side-brand .side-cur { color: var(--muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .toc-toggle { min-height: 38px; padding: 0 var(--s-4) !important; align-items: center; flex: none; }
+  .toc a { min-height: 36px; align-items: center; }
+  .topic, .tema, .card, .divider { scroll-margin-top: 72px; }
+}
+.side-brand .side-cur:empty { display: none; }

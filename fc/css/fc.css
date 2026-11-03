@@ -56,3 +56,28 @@ code.f{font-family:var(--f-mono);font-size:.92em;font-weight:500;background:var(
 .perfect{padding:16px;border:1px solid var(--ok);background:var(--ok-soft);border-radius:8px}
 
 @media (max-width:520px){ .score .big{font-size:52px} }
+
+/* ---------- Simulacro (fc/js/simulacro.js) ---------- */
+.rules{margin:.4em 0 0;padding-left:1.2em}
+.rules li{margin:.2em 0}
+.sim-bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(12px,env(safe-area-inset-right,0px)) 10px 14px;
+  margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));background:color-mix(in srgb,var(--surface) 94%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.sim-clock{font:800 22px var(--f-display);font-variant-numeric:tabular-nums;min-width:3.6em}
+.sim-clock.low{color:var(--bad)}
+.sim-count{flex:1;font-size:14px;color:var(--muted)}
+.sim-count b{color:var(--ink)}
+.sim-sheet{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.sim-sheet summary{cursor:pointer;font-weight:700;min-height:28px}
+.sim-sheet .column{margin-top:10px;gap:5px}
+.sim-sheet .cell{width:32px;height:32px;text-decoration:none;font-size:12.5px}
+.sim-sheet .cell.now{outline:0;background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.sim-q{scroll-margin-top:72px;gap:12px}
+.sim-qh{display:flex;align-items:center;gap:10px}
+.sim-n{display:grid;place-items:center;min-width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--surface);font:700 14px var(--f-mono)}
+.tag{font:600 12px var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.sim-q .qtext{font-size:17.5px}
+.opt{min-height:48px}
+.opt[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt[aria-checked="true"] .k{background:var(--accent);color:var(--surface)}
+@media (min-width:721px){.sim-bar{margin:0;border:1px solid var(--line);border-radius:12px}}

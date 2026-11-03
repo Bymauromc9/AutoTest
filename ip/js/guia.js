@@ -149,3 +149,45 @@
     document.querySelectorAll('code.lang-cpp, code.lang-sp').forEach(function (c) { highlight(c, c.classList.contains('lang-cpp') ? 'cpp' : 'sp'); });
   } catch (e) { /* navegador sin lookbehind: el código se queda sin colores */ }
 })();
+
+/* ---------- Apartados estudiados y parte actual en el índice móvil ----------
+   · Si el <body> tiene data-estudio-key, cada apartado de la guía (section.topic) lleva un botón
+     «Marcar como estudiado»; se guarda en localStorage como { id: 1, …, _total: n } (la portada lo muestra)
+     y el índice marca con ✓ los apartados estudiados.
+   · En el móvil, junto al nombre del índice fijo se ve la parte que hay en pantalla. */
+(function () {
+  "use strict";
+  var KEY = document.body.getAttribute("data-estudio-key");
+  var topics = Array.prototype.slice.call(document.querySelectorAll("section.tema.guide > section.topic[id]"));
+  if (KEY && topics.length) {
+    var st = window.App.store(KEY) || {};
+    st._total = topics.length; window.App.store(KEY, st);
+    var sync = function (sec) {
+      var on = !!st[sec.id], b = sec.querySelector(":scope > .study");
+      sec.classList.toggle("studied", on);
+      if (b) { b.setAttribute("aria-pressed", on ? "true" : "false"); b.textContent = on ? "Estudiado" : "Marcar como estudiado"; }
+      var a = document.querySelector('.toc-topics a[href="#' + sec.id + '"]'); if (a) a.classList.toggle("studied", on);
+    };
+    topics.forEach(function (sec) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "study";
+      b.addEventListener("click", function () {
+        if (st[sec.id]) delete st[sec.id]; else st[sec.id] = 1;
+        st._total = topics.length; window.App.store(KEY, st); sync(sec);
+      });
+      sec.appendChild(b); sync(sec);
+    });
+  }
+  var brand = document.querySelector(".side-brand");
+  if (brand && "IntersectionObserver" in window) {
+    var cur = document.createElement("span"); cur.className = "side-cur"; brand.appendChild(cur);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var h = en.target.querySelector(".tema-head h2, .divider h2, h2");
+        cur.textContent = h ? "· " + h.textContent.trim() : "";
+      });
+    }, { rootMargin: "-25% 0px -70% 0px" });
+    document.querySelectorAll("section.tema, .divider").forEach(function (s) { io.observe(s); });
+  }
+})();

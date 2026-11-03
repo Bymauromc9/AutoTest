@@ -7,12 +7,14 @@ abre `index.html` con doble clic. También funciona servido desde cualquier host
 ## Estructura
 
 ```
-index.html                  Portada: una tarjeta por asignatura
+index.html                  Portada: «continuar», y una tarjeta por asignatura con su progreso y el próximo examen
 assets/
   css/base.css              Tokens de diseño (colores, tipografías, tema oscuro) y componentes genéricos
-  css/nav.css               Barra superior común (autosuficiente: sirve también en páginas con estilos propios)
+  css/nav.css               Navegación común: barra superior, chips de la sección y barra inferior en el móvil
+  css/hub.css               Portada de cada asignatura (resumen de progreso, secciones, tarjetas por tipo)
   css/portal.css            Estilos de la portada
-  js/core.js                Registro de asignaturas, tema claro/oscuro, almacenamiento y barra superior
+  js/core.js                Registro de asignaturas y recursos, iconos, progreso, tema, almacenamiento y navegación
+  js/hub.js                 Pinta la portada de una asignatura a partir del registro
   js/portal.js              Pinta las tarjetas de la portada a partir del registro
   js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
   css/asistente.css         Estilos del panel del asistente
@@ -21,7 +23,7 @@ api/
 vercel.json                 Tiempo máximo de la función del asistente
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
-  index.html                Portada de FLI: bloque L0 y bloque L1, cada uno con Teoría y Prácticas, y el progreso guardado
+  index.html                Portada de FLI (la genera assets/js/hub.js): Teoría, Prácticas y Examen, con L0 y L1 dentro
   teoria/
     autotest.html           Tests por tema y test general
     examenes.html           Parcial real 23-24 y simulacros, con corrección
@@ -40,37 +42,44 @@ fli/                        Fundamentos Lógicos de la Informática
     css/l1.css              Estilos propios de L1 (se carga después de fli/css/ejercicios.css)
     js/l1.js                Resoluciones plegables (abrir/cerrar todas, abrir la enlazada, abrir al imprimir)
   css/
-    inicio.css              Bloques L0 / L1 de la portada de FLI
     fli.css                 Componentes de FLI (fórmulas, autotest, chuletas, exámenes, guía)
     ejercicios.css          Páginas de ejercicios con índice lateral
     equivalencias.css       Test de equivalencias
   js/
     formulas.js             Utilidades compartidas: colorear conectivas, fórmulas, árboles de tableaux
     logic.js                Motor de lógica proposicional (análisis, evaluación, subfórmulas)
-    autotest.js · examenes.js · chuletas.js · guia.js · equivalencias.js · ejercicios.js · inicio.js
+    autotest.js · examenes.js · chuletas.js · guia.js · equivalencias.js · ejercicios.js
     data/
       banco.js              Banco de preguntas del autotest
       examenes.js           Exámenes completos
       chuletas.js           Contenido de las chuletas y tarjetas
 fc/                         Fundamentos de Computadores (temas 1–6)
-  index.html                Portada de FC: Teoría y Prácticas, con el progreso guardado
+  index.html                Portada de FC (la genera assets/js/hub.js)
   teoria/
-    guia.html               Guía de teoría de los seis temas y formulario (enlazable: guia.html#t3-2)
-    autotest.html           Tests por tema (266 preguntas) y test general
+    guia.html               Guía de teoría de los seis temas y formulario (enlazable: guia.html#t3-2),
+                            con «Marcar como estudiado» en cada apartado
+    chuleta.html            Fórmulas, conversión, Linux, ensamblador, redes y errores frecuentes
+    autotest.html           Tests por tema (519 preguntas, 253 de ellas de exámenes) y test general (#test-G)
   practicas/
     guia.html               Boletines 1–6 explicados, 43 ejercicios resueltos y dos herramientas
                             (mini-okteta en #p2-3 y calculadora de red en #p6-2)
+    herramientas.html       Todas las calculadoras: rendimiento, mini-okteta, bases, C2 con pasos, PPM,
+                            Karnaugh, chmod y red IP (enlazables: herramientas.html#h-karnaugh)
+  examen/
+    guia.html               Cómo es el examen, por dónde empezar y 9 problemas de convocatorias resueltos
+    simulacro.html          Simulacro del test: 40 preguntas x:1, reparto 5/7/7/7/7/7, reloj y penalización oficial
   css/
-    fc.css                  Componentes del autotest
+    fc.css                  Componentes del autotest y del simulacro
     guia.css                Guías con índice lateral, cajas, mapas de Karnaugh y herramientas
-    inicio.css              Portada de FC
   js/
     util.js                 FC.fmt y FC.LETTERS
-    autotest.js · inicio.js · guia.js · herramientas.js
-    data/banco.js           Banco de preguntas del autotest
+    autotest.js · guia.js · herramientas.js
+    simulacro.js            Simulacro del test con las reglas del examen real
+    calculadoras.js         Calculadoras de la página de herramientas (salvo mini-okteta y red IP)
+    data/banco.js           Banco de preguntas (x:1 = de examen, tres opciones, sin barajar opciones)
   img/                      Figuras de los apuntes (buses, placas base de la tarea 1)
 ip/                         Introducción a la Programación (temas 0–4 y prácticas 1–6)
-  index.html                Portada de IP: Teoría y Prácticas, con el progreso guardado
+  index.html                Portada de IP (la genera assets/js/hub.js)
   teoria/
     guia.html               Guía de teoría de los temas 0–4, simulador de la máquina secuencial (#t4-8)
                             y anexos: SP → C++ (#a-1), esquemas (#a-2) y códigos de Wooclap (#a-3)
@@ -80,10 +89,9 @@ ip/                         Introducción a la Programación (temas 0–4 y prá
   css/
     guia.css                Guías (copia de fc/css/guia.css sin Karnaugh) + resaltado de código y simulador
     ip.css                  Componentes del autotest
-    inicio.css              Portada de IP
   js/
     util.js                 IP.fmt y IP.LETTERS
-    autotest.js · inicio.js
+    autotest.js
     guia.js                 Índice, progreso, resoluciones plegables y resaltado de C++ y de la notación SP
     maquina.js              Simulador de la máquina secuencial (primer modelo)
     data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4 y bloque 5 = C++)
@@ -98,23 +106,34 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
   donde los navegadores bloquean esas dos cosas. Los datos van en ficheros `.js`.
 - **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC` y `window.IP` (asignaturas). Cada script está envuelto
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
-- **Barra superior**: la genera `core.js` a partir de atributos del `<body>`:
-  `data-root` (ruta a la raíz: `""`, `"../"`, `"../../"`), `data-subject` (`fli`),
-  `data-area` (`teoria` | `practicas` para L0, `l1-teoria` | `l1-practicas` para L1, o `auto`) y `data-title`
-  (miga de pan). Las secciones con `group` en `SUBJECTS` se pintan agrupadas (L0 · Teoría | Prácticas, L1 · …).
+- **Estructura común**: toda asignatura tiene tres secciones, **Teoría · Prácticas · Examen**, y sus recursos son
+  de un tipo fijo (`App.KINDS`: guía, chuleta, autotest, práctica, ejercicios, simulador, herramientas, examen,
+  simulacro, test general) que decide el icono, el color y el orden dentro de la sección. Los bloques de una
+  asignatura (L0 / L1 en FLI) son grupos dentro de cada sección.
+- **Navegación**: la genera `core.js` a partir de `App.SUBJECTS` y de los atributos del `<body>`:
+  `data-root` (ruta a la raíz: `""`, `"../"`, `"../../"`), `data-subject` (`fc`), `data-hub` (en la portada de la
+  asignatura) y `data-title` (opcional; si no, el título del recurso). La sección y el recurso actuales se deducen
+  de la URL. En el móvil, la barra inferior (Inicio · Teoría · Prácticas · Examen) queda al alcance del pulgar y,
+  en las guías, el índice se queda fijo arriba.
+- **Enlaces directos**: los autotests aceptan `#test-G` (test general) o `#test-3` (tema 3).
 - **Tema**: claro u oscuro según el sistema; el botón de la barra lo fija para todas las páginas
   (`<html data-theme="light|dark">`). Todas las hojas de estilo definen las dos paletas.
 
 ## Añadir una asignatura
 
-1. Crea su carpeta (por ejemplo `mates/`) con su `index.html` y sus páginas. Copia la cabecera de
-   cualquier página de `fli/` y ajusta `data-root`, `data-subject` y las rutas.
-2. Añade una entrada a `SUBJECTS` en `assets/js/core.js`:
+1. Crea su carpeta (por ejemplo `mates/`). Su `index.html` es una copia de `fc/index.html` cambiando
+   `data-subject`; sus páginas, una copia de la cabecera de cualquier página de `fc/` ajustando las rutas.
+2. Añade una entrada a `SUBJECTS` en `assets/js/core.js` con sus recursos:
    ```js
-   { id: "mates", short: "MAT", name: "Matemáticas", desc: "…", home: "mates/index.html",
-     sections: [{ id: "teoria", label: "Teoría", href: "mates/index.html#teoria" }] }
+   { id: "mates", short: "MAT", name: "Matemáticas", desc: "…", intro: "…", home: "mates/index.html",
+     sub: { teoria: "Temas 1–5", practicas: "…", examen: "…" },
+     exam: { date: "2027-01-20", label: "20 de enero de 2027", href: "mates/examen/guia.html" },  // opcional
+     resources: [
+       { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", desc: "…", href: "mates/teoria/guia.html",
+         progress: { t: "estudio", key: "mates-teoria-estudio", total: 20 } }
+     ] }
    ```
-   La portada y la barra superior la incluyen automáticamente.
+   La portada, la portada de la asignatura y la navegación la incluyen automáticamente, con su progreso.
 3. Usa `assets/css/base.css` para que comparta colores, tipografías, tema oscuro y componentes.
    Si necesita estilos o utilidades propias, ponlos en `mates/css/` y `mates/js/` con su propio espacio
    de nombres (`window.MATES`).
@@ -136,11 +155,15 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `fc-settings`, `fc-seen`, `fc-best-1` … `fc-best-6`, `fc-best-G` | Opciones, preguntas vistas y mejores notas del autotest de FC |
 | `fc-practicas-hechos` | Ejercicios de prácticas de FC marcados como hechos |
 | `fc-teoria-visto`, `fc-practicas-visto` | Última parte vista de cada guía de FC |
+| `fc-teoria-estudio`, `ip-teoria-estudio` | Apartados de la guía de teoría marcados como estudiados (`_total`: nº de apartados) |
+| `fc-examen-hechos` | Problemas de la guía del examen de FC marcados como hechos |
+| `fc-sim-best`, `fc-sim-hist`, `fc-sim-time` | Mejor nota (sobre 4), historial y reloj elegido del simulacro de FC |
+| `app-last`, `app-last-<asignatura>` | Último recurso abierto («Continuar donde lo dejaste») |
 | `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
 | `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
 
-El test del autotest en curso se guarda en `sessionStorage` (sobrevive a recargas, no a cerrar la pestaña).
+El test del autotest y el simulacro en curso se guardan en `sessionStorage` (sobreviven a recargas, no a cerrar la pestaña).
 
 
 ## Asistente de IA

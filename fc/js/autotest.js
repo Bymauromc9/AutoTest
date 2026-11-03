@@ -16,7 +16,8 @@ const SEEN = new Set((store("fc-seen")||[]).filter(i=>Number.isInteger(i)&&i>=0&
 function saveSeen(){ store("fc-seen",[...SEEN]); }
 
 function prep(item){ // baraja opciones conservando correcta y notas
-  const idx=shuffle(item.o.map((_,k)=>k));
+  // Las de examen (x:1) mantienen su orden: algunas opciones dicen «las dos anteriores».
+  const idx=item.x? item.o.map((_,k)=>k) : shuffle(item.o.map((_,k)=>k));
   return {src:item, id:item.id, t:item.t, q:item.q, e:item.e, o:idx.map(k=>item.o[k]), a:idx.indexOf(item.a), w:idx.map(k=>(item.w&&item.w[k])||null)};
 }
 /* Elige n preguntas del tema t que NO estén en «exclude», priorizando las no vistas */
@@ -110,7 +111,7 @@ function home(){
   <header class="top">
     <span class="eyebrow">Teoría · Temas 1–6</span>
     <h1>Autotest de FC</h1>
-    <p class="muted">Elige un tema o el test general. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
+    <p class="muted">Elige un tema o el test general. Las preguntas marcadas «De examen» salen de convocatorias anteriores, con sus tres opciones. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
     <div class="legend"><span><span class="cell ok">V</span> acierto</span><span><span class="cell bad">F</span> fallo</span><span><span class="cell blank">–</span> en blanco</span></div>
   </header>
   <div class="settings" role="group" aria-label="Opciones del test">
@@ -161,7 +162,7 @@ function quiz(){
   const last=S.i===n-1;
   const canSwap=newAvailable()>0;
   app.innerHTML=`
-  <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)}${S.key==="G"?" · Tema "+q.t:""}${S.batch>1?" · Tanda "+S.batch:""}</span><h2>Pregunta ${S.i+1} de ${n}</h2></div>
+  <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)}${S.key==="G"?" · Tema "+q.t:""}${S.batch>1?" · Tanda "+S.batch:""}${q.src&&q.src.x?" · De examen":""}</span><h2>Pregunta ${S.i+1} de ${n}</h2></div>
     <div class="qtools">
       <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar preguntas</button>
       <a class="btn ghost" href="guia.html" target="_blank" rel="noopener">Guía de teoría ↗</a>
@@ -253,5 +254,11 @@ document.addEventListener("keydown",e=>{
 
 /* ---------- Arranque ---------- */
 restore();
-render();
+/* Enlace directo a un test (#test-G, #test-3…), p. ej. desde la sección «Examen» de la portada de la asignatura. */
+(function(){
+  const m=location.hash.match(/^#test-(G|\d+)$/);
+  if(m){ const key=m[1]==="G"?"G":parseInt(m[1],10);
+    if(key==="G"||TOPIC_IDS[key]){ history.replaceState(null,"",location.pathname+location.search); start(key); return; } }
+  render();
+})();
 })();

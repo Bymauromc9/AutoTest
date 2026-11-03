@@ -449,3 +449,28 @@ ul.stree > li > .nd { background: var(--accent); color: var(--surface); border-c
 .expl .formula { background: color-mix(in srgb, var(--surface) 65%, transparent); }
 .deep { margin: var(--s-5) 0 var(--s-2); padding: var(--s-4) var(--s-4) var(--s-3); border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--rule)); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .expl ol.steps > li::before { background: var(--surface); }
+
+/* ---------- Móvil: índice fijo arriba (siempre a mano en guías largas) ---------- */
+@media (max-width: 900px) {
+  .side { position: sticky; top: 0; z-index: 30; margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); border-radius: 0; border-width: 0 0 1px;
+    padding: calc(var(--s-2) + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) var(--s-2) max(16px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--surface) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .side.open { box-shadow: 0 12px 28px -18px rgba(0, 0, 0, .45); }
+  .side.open .toc { max-height: calc(100dvh - 190px); overflow-y: auto; overscroll-behavior: contain; padding-bottom: var(--s-3); }
+  .side-brand { min-width: 0; flex: 1 1 auto; font-size: .98rem; white-space: nowrap; overflow: hidden; }
+  .side-brand .side-cur { color: var(--muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .toc-toggle { min-height: 38px; padding: 0 var(--s-4) !important; align-items: center; flex: none; }
+  .toc a { min-height: 36px; align-items: center; }
+  .topic, .tema, .card, .divider { scroll-margin-top: 72px; }
+}
+.side-brand .side-cur:empty { display: none; }
+/* Apartados de teoría marcados como estudiados (fc/js/guia.js) */
+.study { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin-top: var(--s-1); padding: 0 var(--s-4) 0 var(--s-3); border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--muted); font: 600 .86rem var(--f-display); cursor: pointer; }
+.study::before { content: ""; width: 1rem; height: 1rem; border-radius: 4px; border: 2px solid currentColor; box-sizing: border-box; }
+.study:hover { border-color: var(--true); color: var(--true); }
+.study[aria-pressed="true"] { border-color: var(--true); background: var(--true-soft); color: var(--true); }
+.study[aria-pressed="true"]::before { background: var(--true) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; border-color: var(--true); }
+.toc-topics a.studied { color: var(--true); }
+.toc-topics a.studied .tnum::after { content: " ✓"; }
+.topic.studied { border-color: color-mix(in srgb, var(--true) 45%, var(--rule)) !important; }
+@media print { .study { display: none; } }

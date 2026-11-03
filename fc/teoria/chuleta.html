@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chuleta · FC</title>
+<meta name="description" content="Chuleta de Fundamentos de Computadores: fórmulas de los seis temas, tabla de conversión, Linux, ensamblador x86-64 y redes.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../css/guia.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="fc" data-title="Chuleta">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">Σ</span> FC · Chuleta</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#c1"><span class="tn">Σ</span><span class="tname">Fórmulas</span><span></span></a><ol class="toc-topics"><li><a href="#c1-1"><span class="tnum">1</span>Las fórmulas de cada tema</a></li></ol></li><li><a class="toc-tema" href="#c2"><span class="tn">0x</span><span class="tname">Conversión</span><span></span></a><ol class="toc-topics"><li><a href="#c2-1"><span class="tnum">2</span>Tabla y potencias</a></li></ol></li><li><a class="toc-tema" href="#c3"><span class="tn">$</span><span class="tname">Linux</span><span></span></a><ol class="toc-topics"><li><a href="#c3-1"><span class="tnum">3</span>Órdenes</a></li></ol></li><li><a class="toc-tema" href="#c4"><span class="tn">%</span><span class="tname">Ensamblador x86-64</span><span></span></a><ol class="toc-topics"><li><a href="#c4-1"><span class="tnum">4</span>Registros e instrucciones</a></li></ol></li><li><a class="toc-tema" href="#c5"><span class="tn">IP</span><span class="tname">Redes</span><span></span></a><ol class="toc-topics"><li><a href="#c5-1"><span class="tnum">5</span>Comandos y capas</a></li></ol></li><li><a class="toc-tema" href="#c6"><span class="tn">!</span><span class="tname">Errores frecuentes</span><span></span></a><ol class="toc-topics"><li><a href="#c6-1"><span class="tnum">6</span>Repaso exprés</a></li></ol></li></ol></nav>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Fundamentos de Computadores · Repaso</p><h1>Chuleta <span class="ops">2^n</span></h1><p class="lead">Todo lo que hay que tener fresco el día antes, en una página. Si algo no te suena, la guía de teoría lo explica con ejemplos. Se imprime bien en una hoja por las dos caras.</p></header>
+<section class="tema guide" id="c1"><header class="tema-head"><p class="eyebrow">Por temas</p><h2>Fórmulas</h2><p class="lede">Todo lo que hay que tener fresco, tema a tema.</p></header><section class="topic" id="c1-1"><h3><span class="tnum">1</span><span>Las fórmulas de cada tema</span></h3><div class="prose"><p class="sub">Tema 1 · Introducción</p><div class="codeblk cheat"><pre><code>t = (nº instrucciones × CPI) ÷ frecuencia
+   f = N × CPI ÷ t        CPI = t × f ÷ N
+Memoria direccionable = 2<sup>bits del bus de direcciones</sup> bytes
+Ancho de banda = anchura del bus (bytes) × frecuencia del bus
+Tiempo de un bloque = (tamaño ÷ anchura) ÷ frecuencia
+1 KB = 2<sup>10</sup> · 1 MB = 2<sup>20</sup> · 1 GB = 2<sup>30</sup> · 1 TB = 2<sup>40</sup> bytes
+En redes: Mbit/s en potencias de 10, y × 8 para pasar de bytes a bits
+Little endian: el MSB de un dato de k bytes en D está en D + k − 1</code></pre></div><p class="sub">Tema 2 · Representación</p><div class="codeblk cheat"><pre><code>C2 de n bits:       −2<sup>n−1</sup> … +2<sup>n−1</sup>−1     (8 bits: −128 … 127)
+Signo y magnitud:   −(2<sup>n−1</sup>−1) … +2<sup>n−1</sup>−1 (doble cero)
+Sesgada:            se guarda N + S;  rango −S … 2<sup>n</sup> − 1 − S
+Negativo en C2:     |N| en binario → extender → invertir → +1
+Extensión de signo: repetir el bit de signo a la izquierda
+
+IEEE 754 simple:  1 + 8 + 23 bits    S = 127
+IEEE 754 doble:   1 + 11 + 52 bits   S = 1023
+   e = E + S        N = (−1)<sup>s</sup> × 1,m × 2<sup>E</sup>
+   e = 0, m = 0 → cero          e = 0, m ≠ 0 → desnormalizado
+   e = 1…1, m = 0 → ±∞          e = 1…1, m ≠ 0 → NaN
+Redondeo/retenedor: 0x → truncar · 11 → +1 · 10 → al par
+
+ASCII 7 bits (128) · Latin1 1 byte (256, ñ = F1) · UTF-8 1–4 bytes (ñ = C3 B1)
+Píxel PPM (fila, col) = inicio + (fila × anchura + col) × 3</code></pre></div><p class="sub">Tema 3 · Circuitos</p><div class="codeblk cheat"><pre><code>Funciones distintas de n variables = 2<sup>2<sup>n</sup></sup>    (3 → 256, 4 → 65 536)
+Agrupar 2<sup>k</sup> celdas en Karnaugh elimina k variables
+Decodificador: n entradas → 2<sup>n</sup> salidas (una activa)
+Codificador:   2<sup>n</sup> entradas → n salidas
+Multiplexor:   2<sup>n</sup> datos + n de control → 1 salida
+Función de n variables con MUX de 2<sup>n−1</sup> a 1 + inversor
+ROM: m entradas, n salidas → forma 2<sup>m</sup> × n · PLA: entradas × productos × salidas
+Retardo = camino crítico (las ramas en paralelo NO se suman)
+Sólo NAND → simplificar por unos · sólo NOR → por ceros
+Semisumador: s = a ⊕ b, c = a·b · Completo: añade c_in (2 semisumadores + OR)</code></pre></div><p class="sub">Tema 5 · Lenguajes del computador</p><div class="codeblk cheat"><pre><code>k bits en un campo → 2<sup>k</sup> valores distintos
+Tamaño de una instrucción = dirección siguiente − dirección actual
+Dirección de v[i] = base + i × tamaño del elemento
+Variable local en -k(%rbp): de RBP − k a RBP − k + tamaño − 1</code></pre></div><p class="sub">Tema 6 · Redes</p><div class="codeblk cheat"><pre><code>Bits de host h = 32 − n
+Hosts válidos = 2<sup>h</sup> − 2
+Red = bits de host a 0 · Broadcast = bits de host a 1
+Privadas: 10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16 · Loopback 127.0.0.1
+Ruta por defecto = destino 0.0.0.0 en route -n (su pasarela es el router)</code></pre></div></div></section></section>
+<section class="tema guide" id="c2"><header class="tema-head"><p class="eyebrow">Tablas</p><h2>Conversión</h2><p class="lede">Binario, hexadecimal, potencias y fracciones de memoria.</p></header><section class="topic" id="c2-1"><h3><span class="tnum">2</span><span>Tabla y potencias</span></h3><div class="prose"><div class="tablewrap"><table class="ev"><thead><tr><th>Dec</th><th>Bin</th><th>Hex</th><th>Dec</th><th>Bin</th><th>Hex</th></tr></thead><tbody><tr><td>0</td><td>0000</td><td>0</td><td>8</td><td>1000</td><td>8</td></tr><tr><td>1</td><td>0001</td><td>1</td><td>9</td><td>1001</td><td>9</td></tr><tr><td>2</td><td>0010</td><td>2</td><td>10</td><td>1010</td><td>A</td></tr><tr><td>3</td><td>0011</td><td>3</td><td>11</td><td>1011</td><td>B</td></tr><tr><td>4</td><td>0100</td><td>4</td><td>12</td><td>1100</td><td>C</td></tr><tr><td>5</td><td>0101</td><td>5</td><td>13</td><td>1101</td><td>D</td></tr><tr><td>6</td><td>0110</td><td>6</td><td>14</td><td>1110</td><td>E</td></tr><tr><td>7</td><td>0111</td><td>7</td><td>15</td><td>1111</td><td>F</td></tr></tbody></table></div><p><b>Potencias de 2:</b> 2<sup>4</sup> = 16 · 2<sup>5</sup> = 32 · 2<sup>6</sup> = 64 · 2<sup>7</sup> = 128 · 2<sup>8</sup> = 256 · 2<sup>9</sup> = 512 · 2<sup>10</sup> = 1024 · 2<sup>16</sup> = 65 536.</p><p><b>Fracciones:</b> 2<sup>−1</sup> = 0,5 · 2<sup>−2</sup> = 0,25 · 2<sup>−3</sup> = 0,125 · 2<sup>−4</sup> = 0,0625 · 0,75 = 0,11₂ · 0,375 = 0,011₂ · 0,625 = 0,101₂ · 0,875 = 0,111₂.</p><p><b>ASCII:</b> «0» = 0x30 · «A» = 0x41 · «a» = 0x61 · espacio = 0x20 · salto de línea = 0x0A.</p></div></section></section>
+<section class="tema guide" id="c3"><header class="tema-head"><p class="eyebrow">Tema 4</p><h2>Linux</h2><p class="lede">Las órdenes que caen en el test y en el problema.</p></header><section class="topic" id="c3-1"><h3><span class="tnum">3</span><span>Órdenes</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Orden</th><th>Para qué</th></tr></thead><tbody><tr><td><code>pwd</code></td><td>Directorio actual (ruta absoluta)</td></tr><tr><td><code>ls -l</code> · <code>-a</code> · <code>-ld dir</code> · <code>-R</code></td><td>Detallado · ocultos · el propio directorio · recursivo</td></tr><tr><td><code>cd ..</code> · <code>cd ~</code> · <code>cd</code></td><td>Padre · inicio · inicio</td></tr><tr><td><code>cp -r</code> · <code>mv</code> · <code>rm -r</code> · <code>touch</code> · <code>mkdir</code> · <code>rmdir</code></td><td>Copiar, mover o renombrar, borrar, crear</td></tr><tr><td><code>cat</code> · <code>less</code> · <code>head</code> · <code>tail -n1</code> · <code>sort</code></td><td>Ver de golpe · avanzar y retroceder · primeras/últimas líneas · ordenar</td></tr><tr><td><code>find dir -type f -name "*.txt" -size +4k -mtime -2</code></td><td>Buscar (−2 = hace menos de 2 días)</td></tr><tr><td><code>tar czf a.tgz f</code> · <code>tar tzf a.tgz</code> · <code>tar xzf a.tgz</code></td><td>Crear · listar · extraer</td></tr><tr><td><code>chmod 754</code> · <code>chown u:g</code> · <code>chgrp g</code></td><td>Permisos (r = 4, w = 2, x = 1) y propiedad</td></tr><tr><td><code>ps -Af</code> · <code>kill -9 PID</code> · <code>top</code> · <code>orden &amp;</code></td><td>Procesos · matar · consumo · segundo plano</td></tr><tr><td>Ctrl‑C · Ctrl‑Z · <code>fg</code> · <code>bg</code></td><td>Matar · dormir · reanudar</td></tr><tr><td><code>&gt;</code> · <code>&gt;&gt;</code> · <code>&lt;</code> · <code>2&gt;</code> · <code>|</code></td><td>Machacar · añadir · leer de fichero · errores · tubería</td></tr><tr><td><code>du -hs</code> · <code>df -h</code></td><td>Tamaño de un directorio · espacio de los sistemas de ficheros</td></tr><tr><td><code>whoami</code> · <code>who</code> · <code>su</code> · <code>sudo</code> · <code>exit</code></td><td>Usuarios e identidad</td></tr></tbody></table></div><div class="box"><p class="box-t">Comodines y directorios</p><p><code>*</code> cero o más caracteres · <code>?</code> exactamente uno · <code>[a-z]</code> uno del rango · <code>[!b-d]</code> uno fuera del rango.</p><p>/etc configuración · /boot arranque · /home usuarios · /bin y /sbin programas básicos y de administración · /dev dispositivos · /proc virtual (procesos) · /tmp temporales.</p><p>En un directorio: r = listar, w = crear y borrar dentro, x = entrar.</p></div></div></section></section>
+<section class="tema guide" id="c4"><header class="tema-head"><p class="eyebrow">Tema 5</p><h2>Ensamblador x86-64</h2><p class="lede">Registros, operandos y las instrucciones del problema de GDB.</p></header><section class="topic" id="c4-1"><h3><span class="tnum">4</span><span>Registros e instrucciones</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Pieza</th><th>Qué es</th></tr></thead><tbody><tr><td><code>%rax</code> / <code>%eax</code> / <code>%ax</code> / <code>%al</code></td><td>64 / 32 / 16 / 8 bits del mismo registro</td></tr><tr><td><code>%rip</code></td><td>Siguiente instrucción a ejecutar</td></tr><tr><td><code>%rdi</code>, <code>%rsi</code>, <code>%rdx</code>…</td><td>Parámetros 1.º, 2.º, 3.º…</td></tr><tr><td><code>%rax</code></td><td>Valor de retorno</td></tr><tr><td><code>%rsp</code> / <code>%rbp</code></td><td>Cima de la pila / base del marco (variables locales)</td></tr><tr><td><code>$0xa</code> · <code>%rax</code> · <code>(%rax)</code></td><td>Inmediato (en la instrucción) · registro · memoria</td></tr><tr><td><code>-4(%rbp)</code> · <code>base(,%rax,4)</code></td><td>Variable local · elemento de un array de int</td></tr><tr><td><code>cmp</code> + <code>je/jne/jl/jge</code></td><td>Condición de un if o un bucle (cmp sólo toca RFLAGS)</td></tr><tr><td><code>call</code> · <code>ret</code> · <code>push</code> · <code>pop</code></td><td>Modifican la pila y RSP (<code>mov %rsp,%rbp</code> no)</td></tr><tr><td><code>lea d(%r),%x</code></td><td>Calcula una dirección sin acceder a memoria</td></tr><tr><td>.c → <code>gcc -S</code> → .s → <code>gcc -c</code> → .o → <code>gcc</code> → ejecutable</td><td>Compilar, ensamblar, enlazar; <code>objdump -d</code> desensambla, <code>ldd</code> lista las .so</td></tr></tbody></table></div></div></section></section>
+<section class="tema guide" id="c5"><header class="tema-head"><p class="eyebrow">Tema 6</p><h2>Redes</h2><p class="lede">Comandos y la pila de protocolos.</p></header><section class="topic" id="c5-1"><h3><span class="tnum">5</span><span>Comandos y capas</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Orden</th><th>Para qué</th></tr></thead><tbody><tr><td><code>ifconfig</code></td><td>IP (inet), máscara, broadcast y MAC (ether)</td></tr><tr><td><code>route -n</code></td><td>Tabla de rutas: el router es la pasarela de la fila 0.0.0.0</td></tr><tr><td><code>nmcli</code></td><td>Configuración de red y servidores DNS</td></tr><tr><td><code>ping host</code> · <code>ping -b broadcast</code></td><td>Comprobar y medir el retardo · a toda la subred</td></tr><tr><td><code>host nombre</code></td><td>Consulta DNS</td></tr><tr><td><code>netstat -tupan</code></td><td>Conexiones TCP y UDP con su programa y PID</td></tr><tr><td><code>telnet IP 80</code> · <code>nc -l 8080</code></td><td>Hablar HTTP a mano · escuchar en un puerto libre</td></tr></tbody></table></div><p>Capas: aplicación (HTTP, DNS, SMTP, DHCP) → transporte (TCP fiable, UDP no) → red (IP) → enlace (802.3 Ethernet, 802.11 WiFi). MAC 48 bits, IPv4 32, puerto 16.</p></div></section></section>
+<section class="tema guide" id="c6"><header class="tema-head"><p class="eyebrow">La víspera</p><h2>Errores frecuentes</h2><p class="lede">Lo que más puntos quita.</p></header><section class="topic" id="c6-1"><h3><span class="tnum">6</span><span>Repaso exprés</span></h3><div class="prose"><ul><li>No invertir los bytes en little endian, o invertir una cadena.</li><li>Fin de un dato = inicio + tamaño − 1.</li><li><code>-mtime -2</code> = últimos dos días.</li><li>Las ramas en paralelo no se suman.</li><li>2<sup>h</sup> − 2 hosts.</li><li>RIP = la <b>siguiente</b> instrucción.</li><li>En el test, en blanco si no descartas nada.</li></ul><p>La lista completa, con los problemas resueltos, en la <a href="../examen/guia.html#e7">guía del examen</a>. Y los verdadero/falso típicos en el <a href="guia.html#f-2">formulario de la guía de teoría</a>.</p></div></section></section>
+    <p class="foot">Resumen de la guía de teoría y de los exámenes de 2022 a 2026.</p>
+  </main>
+</div>
+<script src="../js/guia.js"></script>
+</body>
+</html>
