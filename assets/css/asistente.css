@@ -132,3 +132,27 @@ html.ai-open .ai-launch { display: none; }
   .ai-foot { display: none; }
 }
 @media print { .ai-ui { display: none !important; } html.ai-open body { margin: 0 !important; padding: 0 !important; } }
+
+/* ---------- ajustes: elegir la IA y la clave de cada uno ---------- */
+.ai-log[hidden], .ai-quick[hidden], .ai-form[hidden], .ai-cfg[hidden] { display: none !important; }
+.ai-cfg { flex: 1 1 auto; overflow-y: auto; padding: 14px 16px 16px 18px; font-size: 15px; }
+.ai-cfg__t { font: 700 16px "Bricolage Grotesque", system-ui, sans-serif; margin: 0 0 10px; }
+.ai-opts { display: flex; flex-direction: column; gap: 8px; }
+.ai-opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--ai-line); border-radius: 10px; cursor: pointer; }
+.ai-opt:has(input:checked) { border-color: var(--ai-accent); background: var(--ai-accent-soft); }
+.ai-opt input { margin-top: 4px; accent-color: var(--ai-accent); }
+.ai-opt span { display: flex; flex-direction: column; gap: 2px; }
+.ai-opt small { color: var(--ai-muted); font-size: 13px; }
+.ai-opt a { color: var(--ai-accent); }
+.ai-keys { display: none; flex-direction: column; gap: 8px; margin: -2px 0 4px 32px; }
+.ai-keys.is-on { display: flex; }
+.ai-keys label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; font-weight: 700; color: var(--ai-muted); }
+.ai-keys input { font: 14px "JetBrains Mono", ui-monospace, monospace; padding: 8px 10px; border: 1px solid var(--ai-line); border-radius: 8px; background: var(--ai-bg); color: var(--ai-ink); }
+.ai-keys input:focus { outline: 2px solid var(--ai-accent); outline-offset: 1px; }
+.ai-cfg__n { margin: 12px 0; font-size: 13px; color: var(--ai-muted); line-height: 1.45; }
+.ai-cfg__b { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-cfg__s { margin: 10px 0 0; font-size: 14px; min-height: 1.2em; }
+.ai-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--ai-accent); background: var(--ai-accent); color: var(--ai-accent-ink); font: 700 14px "Source Sans 3", system-ui, sans-serif; cursor: pointer; }
+.ai-btn--g { background: var(--ai-bg); color: var(--ai-accent); }
+.ai-btn--s { margin-top: 8px; padding: 6px 12px; font-size: 13px; display: inline-block; }
+.ai-btn:focus-visible { outline: 2px solid var(--ai-accent); outline-offset: 2px; }

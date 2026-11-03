@@ -156,9 +156,20 @@ redimensionar arrastrando su borde y sigue abierto al cambiar de página.
   fórmula?», «Errores típicos» y «Ponme a prueba».
 - La conversación se guarda en la pestaña (sessionStorage); el botón ⟲ empieza una nueva.
 
-### Configuración en Vercel
+### Qué IA responde (⚙ en el panel)
 
-El navegador nunca ve la clave: la página llama a `/api/chat` y esa función habla con la API de
+- **Con la clave de cada estudiante (Claude o Gemini).** En ⚙ Ajustes se elige el proveedor, se pega
+  la clave propia (Anthropic: https://console.anthropic.com/settings/keys · Google:
+  https://aistudio.google.com/apikey) y, si se quiere, otro modelo. La clave se guarda sólo en ese
+  navegador (localStorage) y la petición va directamente del navegador a Anthropic o a Google, sin
+  pasar por el servidor: cada uno gasta de su cuenta. Funciona aunque la web no tenga clave propia e
+  incluso abierta desde un archivo. Modelos por defecto: `claude-sonnet-5-5` y `gemini-3.8-flash`.
+- **Con la clave de la web** (opción por defecto). Sólo funciona si el dueño la configura en Vercel
+  (abajo). Si no está configurada, el panel invita a usar la clave propia.
+
+### Configuración de la clave de la web en Vercel (opcional)
+
+El navegador nunca ve esta clave: la página llama a `/api/chat` y esa función habla con la API de
 Anthropic.
 
 1. Crea una clave en https://console.anthropic.com (API Keys) y añade saldo.

@@ -148,6 +148,158 @@
     return out.join("").replace(/\u0000(\d+)\u0000/g, (m, i) => "<pre><code>" + esc(bloques[+i]) + "</code></pre>");
   }
 
+
+  /* ======================= Proveedores de IA =======================
+     · «web»: la función /api/chat con la clave de la web (si el dueño la ha configurado).
+     · «claude» / «gemini»: la clave de cada estudiante, guardada sólo en su navegador
+       (localStorage). La petición va directamente del navegador a Anthropic o a Google:
+       no pasa por el servidor de la web y cada uno gasta de su propia cuenta. */
+  const KEY_CFG = "ai-config-v1";
+  const PROVEEDORES = {
+    web: { nombre: "La IA de la web", corto: "IA de la web" },
+    claude: { nombre: "Claude (Anthropic) con mi clave", corto: "Claude · tu clave",
+      modelos: ["claude-sonnet-5-5", "claude-haiku-5-5", "claude-opus-5-5"], url: "https://console.anthropic.com/settings/keys", ej: "sk-ant-…" },
+    gemini: { nombre: "Gemini (Google) con mi clave", corto: "Gemini · tu clave",
+      modelos: ["gemini-3.8-flash"], url: "https://aistudio.google.com/apikey", ej: "AIza…" }
+  };
+  function cfg() {
+    const c = ls.get(KEY_CFG) || {};
+    return { proveedor: PROVEEDORES[c.proveedor] ? c.proveedor : "web", claves: c.claves || {}, modelos: c.modelos || {} };
+  }
+  const modeloDe = (c, p) => String(c.modelos[p] || PROVEEDORES[p].modelos[0]).trim();
+
+  // Las mismas instrucciones que usa api/chat.js, para cuando se habla directamente con la IA.
+  function instrucciones(ctx) {
+    const asignaturas = {
+      fli: "Fundamentos Lógicos de la Informática (lógica proposicional L0 y de predicados L1)",
+      fc: "Fundamentos de Computadores (representación de la información, circuitos combinacionales, Linux, ensamblador x86-64 y redes)",
+      ip: "Introducción a la Programación (notación algorítmica SP de clase y C++ con Geany y g++)"
+    };
+    const recorta = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n) + "\n[…recortado]" : t; };
+    const asig = asignaturas[ctx.asignatura] || "las asignaturas de 1.º del Grado en Ingeniería Informática";
+    return [
+      "Eres el asistente de estudio de una web de apuntes de 1.º del Grado en Ingeniería Informática de la Universidad de Murcia.",
+      "El estudiante está leyendo una página de " + asig + " y te pregunta porque algo no le ha quedado claro.",
+      "",
+      "Cómo responder:",
+      "- Responde siempre en español, con un tono cercano y claro, como un buen compañero que ya aprobó la asignatura.",
+      "- Básate en el contenido de la página que se te da abajo: usa la misma notación, los mismos nombres y los mismos ejemplos que la página, para que el estudiante pueda seguirte mirando las dos cosas a la vez.",
+      "- Si te piden explicarlo con otras palabras, cambia de verdad el enfoque: una analogía, un ejemplo nuevo con números pequeños o el razonamiento paso a paso. No repitas el texto de la página.",
+      "- Cuando haya una fórmula o un procedimiento, explica de dónde sale y para qué sirve cada parte, y haz una traza o un ejemplo numérico comprobado.",
+      "- Si la página tuviera un error, dilo con claridad y explica cuál sería lo correcto.",
+      "- Si es un ejercicio y el estudiante sólo quiere una pista, dale una pista y no la solución completa.",
+      "- Sé conciso: empieza por la idea clave y desarrolla sólo lo necesario. Usa Markdown sencillo (negrita, listas, `código`, bloques ``` para código o trazas). No uses tablas anchas ni LaTeX: escribe las fórmulas en texto plano (x², √, ≤, →, ∧, ∨, ¬).",
+      "- Si la pregunta no tiene nada que ver con el estudio, responde brevemente y reconduce hacia la asignatura.",
+      "",
+      "<pagina>",
+      "Título: " + recorta(ctx.titulo, 200),
+      "Dirección: " + recorta(ctx.ruta, 300),
+      "Sección que tiene en pantalla: " + recorta(ctx.seccion, 300),
+      ctx.indice ? "Índice de la página:\n" + recorta(ctx.indice, 3000) : "",
+      "Contenido de la sección visible:",
+      recorta(ctx.texto, 22000),
+      "</pagina>",
+      ctx.seleccion ? "\n<texto_seleccionado>\n" + recorta(ctx.seleccion, 4000) + "\n</texto_seleccionado>\nEl estudiante ha seleccionado este fragmento: céntrate en él." : ""
+    ].join("\n");
+  }
+
+  // Conversación válida para las API: empieza por el usuario y alterna los turnos.
+  function limpiar(mensajes) {
+    const out = [];
+    for (const m of mensajes) {
+      if (!m.content || !m.content.trim()) continue;
+      if (!out.length && m.role !== "user") continue;
+      if (out.length && out[out.length - 1].role === m.role) out[out.length - 1].content += "\n\n" + m.content;
+      else out.push({ role: m.role, content: m.content });
+    }
+    return out;
+  }
+
+  async function* lineas(resp) {
+    const reader = resp.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.search(/\r?\n/)) >= 0) {
+        const l = buf.slice(0, i); buf = buf.slice(buf[i] === "\r" ? i + 2 : i + 1);
+        yield l;
+      }
+    }
+    buf += dec.decode();
+    if (buf) yield buf;
+  }
+
+  async function errorDe(r, quien) {
+    let detalle = "";
+    try { const j = await r.json(); detalle = (j.error && (j.error.message || j.error)) || j.message || ""; } catch (e) { /* sin JSON */ }
+    detalle = String(detalle || "");
+    if (quien === "web") {
+      if (r.status === 404) return "No encuentro el servicio de la web (/api/chat). Puedes usar tu propia clave de Claude o de Gemini en ⚙ Ajustes.";
+      if (r.status === 503) return "La web no tiene configurada su clave de IA. Usa tu propia clave de Claude o de Gemini en ⚙ Ajustes.";
+      return detalle || "No se ha podido obtener respuesta (" + r.status + ").";
+    }
+    const nombre = quien === "claude" ? "Claude" : "Gemini";
+    if (r.status === 401 || r.status === 403 || /api[ _-]?key/i.test(detalle)) return "La clave de " + nombre + " no es válida o no tiene permiso. Revísala en ⚙ Ajustes.";
+    if (r.status === 429) return "Has llegado al límite de uso de tu clave de " + nombre + " (o se ha quedado sin saldo). Espera un poco o revisa tu cuenta.";
+    if (r.status === 404) return "El modelo «" + modeloDe(cfg(), quien) + "» no existe para tu clave de " + nombre + ". Cámbialo en ⚙ Ajustes.";
+    return nombre + " ha devuelto un error (" + r.status + ")" + (detalle ? ": " + detalle : ".");
+  }
+
+  async function* viaWeb(mensajes, ctx, signal) {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: mensajes, context: ctx }), signal });
+    if (!r.ok || !r.body) throw new Error(await errorDe(r, "web"));
+    const reader = r.body.getReader(), dec = new TextDecoder();
+    for (;;) { const { done, value } = await reader.read(); if (done) break; yield dec.decode(value, { stream: true }); }
+  }
+
+  async function* viaClaude(mensajes, ctx, c, signal) {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST", signal,
+      headers: { "content-type": "application/json", "x-api-key": c.claves.claude.trim(), "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true" },
+      body: JSON.stringify({ model: modeloDe(c, "claude"), max_tokens: 1600, system: instrucciones(ctx), messages: limpiar(mensajes), stream: true })
+    });
+    if (!r.ok || !r.body) throw new Error(await errorDe(r, "claude"));
+    for await (const l of lineas(r)) {
+      if (!l.startsWith("data:")) continue;
+      let d; try { d = JSON.parse(l.slice(5)); } catch (e) { continue; }
+      if (d.type === "content_block_delta" && d.delta && d.delta.type === "text_delta") yield d.delta.text;
+      else if (d.type === "message_delta" && d.delta && d.delta.stop_reason === "max_tokens") yield "\n\n_(Respuesta cortada por longitud: pídeme que continúe.)_";
+      else if (d.type === "error") throw new Error("Claude: " + (d.error && d.error.message || "error desconocido"));
+    }
+  }
+
+  async function* viaGemini(mensajes, ctx, c, signal) {
+    const modelo = modeloDe(c, "gemini").replace(/^models\//, "");
+    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(modelo) + ":streamGenerateContent?alt=sse", {
+      method: "POST", signal,
+      headers: { "Content-Type": "application/json", "x-goog-api-key": c.claves.gemini.trim() },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: instrucciones(ctx) }] },
+        contents: limpiar(mensajes).map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
+        generationConfig: { maxOutputTokens: 4096 }
+      })
+    });
+    if (!r.ok || !r.body) throw new Error(await errorDe(r, "gemini"));
+    for await (const l of lineas(r)) {
+      if (!l.startsWith("data:")) continue;
+      let d; try { d = JSON.parse(l.slice(5)); } catch (e) { continue; }
+      if (d.error) throw new Error("Gemini: " + (d.error.message || "error desconocido"));
+      if (d.promptFeedback && d.promptFeedback.blockReason) yield "_(Gemini ha bloqueado la pregunta: " + d.promptFeedback.blockReason + ".)_";
+      const cand = d.candidates && d.candidates[0];
+      if (!cand) continue;
+      const partes = (cand.content && cand.content.parts) || [];
+      const t = partes.filter((x) => !x.thought && typeof x.text === "string").map((x) => x.text).join("");
+      if (t) yield t;
+      if (cand.finishReason === "MAX_TOKENS") yield "\n\n_(Respuesta cortada por longitud: pídeme que continúe.)_";
+      else if (cand.finishReason === "SAFETY") yield "\n\n_(Gemini ha cortado la respuesta por sus filtros de seguridad.)_";
+    }
+  }
+
   /* ======================= Interfaz ======================= */
   let panel, log, input, enviarBtn, pararBtn, ctxChip, selChip, lanzador, popSel;
   let historial = ss.get(KEY_CHAT) || [];
@@ -178,13 +330,15 @@
     panel.innerHTML =
       '<div class="ai-resize" role="separator" aria-orientation="vertical" aria-label="Cambiar el tamaño del asistente" tabindex="0"></div>' +
       '<header class="ai-head">' +
-        '<div class="ai-head__t"><span class="ai-dot" aria-hidden="true">✦</span><b>Asistente</b><span class="ai-sub">conoce la página que estás viendo</span></div>' +
+        '<div class="ai-head__t"><span class="ai-dot" aria-hidden="true">✦</span><b>Asistente</b><span class="ai-sub"></span></div>' +
         '<div class="ai-head__b">' +
+          '<button type="button" class="ai-ib" data-a="ajustes" title="Elegir la IA y tu clave" aria-label="Ajustes del asistente" aria-expanded="false">⚙</button>' +
           '<button type="button" class="ai-ib" data-a="nuevo" title="Nueva conversación" aria-label="Nueva conversación">⟲</button>' +
           '<button type="button" class="ai-ib" data-a="cerrar" title="Cerrar (Esc)" aria-label="Cerrar el asistente">✕</button>' +
         '</div>' +
       '</header>' +
       '<p class="ai-ctx" aria-live="polite"><span class="ai-ctx__l">Viendo:</span> <span class="ai-ctx__v"></span></p>' +
+      '<div class="ai-cfg" hidden></div>' +
       '<div class="ai-log" role="log" aria-live="polite"></div>' +
       '<div class="ai-quick" role="group" aria-label="Preguntas rápidas"></div>' +
       '<form class="ai-form">' +
@@ -213,6 +367,7 @@
     });
 
     panel.querySelector('[data-a="cerrar"]').addEventListener("click", () => cerrar());
+    panel.querySelector('[data-a="ajustes"]').addEventListener("click", () => mostrarAjustes(panel.querySelector(".ai-cfg").hidden));
     panel.querySelector('[data-a="nuevo"]').addEventListener("click", () => {
       if (enCurso) enCurso.abort();
       historial = []; ss.set(KEY_CHAT, historial); pintarHistorial();
@@ -243,6 +398,7 @@
 
     document.body.append(lanzador, panel, popSel);
     pintarHistorial();
+    pintarProveedor();
   }
 
   function autoAltura() { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 160) + "px"; }
@@ -403,22 +559,108 @@
     log.scrollTop = log.scrollHeight;
   }
 
+
+  /* ---------- ajustes: qué IA usar y la clave de cada uno ---------- */
+  function pintarProveedor() {
+    const c = cfg();
+    const sub = panel.querySelector(".ai-sub");
+    sub.textContent = PROVEEDORES[c.proveedor].corto + (c.proveedor !== "web" ? " · " + modeloDe(c, c.proveedor) : "");
+  }
+  function mostrarAjustes(si) {
+    const box = panel.querySelector(".ai-cfg");
+    const btn = panel.querySelector('[data-a="ajustes"]');
+    btn.setAttribute("aria-expanded", si ? "true" : "false");
+    box.hidden = !si;
+    log.hidden = si;
+    panel.querySelector(".ai-quick").hidden = si;
+    panel.querySelector(".ai-form").hidden = si;
+    if (!si) { pintarProveedor(); return; }
+    const c = cfg();
+    const fila = (p) => {
+      const P = PROVEEDORES[p];
+      if (p === "web") return '<label class="ai-opt"><input type="radio" name="ai-prov" value="web"' + (c.proveedor === "web" ? " checked" : "") + '><span><b>' + P.nombre + '</b><small>Sin configurar nada, si el dueño de la web ha puesto su clave.</small></span></label>';
+      return '<label class="ai-opt"><input type="radio" name="ai-prov" value="' + p + '"' + (c.proveedor === p ? " checked" : "") + '><span><b>' + P.nombre + '</b><small>Gastas de tu cuenta. <a href="' + P.url + '" target="_blank" rel="noopener">Consigue una clave ↗</a></small></span></label>' +
+        '<div class="ai-keys" data-p="' + p + '">' +
+          '<label>Clave<input type="password" autocomplete="off" spellcheck="false" data-k="' + p + '" placeholder="' + P.ej + '" value="' + esc(c.claves[p] || "") + '"></label>' +
+          '<label>Modelo<input type="text" list="ai-mod-' + p + '" spellcheck="false" data-m="' + p + '" value="' + esc(modeloDe(c, p)) + '"></label>' +
+          '<datalist id="ai-mod-' + p + '">' + P.modelos.map((m) => '<option value="' + m + '">').join("") + '</datalist>' +
+        '</div>';
+    };
+    box.innerHTML =
+      '<p class="ai-cfg__t">¿Qué IA quieres usar?</p>' +
+      '<div class="ai-opts">' + ["web", "claude", "gemini"].map(fila).join("") + '</div>' +
+      '<p class="ai-cfg__n">Tu clave se guarda <b>sólo en este navegador</b> y se envía directamente a Anthropic o a Google; no pasa por el servidor de la web. No la guardes en un ordenador compartido.</p>' +
+      '<div class="ai-cfg__b"><button type="button" class="ai-btn" data-c="guardar">Guardar</button><button type="button" class="ai-btn ai-btn--g" data-c="probar">Probar</button><button type="button" class="ai-btn ai-btn--g" data-c="borrar">Borrar mis claves</button></div>' +
+      '<p class="ai-cfg__s" aria-live="polite"></p>';
+    const estado = box.querySelector(".ai-cfg__s");
+    const leer = () => {
+      const n = cfg();
+      const sel = box.querySelector('input[name="ai-prov"]:checked');
+      n.proveedor = sel ? sel.value : "web";
+      box.querySelectorAll("[data-k]").forEach((i) => { n.claves[i.dataset.k] = i.value.trim(); });
+      box.querySelectorAll("[data-m]").forEach((i) => { n.modelos[i.dataset.m] = i.value.trim() || PROVEEDORES[i.dataset.m].modelos[0]; });
+      return n;
+    };
+    const marcar = () => box.querySelectorAll(".ai-keys").forEach((k) => {
+      k.classList.toggle("is-on", (box.querySelector('input[name="ai-prov"]:checked') || {}).value === k.dataset.p);
+    });
+    box.querySelectorAll('input[name="ai-prov"]').forEach((r) => r.addEventListener("change", marcar));
+    marcar();
+    box.querySelector('[data-c="guardar"]').addEventListener("click", () => {
+      const n = leer();
+      if (n.proveedor !== "web" && !n.claves[n.proveedor]) { estado.textContent = "Pega tu clave de " + (n.proveedor === "claude" ? "Claude" : "Gemini") + " para usarla."; return; }
+      ls.set(KEY_CFG, n);
+      mostrarAjustes(false);
+      aviso("Listo: ahora respondo con <b>" + esc(PROVEEDORES[n.proveedor].corto) + "</b>" + (n.proveedor !== "web" ? " (" + esc(modeloDe(n, n.proveedor)) + ")" : "") + ".");
+    });
+    box.querySelector('[data-c="borrar"]').addEventListener("click", () => {
+      ls.set(KEY_CFG, { proveedor: "web", claves: {}, modelos: cfg().modelos });
+      estado.textContent = "Claves borradas de este navegador.";
+      mostrarAjustes(true);
+      box.querySelector(".ai-cfg__s").textContent = "Claves borradas de este navegador.";
+    });
+    box.querySelector('[data-c="probar"]').addEventListener("click", async () => {
+      const n = leer();
+      if (n.proveedor === "web") {
+        estado.textContent = "Comprobando la IA de la web…";
+        try { const r = await fetch(API, { cache: "no-store" }); const j = r.ok ? await r.json() : null;
+          estado.textContent = j && j.configurado ? "✓ La IA de la web está disponible." : "✗ La web no tiene configurada su clave: usa la tuya.";
+        } catch (e) { estado.textContent = "✗ No se puede conectar con la IA de la web."; }
+        return;
+      }
+      if (!n.claves[n.proveedor]) { estado.textContent = "Primero pega tu clave."; return; }
+      estado.textContent = "Probando la clave…";
+      try {
+        const gen = (n.proveedor === "claude" ? viaClaude : viaGemini)([{ role: "user", content: "Responde sólo: OK" }], { titulo: "Prueba" }, n);
+        let t = ""; for await (const x of gen) { t += x; if (t.length > 20) break; }
+        estado.textContent = "✓ Funciona (" + modeloDe(n, n.proveedor) + "). Pulsa Guardar.";
+      } catch (e) { estado.textContent = "✗ " + (e.message || "No ha funcionado."); }
+    });
+    const primero = box.querySelector('input[name="ai-prov"]:checked');
+    if (primero) primero.focus();
+  }
+
   async function comprobarServidor() {
-    if (estadoServidor !== null) return;
+    if (estadoServidor !== null || cfg().proveedor !== "web") return;
+    const boton = ' <button type="button" class="ai-btn ai-btn--s" data-ir="ajustes">Usar mi clave de Claude o Gemini</button>';
+    const sinIA = (texto) => {
+      aviso(texto + boton, "warn");
+      const b = log.querySelector('.ai-msg--n:last-child [data-ir="ajustes"]');
+      if (b) b.addEventListener("click", () => mostrarAjustes(true));
+    };
     if (location.protocol === "file:") {
       estadoServidor = false;
-      aviso("El asistente necesita la web publicada en Vercel: abierta desde un archivo local no puede llamar a la IA.", "warn");
+      sinIA("Abierta desde un archivo, la web no tiene su propia IA. Puedes usar tu clave:");
       return;
     }
     try {
       const r = await fetch(API, { method: "GET", cache: "no-store" });
       const j = r.ok ? await r.json() : null;
       estadoServidor = !!(j && j.configurado);
-      if (j && !j.configurado) aviso("El asistente está instalado pero falta la clave de la IA. Añade <code>ANTHROPIC_API_KEY</code> en Vercel → Settings → Environment Variables y vuelve a desplegar.", "warn");
-      if (!j) aviso("No encuentro el servicio del asistente (<code>/api/chat</code>). Comprueba que el proyecto está desplegado en Vercel con la carpeta <code>api</code>.", "warn");
+      if (!estadoServidor) sinIA("La web no tiene configurada su propia IA. Para usar el asistente, pon tu clave (cada uno gasta de la suya):");
     } catch (e) {
       estadoServidor = false;
-      aviso("No se puede conectar con el servicio del asistente ahora mismo.", "warn");
+      sinIA("No se puede conectar con la IA de la web.");
     }
   }
 
@@ -443,28 +685,16 @@
     enviarBtn.hidden = true; pararBtn.hidden = false;
     let respuesta = "";
     try {
-      const r = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: historial.slice(-24).map((m) => ({ role: m.role, content: m.content })),
-          context: Object.assign(ctx, { seleccion: sel })
-        }),
-        signal: enCurso.signal
-      });
-      if (!r.ok || !r.body) {
-        let msg = "No se ha podido obtener respuesta (" + r.status + ").";
-        try { const j = await r.json(); if (j.error) msg = j.error; } catch (e) { /* sin JSON */ }
-        if (r.status === 404) msg = "No encuentro el servicio del asistente (/api/chat). Hay que desplegar la web en Vercel con la carpeta api.";
-        throw new Error(msg);
-      }
-      const reader = r.body.getReader();
-      const dec = new TextDecoder();
+      const c = cfg();
+      const mensajes = historial.slice(-24).map((m) => ({ role: m.role, content: m.content }));
+      const ctxCompleto = Object.assign(ctx, { seleccion: sel });
+      let flujo;
+      if (c.proveedor === "web") flujo = viaWeb(mensajes, ctxCompleto, enCurso.signal);
+      else if (!c.claves[c.proveedor]) throw new Error("Falta tu clave de " + (c.proveedor === "claude" ? "Claude" : "Gemini") + ": ponla en ⚙ Ajustes.");
+      else flujo = (c.proveedor === "claude" ? viaClaude : viaGemini)(mensajes, ctxCompleto, c, enCurso.signal);
       let ultimo = 0;
-      for (;;) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        respuesta += dec.decode(value, { stream: true });
+      for await (const trozo of flujo) {
+        respuesta += trozo;
         const ahora = performance.now();
         if (ahora - ultimo > 60) {
           salida.classList.remove("is-typing");
@@ -474,13 +704,16 @@
           if (cerca) log.scrollTop = log.scrollHeight;
         }
       }
-      respuesta += dec.decode();
     } catch (e) {
       if (e.name === "AbortError") respuesta += (respuesta ? "\n\n" : "") + "_(Parado.)_";
       else {
         salida.remove();
         historial.pop();
         aviso(esc(e.message || "Error de conexión."), "err");
+        if (/Ajustes/.test(e.message || "")) {
+          const b = document.createElement("button"); b.type = "button"; b.className = "ai-btn ai-btn--s"; b.textContent = "Abrir ajustes";
+          b.addEventListener("click", () => mostrarAjustes(true)); log.lastElementChild.appendChild(b);
+        }
         input.value = texto; autoAltura();
         respuesta = null;
       }
