@@ -2,3 +2,5 @@ node_modules/
 # La clave de administrador de Firebase es SECRETA: nunca se sube a GitHub.
 clave-admin.json
 *-firebase-adminsdk-*.json
+# Node portátil para Windows (no se sube: pesa ~90 MB)
+node/

@@ -290,6 +290,10 @@ node admin.js resetear <usuario> <contraseña> contraseña nueva; conserva punto
 node admin.js borrar <usuario>                borra cuenta, puntos y progreso (pide confirmación)
 ```
 
+En Windows sin Node instalado vale `admin listar` (etc.) dentro de `scripts\admin`: `admin.cmd` usa
+el Node portátil de `scripts\admin\node\node.exe` si está (se descarga el `.zip` de Windows de
+nodejs.org y se copia ahí su `node.exe`; no se sube a GitHub) y, si no, el Node instalado.
+
 Necesita la **clave de administrador** en `scripts/admin/clave-admin.json`: Firebase → ⚙ Configuración
 del proyecto → Cuentas de servicio → «Generar nueva clave privada». Esa clave da control total del
 proyecto: no se comparte ni se sube (`.gitignore` la excluye). Si se filtra, se revoca en Google Cloud →
