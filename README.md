@@ -275,3 +275,22 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
   semana, y nunca más de los que da tiempo a ganar desde su último test.
 - La configuración (`apiKey`, `projectId`) está al principio de `assets/js/cuentas.js`; es pública.
 - Se usa la API REST de Firebase con `fetch`, sin cargar su SDK.
+
+### Administrar las cuentas (scripts/admin)
+
+Las contraseñas las guarda Firebase cifradas: nadie puede verlas, ni desde la consola. Para resetear
+una contraseña olvidada sin perder los puntos ni el progreso, o borrar una cuenta del todo, está
+`scripts/admin/admin.js`, que se ejecuta en tu ordenador:
+
+```
+cd scripts/admin
+npm install                                   (sólo la primera vez)
+node admin.js listar                          todas las cuentas con sus puntos y su último acceso
+node admin.js resetear <usuario> <contraseña> contraseña nueva; conserva puntos y progreso
+node admin.js borrar <usuario>                borra cuenta, puntos y progreso (pide confirmación)
+```
+
+Necesita la **clave de administrador** en `scripts/admin/clave-admin.json`: Firebase → ⚙ Configuración
+del proyecto → Cuentas de servicio → «Generar nueva clave privada». Esa clave da control total del
+proyecto: no se comparte ni se sube (`.gitignore` la excluye). Si se filtra, se revoca en Google Cloud →
+IAM → Cuentas de servicio → Claves.

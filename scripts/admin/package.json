@@ -1,0 +1,9 @@
+{
+  "name": "autotest-admin",
+  "private": true,
+  "description": "Administración de las cuentas de la web (ver admin.js)",
+  "scripts": { "listar": "node admin.js listar" },
+  "dependencies": {
+    "firebase-admin": "14.5.0"
+  }
+}
