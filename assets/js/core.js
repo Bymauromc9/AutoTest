@@ -11,6 +11,7 @@
  *   App.shuffle    copia barajada de un array (Fisher–Yates)
  *   App.esc        escapa texto para insertarlo como HTML
  *   App.theme      tema claro / oscuro compartido por todas las páginas
+ *   App.retro      modo terminal «de castigo» al cerrar el aviso (ver assets/js/retro.js): get(), set(on), toggle()
  *   App.puntos     suma puntos al ranking al terminar un test ({ asig, tipo, aciertos, total }; ver cuentas.js)
  *   App.sesion()   cuenta activa ({ id, nombre, token, local }) o null
  *   App.config     configuración que se cambia desde el panel de administración (aviso y fechas de
@@ -304,10 +305,20 @@
 
   /* ---------- Tema claro / oscuro ---------- */
   const THEME_KEY = "app-theme";
+  const RETRO_KEY = "app-retro";
   const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  const retroOn = () => store(RETRO_KEY) === 1;
+  /** El modo terminal va sobre el tema oscuro, sin tocar el tema que eligió el usuario. */
   function applyTheme(t) {
-    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
-    else document.documentElement.removeAttribute("data-theme");
+    const html = document.documentElement;
+    if (retroOn()) { html.setAttribute("data-retro", ""); t = "dark"; } else html.removeAttribute("data-retro");
+    if (t === "light" || t === "dark") html.setAttribute("data-theme", t);
+    else html.removeAttribute("data-theme");
+  }
+  function setRetro(on) {
+    store(RETRO_KEY, on ? 1 : null);
+    applyTheme(store(THEME_KEY)); syncThemeButton();
+    return retroOn();
   }
   function effective() {
     const t = document.documentElement.getAttribute("data-theme");
@@ -327,7 +338,7 @@
   applyTheme(store(THEME_KEY));
   if (media && media.addEventListener) media.addEventListener("change", syncThemeButton);
   // Si el tema se cambia en otra pestaña, se aplica también aquí.
-  window.addEventListener("storage", (e) => { if (e.key === THEME_KEY) { applyTheme(store(THEME_KEY)); syncThemeButton(); } });
+  window.addEventListener("storage", (e) => { if (e.key === THEME_KEY || e.key === RETRO_KEY) { applyTheme(store(THEME_KEY)); syncThemeButton(); } });
 
   /* ---------- Cuentas: hay que entrar o registrarse para usar la web ----------
      La cuenta activa está en «app-sesion» (la gestiona assets/js/cuentas.js). Sin ella, cualquier página
@@ -462,7 +473,10 @@
     el.innerHTML = `<div class="site-aviso__in">${icon(c.avisoTipo === "importante" ? "alert" : "megaphone")}<p>${esc(c.aviso)}` +
       `${href ? ` <a href="${esc(href)}">${esc(c.avisoTextoEnlace || "Más información")}</a>` : ""}</p>` +
       `<button type="button" class="site-aviso__x" aria-label="Ocultar este aviso" title="Ocultar este aviso">×</button></div>`;
-    el.querySelector(".site-aviso__x").onclick = () => { store(AVISO_VISTO, c.avisoId || c.aviso); el.remove(); };
+    el.querySelector(".site-aviso__x").onclick = () => {
+      store(AVISO_VISTO, c.avisoId || c.aviso); el.remove();
+      if (window.Retro) window.Retro.castigo();      // broma: modo terminal hasta pulsar Espacio dos veces
+    };
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildNav);
   else buildNav();
@@ -499,6 +513,15 @@
     const rjs = document.createElement("script");
     rjs.src = base + "js/reportes.js"; rjs.defer = true;
     document.head.appendChild(rjs);
+    // Modo terminal «de castigo» al cerrar el aviso (ver assets/js/retro.js). Si está activo, su hoja bloquea el
+    // primer pintado para que la página no aparezca un instante con su aspecto normal.
+    const tcss = document.createElement("link");
+    tcss.rel = "stylesheet"; tcss.href = base + "css/retro.css";
+    if (retroOn()) tcss.setAttribute("blocking", "render");
+    document.head.appendChild(tcss);
+    const tjs = document.createElement("script");
+    tjs.src = base + "js/retro.js"; tjs.defer = true;
+    document.head.appendChild(tjs);
   })();
 
   window.App = Object.freeze({
@@ -506,6 +529,7 @@
     ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
     config: Object.freeze({ get: () => CONFIG, actualizar: actualizarConfig, examenesCodigo: () => JSON.parse(JSON.stringify(EXAMENES_CODIGO)) }),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),
-    theme: Object.freeze({ get: effective, set: setTheme, toggle: toggleTheme })
+    theme: Object.freeze({ get: effective, set: setTheme, toggle: toggleTheme }),
+    retro: Object.freeze({ get: retroOn, set: setRetro, toggle: () => setRetro(!retroOn()) })
   });
 })();

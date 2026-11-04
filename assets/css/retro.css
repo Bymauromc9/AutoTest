@@ -1,0 +1,54 @@
+/* retro.css — modo terminal «de castigo» (assets/js/retro.js): se activa al cerrar el aviso de los
+   administradores y se quita pulsando Espacio dos veces (dos toques en el móvil).
+   core.js pone <html data-retro> y fuerza el tema oscuro; aquí todo se tiñe de fósforo verde con un filtro
+   sobre la página entera (así vale para cualquier hoja, también las de cada asignatura), se cambia la
+   letra por la de máquina y se añaden las líneas de una pantalla CRT. Sin data-retro no hace nada. */
+:root[data-retro] {
+  --retro-filtro: grayscale(1) sepia(1) hue-rotate(68deg) saturate(5) brightness(1.08) contrast(1.05);
+  filter: var(--retro-filtro);
+  background: #000;
+}
+/* Los diálogos (cuenta, reportes, panel) se pintan en otra capa a la que no llega el filtro de <html>. */
+:root[data-retro] dialog { filter: var(--retro-filtro); }
+:root[data-retro] body,
+:root[data-retro] body *:not(svg):not(svg *) {
+  font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace !important;
+}
+:root[data-retro] body { text-shadow: 0 0 6px rgba(255, 255, 255, .28); }
+/* El tema no se puede cambiar en modo terminal (siempre es oscuro). */
+:root[data-retro] #theme-toggle { display: none; }
+/* Cursor parpadeando tras el título de la página. */
+:root[data-retro] h1::after { content: "_"; margin-left: .08em; animation: retro-cursor 1.05s steps(1) infinite; }
+@keyframes retro-cursor { 50% { opacity: 0; } }
+/* Líneas de barrido y viñeta de pantalla antigua; no capturan clics. */
+:root[data-retro]::after {
+  content: ""; position: fixed; inset: 0; z-index: 2147483646; pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, .22) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, .55) 100%);
+}
+
+/* Pantalla de arranque / salida (la crea retro.js). */
+.retro-boot {
+  position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center; padding: 24px;
+  background: #000; color: #4BFF6E; cursor: pointer; filter: none;
+  animation: retro-in .18s ease-out;
+}
+.retro-boot pre {
+  margin: 0; width: min(640px, 100%); min-height: 8.5em; white-space: pre-wrap; overflow-wrap: anywhere;
+  font: 500 clamp(14px, 3.6vw, 18px)/1.6 "JetBrains Mono", ui-monospace, Consolas, monospace;
+  text-shadow: 0 0 8px rgba(75, 255, 110, .55);
+}
+.retro-boot pre::after { content: "█"; animation: retro-cursor 1.05s steps(1) infinite; }
+.retro-boot.is-out { opacity: 0; transition: opacity .25s ease-in; }
+@keyframes retro-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-retro] h1::after, .retro-boot pre::after { animation: none; }
+  .retro-boot { animation: none; }
+  .retro-boot.is-out { transition: none; }
+}
+@media print {
+  :root[data-retro] { filter: none; }
+  :root[data-retro]::after, .retro-boot { display: none !important; }
+}

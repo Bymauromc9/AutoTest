@@ -24,10 +24,13 @@ assets/
   js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
   js/admin.js               Panel de administración (admin.html)
   js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
+  js/retro.js               Broma: al cerrar el aviso de los administradores la web pasa a modo terminal;
+                            se quita con Espacio dos veces (en el móvil, dos toques)
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/asistente.css         Estilos del panel del asistente
   css/admin.css             Estilos del panel de administración
   css/reportes.css          Diálogo «Reportar un error» (autosuficiente, como nav.css)
+  css/retro.css             Estilos del modo terminal (fósforo verde sobre cualquier página)
   css/guia.css              Guías con índice lateral (FC, IP y L1): estructura, temas, cajas, ejercicios,
                             «Más a fondo» plegable, subrayador y piezas para los diagramas (.dg)
   js/guia.js                Guías con índice lateral: «Hecho», progreso, índice, plegables, «Marcar como
@@ -170,6 +173,7 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | Clave | Qué guarda |
 |---|---|
 | `app-theme` | Tema elegido (común a todas las asignaturas) |
+| `app-retro` | Modo terminal «de castigo» activado (por cerrar el aviso) |
 | `fli-settings`, `fli-seen` | Opciones del autotest y preguntas ya vistas |
 | `fli-best-1` … `fli-best-4`, `fli-best-G` | Mejores notas del autotest |
 | `fli-exam-current`, `fli-exam-best-N` | Examen en curso y mejores notas de cada examen |
@@ -341,7 +345,8 @@ Pestañas del panel:
   (y en la semana), ponerlos a cero y **bloquear** la cuenta: deja de salir en el ranking, no suma
   puntos y no puede mandar reportes. Muestra también los comandos de terminal para esa cuenta.
 - **Aviso**: un aviso para todas las páginas (normal o importante, con enlace y fecha de caducidad
-  opcionales). Cada usuario puede cerrarlo; un aviso nuevo vuelve a salir.
+  opcionales). Cada usuario puede cerrarlo; un aviso nuevo vuelve a salir. Ojo: quien lo cierra se
+  lleva de broma el modo terminal (fósforo verde) hasta que pulse Espacio dos veces (dos toques en el móvil).
 - **Exámenes**: las fechas de la cuenta atrás de la portada y de cada asignatura. Si no se tocan se usan
   las de `assets/js/core.js`; «Volver a las del código» borra las del panel.
 - **Reportes**: lo que mandan los usuarios con el botón ⚠ de la barra superior, con la página (y el
