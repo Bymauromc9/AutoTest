@@ -1,0 +1,53 @@
+# Regenera los PDFs descargables (carpeta pdf/) cada vez que cambia el contenido de la web.
+# Si algún PDF cambia, el propio flujo hace un commit con los nuevos y Vercel vuelve a publicar.
+name: PDFs
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "pdf/**"
+      - "**.md"
+      - "api/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pdfs
+  cancel-in-progress: true
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias y Chromium
+        working-directory: scripts/pdf
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Generar los PDFs
+        run: node scripts/pdf/generar.js
+        env:
+          NODE_PATH: scripts/pdf/node_modules
+
+      - name: Guardar los PDFs si han cambiado
+        run: |
+          git add pdf
+          if git diff --cached --quiet; then
+            echo "Los PDFs no han cambiado."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git commit -m "PDFs actualizados automáticamente"
+          git push

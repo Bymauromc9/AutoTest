@@ -205,3 +205,31 @@ Anthropic.
 longitud de los mensajes y el número de preguntas por IP, y sólo acepta peticiones de la propia web.
 Abierta con doble clic (`file://`) la web funciona igual, pero el asistente avisa de que necesita
 estar publicada. Para desactivarlo en una página: `<body data-ai="off">`.
+
+## Descargas en PDF
+
+Cada página tiene un botón **PDF** en la barra superior, y la portada de cada asignatura tiene uno por
+sección (Teoría, Prácticas, Examen), uno por bloque (L0 / L1) y «Toda la asignatura en PDF».
+
+- **Un PDF por página**, generado de antemano con Chrome (texto seleccionable). Las páginas
+  interactivas salen en versión para papel: el autotest con todo el banco de preguntas, la respuesta
+  correcta marcada y su explicación; los exámenes con la solución; las chuletas y la guía de FLI con
+  todas sus pestañas; todas las resoluciones abiertas.
+- **Bloques y asignatura completa**: el navegador los monta al pulsar el botón, uniendo los PDFs de sus
+  páginas con portada e índice (`assets/js/pdf.js` + `assets/vendor/pdf-lib.min.js`, que sólo se carga
+  al pulsar). Así el repositorio guarda un solo PDF por página.
+- Qué entra en cada bloque sale del registro `App.SUBJECTS` de `core.js`: una página nueva registrada
+  allí entra sola en su sección. No se incluyen las herramientas interactivas, el simulador, el
+  simulacro ni los enlaces al test general.
+
+### Generarlos
+
+```
+cd scripts/pdf && npm install && npx playwright install chromium   # la primera vez
+node scripts/pdf/generar.js                                        # desde la raíz del repositorio
+```
+
+El script escribe los PDFs y `pdf/manifest.json` en `pdf/`. Guarda una huella del contenido de cada
+página y sólo vuelve a imprimir las que han cambiado (`--todo` las reimprime todas; `--solo ruta.html`
+sólo una). **No hace falta ejecutarlo a mano**: el flujo `.github/workflows/pdfs.yml` lo ejecuta en
+GitHub cada vez que se sube un cambio a `master` y, si algún PDF cambia, hace un commit con ellos.

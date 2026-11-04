@@ -1,0 +1,28 @@
+/* pdf.css — botones de descarga en PDF (los pone assets/js/pdf.js). Usa los colores de la barra
+   superior (--sn-*) cuando está dentro de ella y los de la página (--accent…) en la portada. */
+.pdf-btn {
+  display: inline-flex; align-items: center; gap: 6px; flex: none; cursor: pointer; white-space: nowrap;
+  font: 700 13.5px/1 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif; letter-spacing: .01em;
+  border-radius: 999px; padding: 0 14px; min-height: 36px;
+  border: 1px solid var(--rule, var(--line, #D7DDE4)); background: var(--surface, #fff); color: var(--accent, #27467A);
+}
+.pdf-btn:hover { border-color: var(--accent, #27467A); }
+.pdf-btn:focus-visible { outline: 3px solid var(--accent, #27467A); outline-offset: 2px; }
+.pdf-btn svg { flex: none; }
+.pdf-btn.is-busy { cursor: progress; opacity: .85; }
+.pdf-btn.is-busy svg { animation: pdf-bob 1s ease-in-out infinite; }
+@keyframes pdf-bob { 50% { transform: translateY(2px); } }
+@media (prefers-reduced-motion: reduce) { .pdf-btn.is-busy svg { animation: none; } }
+
+/* En la barra superior: mismo alto y estilo que el botón del tema */
+.site-nav .pdf-btn--nav { min-height: 44px; padding: 0 14px; border-color: var(--sn-line); background: var(--sn-surface); color: var(--sn-ink); }
+.site-nav .pdf-btn--nav:hover { border-color: var(--sn-accent); color: var(--sn-accent); }
+@media (max-width: 600px) { .site-nav .pdf-btn--nav { padding: 0 12px; } }
+
+/* Portada de la asignatura */
+.pdf-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.pdf-btn--hero { min-height: 44px; padding: 0 18px; font-size: 14.5px; }
+.pdf-btn--sec { margin-left: 4px; }
+.res-gh .pdf-btn--grp { margin-left: auto; min-height: 30px; padding: 0 11px; font-size: 12.5px; }
+
+@media print { .pdf-ui { display: none !important; } }
