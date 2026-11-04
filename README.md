@@ -23,6 +23,10 @@ assets/
   js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/asistente.css         Estilos del panel del asistente
+  css/guia.css              Guías con índice lateral (FC, IP y L1): estructura, temas, cajas, ejercicios,
+                            «Más a fondo» plegable, subrayador y piezas para los diagramas (.dg)
+  js/guia.js                Guías con índice lateral: «Hecho», progreso, índice, plegables, «Marcar como
+                            estudiado», pestaña y mapa de cada tema y leyenda
 api/
   chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
 vercel.json                 Tiempo máximo de la función del asistente
@@ -45,8 +49,9 @@ fli/                        Fundamentos Lógicos de la Informática
       clase.html            Ejercicios de clase 12–32 (sesiones 6–12) resueltos y explicados
       resueltos.html        Resueltos oficiales explicados y propuestos resueltos
       niveles.html          Nivel 1 (resumen) y niveles 2–5 con todos los ejercicios por dificultad
-    css/l1.css              Estilos propios de L1 (se carga después de fli/css/ejercicios.css)
-    js/l1.js                Resoluciones plegables (abrir/cerrar todas, abrir la enlazada, abrir al imprimir)
+    css/l1.css              Estilos propios de las páginas de ejercicios de L1 (después de fli/css/ejercicios.css);
+                            la guía de L1 usa assets/css/guia.css y assets/js/guia.js
+    js/l1.js                Resoluciones plegables de las páginas de ejercicios de L1
   css/
     fli.css                 Componentes de FLI (fórmulas, autotest, chuletas, exámenes, guía)
     ejercicios.css          Páginas de ejercicios con índice lateral
@@ -76,10 +81,10 @@ fc/                         Fundamentos de Computadores (temas 1–6)
     simulacro.html          Simulacro del test: 40 preguntas x:1, reparto 5/7/7/7/7/7, reloj y penalización oficial
   css/
     fc.css                  Componentes del autotest y del simulacro
-    guia.css                Guías con índice lateral, cajas, mapas de Karnaugh y herramientas
+    guia.css                Añadidos de FC a assets/css/guia.css: mapas de Karnaugh y herramientas
   js/
     util.js                 FC.fmt y FC.LETTERS
-    autotest.js · guia.js · herramientas.js
+    autotest.js · herramientas.js
     simulacro.js            Simulacro del test con las reglas del examen real
     calculadoras.js         Calculadoras de la página de herramientas (salvo mini-okteta y red IP)
     data/banco.js           Banco de preguntas (x:1 = de examen, tres opciones, sin barajar opciones)
@@ -93,12 +98,12 @@ ip/                         Introducción a la Programación (temas 0–4 y prá
   practicas/
     guia.html               Prácticas 1–6 explicadas con 44 ejercicios resueltos (SP, C++ y ejecución real)
   css/
-    guia.css                Guías (copia de fc/css/guia.css sin Karnaugh) + resaltado de código y simulador
+    guia.css                Añadidos de IP a assets/css/guia.css: resaltado de código y simulador
     ip.css                  Componentes del autotest
   js/
     util.js                 IP.fmt y IP.LETTERS
     autotest.js
-    guia.js                 Índice, progreso, resoluciones plegables y resaltado de C++ y de la notación SP
+    resaltado.js            Resaltado de C++ y de la notación SP (el resto de la guía es assets/js/guia.js)
     maquina.js              Simulador de la máquina secuencial (primer modelo)
     data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4 y bloque 5 = C++)
 ```
@@ -124,6 +129,13 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 - **Enlaces directos**: los autotests aceptan `#test-G` (test general) o `#test-3` (tema 3).
 - **Tema**: claro u oscuro según el sistema; el botón de la barra lo fija para todas las páginas
   (`<html data-theme="light|dark">`). Todas las hojas de estilo definen las dos paletas.
+- **Guías con índice lateral** (`assets/css/guia.css` + `assets/js/guia.js`, y después lo propio de la asignatura):
+  cada `section.tema` toma un color de separador según su posición; los términos en `<b>` del texto corrido salen
+  con subrayador; las cajas son `.box` (información), `.box.tip` (ejemplo), `.box.warn` (ojo) y `.box.def`; la
+  ampliación va en `<details class="deep"><summary class="deep-t">Más a fondo · …</summary> … </details>` (plegada,
+  se abre al enlazar algo de dentro, al imprimir y en los PDF). Los diagramas son `<figure class="dg">` con piezas
+  HTML (`.dg-flow`, `.dg-chain`, `.dg-pyr`, `.dg-bits`, `.dg-mem`, `.dg-enc`, `.dg-grid`, `.dg-c2`) o SVG en
+  línea que usa las clases `.bx`, `.bt`, `.bk`, `.ar`… para que se adapten al tema claro y oscuro.
 
 ## Añadir una asignatura
 
