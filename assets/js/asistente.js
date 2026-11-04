@@ -485,7 +485,7 @@
   /* ---------- contexto visible en la cabecera ---------- */
   let ctxTimer = 0;
   function actualizarContexto() {
-    if (!panel.classList.contains("is-open")) return;
+    if (!panel || !panel.classList.contains("is-open")) return;   // sin interfaz (data-ai="off")
     const s = seccionVisible();
     const t = tituloDe(s);
     const pagina = (document.body.dataset.title || document.title.split("·")[0]).trim();

@@ -1,0 +1,54 @@
+rules_version = '2';
+// Reglas de Firestore de la web (Firebase → Firestore Database → Reglas → pegar y «Publicar»).
+//
+//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, w<semana>
+//                    Lo lee cualquiera (es el ranking); sólo su dueño lo escribe, y sólo para sumar
+//                    los puntos de UN test: tests +1, los mismos puntos en el total, en una asignatura
+//                    y en la semana actual, y no más de los que da tiempo a ganar desde el último test.
+//   progreso/{uid}   { t, json }  el progreso guardado de la cuenta; sólo lo ve y lo escribe su dueño.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Semana actual (lunes a domingo, hora de Madrid en invierno): la misma cuenta que assets/js/cuentas.js.
+    function semana() {
+      return 'w' + string(int((request.time.toMillis() + 262800000) / 604800000));
+    }
+    function nuevo() { return request.resource.data; }
+    function viejo() { return resource.data; }
+    function delta() { return nuevo().puntos - viejo().puntos; }
+    function cambio(k) { return nuevo().get(k, 0) - viejo().get(k, 0); }
+    function unaAsignatura() {
+      return (cambio('fli') == delta() && cambio('fc') == 0 && cambio('ip') == 0)
+          || (cambio('fc') == delta() && cambio('fli') == 0 && cambio('ip') == 0)
+          || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0);
+    }
+    function esSuyo(uid) { return request.auth != null && request.auth.uid == uid; }
+
+    match /usuarios/{uid} {
+      allow read: if true;
+      allow create: if esSuyo(uid)
+        && nuevo().keys().hasOnly(['nombre', 'id', 'puntos', 'tests', 'ultimo', 'creado'])
+        && nuevo().id is string && nuevo().nombre is string
+        && request.auth.token.email == nuevo().id + '@usuarios.web-ing-inf.firebaseapp.com'
+        && nuevo().nombre.size() == nuevo().id.size()
+        && nuevo().puntos == 0 && nuevo().tests == 0
+        && nuevo().ultimo == request.time && nuevo().creado == request.time;
+      allow update: if esSuyo(uid)
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', semana()])
+        && nuevo().ultimo == request.time
+        && nuevo().tests == viejo().tests + 1
+        && delta() >= 0 && delta() <= 2025
+        && delta() <= 25 + (request.time - viejo().ultimo).seconds() * 4
+        && unaAsignatura()
+        && cambio(semana()) == delta();
+      allow delete: if esSuyo(uid);
+    }
+
+    match /progreso/{uid} {
+      allow read, delete: if esSuyo(uid);
+      allow create, update: if esSuyo(uid)
+        && nuevo().keys().hasOnly(['t', 'json'])
+        && nuevo().t is int && nuevo().json is string && nuevo().json.size() < 400000;
+    }
+  }
+}

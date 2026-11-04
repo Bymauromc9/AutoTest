@@ -19,16 +19,14 @@ assets/
   js/hub.js                 Pinta la portada de una asignatura a partir del registro
   js/portal.js              Pinta las tarjetas de la portada a partir del registro
   js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
-  js/cuentas.js             Cuentas: progreso de cada cuenta, sincronización y puntos (lo carga core.js)
+  js/cuentas.js             Cuentas con Firebase: progreso de cada cuenta, sincronización y puntos (lo carga core.js)
   js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/asistente.css         Estilos del panel del asistente
 api/
   chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
-  cuenta.js                 Cuentas: registro, entrar, progreso guardado y puntos (Upstash Redis)
-  ranking.js                Leaderboard global
-  _db.js                    Utilidades comunes de cuenta.js y ranking.js (no es una ruta)
 vercel.json                 Tiempo máximo de la función del asistente
+firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso y ranking)
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
   index.html                Portada de FLI (la genera assets/js/hub.js): Teoría, Prácticas y Examen, con L0 y L1 dentro
@@ -251,30 +249,29 @@ GitHub cada vez que se sube un cambio a `master` y, si algún PDF cambia, hace u
 ## Cuentas y ranking
 
 Al entrar en la web hay que **crear una cuenta o elegir una** (cuenta.html). Cada cuenta tiene su
-propio progreso, que se guarda en el servidor y la sigue a cualquier dispositivo, y cada test terminado
+propio progreso, que se guarda en Firebase y la sigue a cualquier dispositivo, y cada test terminado
 suma puntos en el **ranking global** (ranking.html: general, esta semana y por asignatura).
 
 - **Elegir cuenta**: cada dispositivo recuerda las cuentas que se han usado en él; mientras su sesión
   siga abierta se entra con un toque. «Cerrar sesión» la deja en la lista pero pide la contraseña.
 - **Progreso**: las páginas siguen usando sus claves de `localStorage`; al cambiar de cuenta,
-  `cuentas.js` guarda el de la anterior y carga el de la nueva. Se sube al servidor cada 20 s si ha
-  cambiado y al salir de la página, y se trae si otro dispositivo guardó algo más reciente. Al crear la
-  primera cuenta se puede quedar con el progreso que ya había en el navegador.
+  `cuentas.js` guarda el de la anterior y carga el de la nueva. Se sube cada 20 s si ha cambiado y al
+  salir de la página, y se trae si otro dispositivo guardó algo más reciente. Al crear la primera
+  cuenta se puede quedar con el progreso que ya había en el navegador.
 - **Puntos**: 10 por acierto al terminar un autotest, un test general, el simulacro de FC, el test de
   equivalencias o la parte de test de un examen de FLI; +25 si un test de 10 preguntas o más sale
-  perfecto. Los calcula el servidor (como mucho 200 preguntas por test y 40 tests por hora, y cada
-  test cuenta una sola vez). Para que otro test sume puntos: `App.puntos({ asig, tipo, aciertos, total })`.
-- **Sin servidor** (abierta con doble clic o sin Upstash configurado): se pueden crear **perfiles
-  locales**, que guardan el progreso sólo en ese navegador y no entran en el ranking.
+  perfecto. Para que otro test sume puntos: `App.puntos({ asig, tipo, aciertos, total })`.
+- **Sin conexión** se pueden crear **perfiles locales**, que guardan el progreso sólo en ese navegador
+  y no entran en el ranking.
 
-### Configuración en Vercel (una vez)
+### Firebase (proyecto `web-ing-inf`)
 
-1. En Vercel → el proyecto → **Storage** → **Create Database** → **Upstash for Redis** (plan gratuito)
-   y conéctala al proyecto. Se crean solas las variables `KV_REST_API_URL` y `KV_REST_API_TOKEN`
-   (también valen `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`).
-2. Vuelve a desplegar (Deployments → Redeploy).
-3. Compruébalo: `GET /api/cuenta` debe devolver `{ "configurado": true }`.
-
-Las contraseñas se guardan con scrypt y sal; las sesiones duran 180 días; tras 10 intentos fallidos
-una cuenta se bloquea 15 minutos.
-
+- **Authentication** con correo y contraseña: cada usuario es `<usuario>@usuarios.web-ing-inf.firebaseapp.com`
+  (en minúsculas y sin tildes; no se manda ningún correo). Firebase impide dos usuarios iguales.
+- **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip` y de cada
+  semana `w<n>`; es público porque es el ranking) y `progreso/<uid>` (el progreso; sólo su dueño).
+- **Reglas** (`firestore.rules`, se pegan en Firestore → Reglas → Publicar): cada uno sólo puede sumar
+  sus propios puntos, de un test en un test, con el mismo valor en el total, en una asignatura y en la
+  semana, y nunca más de los que da tiempo a ganar desde su último test.
+- La configuración (`apiKey`, `projectId`) está al principio de `assets/js/cuentas.js`; es pública.
+- Se usa la API REST de Firebase con `fetch`, sin cargar su SDK.
