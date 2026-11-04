@@ -1,11 +1,18 @@
 rules_version = '2';
 // Reglas de Firestore de la web (Firebase → Firestore Database → Reglas → pegar y «Publicar»).
 //
-//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, w<semana>
-//                    Lo lee cualquiera (es el ranking); sólo su dueño lo escribe, y sólo para sumar
-//                    los puntos de UN test: tests +1, los mismos puntos en el total, en una asignatura
-//                    y en la semana actual, y no más de los que da tiempo a ganar desde el último test.
+//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, w<semana>, bloqueado, admin
+//                    Lo lee cualquiera (es el ranking); su dueño sólo lo escribe para sumar los puntos de
+//                    UN test: tests +1, los mismos puntos en el total, en una asignatura y en la semana
+//                    actual, y no más de los que da tiempo a ganar desde el último test. Una cuenta
+//                    bloqueada ya no suma. Un administrador puede corregir los puntos y bloquear.
+//                    «admin» sólo lo escribe scripts/admin/admin.js (con la clave de servidor).
 //   progreso/{uid}   { t, json }  el progreso guardado de la cuenta; sólo lo ve y lo escribe su dueño.
+//   config/web       aviso para toda la web y fechas de exámenes: lo lee cualquiera, lo escribe un admin.
+//   reportes/{id}    errores que mandan los usuarios: los crea cualquiera con cuenta (no bloqueada);
+//                    sólo los administradores los leen, los marcan como resueltos o los borran.
+//
+// Administrador = cuenta con la «custom claim» admin: true (node scripts/admin/admin.js admin <usuario>).
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -23,6 +30,17 @@ service cloud.firestore {
           || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0);
     }
     function esSuyo(uid) { return request.auth != null && request.auth.uid == uid; }
+    function esAdmin() { return request.auth != null && request.auth.token.get('admin', false) == true; }
+    // Campo numérico entero y no negativo (si falta, cuenta como 0).
+    function natural(k) { return nuevo().get(k, 0) is int && nuevo().get(k, 0) >= 0; }
+    // Campo de texto obligatorio de, como mucho, max caracteres.
+    function texto(k, max) { return nuevo()[k] is string && nuevo()[k].size() <= max; }
+    // Campo de texto opcional de, como mucho, max caracteres.
+    function textoOpc(k, max) { return nuevo().get(k, '') is string && nuevo().get(k, '').size() <= max; }
+    function bloqueada(uid) {
+      return exists(/databases/$(database)/documents/usuarios/$(uid))
+        && get(/databases/$(database)/documents/usuarios/$(uid)).data.get('bloqueado', false) == true;
+    }
 
     match /usuarios/{uid} {
       allow read: if true;
@@ -33,7 +51,9 @@ service cloud.firestore {
         && nuevo().nombre.size() == nuevo().id.size()
         && nuevo().puntos == 0 && nuevo().tests == 0
         && nuevo().ultimo == request.time && nuevo().creado == request.time;
+      // El dueño, al terminar un test.
       allow update: if esSuyo(uid)
+        && viejo().get('bloqueado', false) != true
         && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', semana()])
         && nuevo().ultimo == request.time
         && nuevo().tests == viejo().tests + 1
@@ -41,6 +61,11 @@ service cloud.firestore {
         && delta() <= 25 + (request.time - viejo().ultimo).seconds() * 4
         && unaAsignatura()
         && cambio(semana()) == delta();
+      // Un administrador, desde el panel: corregir puntos (nunca negativos) y bloquear o desbloquear.
+      allow update: if esAdmin()
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'bloqueado', semana()])
+        && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural(semana())
+        && nuevo().get('bloqueado', false) is bool;
       allow delete: if esSuyo(uid);
     }
 
@@ -49,6 +74,34 @@ service cloud.firestore {
       allow create, update: if esSuyo(uid)
         && nuevo().keys().hasOnly(['t', 'json'])
         && nuevo().t is int && nuevo().json is string && nuevo().json.size() < 400000;
+    }
+
+    match /config/web {
+      allow read: if true;
+      allow create, update: if esAdmin()
+        && nuevo().keys().hasOnly(['aviso', 'avisoTipo', 'avisoEnlace', 'avisoTextoEnlace', 'avisoHasta', 'avisoId',
+                                   'examenes', 'actualizado', 'por'])
+        && texto('aviso', 500) && nuevo().avisoTipo in ['info', 'importante']
+        && texto('avisoEnlace', 300) && texto('avisoTextoEnlace', 60)
+        && texto('avisoHasta', 10) && texto('avisoId', 40)
+        && texto('examenes', 6000) && texto('por', 40)
+        && nuevo().actualizado == request.time;
+    }
+
+    match /reportes/{id} {
+      allow create: if request.auth != null
+        && nuevo().keys().hasOnly(['uid', 'nombre', 'pagina', 'titulo', 'contexto', 'texto', 'estado', 'creado'])
+        && nuevo().keys().hasAll(['uid', 'nombre', 'pagina', 'texto', 'estado', 'creado'])
+        && nuevo().uid == request.auth.uid
+        && texto('nombre', 20) && texto('pagina', 300)
+        && textoOpc('titulo', 200) && textoOpc('contexto', 600)
+        && texto('texto', 1500) && nuevo().texto.size() >= 5
+        && nuevo().estado == 'abierto' && nuevo().creado == request.time
+        && !bloqueada(request.auth.uid);
+      allow read, delete: if esAdmin();
+      allow update: if esAdmin()
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['estado'])
+        && nuevo().estado in ['abierto', 'resuelto'];
     }
   }
 }

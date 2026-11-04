@@ -7,8 +7,15 @@
  *   · Los puntos (App.puntos, al terminar un test) van a una cola («app-pend») que se envía a Firebase.
  *   · Sin conexión se pueden crear perfiles locales: sólo en este navegador y sin ranking.
  *
+ *   · Administradores: cuentas con la «custom claim» admin del token (la da scripts/admin/admin.js). Aquí
+ *     sólo se lee para enseñar el enlace al panel; lo que pueden hacer lo deciden las reglas de Firestore.
+ *   · Configuración de la web (aviso y fechas de exámenes, config/web): se trae en segundo plano y se
+ *     aplica con App.config.actualizar.
+ *   · Cuentas.datos: acceso a Firestore con la sesión activa (lo usan el panel y los reportes).
+ *
  * localStorage:  app-sesion (cuenta activa) · app-cuentas (cuentas usadas en este dispositivo)
  *                app-owner (de quién es el progreso que hay ahora en las claves) · app-sync · app-pend · u:<id>
+ *                app-admin (id de la cuenta activa si es administradora)
  */
 (function () {
   "use strict";
@@ -72,23 +79,36 @@
   }
   const json = (body, keepalive) => ({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), keepalive: Boolean(keepalive) });
 
-  /* Tokens: el id token dura una hora; se renueva con el refresh token y se guarda en la pestaña. */
-  async function sesionDe(refresh) {
+  /* Tokens: el id token dura una hora; se renueva con el refresh token y se guarda en la pestaña.
+     «adm»: si el token lleva la claim admin (se lee del propio token; no hace falta comprobar su firma
+     porque sólo sirve para enseñar el enlace al panel: el servidor vuelve a comprobarlo en cada escritura). */
+  function claimsDe(idToken) {
+    try {
+      const p = String(idToken).split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const bin = atob(p + "===".slice((p.length + 3) % 4));
+      return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+    } catch (e) { return {}; }
+  }
+  async function sesionDe(refresh, forzar) {
     const c = App.session("app-idt") || {};
-    if (c.r === refresh && c.exp > Date.now() + 60000) return c;
+    if (!forzar && c.r === refresh && c.exp > Date.now() + 60000) return c;
     const d = await pedir(TOKEN, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(refresh) });
-    const n = { r: refresh, t: d.id_token, uid: d.user_id, exp: Date.now() + (Number(d.expires_in) || 3600) * 1000 };
+    const n = { r: refresh, t: d.id_token, uid: d.user_id, adm: claimsDe(d.id_token).admin === true, exp: Date.now() + (Number(d.expires_in) || 3600) * 1000 };
     App.session("app-idt", n);
     return n;
   }
-  function guardarSesion(d) { App.session("app-idt", { r: d.refreshToken, t: d.idToken, uid: d.localId, exp: Date.now() + (Number(d.expiresIn) || 3600) * 1000 }); }
+  function guardarSesion(d) { App.session("app-idt", { r: d.refreshToken, t: d.idToken, uid: d.localId, adm: claimsDe(d.idToken).admin === true, exp: Date.now() + (Number(d.expiresIn) || 3600) * 1000 }); }
 
   /* Firestore: valores ↔ JS */
-  const val = (x) => typeof x === "number" ? { integerValue: String(Math.round(x)) } : { stringValue: String(x) };
+  const val = (x) => typeof x === "number" ? { integerValue: String(Math.round(x)) } : typeof x === "boolean" ? { booleanValue: x } : { stringValue: String(x) };
   function leer(doc) {
     const o = {}, f = (doc && doc.fields) || {};
-    for (const k in f) { const v = f[k]; o[k] = "integerValue" in v ? Number(v.integerValue) : "doubleValue" in v ? Number(v.doubleValue) : "stringValue" in v ? v.stringValue : "timestampValue" in v ? v.timestampValue : null; }
+    for (const k in f) {
+      const v = f[k];
+      o[k] = "integerValue" in v ? Number(v.integerValue) : "doubleValue" in v ? Number(v.doubleValue) : "stringValue" in v ? v.stringValue
+        : "booleanValue" in v ? v.booleanValue : "timestampValue" in v ? v.timestampValue : null;
+    }
     return o;
   }
   const cab = (s) => s ? { Authorization: "Bearer " + s.t } : {};
@@ -272,6 +292,7 @@
     store(K.sync, { id: c.id, h: huella(s), t, subido: remoto ? remoto.t : 0 });
     store(K.owner, c.id);
     store(K.ses, { id: c.id, nombre: c.nombre, token: c.token || null, local: Boolean(c.local) });
+    store("app-admin", null);                      // el rol se vuelve a comprobar con el token de esta cuenta
     guardarCuenta(c);
     App.session("app-pull", Date.now());
     await sincronizar();
@@ -315,7 +336,7 @@
       cambiarCuenta(ses.id, { token: null });
     }
     aplicar({});
-    store(K.owner, null); store(K.ses, null); store(K.sync, null);
+    store(K.owner, null); store(K.ses, null); store(K.sync, null); store("app-admin", null);
   }
   /** Quita una cuenta de la lista de este dispositivo (no la borra del servidor). */
   function olvidar(id) {
@@ -379,8 +400,8 @@
     let pos = 0, prev = null;
     const filas = (Array.isArray(d) ? d : []).filter((x) => x.document).map((x) => {
       const u = leer(x.document), uid = x.document.name.split("/").pop();
-      return { uid, nombre: u.nombre || "?", puntos: Number(u[campo] || 0), tests: Number(u.tests || 0) };
-    }).filter((f) => f.puntos > 0).map((f, i) => {
+      return { uid, nombre: u.nombre || "?", puntos: Number(u[campo] || 0), tests: Number(u.tests || 0), bloqueado: u.bloqueado === true };
+    }).filter((f) => f.puntos > 0 && !f.bloqueado).map((f, i) => {
       if (f.puntos !== prev) { pos = i + 1; prev = f.puntos; }   // empates: misma posición
       return { pos, nombre: f.nombre, puntos: f.puntos, tests: f.tests, yo: Boolean(s && s.uid === f.uid) };
     });
@@ -427,11 +448,85 @@
   /** ¿Hay progreso en este navegador que no es de ninguna cuenta? (p. ej. de antes de que hubiera cuentas) */
   const progresoSuelto = () => !store(K.owner) && Object.keys(recoger()).length > 0;
 
-  window.Cuentas = Object.freeze({ servidor, lista, actual, progresoSuelto, registrar, entrar, elegir, crearLocal, salir, olvidar, enviar, sincronizar, ranking: (t) => fetchRanking(t, (actual() || {}).token), yo, toast, idDe, puntosDe, fmt });
+  /* ---------------- Administradores ---------------- */
+  function marcarAdmin(id) {
+    store("app-admin", id || null);
+    document.querySelectorAll(".site-nav__admin").forEach((a) => { a.hidden = !id; });
+  }
+  /** ¿La cuenta activa es administradora? forzar: pide un token nuevo (recoge un cambio de rol reciente). */
+  async function esAdmin(forzar) {
+    const ses = actual();
+    if (!ses || !ses.token) { marcarAdmin(null); return false; }
+    try {
+      const s = await sesionDe(ses.token, forzar);
+      marcarAdmin(s.adm ? ses.id : null);
+      return Boolean(s.adm);
+    } catch (e) {
+      if (e.status === 401) { caducada(ses.id); marcarAdmin(null); return false; }
+      return store("app-admin") === ses.id;          // sin conexión: lo último que se supo
+    }
+  }
+
+  /* ---------------- Configuración de la web (config/web) ----------------
+     Pública: la lee cualquiera. Se trae como mucho una vez cada 5 minutos por pestaña. */
+  const CAMPOS_CONFIG = ["aviso", "avisoTipo", "avisoEnlace", "avisoTextoEnlace", "avisoHasta", "avisoId", "examenes"];
+  function limpiarConfig(d) {
+    const cfg = {};
+    if (d) CAMPOS_CONFIG.forEach((k) => { if (typeof d[k] === "string" && d[k] !== "") cfg[k] = d[k]; });
+    return cfg;
+  }
+  async function cargarConfig(forzar) {
+    const t = App.session("app-config-t");
+    if (!forzar && t && Date.now() - t < 300000) return App.config.get();
+    App.session("app-config-t", Date.now());
+    const d = await docGet("config/web");
+    const cfg = limpiarConfig(d);
+    App.config.actualizar(cfg);
+    return cfg;
+  }
+
+  /* ---------------- Acceso a los datos con la sesión activa ----------------
+     Lo usan el panel de administración (assets/js/admin.js) y los reportes (assets/js/reportes.js).
+     Qué se puede leer o escribir lo deciden las reglas de Firestore (firestore.rules). */
+  async function sesionActiva(forzar) {
+    const ses = actual();
+    if (!ses || !ses.token) throw fallo("Entra con tu cuenta (no con un perfil local).", 401);
+    try { return await sesionDe(ses.token, forzar); }
+    catch (e) { if (e.status === 401) caducada(ses.id); throw e; }
+  }
+  /** Documentos de una consulta: [{ _id, _t (última modificación), …campos }] */
+  async function consultar(structuredQuery) {
+    const s = await sesionActiva();
+    const o = json({ structuredQuery }); o.headers.Authorization = "Bearer " + s.t;
+    const d = await pedir(DB + ":runQuery", o);
+    return (Array.isArray(d) ? d : []).filter((x) => x.document)
+      .map((x) => Object.assign({ _id: x.document.name.split("/").pop(), _t: x.document.updateTime }, leer(x.document)));
+  }
+  /** Un documento ({ _id, _t, …campos }) o null si no existe. */
+  async function leerDoc(ruta) {
+    const s = await sesionActiva();
+    try {
+      const d = await pedir(DB + "/" + ruta, { headers: cab(s), cache: "no-store" });
+      return Object.assign({ _id: d.name.split("/").pop(), _t: d.updateTime }, leer(d));
+    } catch (e) { if (e.status === 404) return null; throw e; }
+  }
+  async function escribir(writes) { return commit(writes, await sesionActiva()); }
+  /** Id aleatorio de 20 caracteres, como los que genera Firestore. */
+  function nuevoId() {
+    const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", r = new Uint8Array(20);
+    crypto.getRandomValues(r);
+    return Array.from(r, (x) => abc[x % abc.length]).join("");
+  }
+  const datos = Object.freeze({ sesion: sesionActiva, consultar, leer: leerDoc, escribir, ruta: (r) => DOC + r, valor: val, semana, nuevoId });
+
+  window.Cuentas = Object.freeze({ servidor, lista, actual, progresoSuelto, registrar, entrar, elegir, crearLocal, salir, olvidar, enviar, sincronizar,
+    ranking: (t) => fetchRanking(t, (actual() || {}).token), yo, toast, idDe, puntosDe, fmt, esAdmin, cargarConfig, limpiarConfig, datos });
 
   /* ---------------- En cada página ---------------- */
   function iniciar() {
+    cargarConfig().catch(() => {});
     if (!actual()) return;
+    esAdmin().catch(() => {});
     traer().catch(() => {});
     enviar();
     setInterval(() => sincronizar(), 20000);

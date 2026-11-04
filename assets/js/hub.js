@@ -94,16 +94,19 @@
   }
 
   document.title = S.short + " · " + S.name;
-  app.innerHTML = `
-    <header class="hub-hero">
-      <span class="eyebrow">1.º Grado en Ingeniería Informática · Universidad de Murcia</span>
-      <div class="hub-title"><span class="hub-badge" aria-hidden="true">${esc(S.short)}</span><h1>${esc(S.name)}</h1></div>
-      <p class="lead">${esc(S.intro)}</p>
-      ${stats()}
-      ${cont()}
-    </header>
-    ${SECTIONS.map(section).join("")}
-    <p class="muted hub-note">Tu progreso se guarda sólo en este navegador.</p>`;
+  function pintar() {
+    app.innerHTML = `
+      <header class="hub-hero">
+        <span class="eyebrow">1.º Grado en Ingeniería Informática · Universidad de Murcia</span>
+        <div class="hub-title"><span class="hub-badge" aria-hidden="true">${esc(S.short)}</span><h1>${esc(S.name)}</h1></div>
+        <p class="lead">${esc(S.intro)}</p>
+        ${stats()}
+        ${cont()}
+      </header>
+      ${SECTIONS.map(section).join("")}
+      <p class="muted hub-note">Tu progreso se guarda sólo en este navegador.</p>`;
+  }
+  pintar();
 
   // Al desplazarse, la sección visible se marca en la barra inferior y en las pestañas.
   if ("IntersectionObserver" in window) {
@@ -117,6 +120,10 @@
       });
     }, { rootMargin: "-35% 0px -60% 0px" });
     app.querySelectorAll(".hub-sec, .hub-hero").forEach((s) => io.observe(s));
+    // Si llegan fechas de exámenes nuevas (panel de administración), se repinta y se vuelven a observar.
+    window.addEventListener("app:config", () => { pintar(); app.querySelectorAll(".hub-sec, .hub-hero").forEach((s) => io.observe(s)); });
+  } else {
+    window.addEventListener("app:config", pintar);
   }
   // Si se llega con un ancla (#examen), se baja a esa sección ya pintada.
   if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }

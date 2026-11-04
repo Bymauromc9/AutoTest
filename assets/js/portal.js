@@ -8,21 +8,26 @@
   const list = document.getElementById("subjects");
   if (!list) return;
 
-  list.innerHTML = SUBJECTS.map((s) => {
-    const pct = progress.subject(s);
-    const counts = SECTIONS.map((x) => ({ x, n: s.resources.filter((r) => r.sec === x.id).length }));
-    const exam = s.exam && daysTo(s.exam.date) >= 0 ? `<span class="subject__exam">${icon("calendar")}Examen en ${daysTo(s.exam.date)} días</span>` : "";
-    return `
-    <li class="subject">
-      <a class="subject__link" href="${esc(s.home)}">
-        <span class="subject__top"><span class="subject__short">${esc(s.short)}</span>${exam}<span class="subject__go">${icon("chevron")}</span></span>
-        <span class="subject__name">${esc(s.name)}</span>
-        <span class="subject__desc">${esc(s.desc)}</span>
-        <span class="subject__sections">${counts.map((c) => `<span>${icon(c.x.icon)}${esc(c.x.label)} <b>${c.n}</b></span>`).join("")}</span>
-        <span class="subject__prog"><span class="res-bar"><span style="width:${pct}%"></span></span><span class="subject__pct">${pct}%</span></span>
-      </a>
-    </li>`;
-  }).join("");
+  function pintarAsignaturas() {
+    list.innerHTML = SUBJECTS.map((s) => {
+      const pct = progress.subject(s);
+      const counts = SECTIONS.map((x) => ({ x, n: s.resources.filter((r) => r.sec === x.id).length }));
+      const exam = s.exam && daysTo(s.exam.date) >= 0 ? `<span class="subject__exam">${icon("calendar")}Examen en ${daysTo(s.exam.date)} días</span>` : "";
+      return `
+      <li class="subject">
+        <a class="subject__link" href="${esc(s.home)}">
+          <span class="subject__top"><span class="subject__short">${esc(s.short)}</span>${exam}<span class="subject__go">${icon("chevron")}</span></span>
+          <span class="subject__name">${esc(s.name)}</span>
+          <span class="subject__desc">${esc(s.desc)}</span>
+          <span class="subject__sections">${counts.map((c) => `<span>${icon(c.x.icon)}${esc(c.x.label)} <b>${c.n}</b></span>`).join("")}</span>
+          <span class="subject__prog"><span class="res-bar"><span style="width:${pct}%"></span></span><span class="subject__pct">${pct}%</span></span>
+        </a>
+      </li>`;
+    }).join("");
+  }
+  pintarAsignaturas();
+  // Si llegan fechas de exámenes nuevas (panel de administración), se repinta.
+  window.addEventListener("app:config", pintarAsignaturas);
 
   // Continuar con el último recurso abierto, en cualquier asignatura.
   const last = store("app-last");
@@ -41,7 +46,7 @@
   const { SUBJECTS, esc, icon, daysTo, sesion, ROOT } = window.App;
 
   const ex = document.getElementById("exams");
-  if (ex) {
+  function pintarExamenes() {
     const items = SUBJECTS.map((s) => {
       if (!s.exam) return `<div class="exam-cd is-tbd"><span class="exam-cd__n">?</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">fecha del examen por confirmar</small><small class="exam-cd__s">sin fecha</small></span></div>`;
       const d = daysTo(s.exam.date);
@@ -54,6 +59,7 @@
     ex.innerHTML = items;
     ex.hidden = !items;
   }
+  if (ex) { pintarExamenes(); window.addEventListener("app:config", pintarExamenes); }
 
   const box = document.getElementById("cuenta-strip");
   const ses = sesion();

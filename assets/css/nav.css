@@ -4,19 +4,19 @@
      · barra inferior fija en el móvil (Inicio · Teoría · Prácticas · Examen).
    Es autosuficiente: define sus propios colores para poder usarse en páginas con hojas de estilo propias
    (guías, equivalencias, ejercicios). Diseño móvil primero: los estilos base son los del móvil. */
-.site-nav, .tabbar {
+.site-nav, .tabbar, .site-aviso {
   --sn-ink: #15202C; --sn-muted: #5A6573; --sn-line: #D7DDE4; --sn-surface: #FFFFFF; --sn-soft: #E4EAF4;
   --sn-accent: #27467A; --sn-accent-ink: #FFFFFF; --sn-bar: rgba(255, 255, 255, .92);
   font-family: "Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--sn-ink);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .site-nav, :root:not([data-theme="light"]) .tabbar {
+  :root:not([data-theme="light"]) .site-nav, :root:not([data-theme="light"]) .tabbar, :root:not([data-theme="light"]) .site-aviso {
     --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
     --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
   }
 }
-:root[data-theme="dark"] .site-nav, :root[data-theme="dark"] .tabbar {
+:root[data-theme="dark"] .site-nav, :root[data-theme="dark"] .tabbar, :root[data-theme="dark"] .site-aviso {
   --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
   --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
 }
@@ -41,13 +41,16 @@
   background: var(--sn-surface); color: var(--sn-ink); cursor: pointer; display: grid; place-items: center; padding: 0;
 }
 .site-nav__theme:hover { border-color: var(--sn-accent); color: var(--sn-accent); }
-/* Ranking y cuenta (los pone core.js antes del botón del tema) */
+/* Ranking, reportar un error, panel de administración y cuenta (los pone core.js antes del botón del tema) */
 .site-nav__icon, .site-nav__acct {
   flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; text-decoration: none;
 }
 .site-nav__icon { border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-ink) !important; }
 .site-nav__icon:hover { border-color: var(--sn-accent); color: var(--sn-accent) !important; }
-@media (max-width: 420px) { .site-nav__icon { display: none; } }
+.site-nav__icon { padding: 0; cursor: pointer; font: inherit; }
+.site-nav__icon[hidden] { display: none; }
+/* En pantallas muy estrechas sólo queda «Reportar un error» (el ranking y el panel están en la portada y en «Tu cuenta»). */
+@media (max-width: 420px) { .site-nav__icon:not([data-reportar]) { display: none; } }
 .site-nav__acct {
   background: var(--sn-accent); color: var(--sn-accent-ink) !important; border: 1px solid var(--sn-accent);
   font: 800 17px/1 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -106,7 +109,22 @@ html.ai-open .tabbar { display: none; }
   body.has-tabbar .ai-launch { bottom: max(16px, env(safe-area-inset-bottom)) !important; }
 }
 
+/* ---------- Aviso para toda la web (lo pone un administrador; ver pintarAviso en core.js) ---------- */
+.site-aviso { --av: var(--sn-accent); max-width: 1180px; margin: -8px auto 20px; }
+.site-aviso.is-importante { --av: #B25E00; }
+:root[data-theme="dark"] .site-aviso.is-importante { --av: #E8B85C; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .site-aviso.is-importante { --av: #E8B85C; } }
+.site-aviso__in { display: flex; align-items: flex-start; gap: 10px; padding: 10px 6px 10px 14px; border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--av) 35%, var(--sn-line)); border-left: 4px solid var(--av);
+  background: color-mix(in srgb, var(--av) 9%, var(--sn-surface)); color: var(--sn-ink); }
+.site-aviso__in > .ico { width: 22px; height: 22px; flex: none; margin-top: 1px; color: var(--av); }
+.site-aviso__in p { flex: 1; margin: 0; font-size: 15.5px; line-height: 1.45; font-weight: 600; }
+.site-aviso__in a { color: var(--av); font-weight: 700; white-space: nowrap; }
+.site-aviso__x { flex: none; width: 32px; height: 32px; margin: -4px 0; border: 0; border-radius: 50%; background: transparent; color: var(--sn-muted); font-size: 22px; line-height: 1; cursor: pointer; }
+.site-aviso__x:hover { color: var(--sn-ink); background: color-mix(in srgb, var(--av) 14%, transparent); }
+@media (min-width: 721px) { .site-aviso { margin-top: -12px; } }
+
 /* Enlace «Saltar al contenido» (accesibilidad): invisible hasta que recibe el foco con el teclado. */
 .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 950; padding: 8px 12px; border-radius: 6px; background: #27467A; color: #fff; font: 600 15px system-ui, sans-serif; }
 .skip-link:focus { left: 16px; }
-@media print { .site-nav, .skip-link, .tabbar { display: none !important; } body.has-tabbar { padding-bottom: 0 !important; } }
+@media print { .site-nav, .skip-link, .tabbar, .site-aviso { display: none !important; } body.has-tabbar { padding-bottom: 0 !important; } }

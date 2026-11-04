@@ -5,6 +5,14 @@
  *   node admin.js listar                         todas las cuentas con sus puntos
  *   node admin.js resetear <usuario> <contraseña> pone una contraseña nueva (conserva puntos y progreso)
  *   node admin.js borrar <usuario>               borra la cuenta, sus puntos y su progreso (pide confirmación)
+ *   node admin.js admin <usuario>                le da acceso al panel de administración (admin.html)
+ *   node admin.js quitar-admin <usuario>         se lo quita
+ *   node admin.js admins                         lista quién es administrador
+ *
+ * Ser administrador es una «custom claim» de Firebase (admin: true) que viaja en el token de la sesión:
+ * las reglas de Firestore (firestore.rules) la exigen para escribir avisos, fechas de exámenes, corregir
+ * puntos o ver los reportes. También se apunta en usuarios/<uid>.admin para que el panel lo muestre.
+ * El cambio llega a la web cuando se renueva el token (como mucho en una hora) o al volver a entrar.
  *
  * Necesita la clave de administrador del proyecto en esta carpeta con el nombre clave-admin.json:
  *   Firebase → ⚙ Configuración del proyecto → Cuentas de servicio → «Generar nueva clave privada».
@@ -78,12 +86,14 @@ async function listar(fb) {
     r.users.forEach((u) => {
       const d = usuarios.get(u.uid) || {};
       usuarios.delete(u.uid);
+      const estado = [u.disabled ? "desactivada" : "", d.bloqueado ? "bloqueada en el ranking" : ""].filter(Boolean).join(", ");
       filas.push({ usuario: d.nombre || (u.email || "").split("@")[0], puntos: d.puntos || 0, tests: d.tests || 0,
-        creada: fecha(u.metadata.creationTime), "último acceso": fecha(u.metadata.lastSignInTime), estado: u.disabled ? "desactivada" : "" });
+        creada: fecha(u.metadata.creationTime), "último acceso": fecha(u.metadata.lastSignInTime),
+        rol: (u.customClaims || {}).admin ? "admin" : "", estado });
     });
     token = r.pageToken;
   } while (token);
-  usuarios.forEach((d) => filas.push({ usuario: d.nombre, puntos: d.puntos || 0, tests: d.tests || 0, creada: "—", "último acceso": "—", estado: "SIN CUENTA (fantasma)" }));
+  usuarios.forEach((d) => filas.push({ usuario: d.nombre, puntos: d.puntos || 0, tests: d.tests || 0, creada: "—", "último acceso": "—", rol: "", estado: "SIN CUENTA (fantasma)" }));
   filas.sort((a, b) => b.puntos - a.puntos);
   if (!filas.length) return console.log("\n  Todavía no hay ninguna cuenta.\n");
   console.log("\n  " + filas.length + (filas.length === 1 ? " cuenta" : " cuentas") + ":\n");
@@ -116,18 +126,60 @@ async function borrar(fb, nombre) {
   console.log("\n  ✔ Cuenta «" + visible + "» borrada. Ese nombre de usuario vuelve a estar libre.\n");
 }
 
+/** Da o quita el rol de administrador: la claim admin del token y el campo admin del documento. */
+async function hacerAdmin(fb, nombre, si) {
+  if (!nombre) salir("Uso:  node admin.js " + (si ? "admin" : "quitar-admin") + " <usuario>");
+  const c = await buscar(fb, nombre);
+  if (!c.user) salir("No existe ninguna cuenta con el usuario «" + nombre + "».");
+  const visible = (c.datos && c.datos.nombre) || nombre;
+  const claims = Object.assign({}, c.user.customClaims || {});
+  if (Boolean(claims.admin) === si) {
+    console.log("\n  «" + visible + "» " + (si ? "ya era" : "no era") + " administrador: no hay nada que cambiar.\n");
+    return;
+  }
+  if (si) claims.admin = true; else delete claims.admin;
+  await fb.auth.setCustomUserClaims(c.uid, Object.keys(claims).length ? claims : null);
+  if (c.datos) {
+    const { FieldValue } = require("firebase-admin/firestore");
+    await fb.db.collection("usuarios").doc(c.uid).update({ admin: si ? true : FieldValue.delete() });
+  }
+  console.log("\n  ✔ «" + visible + "» " + (si ? "ya es administrador." : "ya no es administrador.") +
+    (si ? "\n    Al abrir admin.html (o «Tu cuenta») la web renueva su sesión y ya le deja entrar;" +
+          "\n    el escudo de la barra superior le aparece en las demás páginas en menos de una hora.\n"
+        : "\n    Su sesión actual puede seguir teniendo el permiso hasta una hora como mucho.\n"));
+}
+
+async function admins(fb) {
+  const filas = [];
+  let token;
+  do {
+    const r = await fb.auth.listUsers(1000, token);
+    r.users.filter((u) => (u.customClaims || {}).admin).forEach((u) => filas.push({ usuario: (u.email || "").split("@")[0], "último acceso": fecha(u.metadata.lastSignInTime) }));
+    token = r.pageToken;
+  } while (token);
+  if (!filas.length) return console.log("\n  Todavía no hay ningún administrador. Hazte uno con:  node admin.js admin <tu usuario>\n");
+  console.log("\n  Administradores:\n");
+  console.table(filas);
+}
+
 (async () => {
   const [cmd, ...args] = process.argv.slice(2);
   const ayuda = "Uso:\n" +
     "    node admin.js listar\n" +
     "    node admin.js resetear <usuario> <contraseña nueva>\n" +
-    "    node admin.js borrar <usuario>";
-  if (!["listar", "resetear", "borrar"].includes(cmd)) salir(ayuda);
+    "    node admin.js borrar <usuario>\n" +
+    "    node admin.js admin <usuario>\n" +
+    "    node admin.js quitar-admin <usuario>\n" +
+    "    node admin.js admins";
+  if (!["listar", "resetear", "borrar", "admin", "quitar-admin", "admins"].includes(cmd)) salir(ayuda);
   const fb = iniciar();
   try {
     if (cmd === "listar") await listar(fb);
     if (cmd === "resetear") await resetear(fb, args[0], args.slice(1).join(" "));
     if (cmd === "borrar") await borrar(fb, args[0]);
+    if (cmd === "admin") await hacerAdmin(fb, args[0], true);
+    if (cmd === "quitar-admin") await hacerAdmin(fb, args[0], false);
+    if (cmd === "admins") await admins(fb);
     process.exit(0);
   } catch (e) {
     salir("Error: " + (e.message || e));

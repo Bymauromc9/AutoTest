@@ -13,6 +13,8 @@
  *   App.theme      tema claro / oscuro compartido por todas las páginas
  *   App.puntos     suma puntos al ranking al terminar un test ({ asig, tipo, aciertos, total }; ver cuentas.js)
  *   App.sesion()   cuenta activa ({ id, nombre, token, local }) o null
+ *   App.config     configuración que se cambia desde el panel de administración (aviso y fechas de
+ *                  exámenes): get(), actualizar(cfg) y examenesCodigo() (las fechas que trae el código)
  *
  * Sin cuenta activa, cualquier página manda a cuenta.html para entrar o registrarse (<html data-auth="off">
  * lo desactiva en una página).
@@ -154,15 +156,30 @@
     }
   ];
 
-  /* Asignaturas con varios exámenes (parciales y final, en «exams»): «exam» es el próximo que queda y
-     «examsLeft» los que vienen después. Las que tienen uno solo lo ponen directamente en «exam». */
+  /* ---------- Fechas de exámenes ----------
+     En el código, cada asignatura trae un examen («exam») o varios («exams»: parciales y final). Desde el
+     panel de administración se pueden cambiar sin tocar el código (App.config → «examenes»: { fli: [{ date,
+     label, name }], … }; el enlace y la frase de cada examen se toman del código). Al aplicarlas, cada
+     asignatura queda con «exams» (todos), «exam» (el próximo que queda) y «examsLeft» (los siguientes). */
+  const EXAMENES_CODIGO = {};
   SUBJECTS.forEach((s) => {
-    if (!Array.isArray(s.exams) || !s.exams.length) return;
-    const list = s.exams.slice().sort((a, b) => (a.date < b.date ? -1 : 1));
-    const i = list.findIndex((e) => daysTo(e.date) >= 0);
-    s.exam = i >= 0 ? list[i] : list[list.length - 1];
-    s.examsLeft = i >= 0 ? list.slice(i + 1) : [];
+    EXAMENES_CODIGO[s.id] = (Array.isArray(s.exams) ? s.exams : s.exam ? [s.exam] : []).map((e) => Object.assign({}, e));
   });
+  function aplicarExamenes(propios) {
+    SUBJECTS.forEach((s) => {
+      const base = EXAMENES_CODIGO[s.id];
+      const suyos = propios && Array.isArray(propios[s.id]) ? propios[s.id].filter((e) => e && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) : null;
+      const list = (suyos ? suyos.map((e, i) => {
+        const b = base[i] || base[base.length - 1] || {};
+        return { date: e.date, label: String(e.label || e.date), name: e.name ? String(e.name) : undefined, href: b.href || s.home, cta: b.cta };
+      }) : base.map((e) => Object.assign({}, e))).sort((a, b) => (a.date < b.date ? -1 : 1));
+      s.exams = list;
+      if (!list.length) { s.exam = null; s.examsLeft = []; return; }
+      const i = list.findIndex((e) => daysTo(e.date) >= 0);
+      s.exam = i >= 0 ? list[i] : list[list.length - 1];
+      s.examsLeft = i >= 0 ? list.slice(i + 1) : [];
+    });
+  }
 
   /* ---------- Almacenamiento ---------- */
   function makeStore(getStorage) {
@@ -178,6 +195,25 @@
   }
   const store = makeStore(() => window.localStorage);
   const session = makeStore(() => window.sessionStorage);
+
+  /* ---------- Configuración de la web (aviso y fechas de exámenes) ----------
+     La escribe el panel de administración en Firestore (config/web) y cuentas.js la trae en segundo plano.
+     Aquí se guarda una copia («app-config») para aplicarla al instante al abrir la página siguiente; si
+     llega una distinta, se aplica, se repinta el aviso y se lanza el evento «app:config» (la portada y la
+     de cada asignatura repintan la cuenta atrás). */
+  const CONFIG_KEY = "app-config", AVISO_VISTO = "app-aviso-visto";
+  let CONFIG = store(CONFIG_KEY) || {};
+  function examenesDe(cfg) { try { return cfg && cfg.examenes ? JSON.parse(cfg.examenes) : null; } catch (e) { return null; } }
+  aplicarExamenes(examenesDe(CONFIG));
+  function actualizarConfig(cfg) {
+    cfg = cfg && typeof cfg === "object" ? cfg : {};
+    if (JSON.stringify(cfg) === JSON.stringify(CONFIG)) return false;
+    CONFIG = cfg; store(CONFIG_KEY, cfg);
+    aplicarExamenes(examenesDe(cfg));
+    pintarAviso();
+    window.dispatchEvent(new CustomEvent("app:config"));
+    return true;
+  }
 
   function shuffle(a) {
     a = a.slice();
@@ -210,7 +246,10 @@
     trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8.5 20.5h7M9.5 17h5v3.5h-5z"/>',
     user: '<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
     logout: '<path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
-    swapuser: '<circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M16 5h5M19 3l2 2-2 2M21 12h-5M18 10l-2 2 2 2"/>'
+    swapuser: '<circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M16 5h5M19 3l2 2-2 2M21 12h-5M18 10l-2 2 2 2"/>',
+    alert: '<path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.1"/>',
+    shield: '<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>',
+    megaphone: '<path d="M4 10v4a1 1 0 0 0 1 1h3l6 4V5L8 9H5a1 1 0 0 0-1 1z"/><path d="M18 9a4 4 0 0 1 0 6"/>'
   };
   function icon(name, cls) {
     return `<svg class="ico${cls ? " " + cls : ""}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
@@ -362,8 +401,13 @@
       }
     }
     // Ranking y cuenta (inicial del usuario), junto al botón del tema.
+    // Reportar un error (sólo con cuenta: los perfiles locales no pueden escribir en el servidor) y, para los
+    // administradores, el panel (cuentas.js lo muestra u oculta al comprobar el rol en el token).
     const ses = store(SESION_KEY);
+    const esAdmin = Boolean(ses && store("app-admin") === ses.id);
     const acct = ses ? `<a class="site-nav__icon" href="${root}ranking.html" title="Ranking global" aria-label="Ranking global">${icon("trophy")}</a>` +
+      (ses.local ? "" : `<button type="button" class="site-nav__icon" data-reportar title="Reportar un error" aria-label="Reportar un error">${icon("alert")}</button>`) +
+      `<a class="site-nav__icon site-nav__admin" href="${root}admin.html" title="Panel de administración" aria-label="Panel de administración"${esAdmin ? "" : " hidden"}>${icon("shield")}</a>` +
       `<a class="site-nav__acct" href="${root}cuenta.html" title="Tu cuenta: ${esc(ses.nombre)}" aria-label="Tu cuenta: ${esc(ses.nombre)}">${esc((ses.nombre || "?").charAt(0).toUpperCase())}</a>` : "";
     nav.innerHTML = `<div class="site-nav__inner"><div class="site-nav__crumbs">${crumbs}</div>${tabs}${acct}<button type="button" class="site-nav__theme" id="theme-toggle"></button></div>${chips}`;
     // La barra va justo después del enlace «Saltar al contenido», que debe ser lo primero al tabular.
@@ -394,6 +438,31 @@
     body.classList.add("has-site-nav");
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
     syncThemeButton();
+    pintarAviso();
+  }
+
+  /* ---------- Aviso para toda la web (lo pone un administrador desde el panel) ----------
+     Va debajo de la barra superior hasta la fecha de «avisoHasta» (incluida). Cada usuario puede cerrarlo:
+     se recuerda por su «avisoId», así que un aviso nuevo vuelve a salir. */
+  function enlaceAviso(u) {
+    u = String(u || "").trim();
+    if (!u || /^(javascript|data|vbscript):/i.test(u)) return "";
+    return /^(https?:\/\/|\/|#)/i.test(u) ? u : ROOT_URL + u;
+  }
+  function pintarAviso() {
+    const nav = document.querySelector(".site-nav");
+    if (!nav) return;
+    const c = CONFIG;
+    let el = document.querySelector(".site-aviso");
+    const vigente = c.aviso && (!c.avisoHasta || daysTo(c.avisoHasta) >= 0) && store(AVISO_VISTO) !== (c.avisoId || c.aviso);
+    if (!vigente) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement("div"); el.setAttribute("role", "status"); nav.insertAdjacentElement("afterend", el); }
+    el.className = "site-aviso" + (c.avisoTipo === "importante" ? " is-importante" : "");
+    const href = enlaceAviso(c.avisoEnlace);
+    el.innerHTML = `<div class="site-aviso__in">${icon(c.avisoTipo === "importante" ? "alert" : "megaphone")}<p>${esc(c.aviso)}` +
+      `${href ? ` <a href="${esc(href)}">${esc(c.avisoTextoEnlace || "Más información")}</a>` : ""}</p>` +
+      `<button type="button" class="site-aviso__x" aria-label="Ocultar este aviso" title="Ocultar este aviso">×</button></div>`;
+    el.querySelector(".site-aviso__x").onclick = () => { store(AVISO_VISTO, c.avisoId || c.aviso); el.remove(); };
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildNav);
   else buildNav();
@@ -423,11 +492,19 @@
     const pjs = document.createElement("script");
     pjs.src = base + "js/pdf.js"; pjs.defer = true;
     document.head.appendChild(pjs);
+    // Reportar un error (botón de la barra superior; ver assets/js/reportes.js)
+    const rcss = document.createElement("link");
+    rcss.rel = "stylesheet"; rcss.href = base + "css/reportes.css";
+    document.head.appendChild(rcss);
+    const rjs = document.createElement("script");
+    rjs.src = base + "js/reportes.js"; rjs.defer = true;
+    document.head.appendChild(rjs);
   })();
 
   window.App = Object.freeze({
     SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso,
     ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
+    config: Object.freeze({ get: () => CONFIG, actualizar: actualizarConfig, examenesCodigo: () => JSON.parse(JSON.stringify(EXAMENES_CODIGO)) }),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),
     theme: Object.freeze({ get: effective, set: setTheme, toggle: toggleTheme })
   });

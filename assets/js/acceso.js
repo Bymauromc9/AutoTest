@@ -42,7 +42,12 @@
         <a class="btn ghost" href="?cambiar=1">${icon("swapuser")}Cambiar de cuenta</a>
         <button type="button" class="btn danger" id="salir">${icon("logout")}Cerrar sesión</button>
       </div>
+      <div class="cta-actions" id="admin-acc" hidden>
+        <a class="btn ghost" href="${ROOT}admin.html">${icon("shield")}Panel de administración</a>
+      </div>
     </section>`;
+    // Sólo para administradores (se comprueba con un token nuevo, por si el rol se acaba de dar).
+    if (!ses.local) C.esAdmin(true).then((si) => { const b = document.getElementById("admin-acc"); if (b) b.hidden = !si; }).catch(() => {});
     document.getElementById("salir").onclick = async (e) => {
       e.currentTarget.disabled = true;
       await C.salir();

@@ -10,6 +10,7 @@ abre `index.html` con doble clic. También funciona servido desde cualquier host
 index.html                  Portada: tu cuenta y el top 5, cuenta atrás de los exámenes, «continuar» y una tarjeta por asignatura
 cuenta.html                 Entrar, crear cuenta o elegir una de las cuentas usadas en el dispositivo; «Tu cuenta»
 ranking.html                Leaderboard global: general, esta semana y por asignatura
+admin.html                  Panel de administración (sólo cuentas administradoras): usuarios, aviso, exámenes y reportes
 assets/
   css/base.css              Tokens de diseño (colores, tipografías, tema oscuro) y componentes genéricos
   css/nav.css               Navegación común: barra superior, chips de la sección y barra inferior en el móvil
@@ -21,8 +22,12 @@ assets/
   js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
   js/cuentas.js             Cuentas con Firebase: progreso de cada cuenta, sincronización y puntos (lo carga core.js)
   js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
+  js/admin.js               Panel de administración (admin.html)
+  js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/asistente.css         Estilos del panel del asistente
+  css/admin.css             Estilos del panel de administración
+  css/reportes.css          Diálogo «Reportar un error» (autosuficiente, como nav.css)
   css/guia.css              Guías con índice lateral (FC, IP y L1): estructura, temas, cajas, ejercicios,
                             «Más a fondo» plegable, subrayador y piezas para los diagramas (.dg)
   js/guia.js                Guías con índice lateral: «Hecho», progreso, índice, plegables, «Marcar como
@@ -30,7 +35,7 @@ assets/
 api/
   chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
 vercel.json                 Tiempo máximo de la función del asistente
-firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso y ranking)
+firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso, ranking, configuración y reportes)
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
   index.html                Portada de FLI (la genera assets/js/hub.js): Teoría, Prácticas y Examen, con L0 y L1 dentro
@@ -182,6 +187,7 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `app-sesion`, `app-cuentas` | Cuenta activa y cuentas usadas en este dispositivo (con su sesión) |
 | `app-owner`, `app-sync`, `u:<cuenta>` | De quién es el progreso cargado, estado de la sincronización y copia del progreso de cada cuenta |
 | `app-pend` | Puntos pendientes de enviar al ranking (si no había conexión) |
+| `app-config`, `app-aviso-visto` | Copia del aviso y las fechas de examen publicadas desde el panel, y último aviso cerrado |
 | `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
 | `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
@@ -281,10 +287,14 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
 - **Authentication** con correo y contraseña: cada usuario es `<usuario>@usuarios.web-ing-inf.firebaseapp.com`
   (en minúsculas y sin tildes; no se manda ningún correo). Firebase impide dos usuarios iguales.
 - **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip` y de cada
-  semana `w<n>`; es público porque es el ranking) y `progreso/<uid>` (el progreso; sólo su dueño).
+  semana `w<n>`; es público porque es el ranking), `progreso/<uid>` (el progreso; sólo su dueño),
+  `config/web` (el aviso y las fechas de examen del panel; lo lee cualquiera, lo escribe un administrador)
+  y `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores).
 - **Reglas** (`firestore.rules`, se pegan en Firestore → Reglas → Publicar): cada uno sólo puede sumar
   sus propios puntos, de un test en un test, con el mismo valor en el total, en una asignatura y en la
-  semana, y nunca más de los que da tiempo a ganar desde su último test.
+  semana, y nunca más de los que da tiempo a ganar desde su último test. Un administrador (claim
+  `admin` en su sesión) puede además corregir puntos, bloquear cuentas, publicar `config/web` y gestionar
+  los reportes. **Cada vez que cambie `firestore.rules` hay que volver a publicarlas.**
 - La configuración (`apiKey`, `projectId`) está al principio de `assets/js/cuentas.js`; es pública.
 - Se usa la API REST de Firebase con `fetch`, sin cargar su SDK.
 
@@ -310,3 +320,33 @@ Necesita la **clave de administrador** en `scripts/admin/clave-admin.json`: Fire
 del proyecto → Cuentas de servicio → «Generar nueva clave privada». Esa clave da control total del
 proyecto: no se comparte ni se sube (`.gitignore` la excluye). Si se filtra, se revoca en Google Cloud →
 IAM → Cuentas de servicio → Claves.
+
+### Panel de administración (admin.html)
+
+Sólo lo ven las cuentas administradoras: les aparece un escudo en la barra superior y un enlace en
+«Tu cuenta». Lo que no se puede hacer desde la web (contraseñas, borrar cuentas, dar o quitar el
+permiso de administrador) se hace con `scripts/admin/admin.js`:
+
+```
+node admin.js admin <usuario>                 le da acceso al panel (entra abriendo admin.html o «Tu cuenta»)
+node admin.js quitar-admin <usuario>          se lo quita (una sesión ya abierta puede conservarlo hasta 1 h)
+node admin.js admins                          lista quién es administrador
+```
+
+Pestañas del panel:
+
+- **Resumen**: cuentas, tests, puntos, cuentas activas esta semana, top de la semana, puntos por
+  asignatura y reportes sin revisar.
+- **Usuarios**: buscar y filtrar cuentas. «Gestionar» permite sumar o restar puntos en una asignatura
+  (y en la semana), ponerlos a cero y **bloquear** la cuenta: deja de salir en el ranking, no suma
+  puntos y no puede mandar reportes. Muestra también los comandos de terminal para esa cuenta.
+- **Aviso**: un aviso para todas las páginas (normal o importante, con enlace y fecha de caducidad
+  opcionales). Cada usuario puede cerrarlo; un aviso nuevo vuelve a salir.
+- **Exámenes**: las fechas de la cuenta atrás de la portada y de cada asignatura. Si no se tocan se usan
+  las de `assets/js/core.js`; «Volver a las del código» borra las del panel.
+- **Reportes**: lo que mandan los usuarios con el botón ⚠ de la barra superior, con la página (y el
+  apartado), la pregunta o el texto seleccionado. Se marcan como resueltos o se borran.
+
+Las páginas leen `config/web` como mucho cada 5 minutos y lo guardan en `app-config`, así que un
+cambio puede tardar ese tiempo en verse en un navegador que ya tenía la web abierta.
+

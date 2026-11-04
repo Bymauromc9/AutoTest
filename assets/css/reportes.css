@@ -1,0 +1,37 @@
+/* reportes.css — diálogo «Reportar un error» (assets/js/reportes.js). Lo carga core.js en todas las páginas.
+   Autosuficiente, como nav.css: define sus colores para verse igual en las páginas con hojas propias. */
+.rep-dlg {
+  --rp-ink: #15202C; --rp-muted: #5A6573; --rp-line: #D7DDE4; --rp-surface: #FFFFFF; --rp-bg: #F3F5F8;
+  --rp-accent: #27467A; --rp-accent-ink: #FFFFFF; --rp-bad: #B42318; --rp-bad-soft: #FBE7E5;
+  width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--rp-line); border-radius: 16px;
+  background: var(--rp-surface); color: var(--rp-ink); box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .5);
+  font: 16px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .rep-dlg {
+    --rp-ink: #E5EAF0; --rp-muted: #9BA7B4; --rp-line: #2B3642; --rp-surface: #18202A; --rp-bg: #10151B;
+    --rp-accent: #93B4E6; --rp-accent-ink: #10151B; --rp-bad: #F2786D; --rp-bad-soft: #3A1C1A;
+  }
+}
+:root[data-theme="dark"] .rep-dlg {
+  --rp-ink: #E5EAF0; --rp-muted: #9BA7B4; --rp-line: #2B3642; --rp-surface: #18202A; --rp-bg: #10151B;
+  --rp-accent: #93B4E6; --rp-accent-ink: #10151B; --rp-bad: #F2786D; --rp-bad-soft: #3A1C1A;
+}
+.rep-dlg::backdrop { background: rgba(10, 14, 20, .5); }
+.rep-form { display: flex; flex-direction: column; gap: 14px; padding: 20px; margin: 0; }
+.rep-form h2 { margin: 0; font: 800 22px/1.2 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif; }
+.rep-sub { margin: -6px 0 0; color: var(--rp-muted); }
+.rep-ctx { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--rp-bg); border: 1px solid var(--rp-line); font-size: 14px; }
+.rep-ctx b { font-size: 12.5px; color: var(--rp-muted); font-weight: 700; }
+.rep-ctx span { overflow-wrap: anywhere; }
+.rep-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; }
+.rep-field textarea { font: inherit; font-weight: 400; min-height: 120px; resize: vertical; padding: 10px 12px; border: 1px solid var(--rp-line); border-radius: 10px; background: var(--rp-bg); color: var(--rp-ink); }
+.rep-field textarea:focus-visible { outline: 3px solid var(--rp-accent); outline-offset: 1px; }
+.rep-count { align-self: flex-end; font: 400 12.5px "JetBrains Mono", ui-monospace, monospace; color: var(--rp-muted); }
+.rep-err { margin: 0; padding: 9px 12px; border-radius: 8px; background: var(--rp-bad-soft); color: var(--rp-bad); font-size: 15px; }
+.rep-acts { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.rep-btn { min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid var(--rp-accent); background: var(--rp-accent); color: var(--rp-accent-ink); font: 700 15px "Source Sans 3", system-ui, sans-serif; cursor: pointer; }
+.rep-btn.ghost { background: transparent; color: var(--rp-accent); }
+.rep-btn:disabled { opacity: .5; cursor: progress; }
+.rep-btn:focus-visible { outline: 3px solid var(--rp-accent); outline-offset: 2px; }
+@media print { .rep-dlg { display: none !important; } }
