@@ -35,7 +35,7 @@
     const when = d > 1 ? `Faltan <b>${d}</b> días` : d === 1 ? "<b>Mañana</b>" : d === 0 ? "<b>Hoy</b>" : "Convocatoria pasada";
     return `<a class="exam-card" href="${root}${S.exam.href}">
       <span class="exam-days"><span class="n">${d >= 0 ? d : "—"}</span><span class="l">${d === 1 ? "día" : "días"}</span></span>
-      <span class="exam-txt"><span class="res-kind">Próximo examen</span><span class="res-t">${when}</span><span class="res-d">${esc(S.exam.label)} · ${esc(S.exam.cta || "cómo es y cómo prepararlo")}</span></span>
+      <span class="exam-txt"><span class="res-kind">Próximo examen${S.exam.name ? " · " + esc(S.exam.name) : ""}</span><span class="res-t">${when}</span><span class="res-d">${esc(S.exam.label)} · ${esc(S.exam.cta || "cómo es y cómo prepararlo")}${(S.examsLeft || []).map((e) => ` · después: ${esc(e.name || "examen")} en ${daysTo(e.date)} días (${esc(e.label.split(" · ")[0])})`).join("")}</span></span>
       <span class="res-go">${icon("chevron")}</span></a>`;
   }
 

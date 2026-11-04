@@ -131,6 +131,10 @@
       desc: "Algoritmos con la notación de clase y su traducción a C++.",
       home: "ip/index.html",
       intro: "Cinco temas de teoría (algoritmos, léxico y casos, acciones y funciones, iteración y secuencias) con la notación algorítmica de clase, y seis prácticas en C++ con Geany y g++.",
+      exams: [
+        { date: "2026-11-20", name: "2.º parcial", label: "20 de noviembre de 2026 · 2.º parcial", href: "ip/teoria/autotest.html", cta: "repasa con el autotest por temas" },
+        { date: "2026-12-18", name: "Examen final", label: "18 de diciembre de 2026 · examen final", href: "ip/teoria/autotest.html#test-G", cta: "practica con el test general" }
+      ],
       sub: { teoria: "Temas 0–4", practicas: "Prácticas 1–6", examen: "Repaso final" },
       empty: { "examen": "Todavía no hay exámenes de convocatorias anteriores de IP. Cuando estén, aparecerán aquí con su solución." },
       resources: [
@@ -149,6 +153,16 @@
       ]
     }
   ];
+
+  /* Asignaturas con varios exámenes (parciales y final, en «exams»): «exam» es el próximo que queda y
+     «examsLeft» los que vienen después. Las que tienen uno solo lo ponen directamente en «exam». */
+  SUBJECTS.forEach((s) => {
+    if (!Array.isArray(s.exams) || !s.exams.length) return;
+    const list = s.exams.slice().sort((a, b) => (a.date < b.date ? -1 : 1));
+    const i = list.findIndex((e) => daysTo(e.date) >= 0);
+    s.exam = i >= 0 ? list[i] : list[list.length - 1];
+    s.examsLeft = i >= 0 ? list.slice(i + 1) : [];
+  });
 
   /* ---------- Almacenamiento ---------- */
   function makeStore(getStorage) {

@@ -136,6 +136,7 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
    { id: "mates", short: "MAT", name: "Matemáticas", desc: "…", intro: "…", home: "mates/index.html",
      sub: { teoria: "Temas 1–5", practicas: "…", examen: "…" },
      exam: { date: "2027-01-20", label: "20 de enero de 2027", href: "mates/examen/guia.html" },  // opcional
+     // o, con parciales: exams: [{ date, name: "1.er parcial", label, href, cta }, …] (se muestra el próximo)
      resources: [
        { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", desc: "…", href: "mates/teoria/guia.html",
          progress: { t: "estudio", key: "mates-teoria-estudio", total: 20 } }

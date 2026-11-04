@@ -49,7 +49,7 @@
       const txt = d === 0 ? "¡es hoy!" : d === 1 ? "día para el examen" : "días para el examen";
       const [y, m, dd] = s.exam.date.split("-").map(Number);
       const corta = new Date(y, m - 1, dd).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
-      return `<a class="exam-cd" href="${esc(s.exam.href || s.home)}" title="${esc(s.name)} · ${esc(s.exam.label)}"><span class="exam-cd__n">${d}</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">${txt} · ${esc(s.exam.label)}</small><small class="exam-cd__s">${d === 1 ? "día" : "días"} · ${esc(corta)}</small></span></a>`;
+      return `<a class="exam-cd" href="${esc(s.exam.href || s.home)}" title="${esc(s.name)} · ${esc(s.exam.label)}"><span class="exam-cd__n">${d}</span><span class="exam-cd__t"><b>${esc(s.short)}${s.exam.name ? " · " + esc(s.exam.name) : ""}</b><small class="exam-cd__l">${txt} · ${esc(s.exam.label.split(" · ")[0])}${(s.examsLeft || []).length ? " · luego " + s.examsLeft.map((e) => esc(e.name || "examen") + " en " + daysTo(e.date) + " días").join(", ") : ""}</small><small class="exam-cd__s">${d === 1 ? "día" : "días"} · ${esc(corta)}</small></span></a>`;
     }).join("");
     ex.innerHTML = items;
     ex.hidden = !items;
