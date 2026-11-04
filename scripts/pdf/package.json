@@ -1,0 +1,10 @@
+{
+  "name": "autotest-pdf",
+  "private": true,
+  "description": "Genera los PDFs descargables de la web (ver generar.js)",
+  "scripts": { "generar": "node generar.js" },
+  "dependencies": {
+    "pdf-lib": "1.17.1",
+    "playwright": "1.63.0"
+  }
+}

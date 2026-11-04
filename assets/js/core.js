@@ -356,6 +356,13 @@
     const js = document.createElement("script");
     js.src = base + "js/asistente.js"; js.defer = true;
     document.head.appendChild(js);
+    // Botones de descarga en PDF (ver assets/js/pdf.js y scripts/pdf/generar.js)
+    const pcss = document.createElement("link");
+    pcss.rel = "stylesheet"; pcss.href = base + "css/pdf.css";
+    document.head.appendChild(pcss);
+    const pjs = document.createElement("script");
+    pjs.src = base + "js/pdf.js"; pjs.defer = true;
+    document.head.appendChild(pjs);
   })();
 
   window.App = Object.freeze({

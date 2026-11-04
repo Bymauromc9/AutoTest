@@ -1,0 +1,398 @@
+{
+ "paginas": {
+  "fli/teoria/chuletas.html": {
+   "file": "fli-teoria-chuletas.pdf",
+   "title": "Chuletas visuales",
+   "subject": "fli",
+   "sec": "teoria",
+   "group": "L0",
+   "descarga": "FLI - Chuletas visuales.pdf",
+   "paginas": 12,
+   "bytes": 502507,
+   "huella": "4d382f6309d460e6"
+  },
+  "fli/teoria/autotest.html": {
+   "file": "fli-teoria-autotest.pdf",
+   "title": "Autotest por temas",
+   "subject": "fli",
+   "sec": "teoria",
+   "group": "L0",
+   "descarga": "FLI - Autotest por temas.pdf",
+   "paginas": 55,
+   "bytes": 895900,
+   "huella": "6a1146b9ba3b8e9f"
+  },
+  "fli/teoria/equivalencias.html": {
+   "file": "fli-teoria-equivalencias.pdf",
+   "title": "Equivalencias de L0",
+   "subject": "fli",
+   "sec": "teoria",
+   "group": "L0",
+   "descarga": "FLI - Equivalencias de L0.pdf",
+   "paginas": 2,
+   "bytes": 68056,
+   "huella": "1a6359bf70169403"
+  },
+  "fli/teoria/ejercicios.html": {
+   "file": "fli-teoria-ejercicios.pdf",
+   "title": "Ejercicios por tema",
+   "subject": "fli",
+   "sec": "teoria",
+   "group": "L0",
+   "descarga": "FLI - Ejercicios por tema.pdf",
+   "paginas": 39,
+   "bytes": 799125,
+   "huella": "c71df3e184676c95"
+  },
+  "fli/practicas/guia.html": {
+   "file": "fli-practicas-guia.pdf",
+   "title": "Guía de prácticas",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L0",
+   "descarga": "FLI - Guía de prácticas.pdf",
+   "paginas": 27,
+   "bytes": 839041,
+   "huella": "cc90756a575b4c85"
+  },
+  "fli/practicas/ejercicios.html": {
+   "file": "fli-practicas-ejercicios.pdf",
+   "title": "Ejercicios de prácticas",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L0",
+   "descarga": "FLI - Ejercicios de prácticas.pdf",
+   "paginas": 44,
+   "bytes": 1133445,
+   "huella": "a7abee64067687e0"
+  },
+  "fli/l1/practicas/guia.html": {
+   "file": "fli-l1-practicas-guia.pdf",
+   "title": "Guía de prácticas de L1",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L1",
+   "descarga": "FLI - Guía de prácticas de L1.pdf",
+   "paginas": 26,
+   "bytes": 709825,
+   "huella": "bb26b0e0e8c0fc90"
+  },
+  "fli/l1/practicas/clase.html": {
+   "file": "fli-l1-practicas-clase.pdf",
+   "title": "Ejercicios de clase",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L1",
+   "descarga": "FLI - Ejercicios de clase.pdf",
+   "paginas": 56,
+   "bytes": 1487666,
+   "huella": "2f51f5ace417ae0a"
+  },
+  "fli/l1/practicas/resueltos.html": {
+   "file": "fli-l1-practicas-resueltos.pdf",
+   "title": "Resueltos y propuestos",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L1",
+   "descarga": "FLI - Resueltos y propuestos.pdf",
+   "paginas": 28,
+   "bytes": 868565,
+   "huella": "23606bb16564904b"
+  },
+  "fli/l1/practicas/niveles.html": {
+   "file": "fli-l1-practicas-niveles.pdf",
+   "title": "Práctica por niveles",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L1",
+   "descarga": "FLI - Práctica por niveles.pdf",
+   "paginas": 77,
+   "bytes": 1931702,
+   "huella": "8c79d45781f4bbd6"
+  },
+  "fli/teoria/examenes.html": {
+   "file": "fli-teoria-examenes.pdf",
+   "title": "Exámenes completos",
+   "subject": "fli",
+   "sec": "examen",
+   "group": "",
+   "descarga": "FLI - Exámenes completos.pdf",
+   "paginas": 52,
+   "bytes": 1065152,
+   "huella": "495bab0a276b9654"
+  },
+  "fc/teoria/guia.html": {
+   "file": "fc-teoria-guia.pdf",
+   "title": "Guía de teoría",
+   "subject": "fc",
+   "sec": "teoria",
+   "group": "",
+   "descarga": "FC - Guía de teoría.pdf",
+   "paginas": 53,
+   "bytes": 3303525,
+   "huella": "b0ab822bcfbfbcba"
+  },
+  "fc/teoria/chuleta.html": {
+   "file": "fc-teoria-chuleta.pdf",
+   "title": "Chuleta",
+   "subject": "fc",
+   "sec": "teoria",
+   "group": "",
+   "descarga": "FC - Chuleta.pdf",
+   "paginas": 11,
+   "bytes": 368314,
+   "huella": "55b34cd6618d1945"
+  },
+  "fc/teoria/autotest.html": {
+   "file": "fc-teoria-autotest.pdf",
+   "title": "Autotest por temas",
+   "subject": "fc",
+   "sec": "teoria",
+   "group": "",
+   "descarga": "FC - Autotest por temas.pdf",
+   "paginas": 103,
+   "bytes": 1189877,
+   "huella": "633f026644f982e4"
+  },
+  "fc/practicas/guia.html": {
+   "file": "fc-practicas-guia.pdf",
+   "title": "Guía de prácticas",
+   "subject": "fc",
+   "sec": "practicas",
+   "group": "",
+   "descarga": "FC - Guía de prácticas.pdf",
+   "paginas": 50,
+   "bytes": 998847,
+   "huella": "d74ecbbec9541459"
+  },
+  "fc/examen/guia.html": {
+   "file": "fc-examen-guia.pdf",
+   "title": "Guía del examen",
+   "subject": "fc",
+   "sec": "examen",
+   "group": "",
+   "descarga": "FC - Guía del examen.pdf",
+   "paginas": 21,
+   "bytes": 581347,
+   "huella": "6a06bd226ac82190"
+  },
+  "ip/teoria/guia.html": {
+   "file": "ip-teoria-guia.pdf",
+   "title": "Guía de teoría",
+   "subject": "ip",
+   "sec": "teoria",
+   "group": "",
+   "descarga": "IP - Guía de teoría.pdf",
+   "paginas": 43,
+   "bytes": 908129,
+   "huella": "45e84b933bb72e97"
+  },
+  "ip/teoria/autotest.html": {
+   "file": "ip-teoria-autotest.pdf",
+   "title": "Autotest por temas",
+   "subject": "ip",
+   "sec": "teoria",
+   "group": "",
+   "descarga": "IP - Autotest por temas.pdf",
+   "paginas": 36,
+   "bytes": 665175,
+   "huella": "eff53ae0f90fdb87"
+  },
+  "ip/practicas/guia.html": {
+   "file": "ip-practicas-guia.pdf",
+   "title": "Guía de prácticas",
+   "subject": "ip",
+   "sec": "practicas",
+   "group": "",
+   "descarga": "IP - Guía de prácticas.pdf",
+   "paginas": 87,
+   "bytes": 2093462,
+   "huella": "6bd26d8583d9e41d"
+  }
+ },
+ "bloques": [
+  {
+   "id": "fli-teoria",
+   "subject": "fli",
+   "sec": "teoria",
+   "group": "",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Teoría",
+   "descarga": "FLI - Teoría.pdf",
+   "partes": [
+    "fli/teoria/chuletas.html",
+    "fli/teoria/autotest.html",
+    "fli/teoria/equivalencias.html",
+    "fli/teoria/ejercicios.html"
+   ]
+  },
+  {
+   "id": "fli-practicas",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Prácticas",
+   "descarga": "FLI - Prácticas.pdf",
+   "partes": [
+    "fli/practicas/guia.html",
+    "fli/practicas/ejercicios.html",
+    "fli/l1/practicas/guia.html",
+    "fli/l1/practicas/clase.html",
+    "fli/l1/practicas/resueltos.html",
+    "fli/l1/practicas/niveles.html"
+   ]
+  },
+  {
+   "id": "fli-practicas-l0",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L0",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Prácticas · L0 (Lógica proposicional)",
+   "descarga": "FLI - Prácticas L0.pdf",
+   "partes": [
+    "fli/practicas/guia.html",
+    "fli/practicas/ejercicios.html"
+   ]
+  },
+  {
+   "id": "fli-practicas-l1",
+   "subject": "fli",
+   "sec": "practicas",
+   "group": "L1",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Prácticas · L1 (Lógica de predicados)",
+   "descarga": "FLI - Prácticas L1.pdf",
+   "partes": [
+    "fli/l1/practicas/guia.html",
+    "fli/l1/practicas/clase.html",
+    "fli/l1/practicas/resueltos.html",
+    "fli/l1/practicas/niveles.html"
+   ]
+  },
+  {
+   "id": "fli-examen",
+   "subject": "fli",
+   "sec": "examen",
+   "group": "",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Examen",
+   "descarga": "FLI - Examen.pdf",
+   "partes": [
+    "fli/teoria/examenes.html"
+   ]
+  },
+  {
+   "id": "fc-teoria",
+   "subject": "fc",
+   "sec": "teoria",
+   "group": "",
+   "asig": "FC · Fundamentos de Computadores",
+   "title": "Teoría",
+   "descarga": "FC - Teoría.pdf",
+   "partes": [
+    "fc/teoria/guia.html",
+    "fc/teoria/chuleta.html",
+    "fc/teoria/autotest.html"
+   ]
+  },
+  {
+   "id": "fc-practicas",
+   "subject": "fc",
+   "sec": "practicas",
+   "group": "",
+   "asig": "FC · Fundamentos de Computadores",
+   "title": "Prácticas",
+   "descarga": "FC - Prácticas.pdf",
+   "partes": [
+    "fc/practicas/guia.html"
+   ]
+  },
+  {
+   "id": "fc-examen",
+   "subject": "fc",
+   "sec": "examen",
+   "group": "",
+   "asig": "FC · Fundamentos de Computadores",
+   "title": "Examen",
+   "descarga": "FC - Examen.pdf",
+   "partes": [
+    "fc/examen/guia.html"
+   ]
+  },
+  {
+   "id": "ip-teoria",
+   "subject": "ip",
+   "sec": "teoria",
+   "group": "",
+   "asig": "IP · Introducción a la Programación",
+   "title": "Teoría",
+   "descarga": "IP - Teoría.pdf",
+   "partes": [
+    "ip/teoria/guia.html",
+    "ip/teoria/autotest.html"
+   ]
+  },
+  {
+   "id": "ip-practicas",
+   "subject": "ip",
+   "sec": "practicas",
+   "group": "",
+   "asig": "IP · Introducción a la Programación",
+   "title": "Prácticas",
+   "descarga": "IP - Prácticas.pdf",
+   "partes": [
+    "ip/practicas/guia.html"
+   ]
+  }
+ ],
+ "asignaturas": {
+  "fli": {
+   "id": "fli-completa",
+   "subject": "fli",
+   "asig": "FLI · Fundamentos Lógicos de la Informática",
+   "title": "Asignatura completa",
+   "descarga": "FLI - Asignatura completa.pdf",
+   "partes": [
+    "fli/teoria/chuletas.html",
+    "fli/teoria/autotest.html",
+    "fli/teoria/equivalencias.html",
+    "fli/teoria/ejercicios.html",
+    "fli/practicas/guia.html",
+    "fli/practicas/ejercicios.html",
+    "fli/l1/practicas/guia.html",
+    "fli/l1/practicas/clase.html",
+    "fli/l1/practicas/resueltos.html",
+    "fli/l1/practicas/niveles.html",
+    "fli/teoria/examenes.html"
+   ]
+  },
+  "fc": {
+   "id": "fc-completa",
+   "subject": "fc",
+   "asig": "FC · Fundamentos de Computadores",
+   "title": "Asignatura completa",
+   "descarga": "FC - Asignatura completa.pdf",
+   "partes": [
+    "fc/teoria/guia.html",
+    "fc/teoria/chuleta.html",
+    "fc/teoria/autotest.html",
+    "fc/practicas/guia.html",
+    "fc/examen/guia.html"
+   ]
+  },
+  "ip": {
+   "id": "ip-completa",
+   "subject": "ip",
+   "asig": "IP · Introducción a la Programación",
+   "title": "Asignatura completa",
+   "descarga": "IP - Asignatura completa.pdf",
+   "partes": [
+    "ip/teoria/guia.html",
+    "ip/teoria/autotest.html",
+    "ip/practicas/guia.html"
+   ]
+  }
+ }
+}
