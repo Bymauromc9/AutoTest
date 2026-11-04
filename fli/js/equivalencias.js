@@ -252,7 +252,7 @@ function quiz(){
 }
 function answer(k){ if(S.ans[S.i]!==undefined) return; S.ans[S.i]=k; quiz(); }
 function next(){ S.showTT=false; if(S.i<S.qs.length-1){S.i++;quiz();window.scrollTo({top:0});} else finish(); }
-function finish(){ const g=grade(); const b=store("eq-best"); if(b==null||g.nota>b) store("eq-best",g.nota); S.view="results"; render(); window.scrollTo(0,0); }
+function finish(){ const g=grade(); const b=store("eq-best"); if(b==null||g.nota>b) store("eq-best",g.nota); if(window.App&&window.App.puntos) window.App.puntos({asig:"fli",tipo:"equivalencias",aciertos:g.ok,total:g.n}); S.view="results"; render(); window.scrollTo(0,0); }
 function grade(){ let ok=0; S.qs.forEach((q,k)=>{ if(isOk(q,S.ans[k])) ok++; }); const n=S.qs.length; return {ok,bad:n-ok,n,nota:Math.round(ok/n*100)/10}; }
 
 function results(){

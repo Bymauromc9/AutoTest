@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="assets/css/nav.css">
 <link rel="stylesheet" href="assets/css/hub.css">
 <link rel="stylesheet" href="assets/css/portal.css">
+<link rel="stylesheet" href="assets/css/cuentas.css">
 <script src="assets/js/core.js"></script>
 </head>
 <body data-root="">
@@ -25,13 +26,15 @@
     <h1>Mis asignaturas</h1>
     <p class="muted">Cada asignatura tiene las mismas tres partes: <b>Teoría</b> (guía, chuleta y autotest), <b>Prácticas</b> (guía, ejercicios y herramientas) y <b>Examen</b> (exámenes, simulacros y test general).</p>
   </header>
+  <div id="cuenta-strip"></div>
+  <div class="exams-strip" id="exams" aria-label="Cuenta atrás de los exámenes"></div>
   <div id="continue" hidden></div>
   <ul class="subjects" id="subjects" aria-label="Asignaturas">
     <li class="subject"><a class="subject__link" href="fli/index.html"><span class="subject__name">Fundamentos Lógicos de la Informática</span></a></li>
     <li class="subject"><a class="subject__link" href="fc/index.html"><span class="subject__name">Fundamentos de Computadores</span></a></li>
     <li class="subject"><a class="subject__link" href="ip/index.html"><span class="subject__name">Introducción a la Programación</span></a></li>
   </ul>
-  <p class="muted portal-note">Tu progreso (notas, exámenes en curso, ejercicios hechos, apartados estudiados) y el tema claro u oscuro se guardan sólo en este navegador.</p>
+  <p class="muted portal-note">Tu progreso (notas, exámenes en curso, ejercicios hechos, apartados estudiados) se guarda en tu cuenta, y cada test que terminas suma puntos en el <a href="ranking.html">ranking</a>.</p>
 </main>
 <script src="assets/js/portal.js"></script>
 </body>

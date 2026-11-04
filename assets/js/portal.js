@@ -34,3 +34,49 @@
     box.hidden = false;
   }
 })();
+
+/* Cuenta (puntos y puesto), mini ranking y cuenta atrás de los exámenes. */
+(function () {
+  "use strict";
+  const { SUBJECTS, esc, icon, daysTo, sesion, ROOT } = window.App;
+
+  const ex = document.getElementById("exams");
+  if (ex) {
+    const items = SUBJECTS.map((s) => {
+      if (!s.exam) return `<div class="exam-cd is-tbd"><span class="exam-cd__n">?</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">fecha del examen por confirmar</small><small class="exam-cd__s">sin fecha</small></span></div>`;
+      const d = daysTo(s.exam.date);
+      if (d < 0) return "";
+      const txt = d === 0 ? "¡es hoy!" : d === 1 ? "día para el examen" : "días para el examen";
+      const [y, m, dd] = s.exam.date.split("-").map(Number);
+      const corta = new Date(y, m - 1, dd).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+      return `<a class="exam-cd" href="${esc(s.exam.href || s.home)}" title="${esc(s.name)} · ${esc(s.exam.label)}"><span class="exam-cd__n">${d}</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">${txt} · ${esc(s.exam.label)}</small><small class="exam-cd__s">${d === 1 ? "día" : "días"} · ${esc(corta)}</small></span></a>`;
+    }).join("");
+    ex.innerHTML = items;
+    ex.hidden = !items;
+  }
+
+  const box = document.getElementById("cuenta-strip");
+  const ses = sesion();
+  if (!box || !ses) return;
+  const av = (n, local) => `<span class="cta-av${local ? " cta-av--local" : ""}" aria-hidden="true">${esc((n || "?").charAt(0).toUpperCase())}</span>`;
+  function pintar(d, top) {
+    const fmt = (n) => Number(n || 0).toLocaleString("es-ES");
+    const extra = ses.local ? "perfil local · no entra en el ranking" : d.posicion ? `puesto <b>#${d.posicion}</b> del ranking` : "termina un test para entrar en el ranking";
+    const mini = top && top.length ? `<ol class="cta-mini" aria-label="Los primeros del ranking">${top.slice(0, 5).map((f) =>
+      `<li${f.yo ? ' class="is-me"' : ""}><span class="p">${f.pos}</span><span class="n">${esc(f.nombre)}${f.yo ? " (tú)" : ""}</span><span class="v">${fmt(f.puntos)}</span></li>`).join("")}</ol>` : "";
+    box.innerHTML = `<section class="cta-strip" aria-label="Tu cuenta">
+      ${av(ses.nombre, ses.local)}<span class="cta-strip__who"><b>Hola, ${esc(ses.nombre)}</b><small><b>${fmt(d.puntos)}</b> puntos · ${extra}</small></span>
+      <span class="cta-strip__links"><a class="btn ghost" href="${ROOT}ranking.html">${icon("trophy")}Ranking</a><a class="btn ghost" href="${ROOT}cuenta.html?cambiar=1" title="Cambiar de cuenta">${icon("swapuser")}Cambiar</a></span>
+      ${mini}</section>`;
+  }
+  const cache = (window.Cuentas ? window.Cuentas.lista() : (window.App.store("app-cuentas") || [])).find((c) => c.id === ses.id) || {};
+  pintar({ puntos: cache.puntos || 0, posicion: cache.posicion || null });
+  // cuentas.js llega después (lo carga core.js): datos al día y los cinco primeros.
+  function cuandoCuentas(fn, n) { if (window.Cuentas) fn(window.Cuentas); else if ((n || 0) < 50) setTimeout(() => cuandoCuentas(fn, (n || 0) + 1), 100); }
+  cuandoCuentas(async (C) => {
+    const d = await C.yo();
+    let top = null;
+    if (!ses.local && (await C.servidor())) { try { top = (await C.ranking("total")).filas; } catch (e) { top = null; } }
+    pintar(d || {}, top);
+  });
+})();

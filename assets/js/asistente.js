@@ -508,6 +508,7 @@
     input.placeholder = t ? "¿Qué no entiendes de este fragmento?" : "¿Qué no entiendes? Pregunta sobre lo que tienes en pantalla…";
   }
   function mostrarPop() {
+    if (!popSel) return;                         // sin interfaz (página con data-ai="off")
     const t = textoSeleccionado();
     if (!t || t.length < 2) { popSel.hidden = true; return; }
     const r = window.getSelection().getRangeAt(0).getBoundingClientRect();

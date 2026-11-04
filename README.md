@@ -7,7 +7,9 @@ abre `index.html` con doble clic. También funciona servido desde cualquier host
 ## Estructura
 
 ```
-index.html                  Portada: «continuar», y una tarjeta por asignatura con su progreso y el próximo examen
+index.html                  Portada: tu cuenta y el top 5, cuenta atrás de los exámenes, «continuar» y una tarjeta por asignatura
+cuenta.html                 Entrar, crear cuenta o elegir una de las cuentas usadas en el dispositivo; «Tu cuenta»
+ranking.html                Leaderboard global: general, esta semana y por asignatura
 assets/
   css/base.css              Tokens de diseño (colores, tipografías, tema oscuro) y componentes genéricos
   css/nav.css               Navegación común: barra superior, chips de la sección y barra inferior en el móvil
@@ -17,9 +19,15 @@ assets/
   js/hub.js                 Pinta la portada de una asignatura a partir del registro
   js/portal.js              Pinta las tarjetas de la portada a partir del registro
   js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
+  js/cuentas.js             Cuentas: progreso de cada cuenta, sincronización y puntos (lo carga core.js)
+  js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
+  css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/asistente.css         Estilos del panel del asistente
 api/
   chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
+  cuenta.js                 Cuentas: registro, entrar, progreso guardado y puntos (Upstash Redis)
+  ranking.js                Leaderboard global
+  _db.js                    Utilidades comunes de cuenta.js y ranking.js (no es una ruta)
 vercel.json                 Tiempo máximo de la función del asistente
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
@@ -140,7 +148,8 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 
 ## Datos guardados en el navegador
 
-Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún sitio.
+Las páginas guardan el progreso en el navegador (`localStorage`) con las claves de abajo. Con una cuenta,
+`assets/js/cuentas.js` guarda además una copia por cuenta y la sube al servidor (ver «Cuentas y ranking»).
 
 | Clave | Qué guarda |
 |---|---|
@@ -159,6 +168,9 @@ Todo se guarda sólo en el navegador (`localStorage`), nunca se envía a ningún
 | `fc-examen-hechos` | Problemas de la guía del examen de FC marcados como hechos |
 | `fc-sim-best`, `fc-sim-hist`, `fc-sim-time` | Mejor nota (sobre 4), historial y reloj elegido del simulacro de FC |
 | `app-last`, `app-last-<asignatura>` | Último recurso abierto («Continuar donde lo dejaste») |
+| `app-sesion`, `app-cuentas` | Cuenta activa y cuentas usadas en este dispositivo (con su sesión) |
+| `app-owner`, `app-sync`, `u:<cuenta>` | De quién es el progreso cargado, estado de la sincronización y copia del progreso de cada cuenta |
+| `app-pend` | Puntos pendientes de enviar al ranking (si no había conexión) |
 | `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
 | `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
@@ -233,3 +245,35 @@ El script escribe los PDFs y `pdf/manifest.json` en `pdf/`. Guarda una huella de
 página y sólo vuelve a imprimir las que han cambiado (`--todo` las reimprime todas; `--solo ruta.html`
 sólo una). **No hace falta ejecutarlo a mano**: el flujo `.github/workflows/pdfs.yml` lo ejecuta en
 GitHub cada vez que se sube un cambio a `master` y, si algún PDF cambia, hace un commit con ellos.
+
+
+## Cuentas y ranking
+
+Al entrar en la web hay que **crear una cuenta o elegir una** (cuenta.html). Cada cuenta tiene su
+propio progreso, que se guarda en el servidor y la sigue a cualquier dispositivo, y cada test terminado
+suma puntos en el **ranking global** (ranking.html: general, esta semana y por asignatura).
+
+- **Elegir cuenta**: cada dispositivo recuerda las cuentas que se han usado en él; mientras su sesión
+  siga abierta se entra con un toque. «Cerrar sesión» la deja en la lista pero pide la contraseña.
+- **Progreso**: las páginas siguen usando sus claves de `localStorage`; al cambiar de cuenta,
+  `cuentas.js` guarda el de la anterior y carga el de la nueva. Se sube al servidor cada 20 s si ha
+  cambiado y al salir de la página, y se trae si otro dispositivo guardó algo más reciente. Al crear la
+  primera cuenta se puede quedar con el progreso que ya había en el navegador.
+- **Puntos**: 10 por acierto al terminar un autotest, un test general, el simulacro de FC, el test de
+  equivalencias o la parte de test de un examen de FLI; +25 si un test de 10 preguntas o más sale
+  perfecto. Los calcula el servidor (como mucho 200 preguntas por test y 40 tests por hora, y cada
+  test cuenta una sola vez). Para que otro test sume puntos: `App.puntos({ asig, tipo, aciertos, total })`.
+- **Sin servidor** (abierta con doble clic o sin Upstash configurado): se pueden crear **perfiles
+  locales**, que guardan el progreso sólo en ese navegador y no entran en el ranking.
+
+### Configuración en Vercel (una vez)
+
+1. En Vercel → el proyecto → **Storage** → **Create Database** → **Upstash for Redis** (plan gratuito)
+   y conéctala al proyecto. Se crean solas las variables `KV_REST_API_URL` y `KV_REST_API_TOKEN`
+   (también valen `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`).
+2. Vuelve a desplegar (Deployments → Redeploy).
+3. Compruébalo: `GET /api/cuenta` debe devolver `{ "configurado": true }`.
+
+Las contraseñas se guardan con scrypt y sal; las sesiones duran 180 días; tras 10 intentos fallidos
+una cuenta se bloquea 15 minutos.
+

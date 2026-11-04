@@ -41,6 +41,18 @@
   background: var(--sn-surface); color: var(--sn-ink); cursor: pointer; display: grid; place-items: center; padding: 0;
 }
 .site-nav__theme:hover { border-color: var(--sn-accent); color: var(--sn-accent); }
+/* Ranking y cuenta (los pone core.js antes del botón del tema) */
+.site-nav__icon, .site-nav__acct {
+  flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; text-decoration: none;
+}
+.site-nav__icon { border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-ink) !important; }
+.site-nav__icon:hover { border-color: var(--sn-accent); color: var(--sn-accent) !important; }
+@media (max-width: 420px) { .site-nav__icon { display: none; } }
+.site-nav__acct {
+  background: var(--sn-accent); color: var(--sn-accent-ink) !important; border: 1px solid var(--sn-accent);
+  font: 800 17px/1 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+}
+.site-nav__acct:hover { filter: brightness(1.1); }
 
 /* ---------- Recursos de la sección (chips) ---------- */
 .site-nav__res { margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0; }

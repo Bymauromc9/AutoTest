@@ -139,6 +139,7 @@
     stop(); S.done = true;
     const g = grade();
     const best = store("fc-sim-best"); if (best == null || g.nota > best) store("fc-sim-best", g.nota);
+    if (window.App && window.App.puntos) window.App.puntos({ asig: "fc", tipo: "simulacro", aciertos: g.ok, total: g.n });   // ranking
     const hist = store("fc-sim-hist") || []; hist.push({ d: Date.now(), nota: g.nota, ok: g.ok, bad: g.bad, blank: g.blank });
     store("fc-sim-hist", hist.slice(-30));
     session(STATE, null);

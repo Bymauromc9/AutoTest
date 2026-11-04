@@ -73,7 +73,10 @@ function examView(){
     b.parentElement.querySelectorAll(".opt").forEach(o=>{const on=X.res[k]===+o.dataset.k; o.classList.toggle("sel",on); o.setAttribute("aria-pressed",on);});
   });
   document.getElementById("exquit").onclick=()=>{ X.acc=elapsed(); X.t0=Date.now(); save(); go("list"); };
-  document.getElementById("submit").onclick=()=>{ X.el=elapsed(); X.done=true; save(); go("examres"); };
+  document.getElementById("submit").onclick=()=>{ X.el=elapsed(); X.done=true; save();
+    // Puntos del ranking: sólo la parte de test (los ejercicios se puntúan a mano).
+    const g=examGrade(), P=examParts(X); if(window.App&&window.App.puntos&&P.test.length) window.App.puntos({asig:"fli",tipo:"examen",aciertos:g.ok,total:P.test.length});
+    go("examres"); };
 }
 
 function examGrade(){

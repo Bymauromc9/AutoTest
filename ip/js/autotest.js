@@ -191,6 +191,8 @@ function next(){ S.flash=false; if(S.i<S.qs.length-1){S.i++; quiz(); window.scro
 function finish(){
   const g=grade(); const prev=store("ip-best-"+S.key);
   if(prev==null||g.nota>prev) store("ip-best-"+S.key,g.nota);
+  // Puntos del ranking (assets/js/cuentas.js)
+  if(window.App&&window.App.puntos) window.App.puntos({asig:"ip",tipo:S.key==="G"?"general":"autotest",aciertos:g.ok,total:g.n});
   S.view="results"; render(); window.scrollTo(0,0);
 }
 

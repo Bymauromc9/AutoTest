@@ -253,7 +253,15 @@ const OPC_PDF = (asig, titulo) => ({
   // PDF sale idéntico byte a byte mientras no cambie el contenido.
   async function nuevaPagina() {
     const ctx = await browser.newContext({ viewport: { width: 1100, height: 1400 }, colorScheme: "light", reducedMotion: "reduce" });
-    await ctx.addInitScript(() => { try { localStorage.setItem("app-theme", JSON.stringify("light")); } catch (e) { /* nada */ } });
+    // Tema claro y una cuenta local de impresión (sin cuenta, core.js manda a cuenta.html).
+    await ctx.addInitScript(() => {
+      try {
+        localStorage.setItem("app-theme", JSON.stringify("light"));
+        const ses = { id: "local:pdf", nombre: "PDF", token: null, local: true };
+        localStorage.setItem("app-sesion", JSON.stringify(ses));
+        localStorage.setItem("app-owner", JSON.stringify(ses.id));
+      } catch (e) { /* nada */ }
+    });
     const pg = await ctx.newPage();
     pg.on("pageerror", (e) => console.warn("  aviso JS:", e.message));
     return pg;

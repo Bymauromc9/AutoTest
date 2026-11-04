@@ -11,6 +11,11 @@
  *   App.shuffle    copia barajada de un array (Fisher–Yates)
  *   App.esc        escapa texto para insertarlo como HTML
  *   App.theme      tema claro / oscuro compartido por todas las páginas
+ *   App.puntos     suma puntos al ranking al terminar un test ({ asig, tipo, aciertos, total }; ver cuentas.js)
+ *   App.sesion()   cuenta activa ({ id, nombre, token, local }) o null
+ *
+ * Sin cuenta activa, cualquier página manda a cuenta.html para entrar o registrarse (<html data-auth="off">
+ * lo desactiva en una página).
  *
  * Se carga en el <head> SIN defer: aplica el tema antes de pintar la página (evita el parpadeo)
  * y, cuando el DOM está listo, inserta la navegación según los data-* del <body>:
@@ -24,6 +29,8 @@
   "use strict";
   // Ruta de este script (sirve para cargar el asistente desde cualquier carpeta).
   const CORE_SRC = document.currentScript && document.currentScript.src;
+  // Raíz del sitio, deducida de la ruta de este script (…/assets/js/core.js → …/).
+  const ROOT_URL = CORE_SRC ? CORE_SRC.replace(/assets\/js\/core\.js(\?.*)?$/, "") : "";
 
   /* ---------- Tipos de recurso ----------
      Todas las asignaturas usan los mismos tipos, con el mismo icono y en el mismo orden dentro de cada sección. */
@@ -185,7 +192,11 @@
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6L6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
     moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
-    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'
+    calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8.5 20.5h7M9.5 17h5v3.5h-5z"/>',
+    user: '<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+    logout: '<path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
+    swapuser: '<circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M16 5h5M19 3l2 2-2 2M21 12h-5M18 10l-2 2 2 2"/>'
   };
   function icon(name, cls) {
     return `<svg class="ico${cls ? " " + cls : ""}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
@@ -265,6 +276,30 @@
   // Si el tema se cambia en otra pestaña, se aplica también aquí.
   window.addEventListener("storage", (e) => { if (e.key === THEME_KEY) { applyTheme(store(THEME_KEY)); syncThemeButton(); } });
 
+  /* ---------- Cuentas: hay que entrar o registrarse para usar la web ----------
+     La cuenta activa está en «app-sesion» (la gestiona assets/js/cuentas.js). Sin ella, cualquier página
+     manda a cuenta.html (que vuelve después a la página pedida). <html data-auth="off"> lo desactiva. */
+  const SESION_KEY = "app-sesion";
+  const enCuenta = /\/cuenta\.html$/.test(decodeURIComponent(location.pathname));
+  const sinSesion = !store(SESION_KEY) && !enCuenta && ROOT_URL && document.documentElement.dataset.auth !== "off";
+  if (sinSesion) {
+    document.documentElement.style.visibility = "hidden";
+    location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
+  }
+  /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
+  const esProgreso = (k) => /^(fli|fc|ip|eq)-|^app-last/.test(k);
+  /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
+      cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
+  function puntos(r) {
+    const ses = store(SESION_KEY);
+    if (!ses || !r || !(r.total > 0)) return;
+    const ev = { u: ses.id, evento: Date.now().toString(36) + Math.random().toString(36).slice(2, 10), asig: r.asig, tipo: r.tipo,
+      aciertos: Math.max(0, Math.round(r.aciertos)), total: Math.round(r.total), t: Date.now() };
+    const cola = store("app-pend") || [];
+    cola.push(ev); store("app-pend", cola.slice(-100));
+    if (window.Cuentas) window.Cuentas.enviar();
+  }
+
   /* ---------- Recurso actual ---------- */
   function abs(root, href) { try { return new URL(root + href, location.href); } catch (e) { return null; } }
   function samePath(a, b) { return decodeURIComponent(a.pathname).replace(/\/index\.html$/, "/") === decodeURIComponent(b.pathname).replace(/\/index\.html$/, "/"); }
@@ -281,7 +316,7 @@
      · En el móvil, barra inferior fija con Inicio · Teoría · Prácticas · Examen (al alcance del pulgar). */
   function buildNav() {
     const body = document.body;
-    if (!body || body.dataset.nav === "off" || document.querySelector(".site-nav")) return;
+    if (!body || sinSesion || body.dataset.nav === "off" || document.querySelector(".site-nav")) return;
     const root = body.dataset.root || "";
     const subject = SUBJECTS.find((s) => s.id === body.dataset.subject);
     const isHub = body.hasAttribute("data-hub");
@@ -312,7 +347,11 @@
           `<a href="${root}${r.href}"${r === cur ? ' aria-current="page"' : ""}>${icon(KINDS[r.kind].icon)}<span>${esc(r.title)}</span></a>`).join("")}</div></nav>`;
       }
     }
-    nav.innerHTML = `<div class="site-nav__inner"><div class="site-nav__crumbs">${crumbs}</div>${tabs}<button type="button" class="site-nav__theme" id="theme-toggle"></button></div>${chips}`;
+    // Ranking y cuenta (inicial del usuario), junto al botón del tema.
+    const ses = store(SESION_KEY);
+    const acct = ses ? `<a class="site-nav__icon" href="${root}ranking.html" title="Ranking global" aria-label="Ranking global">${icon("trophy")}</a>` +
+      `<a class="site-nav__acct" href="${root}cuenta.html" title="Tu cuenta: ${esc(ses.nombre)}" aria-label="Tu cuenta: ${esc(ses.nombre)}">${esc((ses.nombre || "?").charAt(0).toUpperCase())}</a>` : "";
+    nav.innerHTML = `<div class="site-nav__inner"><div class="site-nav__crumbs">${crumbs}</div>${tabs}${acct}<button type="button" class="site-nav__theme" id="theme-toggle"></button></div>${chips}`;
     // La barra va justo después del enlace «Saltar al contenido», que debe ser lo primero al tabular.
     const skip = body.querySelector(":scope > .skip-link");
     body.insertBefore(nav, skip ? skip.nextSibling : body.firstChild);
@@ -356,6 +395,13 @@
     const js = document.createElement("script");
     js.src = base + "js/asistente.js"; js.defer = true;
     document.head.appendChild(js);
+    // Cuentas: sincroniza el progreso con la cuenta y envía los puntos (ver assets/js/cuentas.js)
+    const ccss = document.createElement("link");
+    ccss.rel = "stylesheet"; ccss.href = base + "css/cuentas.css";
+    document.head.appendChild(ccss);
+    const cjs = document.createElement("script");
+    cjs.src = base + "js/cuentas.js"; cjs.defer = true;
+    document.head.appendChild(cjs);
     // Botones de descarga en PDF (ver assets/js/pdf.js y scripts/pdf/generar.js)
     const pcss = document.createElement("link");
     pcss.rel = "stylesheet"; pcss.href = base + "css/pdf.css";
@@ -366,7 +412,8 @@
   })();
 
   window.App = Object.freeze({
-    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo,
+    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso,
+    ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),
     theme: Object.freeze({ get: effective, set: setTheme, toggle: toggleTheme })
   });
