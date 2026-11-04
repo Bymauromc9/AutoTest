@@ -9,7 +9,7 @@
    "descarga": "FLI - Chuletas visuales.pdf",
    "paginas": 12,
    "bytes": 484926,
-   "huella": "c698f9766344e4e0"
+   "huella": "3508fa7f8fa1f015"
   },
   "fli/teoria/autotest.html": {
    "file": "fli-teoria-autotest.pdf",
@@ -20,7 +20,7 @@
    "descarga": "FLI - Autotest por temas.pdf",
    "paginas": 55,
    "bytes": 811596,
-   "huella": "78905ffbd3fdf079"
+   "huella": "77ec12ee07ea6509"
   },
   "fli/teoria/equivalencias.html": {
    "file": "fli-teoria-equivalencias.pdf",
@@ -52,8 +52,8 @@
    "group": "L0",
    "descarga": "FLI - Guía de prácticas.pdf",
    "paginas": 27,
-   "bytes": 802127,
-   "huella": "886e74633c9afe41"
+   "bytes": 908295,
+   "huella": "8e7ff1aaebd32dc3"
   },
   "fli/practicas/ejercicios.html": {
    "file": "fli-practicas-ejercicios.pdf",
@@ -73,9 +73,9 @@
    "sec": "practicas",
    "group": "L1",
    "descarga": "FLI - Guía de prácticas de L1.pdf",
-   "paginas": 26,
-   "bytes": 698353,
-   "huella": "6efc1beab45e3919"
+   "paginas": 29,
+   "bytes": 1039913,
+   "huella": "8001d8c73048c8c6"
   },
   "fli/l1/practicas/clase.html": {
    "file": "fli-l1-practicas-clase.pdf",
@@ -119,7 +119,7 @@
    "descarga": "FLI - Exámenes completos.pdf",
    "paginas": 52,
    "bytes": 1013889,
-   "huella": "a2c4d74b540b93c2"
+   "huella": "67453d5feb811211"
   },
   "fc/teoria/guia.html": {
    "file": "fc-teoria-guia.pdf",
@@ -128,9 +128,9 @@
    "sec": "teoria",
    "group": "",
    "descarga": "FC - Guía de teoría.pdf",
-   "paginas": 53,
-   "bytes": 3189731,
-   "huella": "15020cfdd7f6d933"
+   "paginas": 60,
+   "bytes": 2957725,
+   "huella": "0c21d68568349671"
   },
   "fc/teoria/chuleta.html": {
    "file": "fc-teoria-chuleta.pdf",
@@ -139,9 +139,9 @@
    "sec": "teoria",
    "group": "",
    "descarga": "FC - Chuleta.pdf",
-   "paginas": 11,
-   "bytes": 362259,
-   "huella": "4b8a57152209ee83"
+   "paginas": 9,
+   "bytes": 420470,
+   "huella": "3fa105c5c691661f"
   },
   "fc/teoria/autotest.html": {
    "file": "fc-teoria-autotest.pdf",
@@ -162,8 +162,8 @@
    "group": "",
    "descarga": "FC - Guía de prácticas.pdf",
    "paginas": 50,
-   "bytes": 951128,
-   "huella": "9277339d6e650a1a"
+   "bytes": 1215129,
+   "huella": "adfcff419175756f"
   },
   "fc/examen/guia.html": {
    "file": "fc-examen-guia.pdf",
@@ -172,9 +172,9 @@
    "sec": "examen",
    "group": "",
    "descarga": "FC - Guía del examen.pdf",
-   "paginas": 21,
-   "bytes": 559419,
-   "huella": "8fe19d37c492f83b"
+   "paginas": 22,
+   "bytes": 870960,
+   "huella": "e0051db2a583de90"
   },
   "ip/teoria/guia.html": {
    "file": "ip-teoria-guia.pdf",
@@ -183,9 +183,9 @@
    "sec": "teoria",
    "group": "",
    "descarga": "IP - Guía de teoría.pdf",
-   "paginas": 43,
-   "bytes": 858687,
-   "huella": "05ba4b63a84e2b82"
+   "paginas": 49,
+   "bytes": 1523732,
+   "huella": "9317f3780e0a3810"
   },
   "ip/teoria/autotest.html": {
    "file": "ip-teoria-autotest.pdf",
@@ -205,9 +205,9 @@
    "sec": "practicas",
    "group": "",
    "descarga": "IP - Guía de prácticas.pdf",
-   "paginas": 87,
-   "bytes": 1958061,
-   "huella": "c2641435b1384887"
+   "paginas": 93,
+   "bytes": 2367530,
+   "huella": "869bf0bdbaa1c6a4"
   }
  },
  "bloques": [
