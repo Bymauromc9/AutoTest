@@ -1,0 +1,72 @@
+/* guia.css — añadidos de GOHP a las guías (se carga después de assets/css/guia.css): navegación entre
+   páginas, organigramas, matriz DAFO, matriz de Ansoff, gráfico del punto muerto, herramientas de
+   cálculo y la chuleta. */
+
+/* ---------- enlaces entre las páginas de GOHP (en la cabecera) ---------- */
+.gohp-pages { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
+.gohp-pages a { font: 700 .85rem var(--f-display); text-decoration: none; padding: 5px 12px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); }
+.gohp-pages a:hover { border-color: var(--accent); color: var(--accent); }
+.gohp-pages a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+/* ---------- organigramas (árbol con listas anidadas) ---------- */
+.org { overflow-x: auto; padding: var(--s-2) 0 var(--s-3); }
+.org ul { position: relative; display: flex; justify-content: center; margin: 0; padding: 18px 0 0; list-style: none; }
+.org > ul { padding-top: 0; }
+.org li { position: relative; display: flex; flex-direction: column; align-items: center; padding: 18px 6px 0; }
+.org > ul > li { padding-top: 0; }
+.org li::before, .org li::after { content: ""; position: absolute; top: 0; width: 50%; height: 18px; border-top: 2px solid var(--muted); }
+.org li::before { right: 50%; }
+.org li::after { left: 50%; border-left: 2px solid var(--muted); }
+.org li:only-child::before, .org li:only-child::after { display: none; }
+.org li:only-child { padding-top: 18px; }
+.org li:only-child::after { display: block; border-top: 0; width: 0; left: 50%; }
+.org > ul > li::before, .org > ul > li::after { display: none !important; }
+.org li:first-child::before, .org li:last-child::after { border-top: 0; }
+.org li:last-child::before { border-right: 2px solid var(--muted); border-radius: 0 6px 0 0; }
+.org li:first-child::after { border-radius: 6px 0 0 0; }
+.org ul ul::before { content: ""; position: absolute; top: 0; left: 50%; height: 18px; border-left: 2px solid var(--muted); }
+.org span { display: inline-block; padding: 5px 9px; border: 1.5px solid color-mix(in srgb, var(--t, var(--accent)) 50%, var(--rule)); border-radius: 8px; background: color-mix(in srgb, var(--t, var(--accent)) 7%, var(--surface)); font: 600 .78rem/1.25 var(--f-display); text-align: center; white-space: nowrap; }
+.org span.top { background: var(--t, var(--accent)); color: var(--surface); border-color: var(--t, var(--accent)); }
+.org span.staff { border-style: dashed; background: transparent; }
+.org small { display: block; font: 500 .68rem var(--f-display); color: var(--muted); }
+.org-cap { font-size: .9rem; color: var(--muted); text-align: center; margin: var(--s-1) 0 0 !important; }
+
+/* ---------- matrices 2 × 2 (DAFO, Ansoff, Porter) ---------- */
+.mx { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 6px; margin: var(--s-2) 0 var(--s-4); }
+.mx > .h { font: 700 .8rem var(--f-display); color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; padding: 4px; }
+.mx > .c { padding: var(--s-2) var(--s-3); border-radius: 10px; border: 1.5px solid var(--rule); background: var(--surface); font-size: .92rem; min-width: 0; }
+.mx > .c b { display: block; font: 800 .95rem var(--f-display); margin-bottom: 2px; }
+.mx > .c ul { margin: 4px 0 0; padding-left: 1.1em; font-size: .88rem; }
+.mx > .c.g { border-color: var(--true); background: var(--true-soft); }
+.mx > .c.r { border-color: var(--false); background: var(--false-soft); }
+.mx > .c.a { border-color: var(--accent); background: var(--accent-soft); }
+.mx > .c.w { border-color: var(--warn); background: var(--warn-soft); }
+@media (max-width: 520px) { .mx { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .mx > .h.side { display: none; } }
+
+/* ---------- gráfico del punto muerto (SVG) ---------- */
+.pm svg { width: 100%; max-width: 560px; display: block; margin: 0 auto; }
+.pm .ax { stroke: var(--muted); stroke-width: 1.5; }
+.pm .it { stroke: var(--true); stroke-width: 3; fill: none; }
+.pm .ct { stroke: var(--false); stroke-width: 3; fill: none; }
+.pm .cf { stroke: var(--warn); stroke-width: 2; stroke-dasharray: 6 5; fill: none; }
+.pm .gn { fill: var(--true-soft); opacity: .8; }
+.pm .ls { fill: var(--false-soft); opacity: .8; }
+.pm text { font: 600 12px var(--f-display); fill: var(--ink); }
+.pm text.m { fill: var(--muted); font-weight: 500; }
+.pm .pt { fill: var(--accent); }
+
+/* ---------- herramientas ---------- */
+.calc-out { margin: 0; padding: var(--s-3) var(--s-4); background: var(--paper); border: 1px dashed var(--rule); border-radius: 8px; font: .86rem/1.65 var(--f-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.calc-out b { color: var(--accent); }
+.calc-out .neg { color: var(--false); }
+.calc-out .pos { color: var(--true); }
+div[id^="calc-"] { display: flex; flex-direction: column; gap: var(--s-3); min-width: 0; }
+.tool input[type=number] { font: .95rem var(--f-mono); padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--paper); color: var(--ink); width: 100%; }
+.flows { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.flows label { flex: 1 1 110px; }
+
+/* ---------- chuleta ---------- */
+.codeblk mark { background: var(--warn-soft); color: var(--warn); border-radius: 3px; padding: 0 .1em; }
+.codeblk.cheat pre { font-size: .84rem; line-height: 1.75; }
+
+@media print { .org { overflow: visible; } }

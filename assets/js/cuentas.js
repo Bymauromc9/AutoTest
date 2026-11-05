@@ -2,7 +2,7 @@
  * cuentas.js — cuentas de usuario (lo carga core.js en todas las páginas).
  *
  *   · Cada cuenta tiene su propio progreso. Las páginas siguen guardando en localStorage con las claves
- *     de siempre (fli-…, fc-…, ip-…, eq-…, app-last…); aquí se guarda una copia por cuenta («u:<id>»),
+ *     de siempre (fli-…, fc-…, ip-…, gohp-…, eq-…, app-last…); aquí se guarda una copia por cuenta («u:<id>»),
  *     se sube al servidor y, al cambiar de cuenta, se cambia el contenido de esas claves.
  *   · Los puntos (App.puntos, al terminar un test) van a una cola («app-pend») que se envía a Firebase.
  *   · Sin conexión se pueden crear perfiles locales: sólo en este navegador y sin ranking.
@@ -46,7 +46,7 @@
   const correoDe = (n) => idDe(n).normalize("NFD").replace(/[̀-ͯ]/g, "");
   /** Semana actual (lunes a domingo, hora de Madrid en invierno): la misma cuenta que firestore.rules. */
   const semana = () => "w" + Math.floor((Date.now() + 262800000) / 604800000);
-  const ASIG = ["fli", "fc", "ip"];
+  const ASIG = ["fli", "fc", "ip", "gohp"];
 
   function fallo(msg, status, codigo) { const e = new Error(msg); e.status = status; e.codigo = codigo; return e; }
   const MENSAJES = {

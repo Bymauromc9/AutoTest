@@ -154,6 +154,34 @@
         { id: "general", sec: "examen", kind: "general", title: "Test general", href: "ip/teoria/autotest.html#test-G",
           desc: "30 preguntas de todos los temas y del C++ de prácticas, repartidas según su peso.", progress: { t: "best", key: "ip-best-G", scale: 10 } }
       ]
+    },
+    {
+      id: "gohp",
+      short: "GOHP",
+      name: "Gestión de Organizaciones y Habilidades Profesionales",
+      desc: "La empresa por dentro: estrategia, organización, producción, marketing, finanzas y personas.",
+      home: "gohp/index.html",
+      intro: "Diez temas: la empresa, las teorías de la administración, el entorno, la planificación, la organización, la producción, el marketing, las finanzas, la dirección y los recursos humanos, más el seminario de ética. Teoría, prácticas resueltas, calculadoras y todo lo necesario para el examen.",
+      exam: { date: "2027-01-08", label: "8 de enero de 2027 · test + parte escrita", href: "gohp/examen/guia.html" },
+      sub: { teoria: "Temas 1–10", practicas: "Prácticas 1–10", examen: "Test + parte escrita" },
+      resources: [
+        { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "gohp/teoria/guia.html",
+          desc: "Los diez temas y el seminario de ética: definiciones, cálculos resueltos (productividad, punto muerto, VAN y TIR) y las trampas del test.", progress: { t: "estudio", key: "gohp-teoria-estudio", visto: "gohp-teoria-visto", total: 62 } },
+        { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuleta", href: "gohp/teoria/chuleta.html",
+          desc: "Tamaños y formas de empresa, teorías, estrategias, todas las fórmulas de producción e inversión y las teorías de la motivación, en una página." },
+        { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "gohp/teoria/autotest.html",
+          desc: "Unas 300 preguntas de los diez temas y del seminario con corrección inmediata, explicación y la penalización del examen (−1/3).", progress: { t: "autotest", prefix: "gohp-best-", topics: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] } },
+        { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de prácticas", href: "gohp/practicas/guia.html",
+          desc: "Las prácticas de los diez temas resueltas: casos de empresa, organigramas y todos los problemas de producción e inversión paso a paso (41 ejercicios).", progress: { t: "hechos", key: "gohp-practicas-hechos", total: 41 } },
+        { id: "herramientas", sec: "practicas", kind: "herramientas", title: "Herramientas", href: "gohp/practicas/herramientas.html",
+          desc: "Punto muerto y beneficio objetivo, fabricar o comprar, productividad, VAN, TIR, pay-back y coste efectivo con TAE, con todos los pasos." },
+        { id: "guia-e", sec: "examen", kind: "examen", title: "Guía del examen", href: "gohp/examen/guia.html",
+          desc: "Cómo es el examen, los mínimos, la penalización del test, qué estudiar primero y 8 problemas tipo examen resueltos.", progress: { t: "hechos", key: "gohp-examen-hechos", total: 8 } },
+        { id: "simulacro", sec: "examen", kind: "simulacro", title: "Simulacro del test", href: "gohp/examen/simulacro.html",
+          desc: "40 preguntas de cuatro opciones, 4 de cada tema, con reloj y la penalización del examen (cada fallo resta 1/3). Nota sobre 10.", progress: { t: "best", key: "gohp-sim-best" } },
+        { id: "general", sec: "examen", kind: "general", title: "Test general", href: "gohp/teoria/autotest.html#test-G",
+          desc: "30 preguntas de los diez temas con corrección inmediata: para repasar sin reloj.", progress: { t: "best", key: "gohp-best-G", scale: 10 } }
+      ]
     }
   ];
 
@@ -351,7 +379,7 @@
     location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
   }
   /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
-  const esProgreso = (k) => /^(fli|fc|ip|eq)-|^app-last/.test(k);
+  const esProgreso = (k) => /^(fli|fc|ip|gohp|eq)-|^app-last/.test(k);
   /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
       cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
   function puntos(r) {

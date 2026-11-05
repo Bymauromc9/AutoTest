@@ -8,6 +8,7 @@
  *   node admin.js admin <usuario>                le da acceso al panel de administración (admin.html)
  *   node admin.js quitar-admin <usuario>         se lo quita
  *   node admin.js admins                         lista quién es administrador
+ *   node admin.js reglas                         publica firestore.rules (guarda antes una copia de las publicadas)
  *
  * Ser administrador es una «custom claim» de Firebase (admin: true) que viaja en el token de la sesión:
  * las reglas de Firestore (firestore.rules) la exigen para escribir avisos, fechas de exámenes, corregir
@@ -35,8 +36,8 @@ const correoDe = (n) => String(n || "").normalize("NFC").trim().toLowerCase().no
 function salir(msg) { console.error("\n  " + msg + "\n"); process.exit(1); }
 
 function iniciar() {
-  let app, auth, firestore;
-  try { app = require("firebase-admin/app"); auth = require("firebase-admin/auth"); firestore = require("firebase-admin/firestore"); }
+  let app, auth, firestore, reglas;
+  try { app = require("firebase-admin/app"); auth = require("firebase-admin/auth"); firestore = require("firebase-admin/firestore"); reglas = require("firebase-admin/security-rules"); }
   catch (e) { salir("Falta instalar las dependencias. En esta carpeta ejecuta:  npm install"); }
   if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {               // pruebas con los emuladores
     app.initializeApp({ projectId: PROYECTO });
@@ -51,7 +52,7 @@ function iniciar() {
     if (cred.project_id !== PROYECTO) salir("Esa clave es del proyecto «" + cred.project_id + "», no de «" + PROYECTO + "».");
     app.initializeApp({ credential: app.cert(cred), projectId: PROYECTO });
   }
-  return { auth: auth.getAuth(), db: firestore.getFirestore() };
+  return { auth: auth.getAuth(), db: firestore.getFirestore(), reglas: () => reglas.getSecurityRules() };
 }
 
 function preguntar(txt) {
@@ -162,6 +163,26 @@ async function admins(fb) {
   console.table(filas);
 }
 
+/** Publica ../../firestore.rules en el proyecto. Antes guarda las que hay publicadas en reglas-anteriores.rules. */
+async function publicarReglas(fb) {
+  const fichero = path.join(__dirname, "..", "..", "firestore.rules");
+  if (!fs.existsSync(fichero)) salir("No encuentro " + fichero);
+  const nuevas = fs.readFileSync(fichero, "utf8");
+  const sr = fb.reglas();
+  let actuales = null;
+  try { actuales = await sr.getFirestoreRuleset(); } catch (e) { /* aún no hay reglas publicadas */ }
+  if (actuales) {
+    const viejas = actuales.source.map((f) => f.content).join("\n");
+    if (viejas.trim() === nuevas.trim()) return console.log("\n  Las reglas publicadas ya son las de firestore.rules: no hay nada que cambiar.\n");
+    fs.writeFileSync(path.join(__dirname, "reglas-anteriores.rules"), viejas);
+    console.log("\n  Copia de las reglas publicadas ahora (" + (actuales.createTime || "") + ") en reglas-anteriores.rules");
+  }
+  const r = await preguntar("  ¿Publicar firestore.rules en «" + PROYECTO + "»? Escribe «si» para confirmar: ");
+  if (r.trim().toLowerCase() !== "si" && r.trim().toLowerCase() !== "sí") return console.log("\n  Cancelado.\n");
+  const rs = await sr.releaseFirestoreRulesetFromSource(nuevas);
+  console.log("\n  Reglas publicadas (" + rs.name.split("/").pop() + "). Tardan un minuto en aplicarse.\n");
+}
+
 (async () => {
   const [cmd, ...args] = process.argv.slice(2);
   const ayuda = "Uso:\n" +
@@ -170,8 +191,9 @@ async function admins(fb) {
     "    node admin.js borrar <usuario>\n" +
     "    node admin.js admin <usuario>\n" +
     "    node admin.js quitar-admin <usuario>\n" +
-    "    node admin.js admins";
-  if (!["listar", "resetear", "borrar", "admin", "quitar-admin", "admins"].includes(cmd)) salir(ayuda);
+    "    node admin.js admins\n" +
+    "    node admin.js reglas";
+  if (!["listar", "resetear", "borrar", "admin", "quitar-admin", "admins", "reglas"].includes(cmd)) salir(ayuda);
   const fb = iniciar();
   try {
     if (cmd === "listar") await listar(fb);
@@ -180,6 +202,7 @@ async function admins(fb) {
     if (cmd === "admin") await hacerAdmin(fb, args[0], true);
     if (cmd === "quitar-admin") await hacerAdmin(fb, args[0], false);
     if (cmd === "admins") await admins(fb);
+    if (cmd === "reglas") await publicarReglas(fb);
     process.exit(0);
   } catch (e) {
     salir("Error: " + (e.message || e));

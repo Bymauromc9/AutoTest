@@ -1,7 +1,7 @@
 rules_version = '2';
 // Reglas de Firestore de la web (Firebase → Firestore Database → Reglas → pegar y «Publicar»).
 //
-//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, w<semana>, bloqueado, admin
+//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, gohp, w<semana>, bloqueado, admin
 //                    Lo lee cualquiera (es el ranking); su dueño sólo lo escribe para sumar los puntos de
 //                    UN test: tests +1, los mismos puntos en el total, en una asignatura y en la semana
 //                    actual, y no más de los que da tiempo a ganar desde el último test. Una cuenta
@@ -25,9 +25,10 @@ service cloud.firestore {
     function delta() { return nuevo().puntos - viejo().puntos; }
     function cambio(k) { return nuevo().get(k, 0) - viejo().get(k, 0); }
     function unaAsignatura() {
-      return (cambio('fli') == delta() && cambio('fc') == 0 && cambio('ip') == 0)
-          || (cambio('fc') == delta() && cambio('fli') == 0 && cambio('ip') == 0)
-          || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0);
+      return (cambio('fli') == delta() && cambio('fc') == 0 && cambio('ip') == 0 && cambio('gohp') == 0)
+          || (cambio('fc') == delta() && cambio('fli') == 0 && cambio('ip') == 0 && cambio('gohp') == 0)
+          || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('gohp') == 0)
+          || (cambio('gohp') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('ip') == 0);
     }
     function esSuyo(uid) { return request.auth != null && request.auth.uid == uid; }
     function esAdmin() { return request.auth != null && request.auth.token.get('admin', false) == true; }
@@ -54,7 +55,7 @@ service cloud.firestore {
       // El dueño, al terminar un test.
       allow update: if esSuyo(uid)
         && viejo().get('bloqueado', false) != true
-        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', semana()])
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', 'gohp', semana()])
         && nuevo().ultimo == request.time
         && nuevo().tests == viejo().tests + 1
         && delta() >= 0 && delta() <= 2025
@@ -63,8 +64,8 @@ service cloud.firestore {
         && cambio(semana()) == delta();
       // Un administrador, desde el panel: corregir puntos (nunca negativos) y bloquear o desbloquear.
       allow update: if esAdmin()
-        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'bloqueado', semana()])
-        && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural(semana())
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'gohp', 'bloqueado', semana()])
+        && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural('gohp') && natural(semana())
         && nuevo().get('bloqueado', false) is bool;
       allow delete: if esSuyo(uid);
     }

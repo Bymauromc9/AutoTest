@@ -241,7 +241,7 @@
     confirmar(dlg.querySelector("#g-cero"), async () => {
       ocupado(dlg, true);
       try {
-        Object.assign(u, await cambiarUsuario(uid, () => ({ puntos: 0, fli: 0, fc: 0, ip: 0, [semana]: 0 })));
+        Object.assign(u, await cambiarUsuario(uid, () => ({ puntos: 0, fli: 0, fc: 0, ip: 0, gohp: 0, [semana]: 0 })));
         hecho(`Los puntos de ${u.nombre} están a cero.`);
       } catch (e) { fallo(e); }
     });

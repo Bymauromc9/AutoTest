@@ -114,6 +114,27 @@ ip/                         Introducción a la Programación (temas 0–4 y prá
     resaltado.js            Resaltado de C++ y de la notación SP (el resto de la guía es assets/js/guia.js)
     maquina.js              Simulador de la máquina secuencial (primer modelo)
     data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4 y bloque 5 = C++)
+gohp/                       Gestión de Organizaciones y Habilidades Profesionales (temas 1–10 y seminario de ética)
+  index.html                Portada de GOHP (la genera assets/js/hub.js)
+  teoria/
+    guia.html               Guía de teoría de los diez temas y del seminario (62 apartados)
+    chuleta.html            Chuleta: empresa, teorías, estrategias, fórmulas de producción e inversión, motivación
+    autotest.html           Tests de cada tema (unas 300 preguntas) y test general; penalización −1/3 opcional
+  practicas/
+    guia.html               Prácticas 1–10 resueltas (41 ejercicios; resolución propia, no oficial)
+    herramientas.html       Calculadoras: punto muerto, fabricar o comprar, productividad, VAN/TIR, coste efectivo y TAE
+  examen/
+    guia.html               Cómo es el examen (8 de enero de 2027), qué estudiar y 8 problemas tipo examen
+    simulacro.html          Simulacro del test: 40 preguntas (4 por tema), reloj y −1/3 por fallo, nota sobre 10
+  css/
+    guia.css                Añadidos de GOHP a assets/css/guia.css: organigramas, matrices DAFO, gráfico del punto muerto
+    gohp.css                Componentes del autotest y del simulacro
+  js/
+    util.js                 GOHP.fmt y GOHP.LETTERS
+    autotest.js
+    simulacro.js
+    herramientas.js         Calculadoras de la página de herramientas
+    data/banco.js           Banco de preguntas (GOHP.TOPICS; tema 11 = seminario, no entra en el simulacro)
 ```
 
 Cada página carga sólo lo que necesita, en este orden: `core.js` (en el `<head>`, para aplicar el tema
@@ -123,7 +144,7 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 
 - **Sin módulos ES ni `fetch`**: así todo funciona abriendo los ficheros con doble clic (`file://`),
   donde los navegadores bloquean esas dos cosas. Los datos van en ficheros `.js`.
-- **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC` y `window.IP` (asignaturas). Cada script está envuelto
+- **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC`, `window.IP` y `window.GOHP` (asignaturas). Cada script está envuelto
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
 - **Estructura común**: toda asignatura tiene tres secciones, **Teoría · Prácticas · Examen**, y sus recursos son
   de un tipo fijo (`App.KINDS`: guía, chuleta, autotest, práctica, ejercicios, simulador, herramientas, examen,
@@ -164,6 +185,10 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 3. Usa `assets/css/base.css` para que comparta colores, tipografías, tema oscuro y componentes.
    Si necesita estilos o utilidades propias, ponlos en `mates/css/` y `mates/js/` con su propio espacio
    de nombres (`window.MATES`).
+4. Para que cuente en el ranking y su progreso se guarde con la cuenta: añade su id a `ASIG` en
+   `assets/js/cuentas.js`, a `esProgreso` en `assets/js/core.js` y a `firestore.rules` (`unaAsignatura()`
+   y las listas `hasOnly` y `natural` del dueño y del administrador), y publica las reglas con
+   `node scripts/admin/admin.js reglas`. Opcional: su descripción para la IA en `api/chat.js` y `assets/js/asistente.js`.
 
 ## Datos guardados en el navegador
 
@@ -195,6 +220,9 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
 | `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
+| `gohp-settings`, `gohp-seen`, `gohp-best-1` … `gohp-best-11`, `gohp-best-G` | Opciones, preguntas vistas y mejores notas del autotest de GOHP (11 = seminario) |
+| `gohp-teoria-estudio`, `gohp-teoria-visto`, `gohp-practicas-hechos`, `gohp-practicas-visto`, `gohp-examen-hechos` | Avance en las guías de GOHP |
+| `gohp-sim-best`, `gohp-sim-hist`, `gohp-sim-time` | Mejor nota (sobre 10), historial y reloj elegido del simulacro de GOHP |
 
 El test del autotest y el simulacro en curso se guardan en `sessionStorage` (sobreviven a recargas, no a cerrar la pestaña).
 
@@ -335,6 +363,7 @@ permiso de administrador) se hace con `scripts/admin/admin.js`:
 node admin.js admin <usuario>                 le da acceso al panel (entra abriendo admin.html o «Tu cuenta»)
 node admin.js quitar-admin <usuario>          se lo quita (una sesión ya abierta puede conservarlo hasta 1 h)
 node admin.js admins                          lista quién es administrador
+node admin.js reglas                          publica firestore.rules (guarda antes las publicadas en reglas-anteriores.rules)
 ```
 
 Pestañas del panel:

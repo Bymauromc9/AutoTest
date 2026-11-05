@@ -4,3 +4,4 @@ clave-admin.json
 *-firebase-adminsdk-*.json
 # Node portátil para Windows (no se sube: pesa ~90 MB)
 node/
+reglas-anteriores.rules
