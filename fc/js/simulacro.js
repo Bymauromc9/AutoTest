@@ -139,7 +139,9 @@
     stop(); S.done = true;
     const g = grade();
     const best = store("fc-sim-best"); if (best == null || g.nota > best) store("fc-sim-best", g.nota);
-    if (window.App && window.App.puntos) window.App.puntos({ asig: "fc", tipo: "simulacro", aciertos: g.ok, total: g.n });   // ranking
+    if (window.App && window.App.puntos) window.App.puntos({ asig: "fc", tipo: "simulacro", aciertos: g.ok, total: g.n, nota: g.nota * 2.5 });   // nota sobre 10 para las estadísticas
+    // Repaso de fallos: las falladas y las que se dejaron en blanco vuelven a salir en el autotest.
+    if (window.App && window.App.repaso) S.ids.forEach((id, i) => window.App.repaso.anotar("fc", BANK[id], S.ans[i] === BANK[id].a));   // ranking
     const hist = store("fc-sim-hist") || []; hist.push({ d: Date.now(), nota: g.nota, ok: g.ok, bad: g.bad, blank: g.blank });
     store("fc-sim-hist", hist.slice(-30));
     session(STATE, null);

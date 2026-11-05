@@ -39,6 +39,10 @@
         <a class="btn ghost" href="${ROOT}ranking.html">${icon("trophy")}Ver el ranking</a>
       </div>
       <div class="cta-actions">
+        ${ses.local ? "" : `<a class="btn ghost" href="${ROOT}perfil.html">${icon("medal")}Tu perfil y tu vitrina</a>`}
+        <a class="btn ghost" href="#estadisticas">${icon("chart")}Tus estadísticas</a>
+      </div>
+      <div class="cta-actions">
         <a class="btn ghost" href="?cambiar=1">${icon("swapuser")}Cambiar de cuenta</a>
         <button type="button" class="btn danger" id="salir">${icon("logout")}Cerrar sesión</button>
       </div>

@@ -4,7 +4,8 @@
  */
 (function () {
   "use strict";
-  const { store, session, shuffle } = window.App;
+  const { store, session, shuffle, repaso } = window.App;
+  const ASIG = "gohp";
   const { BANK, TOPICS, TOPIC_IDS, GENERAL_MIX, LETTERS, fmt } = window.GOHP;
 
 /* ======================= ESTADO ======================= */
@@ -43,7 +44,16 @@ function buildFrom(counts, exclude){
   ids.forEach(i=>SEEN.add(i)); saveSeen();
   return ids.map(i=>prep(BANK[i]));
 }
+/* Repaso de fallos (App.repaso): las preguntas que tocan hoy (o todas las del mazo), las más atrasadas primero */
+let HUELLAS=null;
+function repasoItems(todas){
+  if(!HUELLAS){ HUELLAS=new Map(); BANK.forEach((b,i)=>HUELLAS.set(repaso.huella(b.q),i)); }
+  const hs=todas? Object.keys(repaso.mazo(ASIG)).filter(h=>h[0]!=="_") : repaso.pendientes(ASIG);
+  const ids=hs.map(h=>HUELLAS.get(h)).filter(i=>i!=null).slice(0,30);
+  return shuffle(ids).map(i=>prep(BANK[i]));
+}
 function buildTest(key){
+  if(key==="R") return repasoItems(S.repasoTodas);
   let counts;
   if(key==="G") counts=Object.assign({},GENERAL_MIX);
   else { const n=TOPIC_IDS[key].length; counts={[key]: S.len==="all"? n : Math.min(n, parseInt(S.len,10))}; }
@@ -63,7 +73,8 @@ function changeQuestions(){
   quiz(); window.scrollTo(0,0);
 }
 function start(key, items){
-  S.key=key; S.qs=items?items.map(x=>prep(x.src)):buildTest(key); S.i=0; S.ans=new Array(S.qs.length).fill(undefined); S.batch=1; S.flash=false; S.view="quiz"; render(); window.scrollTo(0,0);
+  S.key=key; S.qs=items?items.map(x=>prep(x.src)):buildTest(key);
+  if(!S.qs.length){ S.view="home"; render(); return; } S.i=0; S.ans=new Array(S.qs.length).fill(undefined); S.batch=1; S.flash=false; S.view="quiz"; render(); window.scrollTo(0,0);
 }
 function grade(){
   let ok=0,bad=0,blank=0;
@@ -95,7 +106,7 @@ function restore(){
 }
 function render(){ if(S.view==="quiz") quiz(); else if(S.view==="results") results(); else home(); persist(); }
 
-function testLabel(key){return key==="G"?"Test general":key===11?"Seminario de ética":"Tema "+key;}
+function testLabel(key){if(key==="R")return "Repaso de fallos";return key==="G"?"Test general":key===11?"Seminario de ética":"Tema "+key;}
 
 function home(){
   S.view="home";
@@ -123,6 +134,7 @@ function home(){
       </select></label>
     <label for="pen"><input type="checkbox" id="pen"${S.penalty?" checked":""}> Restar 1/3 por fallo (como en el examen de GOHP)</label>
   </div>
+  ${repasoBox()}
   <section class="tests" aria-label="Tests por tema">${rows}
     <div class="test-row general"><div class="num">Σ</div>
       <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los diez temas (3 de cada uno). El seminario de ética no entra.</p>
@@ -130,9 +142,25 @@ function home(){
       <button class="btn" data-start="G">Empezar</button></div>
   </section>
   <p class="kbd">Atajos: 1–4 o A–D para responder · 0 para dejar en blanco · Intro para pasar a la siguiente.</p>`;
-  app.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>start(b.dataset.start==="G"?"G":parseInt(b.dataset.start,10)));
+  app.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>{ const k=b.dataset.start; S.repasoTodas=b.hasAttribute("data-todas"); start(k==="G"||k==="R"?k:parseInt(k,10)); });
   document.getElementById("len").onchange=e=>{S.len=e.target.value; store("gohp-settings",{len:S.len,penalty:S.penalty});};
   document.getElementById("pen").onchange=e=>{S.penalty=e.target.checked; store("gohp-settings",{len:S.len,penalty:S.penalty});};
+}
+
+/* Caja del repaso de fallos en la portada del autotest */
+function repasoBox(){
+  const R=repaso.resumen(ASIG);
+  const cajas=R.cajas.map((n,b)=>`<span class="rep-caja" title="Caja ${b+1}: ${b===0?"para repasar ya":"vuelve en "+[1,3,7,14][b-1]+" días"}"><i style="height:${R.total?Math.max(6,Math.round(n/R.total*100)):6}%"></i><small>${n}</small></span>`).join("");
+  const prox=R.proximo?new Date(R.proximo).toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"short"}):"";
+  const txt=!R.total?"Aquí se guardan las preguntas que falles o dejes en blanco (también en los simulacros). Repásalas cuando quieras: cada vez que aciertes una, volverá más tarde (al día siguiente, a los 3, 7 y 14 días) hasta que la domines."
+    : R.hoy?`<b>${R.hoy}</b> ${R.hoy===1?"pregunta toca":"preguntas tocan"} hoy de las <b>${R.total}</b> que tienes en el repaso.`
+    : `Nada pendiente hoy. Próximo repaso: <b>${prox}</b>. Tienes <b>${R.total}</b> en el repaso.`;
+  return `<section class="rep-box${R.hoy?" is-due":""}" aria-label="Repaso de fallos">
+    <div class="rep-ico" aria-hidden="true">↻</div>
+    <div class="rep-txt"><h3>Repaso de fallos</h3><p>${txt}${R.dominadas?` · <b>${R.dominadas}</b> ya dominadas`:""}</p></div>
+    ${R.total?`<div class="rep-cajas" aria-label="Preguntas por caja">${cajas}</div>`:""}
+    <div class="rep-acts">${R.hoy?`<button class="btn" data-start="R">Repasar ${Math.min(R.hoy,30)}</button>`:""}${R.total&&!R.hoy?`<button class="btn ghost" data-start="R" data-todas>Repasar igualmente</button>`:""}</div>
+  </section>`;
 }
 
 function columnHTML(){
@@ -186,13 +214,13 @@ function quiz(){
   document.getElementById("quit").onclick=()=>{S.view="home";render();window.scrollTo(0,0);};
   persist();
 }
-function answer(k){ if(S.ans[S.i]!==undefined) return; S.ans[S.i]=k; S.flash=false; quiz(); }
+function answer(k){ if(S.ans[S.i]!==undefined) return; S.ans[S.i]=k; repaso.anotar(ASIG, S.qs[S.i].src, k===S.qs[S.i].a); S.flash=false; quiz(); }
 function next(){ S.flash=false; if(S.i<S.qs.length-1){S.i++; quiz(); window.scrollTo({top:0});} else { finish(); } }
 function finish(){
   const g=grade(); const prev=store("gohp-best-"+S.key);
-  if(prev==null||g.nota>prev) store("gohp-best-"+S.key,g.nota);
+  if(S.key!=="R"&&(prev==null||g.nota>prev)) store("gohp-best-"+S.key,g.nota);
   // Puntos del ranking (assets/js/cuentas.js)
-  if(window.App&&window.App.puntos) window.App.puntos({asig:"gohp",tipo:S.key==="G"?"general":"autotest",aciertos:g.ok,total:g.n});
+  if(window.App&&window.App.puntos) window.App.puntos({asig:"gohp",tipo:S.key==="G"?"general":S.key==="R"?"repaso":"autotest",tema:S.key,aciertos:g.ok,total:g.n,nota:g.nota});
   S.view="results"; render(); window.scrollTo(0,0);
 }
 
@@ -236,6 +264,7 @@ function results(){
     <a class="btn ghost" href="guia.html" target="_blank" rel="noopener">Repasar con la guía de teoría ↗</a>
     <button class="btn ghost" id="home">Volver al inicio</button>
   </div>
+  ${failed.length?`<p class="rep-note">↻ ${failed.length===1?"La pregunta fallada o en blanco se ha guardado":"Las "+failed.length+" preguntas falladas o en blanco se han guardado"} en tu <b>repaso de fallos</b>: repásalas desde la portada del autotest y volverán a salir, cada vez más espaciadas, hasta que las domines.</p>`:""}
   <section class="review" aria-label="Repaso de fallos"><h3>Repaso de fallos y preguntas en blanco</h3>${review}</section>`;
   const r=document.getElementById("retry"); if(r) r.onclick=()=>start(S.key, failed.map(x=>x.q));
   document.getElementById("again").onclick=()=>start(S.key);
@@ -258,9 +287,9 @@ document.addEventListener("keydown",e=>{
 restore();
 /* Enlace directo a un test (#test-G, #test-3…), p. ej. desde la sección «Examen» de la portada de la asignatura. */
 (function(){
-  const m=location.hash.match(/^#test-(G|\d+)$/);
-  if(m){ const key=m[1]==="G"?"G":parseInt(m[1],10);
-    if(key==="G"||TOPIC_IDS[key]){ history.replaceState(null,"",location.pathname+location.search); start(key); return; } }
+  const m=location.hash.match(/^#test-(G|R|\d+)$/);
+  if(m){ const key=m[1]==="G"||m[1]==="R"?m[1]:parseInt(m[1],10);
+    if(key==="G"||key==="R"||TOPIC_IDS[key]){ history.replaceState(null,"",location.pathname+location.search); start(key); return; } }
   render();
 })();
 })();

@@ -9,7 +9,8 @@ abre `index.html` con doble clic. También funciona servido desde cualquier host
 ```
 index.html                  Portada: tu cuenta y el top 5, cuenta atrás de los exámenes, «continuar» y una tarjeta por asignatura
 cuenta.html                 Entrar, crear cuenta o elegir una de las cuentas usadas en el dispositivo; «Tu cuenta»
-ranking.html                Leaderboard global: general, esta semana y por asignatura
+ranking.html                Leaderboard global: general, esta semana y por asignatura, con el reto semanal
+perfil.html                 Perfil público de cada cuenta (?u=<uid> o ?n=<usuario>): puntos, puesto y vitrina de insignias
 admin.html                  Panel de administración (sólo cuentas administradoras): usuarios, aviso, exámenes y reportes
 assets/
   css/base.css              Tokens de diseño (colores, tipografías, tema oscuro) y componentes genéricos
@@ -22,11 +23,17 @@ assets/
   js/asistente.js           Asistente de IA en un panel paralelo (lo carga core.js en todas las páginas)
   js/cuentas.js             Cuentas con Firebase: progreso de cada cuenta, sincronización y puntos (lo carga core.js)
   js/acceso.js · ranking.js Páginas cuenta.html y ranking.html
+  js/perfil.js              Perfil público (perfil.html); en el tuyo eliges las destacadas de tu vitrina
+  js/insignias.js           Insignias: dibujo (SVG), catálogo y las automáticas que se reclaman solas (lo carga core.js)
+  js/estadisticas.js        «Tus estadísticas» en cuenta.html: evolución de notas, temas, actividad y racha
+  js/plan.js                Plan de estudio configurable en la portada y en la de cada asignatura (lo carga core.js)
   js/admin.js               Panel de administración (admin.html)
   js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
   js/retro.js               Broma: al cerrar el aviso de los administradores la web pasa a modo terminal;
                             se quita con Espacio dos veces (en el móvil, dos toques)
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
+  css/insignias.css         Insignias, vitrina, perfil público y estadísticas
+  css/plan.css              Plan de estudio y su diálogo de ajustes
   css/asistente.css         Estilos del panel del asistente
   css/admin.css             Estilos del panel de administración
   css/reportes.css          Diálogo «Reportar un error» (autosuficiente, como nav.css)
@@ -224,7 +231,27 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `gohp-teoria-estudio`, `gohp-teoria-visto`, `gohp-practicas-hechos`, `gohp-practicas-visto`, `gohp-examen-hechos` | Avance en las guías de GOHP |
 | `gohp-sim-best`, `gohp-sim-hist`, `gohp-sim-time` | Mejor nota (sobre 10), historial y reloj elegido del simulacro de GOHP |
 
+| `<asig>-repaso` | Repaso de fallos de cada asignatura: `{ huella: { b: caja 0–4, d: cuándo toca, f: fallos, t: tema }, _dom }` |
+| `<asig>-hist` | Últimos 400 tests terminados: `{ d, tipo, tema, ok, n, nota }` (estadísticas y plan) |
+| `app-plan`, `app-plan-hoy` | Ajustes del plan de estudio y el plan del día (tareas, hechas, de dónde se partía) |
+| `app-est-asig` | Asignatura elegida en «Tus estadísticas» |
+
 El test del autotest y el simulacro en curso se guardan en `sessionStorage` (sobreviven a recargas, no a cerrar la pestaña).
+
+## Repaso de fallos, plan de estudio y estadísticas
+
+- **Repaso de fallos** (`App.repaso` en core.js, en los cuatro autotests y en los simulacros): cada pregunta
+  fallada o en blanco entra en la caja 0 y se puede repasar ya desde la portada del autotest («Repaso de
+  fallos», o el enlace `autotest.html#test-R`). Acertarla cuando toca la sube de caja y la programa a 1, 3, 7
+  y 14 días; acertada en la última se da por dominada. Las preguntas se identifican por una huella del
+  enunciado, así que reordenar o ampliar el banco no las pierde.
+- **Plan de estudio** (`assets/js/plan.js`): cada uno lo activa, lo apaga y lo ajusta en ⚙ (asignaturas,
+  días, minutos al día, prioridad, días de repaso final antes de cada examen, qué entra y dónde verlo). Cada
+  día reparte lo pendiente (apartados sin estudiar, ejercicios sin hacer, temas del autotest por debajo de 7,
+  repaso de fallos) entre los días de estudio que quedan hasta cada examen. Las tareas se marcan solas al
+  hacerlas. Tiempos estimados: `MIN` al principio del fichero.
+- **Estadísticas** (cuenta.html#estadisticas): salen de `App.historial`, que apunta cada test que llama a
+  `App.puntos` (pásale también `nota` sobre 10 y `tema` para que salgan bien).
 
 
 ## Asistente de IA
@@ -310,7 +337,17 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
   cuenta se puede quedar con el progreso que ya había en el navegador.
 - **Puntos**: 10 por acierto al terminar un autotest, un test general, el simulacro de FC, el test de
   equivalencias o la parte de test de un examen de FLI; +25 si un test de 10 preguntas o más sale
-  perfecto. Para que otro test sume puntos: `App.puntos({ asig, tipo, aciertos, total })`.
+  perfecto. Para que otro test sume puntos: `App.puntos({ asig, tipo, aciertos, total, nota, tema })`.
+- **Perfil público** (perfil.html, enlazado desde el ranking): puntos, puesto, puntos por asignatura y la
+  **vitrina de insignias**. En el tuyo eliges hasta 6 destacadas (salen junto a tu nombre en el ranking) y
+  ves las que te faltan con su progreso.
+- **Insignias** (`insignias/<id>`): las **automáticas** (por puntos, tests o puntos de una asignatura) se
+  reclaman solas al abrir la web o al sumar puntos, y las reglas comprueban con su definición que te las has
+  ganado; las **manuales** las da un administrador. En el panel (admin.html#insignias): pack inicial de 19,
+  creador con vista previa (forma, color, rareza, icono), editar, borrar, dar o quitar a varias personas a la
+  vez y, en cada usuario, cambiar el motivo o las veces. **Reto semanal**: el lunes, el panel enseña el podio
+  de la semana anterior y con un botón entrega 🥇🥈🥉 (`semana_oro`, `semana_plata`, `semana_bronce`) y lo
+  apunta en `retos/<semana>`, que el ranking enseña como «Última semana».
 - **Sin conexión** se pueden crear **perfiles locales**, que guardan el progreso sólo en ese navegador
   y no entran en el ranking.
 
@@ -321,7 +358,10 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
 - **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip` y de cada
   semana `w<n>`; es público porque es el ranking), `progreso/<uid>` (el progreso; sólo su dueño),
   `config/web` (el aviso y las fechas de examen del panel; lo lee cualquiera, lo escribe un administrador)
-  y `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores).
+  `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores),
+  `insignias/<id>` (el catálogo; lo lee cualquiera, lo escribe un administrador) y `retos/<semana>`
+  (ganadores de cada reto semanal entregado). Las insignias de cada uno van en `usuarios/<uid>.insignias`
+  y sus destacadas en `usuarios/<uid>.vitrina`.
 - **Reglas** (`firestore.rules`, se pegan en Firestore → Reglas → Publicar): cada uno sólo puede sumar
   sus propios puntos, de un test en un test, con el mismo valor en el total, en una asignatura y en la
   semana, y nunca más de los que da tiempo a ganar desde su último test. Un administrador (claim

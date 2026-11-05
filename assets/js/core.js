@@ -12,7 +12,9 @@
  *   App.esc        escapa texto para insertarlo como HTML
  *   App.theme      tema claro / oscuro compartido por todas las páginas
  *   App.retro      modo terminal «de castigo» al cerrar el aviso (ver assets/js/retro.js): get(), set(on), toggle()
- *   App.puntos     suma puntos al ranking al terminar un test ({ asig, tipo, aciertos, total }; ver cuentas.js)
+ *   App.puntos     suma puntos al ranking al terminar un test ({ asig, tipo, aciertos, total, nota?, tema? }; ver cuentas.js)
+ *   App.repaso     repaso de fallos con repetición espaciada (anotar, pendientes, resumen)
+ *   App.historial  tests terminados de cada asignatura (para las estadísticas)
  *   App.sesion()   cuenta activa ({ id, nombre, token, local }) o null
  *   App.config     configuración que se cambia desde el panel de administración (aviso y fechas de
  *                  exámenes): get(), actualizar(cfg) y examenesCodigo() (las fechas que trae el código)
@@ -76,7 +78,7 @@
         { id: "chuletas", sec: "teoria", group: "L0", kind: "chuleta", title: "Chuletas visuales", href: "fli/teoria/chuletas.html",
           desc: "Tablas de verdad, del castellano a las conectivas, equivalencias, reglas de inferencia y clasificación, con tarjetas para memorizar." },
         { id: "autotest", sec: "teoria", group: "L0", kind: "autotest", title: "Autotest por temas", href: "fli/teoria/autotest.html",
-          desc: "Tests de cada tema con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "fli-best-", topics: [1, 2, 3, 4] } },
+          desc: "Tests de cada tema con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "fli-best-", topics: [1, 2, 3, 4], names: { 1: "Introducción a la lógica", 2: "Lógica proposicional (L0)", 3: "Razonamientos", 4: "Problema SAT en L0" } } },
         { id: "equivalencias", sec: "teoria", group: "L0", kind: "drill", title: "Equivalencias de L0", href: "fli/teoria/equivalencias.html",
           desc: "Test sólo con fórmulas: elige la equivalente o decide si dos fórmulas lo son. Si fallas, contraejemplo y tabla de verdad.", progress: { t: "best", key: "eq-best" } },
         { id: "ejercicios-t", sec: "teoria", group: "L0", kind: "ejercicios", title: "Ejercicios por tema", href: "fli/teoria/ejercicios.html",
@@ -114,7 +116,7 @@
         { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuleta", href: "fc/teoria/chuleta.html",
           desc: "Todas las fórmulas, la tabla de conversión, los comandos de Linux, el ensamblador y los errores que más puntos cuestan, en una página." },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "fc/teoria/autotest.html",
-          desc: "Más de 500 preguntas por temas con corrección inmediata, la explicación de cada respuesta y tandas nuevas sin repetir.", progress: { t: "autotest", prefix: "fc-best-", topics: [1, 2, 3, 4, 5, 6] } },
+          desc: "Más de 500 preguntas por temas con corrección inmediata, la explicación de cada respuesta y tandas nuevas sin repetir.", progress: { t: "autotest", prefix: "fc-best-", topics: [1, 2, 3, 4, 5, 6], names: { 1: "Introducción", 2: "Representación de la información", 3: "Circuitos combinacionales", 4: "Sistemas operativos (Linux)", 5: "Lenguajes del computador", 6: "Redes de ordenadores" } } },
         { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de prácticas", href: "fc/practicas/guia.html",
           desc: "Cada boletín explicado (placa base, okteta y PPM, TkGate, Linux, gcc y gdb, red y HTTP) con 43 ejercicios resueltos paso a paso.", progress: { t: "hechos", key: "fc-practicas-hechos", total: 43 } },
         { id: "herramientas", sec: "practicas", kind: "herramientas", title: "Herramientas", href: "fc/practicas/herramientas.html",
@@ -146,7 +148,7 @@
         { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuletas: SP → C++ y esquemas", href: "ip/teoria/guia.html#a-1",
           desc: "Todas las equivalencias entre la notación SP y C++ en una tabla, y los esquemas de recorrido y búsqueda." },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "ip/teoria/autotest.html",
-          desc: "170 preguntas por tema y un bloque del C++ de prácticas, con corrección inmediata y explicación.", progress: { t: "autotest", prefix: "ip-best-", topics: [0, 1, 2, 3, 4, 5] } },
+          desc: "170 preguntas por tema y un bloque del C++ de prácticas, con corrección inmediata y explicación.", progress: { t: "autotest", prefix: "ip-best-", topics: [0, 1, 2, 3, 4, 5], names: { 0: "Algoritmos, programas y procesos", 1: "Léxico y organización", 2: "Acciones, funciones y tablas", 3: "La iteración", 4: "Secuencias y esquemas", 5: "C++ de prácticas" } } },
         { id: "simulador", sec: "teoria", kind: "simulador", title: "Simulador de la máquina secuencial", href: "ip/teoria/guia.html#t4-8",
           desc: "Ejecuta paso a paso un recorrido, una búsqueda y la meseta mayor: parte izquierda, elemento actual, variables e invariante." },
         { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de prácticas", href: "ip/practicas/guia.html",
@@ -170,7 +172,7 @@
         { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuleta", href: "gohp/teoria/chuleta.html",
           desc: "Tamaños y formas de empresa, teorías, estrategias, todas las fórmulas de producción e inversión y las teorías de la motivación, en una página." },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "gohp/teoria/autotest.html",
-          desc: "Unas 300 preguntas de los diez temas y del seminario con corrección inmediata, explicación y la penalización del examen (−1/3).", progress: { t: "autotest", prefix: "gohp-best-", topics: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] } },
+          desc: "Unas 300 preguntas de los diez temas y del seminario con corrección inmediata, explicación y la penalización del examen (−1/3).", progress: { t: "autotest", prefix: "gohp-best-", topics: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], names: { 1: "La empresa", 2: "La administración", 3: "El entorno", 4: "Planificación", 5: "Organización", 6: "Producción", 7: "Marketing", 8: "Finanzas", 9: "Dirección", 10: "Recursos humanos" } } },
         { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de prácticas", href: "gohp/practicas/guia.html",
           desc: "Las prácticas de los diez temas resueltas: casos de empresa, organigramas y todos los problemas de producción e inversión paso a paso (41 ejercicios).", progress: { t: "hechos", key: "gohp-practicas-hechos", total: 41 } },
         { id: "herramientas", sec: "practicas", kind: "herramientas", title: "Herramientas", href: "gohp/practicas/herramientas.html",
@@ -278,7 +280,13 @@
     swapuser: '<circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M16 5h5M19 3l2 2-2 2M21 12h-5M18 10l-2 2 2 2"/>',
     alert: '<path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.1"/>',
     shield: '<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>',
-    megaphone: '<path d="M4 10v4a1 1 0 0 0 1 1h3l6 4V5L8 9H5a1 1 0 0 0-1 1z"/><path d="M18 9a4 4 0 0 1 0 6"/>'
+    megaphone: '<path d="M4 10v4a1 1 0 0 0 1 1h3l6 4V5L8 9H5a1 1 0 0 0-1 1z"/><path d="M18 9a4 4 0 0 1 0 6"/>',
+    medal: '<path d="M8 3l2.5 6M16 3l-2.5 6"/><circle cx="12" cy="15" r="6"/><path d="M12 12.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2-1.45-1.4 2-.3z"/>',
+    chart: '<path d="M4 20V4M4 20h16"/><path d="M7.5 15l3.5-4 3 2.5 5-6"/>',
+    repeat: '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"/>',
+    plan: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 14.5l2.2 2.2 4.8-4.8"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
+    star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>'
   };
   function icon(name, cls) {
     return `<svg class="ico${cls ? " " + cls : ""}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
@@ -379,10 +387,11 @@
     location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
   }
   /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
-  const esProgreso = (k) => /^(fli|fc|ip|gohp|eq)-|^app-last/.test(k);
+  const esProgreso = (k) => /^(fli|fc|ip|gohp|eq)-|^app-(last|plan)/.test(k);
   /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
       cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
   function puntos(r) {
+    if (r && r.total > 0) historial.anotar(r);
     const ses = store(SESION_KEY);
     if (!ses || !r || !(r.total > 0)) return;
     const ev = { u: ses.id, evento: Date.now().toString(36) + Math.random().toString(36).slice(2, 10), asig: r.asig, tipo: r.tipo,
@@ -391,6 +400,59 @@
     cola.push(ev); store("app-pend", cola.slice(-100));
     if (window.Cuentas) window.Cuentas.enviar();
   }
+
+  /* ---------- Historial de tests (para las estadísticas de «Tu cuenta») ----------
+     «<asig>-hist»: los últimos 400 tests terminados de cada asignatura: { d: fecha (ms), tipo, tema, ok, n, nota }.
+     Lo apunta App.puntos, que llaman todos los tests al terminar (va con el progreso de la cuenta). */
+  const historial = Object.freeze({
+    anotar(r) {
+      if (!r.asig) return;
+      const k = r.asig + "-hist", h = store(k) || [];
+      const nota = typeof r.nota === "number" && isFinite(r.nota) ? Math.round(r.nota * 100) / 100 : Math.round(r.aciertos / r.total * 1000) / 100;
+      h.push({ d: Date.now(), tipo: r.tipo || "test", tema: r.tema != null ? String(r.tema) : "", ok: Math.round(r.aciertos), n: Math.round(r.total), nota });
+      store(k, h.slice(-400));
+    },
+    de: (asig) => (store(asig + "-hist") || []).filter((x) => x && x.d && x.n > 0)
+  });
+
+  /* ---------- Repaso de fallos (repetición espaciada, en todos los autotests) ----------
+     «<asig>-repaso»: { <huella de la pregunta>: { b: caja 0–4, d: cuándo toca (ms), f: veces fallada, t: tema }, _dom: dominadas }.
+     Fallar (o dejar en blanco) una pregunta la mete en la caja 0, para repasarla ya. Acertarla cuando le toca la sube
+     de caja y la vuelve a programar dentro de 1, 3, 7 y 14 días; acertada en la caja 4 se da por dominada y sale del
+     repaso. La huella es del enunciado, así que no cambia aunque se reordene el banco. */
+  const DIAS_CAJA = [1, 3, 7, 14];
+  const DIA = 86400000;
+  function huella(texto) { let h = 5381; const t = String(texto || ""); for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + t.length.toString(36); }
+  /** Medianoche de hoy + n días: lo que «toca» un día se puede repasar desde primera hora. */
+  const diaMas = (n) => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime() + n * DIA; };
+  const repaso = Object.freeze({
+    huella,
+    mazo: (asig) => store(asig + "-repaso") || {},
+    /** Apunta una respuesta: ok = acertada. item = la pregunta del banco ({ q, t }). */
+    anotar(asig, item, ok) {
+      if (!asig || !item || !item.q) return;
+      const k = asig + "-repaso", m = store(k) || {}, h = huella(item.q), e = m[h], ahora = Date.now();
+      if (!ok) m[h] = { b: 0, d: ahora, f: ((e && e.f) || 0) + 1, t: item.t };
+      else if (e && e.d <= ahora) {
+        if (e.b >= DIAS_CAJA.length) { delete m[h]; m._dom = (m._dom || 0) + 1; }
+        else m[h] = { b: e.b + 1, d: diaMas(DIAS_CAJA[e.b]), f: e.f || 1, t: e.t != null ? e.t : item.t };
+      } else return;
+      store(k, m);
+    },
+    /** Huellas de las preguntas que tocan ahora, de la más atrasada a la más reciente. */
+    pendientes(asig) {
+      const m = store(asig + "-repaso") || {}, ahora = Date.now();
+      return Object.keys(m).filter((h) => h[0] !== "_" && m[h].d <= ahora).sort((a, b) => m[a].d - m[b].d);
+    },
+    /** { total, hoy, cajas: [n0…n4], proximo (ms | null), dominadas, porTema: { t: n } } */
+    resumen(asig) {
+      const m = store(asig + "-repaso") || {}, ahora = Date.now(), ks = Object.keys(m).filter((h) => h[0] !== "_");
+      const cajas = [0, 0, 0, 0, 0], porTema = {};
+      let hoy = 0, proximo = null;
+      ks.forEach((h) => { const e = m[h]; cajas[Math.min(4, e.b | 0)]++; porTema[e.t] = (porTema[e.t] || 0) + 1; if (e.d <= ahora) hoy++; else if (proximo == null || e.d < proximo) proximo = e.d; });
+      return { total: ks.length, hoy, cajas, proximo, dominadas: m._dom || 0, porTema };
+    }
+  });
 
   /* ---------- Recurso actual ---------- */
   function abs(root, href) { try { return new URL(root + href, location.href); } catch (e) { return null; } }
@@ -527,6 +589,20 @@
     const cjs = document.createElement("script");
     cjs.src = base + "js/cuentas.js"; cjs.defer = true;
     document.head.appendChild(cjs);
+    // Insignias: dibujo, catálogo y las que se ganan solas (ver assets/js/insignias.js)
+    const icss = document.createElement("link");
+    icss.rel = "stylesheet"; icss.href = base + "css/insignias.css";
+    document.head.appendChild(icss);
+    const ijs = document.createElement("script");
+    ijs.src = base + "js/insignias.js"; ijs.defer = true;
+    document.head.appendChild(ijs);
+    // Plan de estudio (en la portada y en la de cada asignatura; ver assets/js/plan.js)
+    const lcss = document.createElement("link");
+    lcss.rel = "stylesheet"; lcss.href = base + "css/plan.css";
+    document.head.appendChild(lcss);
+    const ljs = document.createElement("script");
+    ljs.src = base + "js/plan.js"; ljs.defer = true;
+    document.head.appendChild(ljs);
     // Botones de descarga en PDF (ver assets/js/pdf.js y scripts/pdf/generar.js)
     const pcss = document.createElement("link");
     pcss.rel = "stylesheet"; pcss.href = base + "css/pdf.css";
@@ -553,7 +629,7 @@
   })();
 
   window.App = Object.freeze({
-    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso,
+    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso, repaso, historial,
     ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
     config: Object.freeze({ get: () => CONFIG, actualizar: actualizarConfig, examenesCodigo: () => JSON.parse(JSON.stringify(EXAMENES_CODIGO)) }),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),

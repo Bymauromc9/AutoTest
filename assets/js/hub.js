@@ -102,6 +102,7 @@
         <p class="lead">${esc(S.intro)}</p>
         ${stats()}
         ${cont()}
+        <div id="plan"></div>
       </header>
       ${SECTIONS.map(section).join("")}
       <p class="muted hub-note">Tu progreso se guarda sólo en este navegador.</p>`;

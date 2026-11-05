@@ -6,6 +6,7 @@
   "use strict";
   const { esc, icon, ROOT, SUBJECTS } = window.App;
   const C = window.Cuentas;
+  const reto = document.getElementById("rk-reto");
   const out = document.getElementById("rk"), me = document.getElementById("rk-me"), nav = document.getElementById("rk-tabs");
   if (!out || !C) return;
   const TABLAS = [{ id: "total", label: "General" }, { id: "semana", label: "Esta semana" }].concat(SUBJECTS.map((s) => ({ id: s.id, label: s.short })));
@@ -39,13 +40,47 @@
       out.innerHTML = `<div class="rk-list"><p class="rk-empty">${icon("trophy")}<br>Nadie tiene puntos ${tabla === "semana" ? "esta semana" : "aquí"} todavía. ¡El primer test que termines te pone arriba!</p></div>`;
       return;
     }
+    const I = window.Insignias;
+    let cat = {};
+    if (I) { try { cat = I.porId(await I.catalogo()); } catch (e) { cat = {}; } }
+    // Hasta 3 insignias junto al nombre: las destacadas de su vitrina o, si no ha elegido, las más raras.
+    const insDe = (f) => {
+      if (!I) return "";
+      let ids = (f.vitrina || []).filter((id) => cat[id] && f.insignias[id]);
+      if (!ids.length) ids = I.ordenar(Object.keys(f.insignias || {}).filter((id) => cat[id]).map((id) => cat[id])).map((x) => x.id);
+      const n = Object.keys(f.insignias || {}).filter((id) => cat[id]).length;
+      const ver = ids.slice(0, 3);
+      return ver.length ? `<span class="rk-ins">${ver.map((id) => I.mini(cat[id])).join("")}${n > ver.length ? `<small>+${n - ver.length}</small>` : ""}</span>` : "";
+    };
     out.innerHTML = `<ol class="rk-list" aria-label="Ranking ${esc(nombre)}">${d.filas.map((f) => `
       <li class="rk-row${f.pos <= 3 ? " top" + f.pos : ""}${f.yo ? " is-me" : ""}"${f.yo ? ' aria-current="true"' : ""}>
         <span class="rk-pos">${f.pos}</span>${av(f.nombre)}
-        <span class="rk-name"><b>${esc(f.nombre)}${f.yo ? " (tú)" : ""}</b><small>${fmt(f.tests)} ${f.tests === 1 ? "test" : "tests"}</small></span>
+        <span class="rk-name"><a class="rk-link" href="${ROOT}perfil.html?u=${encodeURIComponent(f.uid)}"><b>${esc(f.nombre)}${f.yo ? " (tú)" : ""}</b></a><small>${fmt(f.tests)} ${f.tests === 1 ? "test" : "tests"}${insDe(f)}</small></span>
         <span class="rk-pts">${fmt(f.puntos)}<small>puntos</small></span>
       </li>`).join("")}</ol>`;
   }
+  /* Reto semanal: los 3 primeros de «Esta semana» se llevan una insignia (la entrega un administrador el lunes). */
+  async function pintarReto() {
+    if (!reto) return;
+    const I = window.Insignias;
+    let cat = {}, ult = null;
+    try { cat = I ? I.porId(await I.catalogo()) : {}; } catch (e) { cat = {}; }
+    if (!cat.semana_oro) { reto.hidden = true; return; }
+    try { ult = (await C.retos(1))[0] || null; } catch (e) { ult = null; }
+    let gan = [];
+    try { gan = ult ? JSON.parse(ult.ganadores || "[]") : []; } catch (e) { gan = []; }
+    const premio = ["semana_oro", "semana_plata", "semana_bronce"].filter((id) => cat[id]).map((id) => I.html(cat[id], { tam: "sm" })).join("");
+    const fin = new Date(); fin.setDate(fin.getDate() + ((7 - fin.getDay()) % 7)); fin.setHours(23, 59, 0, 0);
+    const quedan = Math.max(0, Math.ceil((fin - Date.now()) / 86400000));
+    reto.innerHTML = `<div class="rk-reto__in">
+      <div class="rk-reto__premio" aria-hidden="true">${premio}</div>
+      <div class="rk-reto__txt"><b>Reto de la semana</b>
+        <small>Los 3 primeros de <a href="#semana">«Esta semana»</a> se llevan su insignia para la vitrina. ${quedan <= 0 ? "Se cierra hoy a medianoche." : quedan === 1 ? "Queda 1 día." : "Quedan " + quedan + " días."}</small>
+        ${gan.length ? `<small class="rk-reto__gan">Última semana: ${gan.slice(0, 3).map((g) => `${["🥇", "🥈", "🥉"][Math.min(2, (g.pos || 1) - 1)]} <a href="${ROOT}perfil.html?u=${encodeURIComponent(g.uid)}">${esc(g.nombre)}</a>`).join(" · ")}</small>` : ""}
+      </div></div>`;
+    reto.hidden = false;
+  }
+  pintarReto();
   window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (TABLAS.some((t) => t.id === h)) { tabla = h; pintar(); } });
   // Si hay puntos pendientes de enviar, se envían antes de pintar para que salgan ya.
   Promise.resolve(C.enviar()).finally(pintar);

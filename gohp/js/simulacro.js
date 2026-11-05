@@ -145,7 +145,9 @@
     stop(); S.done = true;
     const g = grade();
     const best = store("gohp-sim-best"); if (best == null || g.nota > best) store("gohp-sim-best", g.nota);
-    if (window.App && window.App.puntos) window.App.puntos({ asig: "gohp", tipo: "simulacro", aciertos: g.ok, total: g.n });   // ranking
+    if (window.App && window.App.puntos) window.App.puntos({ asig: "gohp", tipo: "simulacro", aciertos: g.ok, total: g.n, nota: g.nota });
+    // Repaso de fallos: las falladas y las que se dejaron en blanco vuelven a salir en el autotest.
+    if (window.App && window.App.repaso) S.ids.forEach((id, i) => window.App.repaso.anotar("gohp", BANK[id], S.ans[i] === BANK[id].a));   // ranking
     const hist = store("gohp-sim-hist") || []; hist.push({ d: Date.now(), nota: g.nota, ok: g.ok, bad: g.bad, blank: g.blank });
     store("gohp-sim-hist", hist.slice(-30));
     session(STATE, null);

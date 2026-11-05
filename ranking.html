@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/nav.css">
 <link rel="stylesheet" href="assets/css/cuentas.css">
+<link rel="stylesheet" href="assets/css/insignias.css">
 <script src="assets/js/core.js"></script>
 </head>
 <body data-root="" data-title="Ranking">
@@ -24,19 +25,22 @@
     <h1>Ranking</h1>
     <p class="muted">Quién ha conseguido más puntos con los autotests, tests generales, simulacros y exámenes.</p>
   </header>
+  <section class="rk-reto" id="rk-reto" aria-label="Reto de la semana" hidden></section>
   <nav class="rk-tabs" id="rk-tabs" aria-label="Tablas del ranking"></nav>
   <div id="rk-me"></div>
   <div id="rk"><p class="muted">Cargando…</p></div>
   <section class="callout rk-how">
     <b>Cómo se consiguen puntos</b>
     <ul>
-      <li><b>10 puntos por cada acierto</b> al terminar un autotest, un test general, el simulacro de FC, el test de equivalencias o la parte de test de un examen de FLI.</li>
+      <li><b>10 puntos por cada acierto</b> al terminar un autotest, un test general, los simulacros de FC y GOHP, el repaso de fallos, el test de equivalencias o la parte de test de un examen de FLI.</li>
       <li><b>+25 de bonus</b> si haces perfecto un test de 10 preguntas o más.</li>
       <li>«Esta semana» empieza de cero cada lunes; las tablas por asignatura sólo cuentan los puntos de esa asignatura.</li>
+      <li><b>Insignias</b>: algunas se ganan solas (por puntos o por tests) y otras las entregan los administradores, como las del reto semanal. Pulsa en un nombre para ver su perfil y su vitrina.</li>
     </ul>
   </section>
 </main>
 <script src="assets/js/cuentas.js"></script>
+<script src="assets/js/insignias.js"></script>
 <script src="assets/js/ranking.js"></script>
 </body>
 </html>

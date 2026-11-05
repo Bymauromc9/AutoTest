@@ -1,12 +1,18 @@
 rules_version = '2';
 // Reglas de Firestore de la web (Firebase → Firestore Database → Reglas → pegar y «Publicar»).
 //
-//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, gohp, w<semana>, bloqueado, admin
-//                    Lo lee cualquiera (es el ranking); su dueño sólo lo escribe para sumar los puntos de
-//                    UN test: tests +1, los mismos puntos en el total, en una asignatura y en la semana
-//                    actual, y no más de los que da tiempo a ganar desde el último test. Una cuenta
-//                    bloqueada ya no suma. Un administrador puede corregir los puntos y bloquear.
-//                    «admin» sólo lo escribe scripts/admin/admin.js (con la clave de servidor).
+//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, gohp, w<semana>, bloqueado, admin,
+//                    insignias { <id>: { f: fecha, n: veces, m?: motivo } }, vitrina [ids], reclamada
+//                    Lo lee cualquiera (es el ranking y el perfil público); su dueño sólo lo escribe para:
+//                    · sumar los puntos de UN test: tests +1, los mismos puntos en el total, en una asignatura y
+//                      en la semana actual, y no más de los que da tiempo a ganar desde el último test;
+//                    · reclamar UNA insignia automática que ya se ha ganado (lo comprueba con su definición);
+//                    · elegir hasta 6 de sus insignias para destacarlas en su vitrina.
+//                    Una cuenta bloqueada ya no suma ni reclama. Un administrador puede corregir los puntos,
+//                    bloquear y dar, quitar o cambiar insignias. «admin» sólo lo escribe scripts/admin/admin.js.
+//   insignias/{id}   definición de cada insignia (nombre, icono, forma, color, rareza; las automáticas, el
+//                    campo y el umbral que hay que alcanzar): la lee cualquiera, la escribe un admin.
+//   retos/{semana}   ganadores de cada reto semanal ya entregado: lo lee cualquiera, lo crea un admin.
 //   progreso/{uid}   { t, json }  el progreso guardado de la cuenta; sólo lo ve y lo escribe su dueño.
 //   config/web       aviso para toda la web y fechas de exámenes: lo lee cualquiera, lo escribe un admin.
 //   reportes/{id}    errores que mandan los usuarios: los crea cualquiera con cuenta (no bloqueada);
@@ -38,6 +44,19 @@ service cloud.firestore {
     function texto(k, max) { return nuevo()[k] is string && nuevo()[k].size() <= max; }
     // Campo de texto opcional de, como mucho, max caracteres.
     function textoOpc(k, max) { return nuevo().get(k, '') is string && nuevo().get(k, '').size() <= max; }
+    // Reclamar una insignia automática: añade sólo «reclamada» a su mapa de insignias, con la fecha del servidor,
+    // y la definición dice que es automática, que está activa y que el campo ya llega al umbral.
+    function reclamaInsignia() {
+      let id = nuevo().reclamada;
+      let ant = viejo().get('insignias', {});
+      let def = get(/databases/$(database)/documents/insignias/$(id)).data;
+      return id is string && nuevo().insignias is map
+        && nuevo().insignias.diff(ant).affectedKeys() == [id].toSet()
+        && !(id in ant)
+        && nuevo().insignias[id] == { 'f': request.time, 'n': 1 }
+        && def.tipo == 'auto' && def.activa == true
+        && viejo().get(def.campo, 0) >= def.umbral;
+    }
     function bloqueada(uid) {
       return exists(/databases/$(database)/documents/usuarios/$(uid))
         && get(/databases/$(database)/documents/usuarios/$(uid)).data.get('bloqueado', false) == true;
@@ -62,12 +81,51 @@ service cloud.firestore {
         && delta() <= 25 + (request.time - viejo().ultimo).seconds() * 4
         && unaAsignatura()
         && cambio(semana()) == delta();
-      // Un administrador, desde el panel: corregir puntos (nunca negativos) y bloquear o desbloquear.
+      // El dueño: reclamar una insignia automática que ya se ha ganado.
+      allow update: if esSuyo(uid)
+        && viejo().get('bloqueado', false) != true
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['insignias', 'reclamada'])
+        && reclamaInsignia();
+      // El dueño: elegir las insignias destacadas de su vitrina (sólo de las que tiene).
+      allow update: if esSuyo(uid)
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['vitrina'])
+        && nuevo().vitrina is list && nuevo().vitrina.size() <= 6
+        && viejo().get('insignias', {}).keys().hasAll(nuevo().vitrina);
+      // Un administrador, desde el panel: corregir puntos (nunca negativos), bloquear o desbloquear y dar, quitar
+      // o cambiar insignias (y quitarlas de la vitrina).
       allow update: if esAdmin()
-        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'gohp', 'bloqueado', semana()])
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'gohp', 'bloqueado', semana(), 'insignias', 'vitrina'])
         && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural('gohp') && natural(semana())
-        && nuevo().get('bloqueado', false) is bool;
+        && nuevo().get('bloqueado', false) is bool
+        && nuevo().get('insignias', {}) is map
+        && nuevo().get('vitrina', []) is list && nuevo().get('vitrina', []).size() <= 6;
       allow delete: if esSuyo(uid);
+    }
+
+    match /insignias/{id} {
+      allow read: if true;
+      allow create, update: if esAdmin()
+        && id.matches('^[a-z][a-z0-9_]{1,39}$')
+        && nuevo().keys().hasOnly(['nombre', 'desc', 'icono', 'forma', 'color', 'rareza', 'tipo', 'campo', 'umbral', 'orden', 'activa', 'actualizado', 'por'])
+        && texto('nombre', 40) && nuevo().nombre.size() >= 2 && textoOpc('desc', 200) && texto('icono', 16)
+        && nuevo().forma in ['escudo', 'hexagono', 'circulo', 'estrella', 'medalla', 'rombo']
+        && nuevo().color in ['bronce', 'plata', 'oro', 'esmeralda', 'zafiro', 'rubi', 'amatista', 'noche', 'arcoiris']
+        && nuevo().rareza in ['comun', 'rara', 'epica', 'legendaria']
+        && nuevo().activa is bool && natural('orden')
+        && (nuevo().tipo == 'manual'
+            || (nuevo().tipo == 'auto' && nuevo().campo in ['puntos', 'tests', 'fli', 'fc', 'ip', 'gohp']
+                && nuevo().umbral is int && nuevo().umbral >= 1))
+        && nuevo().actualizado == request.time && texto('por', 40);
+      allow delete: if esAdmin();
+    }
+
+    match /retos/{semana} {
+      allow read: if true;
+      allow create: if esAdmin()
+        && semana.matches('^w[0-9]{1,6}$')
+        && nuevo().keys().hasOnly(['ganadores', 'cerrado', 'por'])
+        && texto('ganadores', 2000) && nuevo().cerrado == request.time && texto('por', 40);
+      allow delete: if esAdmin();
     }
 
     match /progreso/{uid} {

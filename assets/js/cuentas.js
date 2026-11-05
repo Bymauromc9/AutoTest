@@ -101,14 +101,29 @@
   function guardarSesion(d) { App.session("app-idt", { r: d.refreshToken, t: d.idToken, uid: d.localId, adm: claimsDe(d.idToken).admin === true, exp: Date.now() + (Number(d.expiresIn) || 3600) * 1000 }); }
 
   /* Firestore: valores ↔ JS */
-  const val = (x) => typeof x === "number" ? { integerValue: String(Math.round(x)) } : typeof x === "boolean" ? { booleanValue: x } : { stringValue: String(x) };
+  function val(x) {
+    if (x === null || x === undefined) return { nullValue: null };
+    if (typeof x === "number") return { integerValue: String(Math.round(x)) };
+    if (typeof x === "boolean") return { booleanValue: x };
+    if (x instanceof Date) return { timestampValue: x.toISOString() };
+    if (Array.isArray(x)) return { arrayValue: { values: x.map(val) } };
+    if (typeof x === "object") { const fields = {}; Object.keys(x).forEach((k) => { fields[k] = val(x[k]); }); return { mapValue: { fields } }; }
+    return { stringValue: String(x) };
+  }
+  function valorDe(v) {
+    if (!v) return null;
+    if ("integerValue" in v) return Number(v.integerValue);
+    if ("doubleValue" in v) return Number(v.doubleValue);
+    if ("stringValue" in v) return v.stringValue;
+    if ("booleanValue" in v) return v.booleanValue;
+    if ("timestampValue" in v) return v.timestampValue;
+    if ("mapValue" in v) return leer(v.mapValue);
+    if ("arrayValue" in v) return ((v.arrayValue && v.arrayValue.values) || []).map(valorDe);
+    return null;
+  }
   function leer(doc) {
     const o = {}, f = (doc && doc.fields) || {};
-    for (const k in f) {
-      const v = f[k];
-      o[k] = "integerValue" in v ? Number(v.integerValue) : "doubleValue" in v ? Number(v.doubleValue) : "stringValue" in v ? v.stringValue
-        : "booleanValue" in v ? v.booleanValue : "timestampValue" in v ? v.timestampValue : null;
-    }
+    for (const k in f) o[k] = valorDe(f[k]);
     return o;
   }
   const cab = (s) => s ? { Authorization: "Bearer " + s.t } : {};
@@ -374,6 +389,7 @@
           quitar();
           cambiarCuenta(c.id, { puntos: r.puntos, tests: r.tests, posicion: r.posicion });
           if (mia && r.sumados) toast("+" + fmt(r.sumados) + " puntos", "Llevas " + fmt(r.puntos) + (r.posicion ? " · puesto " + r.posicion + " del ranking" : ""), { texto: "Ranking", href: App.ROOT + "ranking.html" });
+          if (mia && window.Insignias) window.Insignias.revisar().catch(() => {});      // ¿alguna insignia nueva?
         } catch (e) {
           if (e.status === 401) { caducada(c.id); continue; }
           if (e.status === 400) { quitar(); continue; }
@@ -400,10 +416,10 @@
     let pos = 0, prev = null;
     const filas = (Array.isArray(d) ? d : []).filter((x) => x.document).map((x) => {
       const u = leer(x.document), uid = x.document.name.split("/").pop();
-      return { uid, nombre: u.nombre || "?", puntos: Number(u[campo] || 0), tests: Number(u.tests || 0), bloqueado: u.bloqueado === true };
+      return { uid, nombre: u.nombre || "?", puntos: Number(u[campo] || 0), tests: Number(u.tests || 0), bloqueado: u.bloqueado === true, insignias: u.insignias || {}, vitrina: Array.isArray(u.vitrina) ? u.vitrina : [] };
     }).filter((f) => f.puntos > 0 && !f.bloqueado).map((f, i) => {
       if (f.puntos !== prev) { pos = i + 1; prev = f.puntos; }   // empates: misma posición
-      return { pos, nombre: f.nombre, puntos: f.puntos, tests: f.tests, yo: Boolean(s && s.uid === f.uid) };
+      return { pos, uid: f.uid, nombre: f.nombre, puntos: f.puntos, tests: f.tests, insignias: f.insignias, vitrina: f.vitrina, yo: Boolean(s && s.uid === f.uid) };
     });
     let yo = null;
     if (s) {
@@ -519,8 +535,44 @@
   }
   const datos = Object.freeze({ sesion: sesionActiva, consultar, leer: leerDoc, escribir, ruta: (r) => DOC + r, valor: val, semana, nuevoId });
 
+  /* ---------------- Perfiles públicos e insignias (lo lee cualquiera; ver firestore.rules) ---------------- */
+  /** Perfil público de una cuenta por su uid o por su nombre de usuario: { uid, nombre, puntos, tests, … } o null. */
+  async function perfil(q) {
+    if (q.uid) { const u = await docGet("usuarios/" + encodeURIComponent(q.uid)); return u ? Object.assign({ uid: q.uid }, u) : null; }
+    const d = await pedir(DB + ":runQuery", json({ structuredQuery: { from: [{ collectionId: "usuarios" }],
+      where: { fieldFilter: { field: { fieldPath: "id" }, op: "EQUAL", value: val(correoDe(q.nombre || "")) } }, limit: 1 } }));
+    const x = (Array.isArray(d) ? d : []).find((y) => y.document);
+    return x ? Object.assign({ uid: x.document.name.split("/").pop() }, leer(x.document)) : null;
+  }
+  /** Catálogo de insignias (insignias/<id>), ordenado. */
+  async function catalogo() {
+    const d = await pedir(DB + ":runQuery", json({ structuredQuery: { from: [{ collectionId: "insignias" }] } }));
+    return (Array.isArray(d) ? d : []).filter((x) => x.document).map((x) => Object.assign({ id: x.document.name.split("/").pop() }, leer(x.document)))
+      .sort((a, b) => (a.orden || 0) - (b.orden || 0) || String(a.nombre).localeCompare(String(b.nombre)));
+  }
+  /** Retos semanales cerrados (retos/<semana>), del más reciente al más antiguo. */
+  async function retos(n) {
+    const d = await pedir(DB + ":runQuery", json({ structuredQuery: { from: [{ collectionId: "retos" }], orderBy: [{ field: { fieldPath: "cerrado" }, direction: "DESCENDING" }], limit: n || 4 } }));
+    return (Array.isArray(d) ? d : []).filter((x) => x.document).map((x) => Object.assign({ id: x.document.name.split("/").pop() }, leer(x.document)));
+  }
+  /** Para insignias.js: reclamar una insignia automática (una por escritura; las reglas comprueban que te la has ganado). */
+  async function reclamarInsignia(id) {
+    const s = await sesionActiva();
+    return commit([{ update: { name: DOC + "usuarios/" + s.uid, fields: { insignias: { mapValue: { fields: { [id]: { mapValue: { fields: { n: val(1) } } } } } }, reclamada: val(id) } },
+      updateMask: { fieldPaths: ["insignias." + id, "reclamada"] },
+      updateTransforms: [{ fieldPath: "insignias." + id + ".f", setToServerValue: "REQUEST_TIME" }], currentDocument: { exists: true } }], s);
+  }
+  /** Elige las insignias destacadas de tu vitrina (hasta 6, de las que tienes). */
+  async function guardarVitrina(ids) {
+    const s = await sesionActiva();
+    return commit([{ update: { name: DOC + "usuarios/" + s.uid, fields: { vitrina: val(ids.slice(0, 6)) } }, updateMask: { fieldPaths: ["vitrina"] }, currentDocument: { exists: true } }], s);
+  }
+  /** uid de la cuenta activa (o null). */
+  async function miUid() { try { return (await sesionActiva()).uid; } catch (e) { return null; } }
+
   window.Cuentas = Object.freeze({ servidor, lista, actual, progresoSuelto, registrar, entrar, elegir, crearLocal, salir, olvidar, enviar, sincronizar,
-    ranking: (t) => fetchRanking(t, (actual() || {}).token), yo, toast, idDe, puntosDe, fmt, esAdmin, cargarConfig, limpiarConfig, datos });
+    ranking: (t) => fetchRanking(t, (actual() || {}).token), yo, toast, idDe, puntosDe, fmt, esAdmin, cargarConfig, limpiarConfig, datos,
+    perfil, catalogo, retos, reclamarInsignia, guardarVitrina, miUid, posicion: (campo, pts) => posicion(campo, pts).catch(() => null) });
 
   /* ---------------- En cada página ---------------- */
   function iniciar() {
