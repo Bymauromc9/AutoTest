@@ -1,0 +1,169 @@
+<!--{
+ "salida": "amd/practicas/p7.html",
+ "titulo": "Práctica 7 · Geometría en 3D",
+ "descripcion": "Práctica 7 de AMD con SageMath: rectas y planos en paramétricas e implícitas, bases ortonormales adaptadas, posiciones relativas, interpolación lineal, distancias, raycasting y la cámara pinhole.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 7 · Geometría en 3D",
+ "ops": "P + t·u",
+ "lead": "Rectas y planos del espacio (que ya no tienen por qué pasar por el origen): sus ecuaciones, bases ortonormales adaptadas a ellos, cómo se cortan y tres aplicaciones de videojuegos y gráficos: trayectorias con interpolación lineal, distancias a un suelo inclinado, raycasting y la proyección de una cámara.",
+ "marca": "AMD · Práctica 7",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p7-hechos", "data-visto-key": "amd-p7-visto", "data-sage-key": "amd-p7", "data-sage-ficheros": "/amd/sage/geometria.py", "data-sage-prep": "from geometria import *"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 7, explicados y completados (apartados propuestos resueltos y corregida una errata en las medidas del cubo del ejercicio 7). Los ejercicios 5 a 7 son opcionales."
+}-->
+
+<tema id="p7-0" n="0" t="Rectas y planos afines" eyebrow="Práctica 7" lede="Lo que cambia respecto a los subespacios: ahora hay un punto de paso.">
+<ap id="p7-0-1" n="0.1" t="Ecuaciones">
+<ul><li><b>Recta</b> por P con dirección u: paramétricas (x, y, z) = P + t·u; implícitas: dos ecuaciones (se despeja t en cada coordenada y se igualan, o se usan dos vectores perpendiculares a u).</li>
+<li><b>Plano</b> por P con direcciones u, v: paramétricas P + s·u + t·v; implícita: n·((x, y, z) − P) = 0 con n = u × v la normal. Equivale a det(X − P, u, v) = 0.</li>
+<li>Ahora las implícitas tienen término independiente (si no pasan por el origen no son subespacios).</li></ul>
+<box k="tip" t="Órdenes y geometria.py">
+<p><code>u.cross_product(v)</code>, <code>u.normalized()</code>, <code>solve(…)</code>. Dibujos: <code>puntos([P, Q], g=30)</code>, <code>vectores([u], inicio=[P])</code>, <code>recta(u, C=P)</code>, <code>recta(ec=['…', '…'])</code>, <code>plano([u, v], C=P)</code>, <code>plano(ec='…')</code>, <code>segmentos([A, B])</code>, <code>ejes()</code>.</p>
+</box>
+</ap>
+</tema>
+
+<tema id="p7-1" n="1" t="Ejercicio 1 · Ecuaciones de rectas y planos" eyebrow="Ejercicio 1" lede="Paramétricas e implícitas del objeto indicado, con dibujo.">
+<ej id="p7-1a" n="Ejercicio 1 (a)" t="recta por dos puntos">
+<p>La recta que pasa por P = (1, 2, 3) y Q = (4, −1, 2).</p>
+<sol>
+<p>Dirección u = Q − P = (3, −3, −1). Paramétricas: x = 1 + 3t, y = 2 − 3t, z = 3 − t. Despejando t: (x − 1)/3 = (y − 2)/(−3) = (z − 3)/(−1), de donde:</p>
+<res>(x, y, z) = (1, 2, 3) + t(3, −3, −1);  implícitas x + y = 3, x + 3z = 10</res>
+<sage t="Ejercicio 1 (a)">P, Q = vector([1, 2, 3]), vector([4, -1, 2]); u = Q - P
+var('t'); show(P + t*u)
+puntos([P, Q], g=30) + vectores([u], inicio=[P], color=azul) + recta(u, C=P, color=rojo, l=10)</sage>
+<p>(El cuaderno escribe las implícitas con fracciones, ⅓x + ⅓y = 1 y ⅓x + z = 10/3: son las mismas multiplicadas por 3.)</p>
+</sol></ej>
+<ej id="p7-1b" n="Ejercicio 1 (b)" t="plano por tres puntos">
+<p>El plano que pasa por P = (1, 0, 0), Q = (0, 1, 0) y R = (0, 0, 1). (Propuesto: sus paramétricas.)</p>
+<sol>
+<p>Direcciones Q − P = (−1, 1, 0) y R − P = (−1, 0, 1). Implícita: det(X − P, Q − P, R − P) = 0:</p>
+<md><m det>x − 1, y, z; −1, 1, 0; −1, 0, 1</m> = (x − 1) + y + z = 0</md>
+<res>Implícita x + y + z = 1;  paramétricas (x, y, z) = (1, 0, 0) + s(−1, 1, 0) + t(−1, 0, 1) = (1 − s − t, s, t)</res>
+<sage t="Ejercicio 1 (b)">var('x y z')
+P, Q, R = vector([1, 0, 0]), vector([0, 1, 0]), vector([0, 0, 1])
+show(matrix(SR, [[x - 1, y, z], list(Q - P), list(R - P)]).det())
+plano([Q - P, R - P], C=P) + puntos([P, Q, R], g=30) + ejes()</sage>
+</sol></ej>
+<ej id="p7-1c" n="Ejercicio 1 (c)" t="recta perpendicular a dos vectores">
+<p>La recta que pasa por (1, 0, 1) y es perpendicular a (1, 0, 1) y (1, 1, 2). (Propuesto: sus implícitas.)</p>
+<sol>
+<p>La dirección es perpendicular a los dos: w = (1, 0, 1) × (1, 1, 2) = (−1, −1, 1). Paramétricas (1 − t, −t, 1 + t). Eliminando t: x − y = 1 y y + z = 1.</p>
+<res>(x, y, z) = (1, 0, 1) + t(−1, −1, 1);  implícitas x − y = 1, y + z = 1</res>
+<sage t="Ejercicio 1 (c)">P = vector([1, 0, 1]); w = vector([1, 0, 1]).cross_product(vector([1, 1, 2]))
+var('t'); print(w, P + t*w)
+recta(w, C=P) + puntos([P], g=30) + vectores([w], inicio=[P])</sage>
+</sol></ej>
+<ej id="p7-1d" n="Ejercicio 1 (d)" t="plano perpendicular a un vector">
+<p>El plano que pasa por (1, 0, −1) y es perpendicular a (1, −1, 1). (Propuesto: sus paramétricas.)</p>
+<sol>
+<p>La normal es n = (1, −1, 1): (x − 1) − y + (z + 1) = 0, o sea x − y + z = 0 (pasa por el origen). Para las paramétricas, dos vectores perpendiculares a n e independientes: (1, 1, 0) y (0, 1, 1).</p>
+<res>x − y + z = 0;  paramétricas (1, 0, −1) + s(1, 1, 0) + t(0, 1, 1)</res>
+<sage t="Ejercicio 1 (d)">var('x y z'); P = vector([1, 0, -1]); n = vector([1, -1, 1])
+show(n * (vector([x, y, z]) - P))
+plano(ec='x-y+z=0') + puntos([P], g=30) + vectores([n], inicio=[P]) + ejes()</sage>
+</sol></ej>
+</tema>
+
+<tema id="p7-2" n="2" t="Ejercicio 2 · Bases adaptadas" eyebrow="Ejercicio 2" lede="Para cada recta y plano del ejercicio 1, una base ortonormal de ℝ³ cuyos primeros vectores sean los directores.">
+<ej id="p7-2" n="Ejercicio 2 (a–d)" t="bases ortonormales">
+<p>Construye una base ortonormal de ℝ³ cuyos primeros vectores sean los vectores directores de cada recta o plano del ejercicio 1.</p>
+<sol>
+<p>Recta: u (dirección), un v ⟂ u elegido a ojo y w = u × v. Plano: dos direcciones ortogonalizadas (la segunda, n × u) y la normal. Después se normaliza.</p>
+<ul><li><b>a)</b> u = (3, −3, −1), v = (3, 3, 0) (u·v = 0), w = u × v = (3, −3, 18) ∼ (1, −1, 6): {(3, −3, −1)/√19, (1, 1, 0)/√2, (1, −1, 6)/√38}.</li>
+<li><b>b)</b> u = (−1, 1, 0), normal n = (1, 1, 1), v = n × u ∼ (−1, −1, 2): {(−1, 1, 0)/√2, (−1, −1, 2)/√6, (1, 1, 1)/√3}.</li>
+<li><b>c)</b> (propuesto) u = (−1, −1, 1), v = (1, −1, 0), w = u × v = (1, 1, 2): {(−1, −1, 1)/√3, (1, −1, 0)/√2, (1, 1, 2)/√6}.</li>
+<li><b>d)</b> (propuesto) direcciones (1, 1, 0) y n × (1, 1, 0) = (−1, 1, 2), y la normal: {(1, 1, 0)/√2, (−1, 1, 2)/√6, (1, −1, 1)/√3}.</li></ul>
+<sage t="Ejercicio 2: comprobación">bases = {"a": [(3, -3, -1), (3, 3, 0)], "b": [(-1, 1, 0), (-1, -1, 2)], "c": [(-1, -1, 1), (1, -1, 0)], "d": [(1, 1, 0), (-1, 1, 2)]}
+for k, (u, v) in bases.items():
+    u, v = vector(u), vector(v); w = u.cross_product(v)
+    B = column_matrix([u.normalized(), v.normalized(), w.normalized()])
+    print(k, w, B.transpose() * B == identity_matrix(3))</sage>
+</sol></ej>
+</tema>
+
+<tema id="p7-3" n="3" t="Ejercicio 3 · Posiciones relativas" eyebrow="Ejercicio 3" lede="Cómo están colocados dos objetos y, si se cortan, su intersección.">
+<ej id="p7-3a" n="Ejercicio 3 (a)" t="dos rectas">
+<p>r₁ por P = (1, 2, 1) con dirección u = (1, 0, 2), y r₂ = {x + 2y − z = 1, 3x − y + 2z = −2}.</p>
+<sol>
+<p>Dirección de r₂: (1, 2, −1) × (3, −1, 2) = (3, −5, −7), no proporcional a u: no son paralelas. ¿Se cortan? Sustituimos r₁ = (1 + t, 2, 1 + 2t) en r₂: la primera ecuación da t = 3 y la segunda t = −5/7. Distintos: no hay punto común.</p>
+<res>Las rectas se cruzan (ni paralelas ni secantes)</res>
+<sage t="Ejercicio 3 (a)">var('t'); x, y, z = 1 + t, 2, 1 + 2*t
+print(solve(x + 2*y - z - 1 == 0, t), solve(3*x - y + 2*z + 2 == 0, t))
+recta(vector([1, 0, 2]), C=vector([1, 2, 1])) + recta(ec=['x+2*y-z=1', '3*x-y+2*z=-2'], color=rojo)</sage>
+</sol></ej>
+<ej id="p7-3b" n="Ejercicio 3 (b)" t="dos planos">
+<p>Π₁ por P = (1, 0, −1) con direcciones (1, 0, 2) y (0, 1, −2), y Π₂ = {x − 2y + z = 1}.</p>
+<sol>
+<p>Normal de Π₁: (1, 0, 2) × (0, 1, −2) = (−2, 2, 1), no proporcional a (1, −2, 1): se cortan en una recta. Π₁: −2(x − 1) + 2y + (z + 1) = 0 ⇒ −2x + 2y + z = −3. Resolviendo el sistema con z = t:</p>
+<res>Secantes; intersección {x − 2y + z = 1, −2x + 2y + z = −3} = (2, 1/2, 0) + t(2, 3/2, 1)</res>
+<sage t="Ejercicio 3 (b)">var('x y z')
+print(solve([-2*x + 2*y + z == -3, x - 2*y + z == 1], x, y))
+plano([vector([1, 0, 2]), vector([0, 1, -2])], C=vector([1, 0, -1])) + plano(ec='x-2*y+z=1', color=azul) + recta(ec=['x-2*y+z=1', '-2*x+2*y+z=-3'], l=10)</sage>
+</sol></ej>
+<ej id="p7-3c" n="Ejercicio 3 (c)" t="propuesto: recta y plano">
+<p>r por P = (1, 0, −1) con dirección u = (1, 0, 2) y Π = {x − 2y + z = 1}.</p>
+<sol>
+<p>u·n = (1, 0, 2)·(1, −2, 1) = 3 ≠ 0: la recta no es paralela al plano, lo corta en un punto. Sustituyendo (1 + t, 0, −1 + 2t): 1 + t − 0 − 1 + 2t = 1 ⇒ t = 1/3.</p>
+<res>Secantes en el punto (4/3, 0, −1/3)</res>
+<sage t="Ejercicio 3 (c)">var('t'); r = vector([1, 0, -1]) + t * vector([1, 0, 2])
+s = solve(r[0] - 2*r[1] + r[2] == 1, t); print(s, r.subs(s[0]))
+recta(vector([1, 0, 2]), C=vector([1, 0, -1])) + plano(ec='x-2*y+z=1', color=azul) + puntos([r.subs(s[0])], g=30, color=rojo)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p7-4" n="4" t="Ejercicio 4 · Interpolación lineal (Lerp)" eyebrow="Ejercicio 4" lede="Un misil va de A = (1, 2, 1) a B = (7, 10, 5).">
+<ej id="p7-4" n="Ejercicio 4 (a, b, c)" t="trayectorias y degradados">
+<p>a) Fórmula de la trayectoria de A a B (interpolación lineal). b) Posición en t = 0; 0,1; …; 1. c) Lo mismo entre los colores verde (0, 1, 0) y azul (0, 0, 1).</p>
+<sol>
+<p>a) <b>Lerp(t) = (1 − t)·A + t·B = A + t(B − A)</b> = (1 + 6t, 2 + 8t, 1 + 4t), con t ∈ [0, 1]: t = 0 es A y t = 1 es B. Es la recta AB recorrida a velocidad constante.</p>
+<p>b) t = 0,1 → (8/5, 14/5, 7/5); t = 0,5 → (4, 6, 3) (el punto medio); t = 1 → (7, 10, 5).</p>
+<p>c) color(t) = (1 − t)(0, 1, 0) + t(0, 0, 1) = (0, 1 − t, t): un degradado de verde a azul. Así interpolan colores y posiciones los motores gráficos.</p>
+<sage t="Ejercicio 4">A, B = vector([1, 2, 1]), vector([7, 10, 5])
+def lerp(P, Q, t): return (1 - t) * P + t * Q
+print([lerp(A, B, j / 10) for j in range(11)])
+verde, azulc = vector([0, 1, 0]), vector([0, 0, 1])
+sum(polygon([(k/100, 0), (k/100 + 0.01, 0), (k/100 + 0.01, 1), (k/100, 1)], color=tuple(float(c) for c in lerp(verde, azulc, k/100))) for k in range(100)).show(axes=False)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p7-5" n="5" t="Ejercicios 5 a 7 · Aplicaciones" eyebrow="Opcionales" lede="Distancias a un plano, raycasting y la proyección de una cámara.">
+<ej id="p7-5" n="Ejercicio 5" t="dron sobre un suelo inclinado">
+<p>El suelo es Π = {2x − 3y + z = −4}. Un dron está en P₀ = (4, 4, 10) y se mueve en la dirección (0, 0, 1). a) Punto del suelo más cercano al dron en cada instante. b) Distancia mínima al suelo en cada instante.</p>
+<sol>
+<p>Posición: P(t) = (4, 4, 10 + t). La proyección sobre Π resta la componente normal: Q(t) = P(t) − <fr>2x − 3y + z + 4|14</fr>(2, −3, 1), y como 2·4 − 3·4 + (10 + t) + 4 = 10 + t:</p>
+<res>Q(t) = (4, 4, 10 + t) − <fr>10 + t|14</fr>(2, −3, 1) = (18/7 − t/7, 43/7 + 3t/14, 65/7 + 13t/14);  d(t) = |10 + t| / √14</res>
+<sage t="Ejercicio 5">var('t'); P = vector([4, 4, 10 + t]); n = vector([2, -3, 1])
+num = n * P + 4
+show(P - num / (n * n) * n, abs(num) / n.norm())</sage>
+</sol></ej>
+<ej id="p7-6" n="Ejercicio 6" t="raycasting">
+<p>a) Un jugador en P = (1, 1, 0) dispara hacia Q = (2, 1, 1). ¿Dónde impacta en el escudo Π = {2x − y + z = 5}? b) El escudo es el triángulo de vértices V₁ = (5/2, 0, 0), V₂ = (0, −5, 0) y V₃ = (0, 0, 5): ¿ha acertado? (Un punto V del plano está dentro si V₁V = a·V₁V₂ + b·V₁V₃ con a, b ≥ 0 y a + b ≤ 1.)</p>
+<sol>
+<p>a) Rayo r(t) = P + t(Q − P) = (1 + t, 1, t); en el plano: 2(1 + t) − 1 + t = 5 ⇒ t = 4/3, impacto I = (7/3, 1, 4/3).</p>
+<p>b) Resolviendo I − V₁ = a(V₂ − V₁) + b(V₃ − V₁) sale a = −1/5, b = 4/15. Como a &lt; 0, el impacto cae <b>fuera</b> del triángulo.</p>
+<res>Impacto en (7/3, 1, 4/3), fuera del escudo: ha fallado</res>
+<sage t="Ejercicio 6">var('t'); P, Q = vector([1, 1, 0]), vector([2, 1, 1]); r = P + t * (Q - P)
+s = solve(2*r[0] - r[1] + r[2] == 5, t); I = r.subs(s[0]); print(I)
+V1, V2, V3 = vector([5/2, 0, 0]), vector([0, -5, 0]), vector([0, 0, 5])
+print(column_matrix([V2 - V1, V3 - V1, I - V1]).rref())</sage>
+</sol></ej>
+<ej id="p7-7" n="Ejercicio 7" t="la cámara pinhole">
+<p>El ojo está en O = (0, 0, 0) y la pantalla es el plano z = 2. a) ¿Dónde se dibuja el centro C = (2, 2, 4) de un cubo? b) El cubo tiene lados paralelos a los ejes de largo 3 (x), ancho 2 (y) y alto 1 (z): calcula sus vértices, dibújalo en 3D y su proyección en la pantalla.</p>
+<sol>
+<p>El rayo de O a un punto (x, y, z) es t(x, y, z) y corta z = 2 en t = 2/z: <b>(x, y, z) se dibuja en (2/z)(x, y)</b>. a) C → (1/2)(2, 2) = (1, 1).</p>
+<p>b) Vértices: C ± (3/2, 1, 1/2) en todas las combinaciones de signos: x ∈ {1/2, 7/2}, y ∈ {1, 3}, z ∈ {7/2, 9/2}. La cara cercana (z = 7/2) se proyecta con factor 4/7 y la lejana (z = 9/2) con 4/9: la de detrás sale más pequeña, que es la <b>perspectiva</b>.</p>
+<box k="warn" t="Errata en la resolución oficial">
+<p>El cuaderno divide dos veces las medidas entre 2 y dibuja un cubo de 1,5 × 1 × 0,5. Con las medidas del enunciado los vértices son los de arriba.</p>
+</box>
+<sage t="Ejercicio 7">C = vector([2, 2, 4])
+V = [C + vector([sx * 3/2, sy * 1, sz * 1/2]) for sx in (-1, 1) for sy in (-1, 1) for sz in (-1, 1)]
+proy = [(2 / v[2]) * vector([v[0], v[1]]) for v in V]
+print(V); print(proy)
+aristas = [(i, j) for i in range(8) for j in range(i + 1, 8) if sum(V[i][k] != V[j][k] for k in range(3)) == 1]
+show(sum(line3d([V[i], V[j]]) for i, j in aristas) + sum(line3d([(0, 0, 0), v], color='green') for v in V))
+show(sum(line([proy[i], proy[j]]) for i, j in aristas), aspect_ratio=1)</sage>
+</sol></ej>
+</tema>

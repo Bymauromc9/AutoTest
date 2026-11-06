@@ -174,7 +174,8 @@
       fli: "Fundamentos Lógicos de la Informática (lógica proposicional L0 y de predicados L1)",
       fc: "Fundamentos de Computadores (representación de la información, circuitos combinacionales, Linux, ensamblador x86-64 y redes)",
       ip: "Introducción a la Programación (notación algorítmica SP de clase y C++ con Geany y g++)",
-      gohp: "Gestión de Organizaciones y Habilidades Profesionales (la empresa y su entorno, teorías de la administración, planificación estratégica, organización, producción y punto muerto, marketing, inversión y financiación con VAN y TIR, dirección y motivación, y recursos humanos)"
+      gohp: "Gestión de Organizaciones y Habilidades Profesionales (la empresa y su entorno, teorías de la administración, planificación estratégica, organización, producción y punto muerto, marketing, inversión y financiación con VAN y TIR, dirección y motivación, y recursos humanos)",
+      amd: "Álgebra y Matemática Discreta (espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y SVD, aritmética modular y prácticas con SageMath)"
     };
     const recorta = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n) + "\n[…recortado]" : t; };
     const asig = asignaturas[ctx.asignatura] || "las asignaturas de 1.º del Grado en Ingeniería Informática";

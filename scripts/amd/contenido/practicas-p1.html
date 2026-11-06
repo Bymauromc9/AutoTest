@@ -1,0 +1,241 @@
+<!--{
+ "salida": "amd/practicas/p1.html",
+ "titulo": "Práctica 1 · Sistemas de ecuaciones",
+ "descripcion": "Práctica 1 de AMD con SageMath: matrices, matriz ampliada, rref y clasificación de sistemas de ecuaciones lineales, resuelta y explicada, con celdas ejecutables.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 1 · Sistemas de ecuaciones",
+ "ops": "(A | b)",
+ "lead": "Cómo se escriben matrices en SageMath, cómo se forma la matriz ampliada y cómo se clasifican y resuelven sistemas con <code>rref()</code>. Cada ejercicio trae el código de la resolución, que puedes <b>ejecutar aquí mismo</b> con el botón (las celdas de la página comparten sesión, como en Jupyter), y una explicación de lo que hace y de por qué. Los apartados que en el cuaderno oficial quedan propuestos también están resueltos.",
+ "marca": "AMD · Práctica 1",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p1-hechos", "data-visto-key": "amd-p1-visto", "data-sage-key": "amd-p1", "data-sage-datos": "amd/practicas/datos/p1/", "data-sage-ficheros": "matrices.sobj,matricesSistemas.sobj,independientesSistemas.sobj"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 1 (cuadernos de Jupyter de la asignatura), explicados y completados."
+}-->
+
+<tema id="p1-0" n="0" t="Antes de empezar" eyebrow="Práctica 1" lede="Qué se repasa en esta práctica y las órdenes de SageMath que se usan.">
+<ap id="p1-0-1" n="0.1" t="Sistemas lineales y matriz ampliada">
+<p>Un sistema de m ecuaciones con n incógnitas se escribe <b>A·x = b</b>, con A (m × n) la matriz de coeficientes y b la columna de términos independientes. Para resolverlo por Gauss se escalona la <b>matriz ampliada</b> (A | b). Hay tres posibilidades:</p>
+<ul><li><b>Incompatible</b> (sin solución): la columna b es columna pivote, aparece una fila (0 ⋯ 0 | 1).</li>
+<li><b>Compatible determinado</b> (una solución): todas las columnas de A son pivote.</li>
+<li><b>Compatible indeterminado</b> (infinitas): alguna columna de A no tiene pivote; esas variables son parámetros.</li></ul>
+<box k="tip" t="Órdenes de esta práctica">
+<ul><li><code>matrix([[fila1], [fila2], …])</code> y <code>column_matrix([[col1], [col2], …])</code>: introducir matrices por filas o por columnas. Con <code>matrix(QQ, …)</code> se trabaja con fracciones exactas.</li>
+<li><code>A.augment(b, subdivide=True)</code>: la ampliada (A | b) con la barra dibujada.</li>
+<li><code>M.rref()</code>: la forma escalonada <b>reducida</b> (pivotes 1 y ceros encima y debajo). <code>M.echelon_form()</code> hace lo mismo sobre ℚ.</li>
+<li><code>A*B</code>, <code>A+B</code>: producto y suma. <code>show(…)</code>: muestra bonito. <code>load('fichero.sobj')</code>: lee datos guardados.</li>
+<li><code>M[:, j]</code>: la columna j (empezando en 0) como matriz; <code>M[[0,1,2], 3]</code>: filas 0 a 2 de la columna 3.</li></ul>
+</box>
+<box k="warn" t="Cómo funcionan las celdas de esta página">
+<p>El botón <b>Ejecutar en SageMath</b> manda el código a los servidores públicos de SageMath (SageMathCell): no hay que instalar nada. La primera vez descarga los ficheros <code>.sobj</code> de la práctica. Todas las celdas de la página comparten la misma sesión: si una celda usa una variable de otra anterior, ejecuta antes esa. Puedes editar el código y volver a ejecutarlo.</p>
+</box>
+</ap>
+</tema>
+
+<tema id="p1-1" n="1" t="Ejercicio 1 · Introducir matrices" eyebrow="Ejercicio 1" lede="Escribir matrices por filas, por columnas y cargarlas de un fichero, y operar con ellas.">
+<ej id="p1-1ad" n="Ejercicio 1 (a–d)" t="Introducir A, B, C y D">
+<p>Introduce en SageMath A = <m>1 1; 1 2</m>, B = <m>2 3 1; 1 2 1</m>, C = <m>2 3; 1 2; 2 1</m> y D = <m>2 3 2 1; 1 2 1 0; 1 0 1 2</m> (C y D están en el fichero <code>matrices.sobj</code>).</p>
+<sol>
+<p>A y B se escriben <b>por filas</b> con <code>matrix</code>. C se puede escribir por columnas con <code>column_matrix</code>: sus columnas son (2, 1, 2) y (3, 2, 1). C y D también se pueden <b>cargar</b> del fichero, que guarda una tupla con las dos matrices.</p>
+<sage t="Ejercicio 1 (a–d)">A = matrix([[1, 1], [1, 2]])          # por filas
+B = matrix([[2, 3, 1], [1, 2, 1]])
+C = column_matrix([[2, 1, 2], [3, 2, 1]])   # por columnas
+show("A =", A, "  B =", B, "  C =", C)
+M = load('matrices.sobj')             # tupla (C, D)
+C, D = M[0], M[1]
+show("Del fichero: C =", C, "  D =", D)</sage>
+<salida>A = [1 1]   B = [2 3 1]   C = [2 3]
+    [1 2]       [1 2 1]       [1 2]
+                              [2 1]
+Del fichero: C = [2 3]   D = [2 3 2 1]
+                 [1 2]       [1 2 1 0]
+                 [2 1]       [1 0 1 2]</salida>
+<box k="tip" t="Para recordar">
+<p>Los índices de SageMath empiezan en <b>0</b>: <code>M[0]</code> es el primer elemento de la tupla, <code>A[0, 0]</code> la esquina superior izquierda y <code>A.row(0)</code> la primera fila.</p>
+</box>
+</sol></ej>
+<ej id="p1-1e" n="Ejercicio 1 (e)" t="A + B·C">
+<p>Calcula A + B·C.</p>
+<sol>
+<p>B es 2 × 3 y C es 3 × 2, así que B·C es 2 × 2 y se puede sumar con A. A mano:</p>
+<md>B·C = <m>2 3 1; 1 2 1</m><m>2 3; 1 2; 2 1</m> = <m>4+3+2, 6+6+1; 2+2+2, 3+4+1</m> = <m>9 13; 6 8</m></md>
+<res>A + B·C = <m>10 14; 7 10</m></res>
+<sage t="Ejercicio 1 (e)">show("A + B·C =", A + B*C)</sage>
+<salida>A + B·C = [10 14]
+          [ 7 10]</salida>
+</sol></ej>
+</tema>
+
+<tema id="p1-2" n="2" t="Ejercicio 2 · Estudiar y resolver sistemas" eyebrow="Ejercicio 2" lede="Clasificar cada sistema con rref() y resolverlo: si es compatible determinado, comprobar la solución; si es indeterminado, dar tres soluciones y comprobarlas.">
+<ap id="p1-2-0" n="2.0" t="El método en SageMath">
+<ol><li>Se escriben A y b (o se cargan: <code>matricesSistemas.sobj</code> e <code>independientesSistemas.sobj</code> traen los ocho sistemas en orden).</li>
+<li>Se forma la ampliada <code>Ab = A.augment(b, subdivide=True)</code> y se reduce: <code>Ab.rref()</code>.</li>
+<li>Se lee el resultado: fila (0 ⋯ 0 | 1) ⇒ incompatible; pivote en cada columna de A ⇒ determinado (la última columna es la solución); si no, indeterminado.</li>
+<li>Se comprueba: <code>A*sol == b</code> debe dar <code>True</code>.</li></ol>
+<box k="warn" t="La trampa de la última columna">
+<p>Si hay más ecuaciones que incógnitas, la última columna de la reducida tiene filas de más (los ceros de las filas nulas). Para comprobar hay que quedarse sólo con las n primeras entradas: <code>reducida[[0,1,2], 3]</code>, no <code>reducida[:, 3]</code>; si no, <code>A*sol</code> da un error de tamaños.</p>
+</box>
+</ap>
+<ej id="p1-2a" n="Ejercicio 2 (a)" t="4 × 4, compatible determinado">
+<p><sys>x₁ − x₂ − 5x₃ − 5x₄ = 6; −x₁ − x₂ + 2x₃ + x₄ = 1; −x₂ − 2x₃ − 3x₄ = 5; x₄ = −2</sys></p>
+<sol>
+<sage t="Ejercicio 2 (a)">A = matrix([[1, -1, -5, -5], [-1, -1, 2, 1], [0, -1, -2, -3], [0, 0, 0, 1]])
+b = column_matrix([6, 1, 5, -2])
+Ab = A.augment(b, subdivide=True)
+show("(A|b) =", Ab, "  rref =", Ab.rref())
+print(A * column_matrix([0, -1, 1, -2]) == b)    # comprobación</sage>
+<salida>rref = [ 1  0  0  0| 0]
+       [ 0  1  0  0|-1]
+       [ 0  0  1  0| 1]
+       [ 0  0  0  1|-2]
+True</salida>
+<p>Las cuatro columnas de A tienen pivote y la columna b no: <b>compatible determinado</b>. La solución se lee en la última columna.</p>
+<res>x₁ = 0, x₂ = −1, x₃ = 1, x₄ = −2</res>
+</sol></ej>
+<ej id="p1-2b" n="Ejercicio 2 (b)" t="4 × 4 con fracciones">
+<p><sys>3x₂ + x₃ = 0; x₁ − x₂ + 3x₃ + 3x₄ = 3; 3x₂ − x₃ + 3x₄ = 4; 3x₁ + x₂ + x₃ + x₄ = 3</sys></p>
+<sol>
+<sage t="Ejercicio 2 (b)">A = matrix([[0, 3, 1, 0], [1, -1, 3, 3], [0, 3, -1, 3], [3, 1, 1, 1]])
+b = column_matrix([0, 3, 4, 3])
+reducida = A.augment(b, subdivide=True).rref()
+show(reducida)
+sol = reducida[:, 4]          # la última columna (aquí hay tantas filas como incógnitas)
+print(A * sol == b)</sage>
+<salida>[    1     0     0     0|23/33]
+[    0     1     0     0| 7/66]
+[    0     0     1     0|-7/22]
+[    0     0     0     1|37/33]
+True</salida>
+<p>Compatible determinado. SageMath trabaja con <b>fracciones exactas</b> cuando las entradas son enteras, así que la comprobación da exactamente <code>True</code>.</p>
+<res>x₁ = 23/33, x₂ = 7/66, x₃ = −7/22, x₄ = 37/33</res>
+</sol></ej>
+<ej id="p1-2c" n="Ejercicio 2 (c)" t="5 ecuaciones, 3 incógnitas">
+<p><sys>2x₁ − x₂ = 8; x₁ − x₃ = −3; x₂ = −5; x₁ = 2; x₃ = 8</sys></p>
+<sol>
+<sage t="Ejercicio 2 (c)">A = matrix([[2, -1, 0], [1, 0, -1], [0, 1, 0], [1, 0, 0], [0, 0, 1]])
+b = column_matrix([8, -3, -5, 2, 8])
+show(A.augment(b, subdivide=True).rref())
+print(A.rank(), A.augment(b).rank())</sage>
+<salida>[1 0 0|0]
+[0 1 0|0]
+[0 0 1|0]
+[0 0 0|1]
+[0 0 0|0]
+3 4</salida>
+<p>La cuarta fila dice 0 = 1: la columna de términos independientes es pivote, rg(A) = 3 &lt; 4 = rg(A | b).</p>
+<res>Incompatible. (Las tres últimas ecuaciones fijan x = (2, −5, 8), y entonces 2x₁ − x₂ = 9 ≠ 8.)</res>
+</sol></ej>
+<ej id="p1-2d" n="Ejercicio 2 (d)" t="dos ecuaciones contradictorias">
+<p><sys>x₁ + 3x₂ + 2x₃ = 0; −x₁ + x₂ + x₃ = 1; −x₁ + 3x₂ = 3; −x₁ + 3x₂ = 0</sys></p>
+<sol>
+<sage t="Ejercicio 2 (d)">A = matrix([[1, 3, 2], [-1, 1, 1], [-1, 3, 0], [-1, 3, 0]])
+b = column_matrix(QQ, [0, 1, 3, 0])
+show(A.augment(b, subdivide=True).rref())</sage>
+<salida>[1 0 0|0]
+[0 1 0|0]
+[0 0 1|0]
+[0 0 0|1]</salida>
+<p>Se ve sin calcular: las dos últimas ecuaciones tienen el mismo primer miembro, −x₁ + 3x₂, igualado a 3 y a 0. La reducida lo confirma con la fila 0 = 1.</p>
+<res>Incompatible</res>
+</sol></ej>
+<ej id="p1-2e" n="Ejercicio 2 (e)" t="5 ecuaciones, compatible determinado">
+<p><sys>−x₂ + 3x₃ = 3; x₁ − 2x₂ + 5x₃ = 3; x₁ − 3x₂ + 9x₃ = 7; x₁ − 2x₂ + 3x₃ = 1; 2x₁ − 3x₂ + 9x₃ = 5</sys></p>
+<sol>
+<sage t="Ejercicio 2 (e)">A = matrix(QQ, [[0, -1, 3], [1, -2, 5], [1, -3, 9], [1, -2, 3], [2, -3, 9]])
+b = column_matrix(QQ, [3, 3, 7, 1, 5])
+reducida = A.augment(b, subdivide=True).rref()
+show(reducida)
+sol = reducida[[0, 1, 2], 3]   # sólo las 3 primeras filas: hay 3 incógnitas
+print(A * sol == b)</sage>
+<salida>[ 1  0  0|-2]
+[ 0  1  0| 0]
+[ 0  0  1| 1]
+[ 0  0  0| 0]
+[ 0  0  0| 0]
+True</salida>
+<p>Aunque hay 5 ecuaciones, dos son combinación de las demás (filas de ceros completas): compatible determinado. Ojo al leer la solución: hay que coger sólo las 3 primeras filas de la última columna.</p>
+<res>x₁ = −2, x₂ = 0, x₃ = 1</res>
+</sol></ej>
+<ej id="p1-2f" n="Ejercicio 2 (f)" t="propuesto: 6 ecuaciones">
+<p><sys>3x₂ − x₃ = 4; −x₁ + x₂ = 4; 3x₁ + 3x₂ + 2x₃ = 3; x₁ − x₃ = 3; −x₁ − x₂ + x₃ = 2; 3x₁ − x₂ + x₃ = 1</sys></p>
+<sol>
+<p>Está propuesto en el cuaderno oficial. Con los datos del fichero (es el sexto sistema, índice 5):</p>
+<sage t="Ejercicio 2 (f)">A = load('matricesSistemas.sobj')[5]
+b = load('independientesSistemas.sobj')[5]
+show(A.augment(b, subdivide=True).rref())
+print(A.rank(), A.augment(b).rank())</sage>
+<salida>[1 0 0|0]
+[0 1 0|0]
+[0 0 1|0]
+[0 0 0|1]
+[0 0 0|0]
+[0 0 0|0]
+3 4</salida>
+<p>rg(A) = 3 pero rg(A | b) = 4: aparece 0 = 1.</p>
+<res>Incompatible</res>
+</sol></ej>
+<ej id="p1-2g" n="Ejercicio 2 (g)" t="compatible indeterminado">
+<p><sys>3x₁ + x₂ + 3x₃ + 5x₄ + 2x₅ = 3; 3x₃ + 3x₄ + x₅ = 1; 4x₅ = 12</sys></p>
+<sol>
+<box k="warn" t="Errata en la resolución oficial">
+<p>En el cuaderno resuelto la última ecuación se teclea como 5x₅ = 12 (sale x₅ = 12/5). El enunciado (y el fichero de datos) dicen <b>4x₅ = 12</b>, así que x₅ = 3. Aquí está resuelto con el dato correcto.</p>
+</box>
+<sage t="Ejercicio 2 (g)">A = matrix(QQ, [[3, 1, 3, 5, 2], [0, 0, 3, 3, 1], [0, 0, 0, 0, 4]])
+b = column_matrix(QQ, [3, 1, 12])
+show(A.augment(b, subdivide=True).rref())</sage>
+<salida>[   1  1/3    0  2/3    0| -1/3]
+[   0    0    1    1    0| -2/3]
+[   0    0    0    0    1|    3]</salida>
+<p>Pivotes en las columnas de x₁, x₃ y x₅; las de x₂ y x₄ no tienen: son los <b>parámetros</b>. Con x₂ = a y x₄ = b:</p>
+<md l>x₁ = −1/3 − (1/3)a − (2/3)b<br>x₂ = a<br>x₃ = −2/3 − b<br>x₄ = b<br>x₅ = 3</md>
+<p>Tres soluciones concretas: (a, b) = (0, 0), (3, 0) y (0, 3):</p>
+<sage t="Tres soluciones comprobadas">def solucion(a, b_):
+    return column_matrix(QQ, [-1/3 - a/3 - 2*b_/3, a, -2/3 - b_, b_, 3])
+for a, b_ in [(0, 0), (3, 0), (0, 3)]:
+    s = solucion(a, b_)
+    print(s.transpose(), A * s == b)</sage>
+<salida>[-1/3    0 -2/3    0    3] True
+[-4/3    3 -2/3    0    3] True
+[-7/3    0 -11/3    3    3] True</salida>
+<res>Compatible indeterminado con 2 parámetros (5 incógnitas − rango 3)</res>
+</sol></ej>
+<ej id="p1-2h" n="Ejercicio 2 (h)" t="propuesto: 6 ecuaciones">
+<p><sys>3x₂ − x₃ = 1; −x₁ + x₂ = 2; 3x₁ + 3x₂ + 2x₃ = 4; x₁ − x₃ = 2; −x₁ − x₂ + x₃ = 2; 3x₁ − x₂ + x₃ = 3</sys></p>
+<sol>
+<sage t="Ejercicio 2 (h)">A = load('matricesSistemas.sobj')[7]
+b = load('independientesSistemas.sobj')[7]
+print(A.rank(), A.augment(b).rank())</sage>
+<salida>3 4</salida>
+<p>Misma matriz que el apartado (f) con otros términos independientes; también rg(A) = 3 &lt; rg(A | b) = 4. Se ve a mano: la segunda y la cuarta ecuación dan x₂ = 2 + x₁ y x₃ = x₁ − 2, y sustituyendo en la quinta: −x₁ − 2 − x₁ + x₁ − 2 = 2 ⇒ x₁ = −6; pero entonces la primera da 3(−4) − (−8) = −4 ≠ 1.</p>
+<res>Incompatible</res>
+</sol></ej>
+</tema>
+
+<tema id="p1-3" n="3" t="Ejercicio 3 · Construir sistemas" eyebrow="Ejercicio 3" lede="Crear sistemas de tres ecuaciones con tres incógnitas x, y, z, con la ampliada no diagonal, que cumplan cada condición.">
+<ej id="p1-3" n="Ejercicio 3" t="seis sistemas a medida">
+<p>Para cada apartado, crea un sistema de 3 ecuaciones con 3 incógnitas x, y, z cuya matriz ampliada no sea diagonal: compatible determinado; incompatible; compatible indeterminado; indeterminado con todas las soluciones en función de z; en función de y; en función de y y z.</p>
+<sol>
+<p>La idea es partir de la forma reducida que queremos y «estropearla» con operaciones de fila (que no cambian las soluciones). Los parámetros son las variables cuya columna <b>no</b> tiene pivote.</p>
+<ul><li><b>Determinado</b>: x + y + z = 6, x − y = 0, y + z = 3 (solución única (3, 3, 0)).</li>
+<li><b>Incompatible</b>: x + y + z = 1, x − y = 2, 2x + z = 4 (el primer miembro de la tercera es la suma de los de las dos primeras, pero 1 + 2 = 3 ≠ 4).</li>
+<li><b>Indeterminado</b>: x + y + z = 1, x − y = 0, 2x + z = 1 (la tercera es la suma de las dos primeras: sobra).</li>
+<li><b>En función de z</b> (pivotes en x e y): x + y + 2z = 2, x − y = 0, 2x + 2y + 4z = 4 ⇒ x = y = 1 − z.</li>
+<li><b>En función de y</b> (pivotes en x y z): x + y + z = 1, x + y − z = 1, 2x + 2y = 2 ⇒ z = 0, x = 1 − y.</li>
+<li><b>En función de y y z</b> (un solo pivote, en x): x + y + z = 1, 2x + 2y + 2z = 2, −x − y − z = −1.</li></ul>
+<sage t="Ejercicio 3: comprobación con rref">var('x y z')
+sistemas = {
+  "determinado":  [x + y + z == 6, x - y == 0, y + z == 3],
+  "incompatible": [x + y + z == 1, x - y == 2, 2*x + z == 4],
+  "indeterminado": [x + y + z == 1, x - y == 0, 2*x + z == 1],
+  "en función de z": [x + y + 2*z == 2, x - y == 0, 2*x + 2*y + 4*z == 4],
+  "en función de y": [x + y + z == 1, x + y - z == 1, 2*x + 2*y == 2],
+  "en función de y y z": [x + y + z == 1, 2*x + 2*y + 2*z == 2, -x - y - z == -1],
+}
+for nombre, ecs in sistemas.items():
+    A = matrix(QQ, [[e.lhs().coefficient(v) for v in (x, y, z)] for e in ecs])
+    b = column_matrix(QQ, [e.rhs() for e in ecs])
+    print(nombre); print(A.augment(b, subdivide=True).rref()); print()</sage>
+<p>En cada reducida se comprueba la condición: en «en función de z», los pivotes están en las columnas de x e y; en «en función de y», en las de x y z; en «en función de y y z», sólo en la de x.</p>
+</sol></ej>
+</tema>

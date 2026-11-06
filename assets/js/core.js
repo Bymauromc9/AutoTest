@@ -184,6 +184,50 @@
         { id: "general", sec: "examen", kind: "general", title: "Test general", href: "gohp/teoria/autotest.html#test-G",
           desc: "30 preguntas de los diez temas con corrección inmediata: para repasar sin reloj.", progress: { t: "best", key: "gohp-best-G", scale: 10 } }
       ]
+    },
+    {
+      id: "amd",
+      short: "AMD",
+      name: "Álgebra y Matemática Discreta",
+      desc: "Espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y aritmética modular, con SageMath.",
+      home: "amd/index.html",
+      intro: "Cinco temas de teoría (espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y SVD, y aritmética modular) con sus hojas de ejercicios resueltas, y nueve prácticas con SageMath que puedes ejecutar aquí mismo, sin instalar nada.",
+      exams: [
+        { date: "2026-12-17", name: "2.º parcial y global", label: "17 de diciembre de 2026, por la mañana · 2.º parcial y examen global", href: "amd/examen/parciales.html", cta: "repasa con los parciales resueltos y el simulacro" }
+      ],
+      sub: { teoria: "Temas 0–5", practicas: "Prácticas 1–9 con SageMath", examen: "Parciales y examen de prácticas" },
+      resources: [
+        { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "amd/teoria/guia.html",
+          desc: "Repaso de bachillerato y los cinco temas: definiciones, métodos paso a paso, ejemplos resueltos y las órdenes de SageMath de cada cálculo.", progress: { t: "estudio", key: "amd-teoria-estudio", visto: "amd-teoria-visto", total: 36 } },
+        { id: "ejercicios", sec: "teoria", kind: "ejercicios", title: "Hojas de ejercicios resueltas", href: "amd/teoria/ejercicios.html",
+          desc: "Las hojas 1 a 4 y los ejercicios de clase resueltos y explicados apartado por apartado, con la comprobación en SageMath.", progress: { t: "hechos", key: "amd-ejercicios-hechos", total: 177 } },
+        { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "amd/teoria/autotest.html",
+          desc: "Preguntas de los cinco temas con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "amd-best-", topics: [1, 2, 3, 4, 5], names: { 1: "Espacios vectoriales", 2: "Producto escalar", 3: "Aplicaciones lineales", 4: "Diagonalización y SVD", 5: "Aritmética modular" } } },
+        { id: "sage", sec: "practicas", kind: "herramientas", title: "SageMath en la web", href: "amd/practicas/sage.html",
+          desc: "Una consola de SageMath que funciona en el navegador y la chuleta con todas las órdenes que se usan en las prácticas." },
+        { id: "p1", sec: "practicas", kind: "ejercicios", title: "Práctica 1 · Sistemas de ecuaciones", href: "amd/practicas/p1.html",
+          desc: "Matrices en SageMath, matriz ampliada, rref y clasificación de sistemas (SCD, SCI, SI) con soluciones comprobadas.", progress: { t: "hechos", key: "amd-p1-hechos", total: 11 } },
+        { id: "p2", sec: "practicas", kind: "ejercicios", title: "Práctica 2 · Bases, coordenadas y rango", href: "amd/practicas/p2.html",
+          desc: "Independencia, sistemas generadores, bases y coordenadas con matrices grandes guardadas en ficheros .sobj.", progress: { t: "hechos", key: "amd-p2-hechos", total: 9 } },
+        { id: "p3", sec: "practicas", kind: "ejercicios", title: "Práctica 3 · Factorización LU y Cholesky", href: "amd/practicas/p3.html",
+          desc: "Matrices elementales, la descomposición LU (con y sin permutación), Cholesky y sus aplicaciones a imágenes.", progress: { t: "hechos", key: "amd-p3-hechos", total: 8 } },
+        { id: "p4", sec: "practicas", kind: "ejercicios", title: "Práctica 4 · Subespacios", href: "amd/practicas/p4.html",
+          desc: "Paramétricas e implícitas, dimensión, suma e intersección y un recomendador de películas con subespacios.", progress: { t: "hechos", key: "amd-p4-hechos", total: 14 } },
+        { id: "p5", sec: "practicas", kind: "ejercicios", title: "Práctica 5 · Gram-Schmidt y QR", href: "amd/practicas/p5.html",
+          desc: "Bases ortonormales, proyecciones, la descomposición QR y la resolución de sistemas triangulares.", progress: { t: "hechos", key: "amd-p5-hechos", total: 11 } },
+        { id: "p6", sec: "practicas", kind: "ejercicios", title: "Práctica 6 · Mínimos cuadrados", href: "amd/practicas/p6.html",
+          desc: "La mejor solución de un sistema incompatible, rectas y curvas de regresión y ajuste de datos reales.", progress: { t: "hechos", key: "amd-p6-hechos", total: 9 } },
+        { id: "p7", sec: "practicas", kind: "ejercicios", title: "Práctica 7 · Geometría en 3D", href: "amd/practicas/p7.html",
+          desc: "Rectas y planos afines: ecuaciones, bases adaptadas, posiciones relativas, interpolación lineal, distancias, raycasting y la cámara pinhole.", progress: { t: "hechos", key: "amd-p7-hechos", total: 12 } },
+        { id: "p8", sec: "practicas", kind: "ejercicios", title: "Práctica 8 · Construir figuras en 3D", href: "amd/practicas/p8.html",
+          desc: "Polígonos, estrellas, pirámides y prismas colocados en cualquier plano del espacio con bases ortonormales adaptadas.", progress: { t: "hechos", key: "amd-p8-hechos", total: 13 } },
+        { id: "p9", sec: "practicas", kind: "ejercicios", title: "Práctica 9 · Aplicaciones lineales", href: "amd/practicas/p9.html",
+          desc: "Giros, simetrías respecto a rectas y planos y dilataciones aplicadas a piezas 2D y modelos 3D: un avión, un bosque, mosaicos y una animación.", progress: { t: "hechos", key: "amd-p9-hechos", total: 13 } },
+        { id: "parciales", sec: "examen", kind: "examen", title: "Exámenes resueltos", href: "amd/examen/parciales.html",
+          desc: "Los primeros parciales del curso 2025-26 resueltos (con sus erratas corregidas) y simulacros del segundo parcial y del examen de prácticas con SageMath.", progress: { t: "hechos", key: "amd-examen-hechos", total: 23 } },
+        { id: "general", sec: "examen", kind: "general", title: "Test general", href: "amd/teoria/autotest.html#test-G",
+          desc: "30 preguntas de los cinco temas repartidas según su peso.", progress: { t: "best", key: "amd-best-G", scale: 10 } }
+      ]
     }
   ];
 
@@ -387,7 +431,7 @@
     location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
   }
   /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
-  const esProgreso = (k) => /^(fli|fc|ip|gohp|eq)-|^app-(last|plan)/.test(k);
+  const esProgreso = (k) => /^(fli|fc|ip|gohp|amd|eq)-|^app-(last|plan)/.test(k);
   /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
       cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
   function puntos(r) {

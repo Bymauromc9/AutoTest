@@ -1,0 +1,212 @@
+<!--{
+ "salida": "amd/practicas/p9.html",
+ "titulo": "Práctica 9 · Aplicaciones lineales en el plano y el espacio",
+ "descripcion": "Práctica 9 de AMD con SageMath: giros, simetrías respecto a rectas y planos, dilataciones en direcciones dadas y su uso para mover, copiar y animar objetos 2D y 3D.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 9 · Aplicaciones lineales en acción",
+ "ops": "x ↦ A·x",
+ "lead": "Las matrices de giros, simetrías y escalados aplicadas a los vértices de un objeto lo mueven, lo reflejan o lo deforman. Con ellas se colocan piezas, se completa un avión a partir de un ala, se planta un bosque, se teselan mosaicos y se anima una estrella.",
+ "marca": "AMD · Práctica 9",
+ "sym": "↻",
+ "body": {"data-storage-key": "amd-p9-hechos", "data-visto-key": "amd-p9-visto", "data-sage-key": "amd-p9", "data-sage-datos": "amd/practicas/datos/p9/", "data-sage-ficheros": "/amd/sage/geometria.py,pieza.obj,pieza.mtl,pieza1.obj,pieza1.mtl,pieza2.obj,pieza2.mtl,pieza3.obj,pieza3.mtl,cubo.obj,cubo.mtl,avion.obj,avion.mtl,ala.obj,ala.mtl,arbol.obj,arbol.mtl,edificio.obj,edificio.mtl,estrella.obj,estrella.mtl", "data-sage-prep": "from geometria import *\ndef giro(a): return matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados de la práctica 9 resueltos y explicados; el código de los opcionales parte del que acompaña al enunciado, corregido donde hacía falta."
+}-->
+
+<tema id="p9-0" n="0" t="Las matrices que se usan" eyebrow="Práctica 9" lede="Todas se construyen con una base ortonormal adaptada: en ella la aplicación es diagonal.">
+<ap id="p9-0-1" n="0.1" t="Recetario">
+<ul><li><b>Giro de ángulo α</b> en el plano: G = <m>cos α, −sin α; sin α, cos α</m>.</li>
+<li><b>Simetría respecto a la recta ⟨u⟩</b> (u unitario): S = 2uuᵗ − I. Respecto a su perpendicular: −S.</li>
+<li><b>Simetría respecto al plano de normal n</b>: S = I − 2<fr>nnᵗ|nᵗn</fr>.</li>
+<li><b>Dilatación</b>: λ en la dirección u y μ en las perpendiculares: A = μI + (λ − μ)<fr>uuᵗ|uᵗu</fr>.</li>
+<li>En general: si B = [u v w] es la base ortonormal adaptada y D la diagonal con lo que hace la aplicación en cada vector, <b>A = B·D·Bᵗ</b> (la inversa de una ortogonal es su traspuesta).</li></ul>
+<p>Para transformar un objeto se aplica la matriz a cada vértice y se mantienen las caras: <code>objeto([A*vector(v) for v in vertices], caras, …)</code>. Al ejecutar la primera celda se cargan <code>geometria.py</code> y la función <code>giro(a)</code>.</p>
+</ap>
+</tema>
+
+<tema id="p9-1" n="1" t="Ejercicio 1 · Un giro de 30°" eyebrow="Ejercicio 1" lede="Matriz del giro y su efecto sobre un hexágono.">
+<ej id="p9-1a" n="Ejercicio 1 (a)" t="la matriz">
+<p>Calcula la matriz del giro g de 30° en ℝ².</p>
+<sol>
+<p>cos 30° = √3/2 y sin 30° = 1/2:</p>
+<res>G = <m>√3/2, −1/2; 1/2, √3/2</m></res>
+</sol></ej>
+<ej id="p9-1b" n="Ejercicio 1 (b)" t="hexágono y su giro">
+<p>C es el hexágono regular centrado en el origen con un vértice en (5, 4). Calcula sus vértices y los de g(C) y dibuja ambos.</p>
+<sol>
+<p>Radio √41. Con u = (5, 4)/√41 y v = (−4, 5)/√41, los vértices son √41(cos(kπ/3)u + sin(kπ/3)v) = cos(kπ/3)(5, 4) + sin(kπ/3)(−4, 5):</p>
+<res>C: (5, 4), (5/2 − 2√3, 2 + 5√3/2), (−5/2 − 2√3, −2 + 5√3/2), (−5, −4), (−5/2 + 2√3, −2 − 5√3/2), (5/2 + 2√3, 2 − 5√3/2)</res>
+<p>g(C) se obtiene multiplicando cada vértice por G; por ejemplo g(5, 4) = (5√3/2 − 2, 5/2 + 2√3). Como el hexágono tiene simetría de 60°, g(C) es el mismo hexágono «a medio camino»: sus vértices caen en las bisectrices de los de C.</p>
+<sage t="Ejercicio 1">G = giro(pi/6); show(G)
+r = vector([5, 4]).norm(); u = vector([5, 4]) / r; v = vector([-4, 5]) / r
+C = [r*cos(k*pi/3)*u + r*sin(k*pi/3)*v for k in range(6)]
+gC = [G*P for P in C]
+print([P.simplify_full() for P in C]); print([P.simplify_full() for P in gC])
+(poligono(C, color=amarillo, wire=True) + poligono(gC, color=azul, wire=True)).show(aspect_ratio=1)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p9-2" n="2" t="Ejercicio 2 · Simetrías en el plano" eyebrow="Ejercicio 2" lede="La pieza de pieza.obj y la recta r = ⟨(2, 3)⟩.">
+<ej id="p9-2" n="Ejercicio 2 (a, b)" t="colocar y reflejar una pieza">
+<p>a) Coloca la pieza respecto a la base ortonormal determinada por la recta y dibuja ambas. b) Calcula las matrices de las simetrías respecto a la recta y a su perpendicular y úsalas para que el dibujo sea simétrico respecto a las dos.</p>
+<figure class="fig-amd"><img src="datos/p9/pieza.JPG" alt="La pieza: un rombo rojo" loading="lazy" width="724" height="411"><figcaption>Una de las piezas del ejercicio (pieza.JPG).</figcaption></figure>
+<sol>
+<p>a) u = (2, 3)/√13, v = (−3, 2)/√13 y P = [u v]: P lleva e₁ a u y e₂ a v, así que P·x «coloca» la pieza con la recta haciendo de eje X.</p>
+<p>b) S<sub>r</sub> = 2uuᵗ − I y S<sub>⟂</sub> = −S<sub>r</sub>:</p>
+<res>S<sub>r</sub> = <fr>1|13</fr><m>−5, 12; 12, 5</m>,  S<sub>⟂</sub> = <fr>1|13</fr><m>5, −12; −12, −5</m></res>
+<p>Comprobación: S<sub>r</sub>(2, 3) = (2, 3) y S<sub>r</sub>(−3, 2) = (3, −2). El dibujo simétrico tiene cuatro copias: la pieza, S<sub>r</sub>·pieza, S<sub>⟂</sub>·pieza y S<sub>r</sub>S<sub>⟂</sub>·pieza (= −pieza, el giro de 180°).</p>
+<sage t="Ejercicio 2">vertices, caras, colores = importarObjeto("pieza.obj", color=True, dim=2)
+u = vector([2, 3]).normalized(); v = vector([-3, 2]).normalized(); P = column_matrix([u, v])
+Sr = 2*u.column()*u.row() - identity_matrix(2); Sp = -Sr; show(Sr)
+pieza = [P*vector(x) for x in vertices]
+ob = line([-0.6*vector([2, 3]), 0.6*vector([2, 3])], color='black') + line([-0.6*vector([-3, 2]), 0.6*vector([-3, 2])], color='gray')
+for M, col in [(identity_matrix(2), rojo), (Sr, azul), (Sp, verde), (Sr*Sp, naranja)]:
+    ob += objeto([M*x for x in pieza], caras, color=col, dim=2)
+ob.show(aspect_ratio=1)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p9-3" n="3" t="Ejercicio 3 · Simetrías en el espacio" eyebrow="Ejercicio 3" lede="Construir la aplicación, comprobarla y aplicarla a un objeto 3D.">
+<ej id="p9-3a" n="Ejercicio 3 (a)" t="respecto a un plano">
+<p>Simetría respecto a Π = {x − y + 2z = 0}. Aplícala al cubo de cubo.obj.</p>
+<sol>
+<p>n = (1, −1, 2), nᵗn = 6: S = I − <fr>1|3</fr>nnᵗ.</p>
+<res>S = <fr>1|3</fr><m>2, 1, −2; 1, 2, 2; −2, 2, −1</m></res>
+<p>Comprobación: S·n = −n y S deja fijos (1, 1, 0) y (0, 2, 1), que están en Π. El cubo de cubo.obj está centrado en el origen (que está en Π); para ver bien la imagen lo desplazamos antes a (3, 0, 0).</p>
+<sage t="Ejercicio 3 (a)">n = vector([1, -1, 2]); S = identity_matrix(3) - 2*n.column()*n.row()/(n*n); show(S)
+print(S*n == -n, S*vector([1, 1, 0]), S*vector([0, 2, 1]))
+vertices, caras, colores = importarObjeto("cubo.obj", color=True)
+cubo = [vector(x) + vector([3, 0, 0]) for x in vertices]
+plano(ec='x-y+2*z=0', l=10) + objeto(cubo, caras, color=colores) + objeto([S*x for x in cubo], caras, color=colores)</sage>
+</sol></ej>
+<ej id="p9-3b" n="Ejercicio 3 (b)" t="respecto a una recta">
+<p>Simetría respecto a r = ⟨(1, 2, −1)⟩. Aplícala al cubo.</p>
+<sol>
+<p>Con u = (1, 2, −1), S = 2<fr>uuᵗ|uᵗu</fr> − I: deja fija la recta y cambia de signo su perpendicular (es un giro de 180° alrededor de r).</p>
+<res>S = <fr>1|3</fr><m>−2, 2, −1; 2, 1, −2; −1, −2, −2</m></res>
+<p>S·(1, 2, −1) = (1, 2, −1) y S·(2, −1, 0) = (−2, 1, 0) ✓.</p>
+<sage t="Ejercicio 3 (b)">u = vector([1, 2, -1]); S = 2*u.column()*u.row()/(u*u) - identity_matrix(3); show(S)
+print(S*u == u, S*vector([2, -1, 0]))
+vertices, caras, colores = importarObjeto("cubo.obj", color=True)
+cubo = [vector(x) + vector([3, 0, 0]) for x in vertices]
+recta(u, l=10) + objeto(cubo, caras, color=colores) + objeto([S*x for x in cubo], caras, color=colores)</sage>
+</sol></ej>
+<ej id="p9-3c" n="Ejercicio 3 (c)" t="opcional: completar el avión">
+<p>avion.obj tiene el fuselaje y ala.obj un ala. Identifica el plano de simetría del avión y calcula la otra ala.</p>
+<sol>
+<p>Comparando las coordenadas, el fuselaje es invariante al intercambiar x e y: su plano de simetría es <b>x − y = 0</b>. Con n = (1, −1, 0), S = I − nnᵗ intercambia las dos primeras coordenadas:</p>
+<res>S = <m>0, 1, 0; 1, 0, 0; 0, 0, 1</m>;  segunda ala = S·ala</res>
+<sage t="Ejercicio 3 (c)">va, ca, cola = importarObjeto("avion.obj", color=True)
+vl, cl, coll = importarObjeto("ala.obj", color=True)
+n = vector([1, -1, 0]); S = identity_matrix(3) - 2*n.column()*n.row()/(n*n)
+redondo = lambda x: tuple(round(float(c), 3) for c in x)
+fuselaje = set(redondo(x) for x in va); print(all(redondo(S*vector(x)) in fuselaje for x in va))   # True: es simétrico
+(objeto(va, ca, color=cola) + objeto(vl, cl, color=coll) + objeto([S*vector(x) for x in vl], cl, color=coll)).show(frame=False)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p9-4" n="4" t="Ejercicio 4 · Dilataciones" eyebrow="Ejercicio 4" lede="Escalar distinto en distintas direcciones.">
+<ej id="p9-4a" n="Ejercicio 4 (a)" t="la matriz">
+<p>Matriz de la aplicación que multiplica por 2 los vectores de r = ⟨(1, 1, 1)⟩ y por 3 los perpendiculares a r.</p>
+<sol>
+<p>Proyección sobre r: P = <fr>1|3</fr>J (J la matriz de unos). A = 2P + 3(I − P) = 3I − P:</p>
+<res>A = <fr>1|3</fr><m>8, −1, −1; −1, 8, −1; −1, −1, 8</m></res>
+<p>A(1, 1, 1) = (2, 2, 2) y A(1, −1, 0) = (3, −3, 0) ✓.</p>
+<sage t="Ejercicio 4 (a)">u = vector([1, 1, 1]); P = u.column()*u.row()/(u*u)
+A = 2*P + 3*(identity_matrix(3) - P); show(A); print(A*u, A*vector([1, -1, 0]), A*vector([1, 1, -2]))</sage>
+</sol></ej>
+<ej id="p9-4b" n="Ejercicio 4 (b)" t="un bosque">
+<p>arbol.obj contiene un árbol. Dibuja 6 árboles, cada uno con un escalado y un giro elegidos al azar.</p>
+<sol>
+<p>Para cada árbol: un factor s al azar (escalado sI), un ángulo α al azar (giro alrededor del eje Z, que es el vertical) y una traslación para colocarlo en el suelo. Vértice nuevo = posición + G<sub>α</sub>·s·v.</p>
+<sage t="Ejercicio 4 (b)">vertices, caras, colores = importarObjeto("arbol.obj", color=True)
+def giroZ(a): return matrix(RDF, [[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0, 0, 1]])
+bosque = Graphics()
+for k in range(6):
+    s, a = 0.6 + 0.8*random(), 2*pi*random()
+    pos = vector(RDF, [3*(k % 3), 3*(k // 3), 0])
+    M = giroZ(a) * s
+    bosque += objeto([pos + M*vector(v) for v in vertices], caras, color=colores)
+bosque.show(frame=False)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p9-5" n="5" t="Ejercicios 5 a 9 · Opcionales" eyebrow="Opcionales" lede="Composiciones de giros, simetrías y traslaciones para dibujar figuras.">
+<ej id="p9-5" n="Ejercicio 5" t="edificios alrededor de un círculo">
+<p>Círculo de radio 8 centrado en el origen y 5 puntos al azar sobre él; en cada uno, un edificio perpendicular al círculo y escalado 0,6, 0,4, 0,7, 0,8 y 0,5.</p>
+<sol>
+<p>En el punto C = 8(cos θ, sin θ), v = C/‖C‖ es la dirección radial (hacia fuera) y u = (−v₂, v₁) la tangente. P = [u v] lleva el eje Y del edificio (su altura) a la dirección radial: queda perpendicular al círculo. Vértice nuevo = C + P·(s·v).</p>
+<sage t="Ejercicio 5">vertices, caras, colores = importarObjeto("edificio.obj", color=True, dim=2)
+r = 8; borde = [r*vector([cos(2*pi*i/64), sin(2*pi*i/64)]) for i in range(65)]
+ob = poligono(borde, color=verde, opacidad=1) + segmentos(borde)
+for s in [0.6, 0.4, 0.7, 0.8, 0.5]:
+    t = 2*pi*random(); C = r*vector(RDF, [cos(t), sin(t)])
+    v = C.normalized(); u = vector([-v[1], v[0]]); P = column_matrix([u, v])
+    ob += objeto([C + P*(s*vector(x)) for x in vertices], caras, color=colores, dim=2)
+ob.show(axes=False, aspect_ratio=1)</sage>
+<box k="warn" t="En el código del enunciado">
+<p>Dibuja 12 edificios con escalas al azar y coloca cada uno en el ángulo <code>i*ang</code> (con <code>ang</code> ya aleatorio), de modo que no respeta las cinco escalas pedidas. Aquí está corregido.</p>
+</box>
+</sol></ej>
+<ej id="p9-6" n="Ejercicio 6" t="cubos con rombos">
+<p>A) Con la pieza de pieza3.obj (un rombo de 60°) construye un cubo en perspectiva. B) Modifica el programa para construir mosaicos de cubos.</p>
+<figure class="fig-amd"><img src="datos/p9/final2.JPG" alt="Cubo en perspectiva formado por tres rombos rojo, azul y verde" loading="lazy" width="438" height="491"><figcaption>Apartado A (final2.JPG).</figcaption></figure>
+<sol>
+<p>A) El rombo tiene un vértice en el origen y ángulos de 60° y 120°. Girándolo 120° y 240° alrededor de ese vértice, las tres copias cierran un hexágono: las tres caras visibles de un cubo.</p>
+<p>B) El cubo así formado tesela el plano trasladándolo con dos vectores que unen vértices homólogos: desp₁ = P₃ − P₂ = (√3, 0) y desp₂ = Q₀ − P₃ = (−√3/2, −3/2). Con j·desp₁ + k·desp₂ para j, k = 0…4 sale el mosaico de final5; recorriendo sólo algunos (j, k) se obtienen las escaleras de final3 y final4.</p>
+<sage t="Ejercicio 6">vertices, caras, colores = importarObjeto("pieza3.obj", color=True, dim=2)
+A = giro(2*pi/3)
+v1 = [vector(x) for x in vertices]; v2 = [A*x for x in v1]; v3 = [A*x for x in v2]
+cubo = lambda d: sum(objeto([d + x for x in vs], caras, color=c, aristas=True, dim=2) for vs, c in [(v1, rojo), (v2, azul), (v3, verde)])
+cubo(vector([0, 0])).show(axes=False, aspect_ratio=1)
+P0, P1, P2, P3 = v1[0], v1[1], v1[2], v1[3]
+d1, d2 = P3 - P2, (P1 - vector([0, (P2 - P0).norm()])) - P3
+sum(cubo(j*d1 + k*d2) for j in range(5) for k in range(5)).show(axes=False, aspect_ratio=1)</sage>
+</sol></ej>
+<ej id="p9-7" n="Ejercicio 7" t="estrella de rombos y cometas">
+<p>Con pieza1.obj (rombo amarillo) y pieza2.obj (cometa naranja) construye la estrella de la figura.</p>
+<figure class="fig-amd"><img src="datos/p9/final1.JPG" alt="Estrella de cinco puntas: cinco rombos amarillos en el centro y cinco cometas naranjas" loading="lazy" width="555" height="511"><figcaption>final1.JPG</figcaption></figure>
+<sol>
+<p>Los rombos tienen un ángulo de 72° en el origen: cinco copias giradas k·72° forman la flor central. Cada cometa se apoya en el vértice lateral C del rombo correspondiente: se gira −36° para que encaje entre dos rombos y luego se aplica el mismo giro k·72° que a su rombo, de modo que el vértice nuevo es Aᵏ·C + A₂·Aᵏ·v.</p>
+<sage t="Ejercicio 7">v1, c1, _ = importarObjeto("pieza1.obj", color=True, dim=2)
+v2, c2, _ = importarObjeto("pieza2.obj", color=True, dim=2)
+A, A2 = giro(2*pi/5), giro(-pi/5); C = vector(v1[2])
+ob = Graphics()
+for k in range(5):
+    ob += objeto([A^k*vector(x) for x in v1], c1, color=amarillo, aristas=True, dim=2)
+    ob += objeto([A^k*C + A2*A^k*vector(x) for x in v2], c2, color=naranja, aristas=True, dim=2)
+ob.show(axes=False, aspect_ratio=1)</sage>
+</sol></ej>
+<ej id="p9-8" n="Ejercicio 8" t="hojas y flor">
+<p>A) Media elipse como perfil de media hoja. B) La simetría respecto al eje Y completa la hoja. C) Con copias de la hoja construye la flor.</p>
+<figure class="fig-amd"><img src="datos/p9/Flor.png" alt="Flor de doce pétalos amarillos y naranjas sobre un tallo con cinco hojas verdes" loading="lazy" width="303" height="562"><figcaption>Flor.png</figcaption></figure>
+<sol>
+<p>A) (0, 1) + (0,3·cos θ, sin θ) con θ de −π/2 a π/2: media elipse de semiejes 0,3 y 1 que va de (0, 0) a (0, 2). B) S<sub>Y</sub> = <m>−1, 0; 0, 1</m> refleja la mitad. C) Las hojas del tallo están giradas ±45° (alternando con S<sub>Y</sub>) y trasladadas a puntos del tallo; los 12 pétalos son la hoja girada k·30° alrededor de la punta del tallo.</p>
+<sage t="Ejercicio 8">t = [-pi/2 + i*pi/16 for i in range(17)]
+media = [vector([0.3*cos(a), 1 + sin(a)]) for a in t]
+SY = matrix([[-1, 0], [0, 1]]); otra = [SY*x for x in media]
+G = giro(pi/4); P0, P1 = vector([0, 0]), vector([0, 6])
+ob = segmentos([P0, P1])
+for i in range(5):
+    C = P0 + (1/5 + 2/5*i/5)*(P1 - P0); M = G if i % 2 == 0 else SY*G
+    for mitad in (media, otra): ob += poligono([C + M*x for x in mitad], wire=True, color=verde, opacidad=1)
+for k in range(12):
+    M = giro(k*pi/6)
+    for mitad in (media, otra): ob += poligono([P1 + M*x for x in mitad], wire=True, color=naranja if k % 2 == 0 else amarillo, opacidad=1)
+ob.show(aspect_ratio=1, axes=False)</sage>
+</sol></ej>
+<ej id="p9-9" n="Ejercicio 9" t="estrella animada">
+<p>Anima la estrella de estrella.obj para que gire sobre sí misma mientras se hace más pequeña y luego más grande.</p>
+<sol>
+<p>Fotograma k: ángulo a = 2πk, giro G(a) y escalado T(a) = (1 + 0,3 cos a)·I. Cada vértice pasa a G·T·v; al ser T un múltiplo de la identidad, G y T conmutan.</p>
+<sage t="Ejercicio 9">vertices, caras, colores = importarObjeto("estrella.obj", color=True, dim=2)
+fotogramas = []
+for k in srange(0, 1, 0.025):
+    a = 2*pi*k; T = (1 + 0.3*cos(a)) * identity_matrix(RDF, 2)
+    fotogramas.append(objeto([giro(a).change_ring(RDF)*T*vector(v) for v in vertices], caras, color=colores, dim=2))
+graphics_array(fotogramas[::8], 1, 5).show(axes=False)            # cinco fotogramas
+animate(fotogramas, xmin=-1.4, xmax=1.4, ymin=-1.4, ymax=1.4, aspect_ratio=1, axes=False).show(delay=5)</sage>
+<p>(Si el servidor no puede generar el GIF, la primera imagen ya muestra la secuencia.)</p>
+</sol></ej>
+</tema>

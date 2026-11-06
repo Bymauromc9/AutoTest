@@ -1,0 +1,210 @@
+<!--{
+ "salida": "amd/practicas/p3.html",
+ "titulo": "Práctica 3 · Aplicaciones de las matrices",
+ "descripcion": "Práctica 3 de AMD con SageMath: descomposición LU paso a paso, resolver sistemas en dos pasos, un sistema de recomendación, bases de colores RGB, filtros de imagen, Cholesky y el control de un dron.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 3 · Aplicaciones de las matrices",
+ "ops": "A = L·U",
+ "lead": "La <b>descomposición LU</b> (Gauss guardando los pasos), para qué sirve y cuándo falla, y varias aplicaciones de las matrices: recomendar películas con un producto, mezclar colores con una base de ℝ³, filtros de imágenes, Cholesky y un dron que resuelve 8000 sistemas por segundo.",
+ "marca": "AMD · Práctica 3",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p3-hechos", "data-visto-key": "amd-p3-visto", "data-sage-key": "amd-p3", "data-sage-datos": "amd/practicas/datos/p3/", "data-sage-ficheros": "ejercicio1LUMatrices.sobj,ejercicio1LUIndependientes.sobj,ejercicio6Cholesky.sobj,leon.jpg"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 3, explicados y completados (los apartados propuestos están resueltos). Los ejercicios 5, 6 y 7 son de ampliación y no entran en el examen."
+}-->
+
+<tema id="p3-0" n="0" t="La descomposición LU" eyebrow="Práctica 3" lede="Gauss guardando los multiplicadores: A = L·U con L triangular inferior (unos en la diagonal) y U triangular superior.">
+<ap id="p3-0-1" n="0.1" t="Cómo se calcula a mano">
+<p>Si para escalonar A no hace falta intercambiar filas, A = L·U, donde <b>U</b> es la escalonada que da Gauss y <b>L</b> guarda en cada posición (i, j) el <b>multiplicador</b> lᵢⱼ que se usó para hacer cero esa entrada (Fᵢ − lᵢⱼFⱼ).</p>
+<box k="tip" t="Ejemplo del cuaderno">
+<md><m>2 1 1; 4 −6 0; −2 7 2</m> <op>F₂ − 2F₁</op> <m>2 1 1; 0 −8 −2; −2 7 2</m> <op>F₃ + F₁</op> <m>2 1 1; 0 −8 −2; 0 8 3</m> <op>F₃ + F₂</op> <m>2 1 1; 0 −8 −2; 0 0 1</m> = U</md>
+<p>Los multiplicadores son l₂₁ = 2, l₃₁ = −1 (se sumó F₁, es decir, se restó −1·F₁) y l₃₂ = −1:</p>
+<md>A = <m>1 0 0; 2 1 0; −1 −1 1</m><m>2 1 1; 0 −8 −2; 0 0 1</m></md>
+</box>
+<p>Para resolver A·x = b se hacen <b>dos sistemas triangulares</b>: L·y = b (hacia delante) y U·x = y (hacia atrás). La factorización se hace una vez y sirve para todos los b.</p>
+<box k="tip" t="Órdenes">
+<p><code>P, L, U = A.LU(pivot='nonzero')</code> devuelve además una matriz de permutación P (A = P·L·U): con <code>pivot='nonzero'</code> sólo intercambia filas si encuentra un pivote 0, así que en estos ejercicios P = I. Para el examen se da <code>resolucion_triangular</code>:</p>
+</box>
+<sage t="LU paso a paso y resolucion_triangular (ejecútala primero)">def resolucion_triangular(M, b, inferior=False):
+    """Resuelve M x = b con M triangular; b puede ser vector o lista. Devuelve una matriz fila."""
+    n = M.nrows()
+    x = [0 for i in range(n)]
+    b = vector(b)
+    if inferior:
+        for i in range(n):
+            x[i] = (b[i] - sum(M[i, j] * x[j] for j in range(i))) / M[i, i]
+    else:
+        for i in range(n - 1, -1, -1):
+            x[i] = (b[i] - sum(M[i, j] * x[j] for j in range(i + 1, n))) / M[i, i]
+    return matrix([a for a in x])
+
+A = matrix(QQ, [[2, 1, 1], [4, -6, 0], [-2, 7, 2]])
+U = copy(A); n = A.nrows(); L = identity_matrix(QQ, n)
+for j in range(n - 1):
+    for i in range(j + 1, n):
+        l = U[i, j] / U[j, j]          # multiplicador
+        L[i, j] = l
+        U[i, :] = U[i, :] - l * U[j, :]
+show("L =", L, "  U =", U, "  L·U == A:", L * U == A)</sage>
+</ap>
+</tema>
+
+<tema id="p3-1" n="1" t="Ejercicio 1 · Resolver con LU" eyebrow="Ejercicio 1" lede="Sistemas de 4, 10 y 40 incógnitas y coordenadas en una base, en dos pasos.">
+<ej id="p3-1a" n="Ejercicio 1 (a)" t="tres sistemas con LU">
+<p>Usa <code>A.LU(pivot='nonzero')</code> para resolver en dos pasos los tres sistemas de <code>ejercicio1LUMatrices.sobj</code> y <code>ejercicio1LUIndependientes.sobj</code>.</p>
+<sol>
+<sage t="Ejercicio 1 (a)">A, B, C = load('ejercicio1LUMatrices.sobj')
+a, b, c = load('ejercicio1LUIndependientes.sobj')
+print(A.nrows(), B.nrows(), C.nrows())
+P, L, U = A.LU(pivot='nonzero')
+show("L =", L, "  U =", U)
+y = L.solve_right(vector(a))          # L y = a
+x = U.solve_right(y)                  # U x = y
+show(y, x, A.solve_right(vector(a)))
+for M, v in [(B, b), (C, c)]:
+    P, L, U = M.LU(pivot='nonzero')
+    y = resolucion_triangular(L, v, inferior=True)
+    x = resolucion_triangular(U, y)
+    print(M.nrows(), vector(x) == M.solve_right(vector(v)))</sage>
+<salida>4 10 40
+(0, -1, 44, -14/9) (1/45, -2/9, -22/45, -7/9) (1/45, -2/9, -22/45, -7/9)
+10 True
+40 True</salida>
+<p>Las tres formas dan lo mismo. En cuanto a tiempos, <code>solve_right</code> ya hace una LU internamente con código optimizado, así que para un solo sistema no se gana nada factorizando a mano; la ventaja aparece cuando hay que resolver <b>muchos sistemas con la misma matriz</b> (ejercicio 7).</p>
+</sol></ej>
+<ej id="p3-1b" n="Ejercicio 1 (b)" t="coordenadas en una base con LU">
+<p>En ℝ³, con la base B = {(1, 2, 1), (2, 1, 1), (1, 1, 2)}, calcula con la LU las coordenadas de (1, 2, 3), (−2, 1, 3), (4, −2, −1) y (−1, 2, 1).</p>
+<sol>
+<p>Coordenadas de v en B = solución de A·c = v con los vectores de B por columnas. Se factoriza A una vez:</p>
+<md>A = <m>1 2 1; 2 1 1; 1 1 2</m> = <m>1 0 0; 2 1 0; 1 1/3 1</m><m>1 2 1; 0 −3 −1; 0 0 4/3</m></md>
+<p>Para (1, 2, 3): L·y = (1, 2, 3) da y = (1, 0, 2) y U·c = y da c = (1/2, −1/2, 3/2). Igual con los demás (en el cuaderno quedan propuestos):</p>
+<div class="tablewrap"><table><thead><tr><th>v</th><th>y (L·y = v)</th><th>coordenadas (U·c = y)</th></tr></thead><tbody>
+<tr><td>(1, 2, 3)</td><td>(1, 0, 2)</td><td>(1/2, −1/2, 3/2)</td></tr>
+<tr><td>(−2, 1, 3)</td><td>(−2, 5, 10/3)</td><td>(1/2, −5/2, 5/2)</td></tr>
+<tr><td>(4, −2, −1)</td><td>(4, −10, −5/3)</td><td>(−9/4, 15/4, −5/4)</td></tr>
+<tr><td>(−1, 2, 1)</td><td>(−1, 4, 2/3)</td><td>(3/2, −3/2, 1/2)</td></tr></tbody></table></div>
+<p>Comprobación del segundo: ½(1, 2, 1) − 5/2(2, 1, 1) + 5/2(1, 1, 2) = (−2, 1, 3) ✓</p>
+<sage t="Ejercicio 1 (b)">A = column_matrix(QQ, [(1, 2, 1), (2, 1, 1), (1, 1, 2)])
+P, L, U = A.LU(pivot='nonzero')
+for v in [(1, 2, 3), (-2, 1, 3), (4, -2, -1), (-1, 2, 1)]:
+    y = resolucion_triangular(L, v, inferior=True)
+    c = resolucion_triangular(U, y)
+    print(v, "->", c, A * vector(c) == vector(v))</sage>
+</sol></ej>
+</tema>
+
+<tema id="p3-2" n="2" t="Ejercicio 2 · Cuando la LU no basta" eyebrow="Ejercicio 2" lede="Resolver cuatro sistemas con la LU y con solve_right: ¿qué se observa?">
+<ej id="p3-2" n="Ejercicio 2" t="sistemas no determinados">
+<p>Sistema 1: <sys>x + y + z = 2; x − y + z = 4; 2x + 2y + 2z = 0</sys> Sistema 2: <sys>x + y + z = 2; x − y + z = 0; 2x + 2y + 2z = 4</sys> Sistema 3: <sys>x + y + z = 3; 2x − y + z = 1</sys> Sistema 4: <sys>x + y = 2; 2x − y = 1; 3x + y = 5</sys></p>
+<sol>
+<p><code>resolucion_triangular</code> divide por la diagonal, así que <b>sólo sirve si U es invertible</b> (sistema compatible determinado y cuadrado). Y <code>solve_right</code> da una solución aunque haya infinitas, o un error si no hay ninguna. Hay que <b>mirar la U</b>:</p>
+<ul><li><b>Sistema 1</b>: U = <m sm>1 1 1; 0 −2 0; 0 0 0</m> e y = (2, 2, −4). La última ecuación de U·x = y es 0 = −4: <b>incompatible</b>. La sustitución da «división por cero» y <code>solve_right</code> dice «matrix equation has no solutions».</li>
+<li><b>Sistema 2</b>: misma U, y = (2, −2, 0): la última ecuación es 0 = 0. <b>Compatible indeterminado</b>: z = t, −2y = −2 ⇒ y = 1, x = 1 − t. <code>solve_right</code> devuelve sólo una solución, (1, 1, 0) (t = 0), sin avisar de que hay más.</li>
+<li><b>Sistema 3</b> (2 ecuaciones, 3 incógnitas): U = <m sm>1 1 1; 0 −3 −1</m>, y = (3, −5). Indeterminado: (4/3 − 2t/3, 5/3 − t/3, t). La sustitución triangular, que espera U cuadrada, devuelve (4/3, 5/3) sin z: no tiene sentido.</li>
+<li><b>Sistema 4</b> (propuesto, 3 ecuaciones y 2 incógnitas): las dos primeras dan x = y = 1, y la tercera 3 + 1 = 4 ≠ 5: <b>incompatible</b> (la reducida de la ampliada tiene un pivote en la última columna).</li></ul>
+<sage t="Ejercicio 2">A = matrix(QQ, [[1, 1, 1], [1, -1, 1], [2, 2, 2]])
+P, L, U = A.LU(pivot='nonzero')
+show("U =", U)
+for b in [(2, 4, 0), (2, 0, 4)]:
+    y = resolucion_triangular(L, b, inferior=True)
+    show("b =", b, " y =", y, U.augment(y.transpose(), subdivide=True))
+var('x y z')
+show(solve([x + y + z == 2, x - y + z == 0, 2*x + 2*y + 2*z == 4], x, y, z))
+show(solve([x + y + z == 3, 2*x - y + z == 1], x, y, z))
+A4 = matrix(QQ, [[1, 1], [2, -1], [3, 1]]); b4 = vector(QQ, [2, 1, 5])
+show(A4.augment(b4, subdivide=True).rref())</sage>
+<p><code>solve</code> (con variables simbólicas) sí da la solución general con parámetros r1, r2…</p>
+</sol></ej>
+</tema>
+
+<tema id="p3-3" n="3" t="Ejercicio 3 · Un sistema de recomendación" eyebrow="Ejercicio 3" lede="Tres películas descritas por (acción, romance) y tres usuarios con sus gustos.">
+<ej id="p3-3" n="Ejercicio 3 (a–d)" t="recomendar es multiplicar">
+<p>Películas: A = (4,5 de acción, 0,3 de romance), B = (0,5, 4,2), C = (2,0, 2,5). Usuarios: 1 = (5, 0,2), 2 = (0,1, 4,8), 3 = (3,5, 3,2). a) Matriz de contenido U (una fila por película). b) Matriz de gustos V (una columna por usuario). c) Matriz de recomendación R = U·V e interpretación. d) ¿Qué película prefiere cada usuario?</p>
+<sol>
+<sage t="Ejercicio 3">U = matrix(RDF, [(4.5, 0.3), (0.5, 4.2), (2.0, 2.5)])     # filas: películas A, B, C
+V = column_matrix(RDF, [(5, 0.2), (0.1, 4.8), (3.5, 3.2)])   # columnas: usuarios 1, 2, 3
+R = U * V
+show(R)
+for j in range(3):
+    col = list(R.column(j))
+    print("Usuario", j + 1, "-> película", "ABC"[col.index(max(col))], max(col))</sage>
+<salida>[22.56  1.89 16.71]
+[ 3.34 20.21 15.19]
+[10.5  12.2  15.0 ]
+Usuario 1 -> película A 22.56
+Usuario 2 -> película B 20.21
+Usuario 3 -> película A 16.71</salida>
+<p>R<sub>ij</sub> es el <b>producto escalar</b> entre el perfil de la película i y los gustos del usuario j: cuanto más se parecen (más alineados están los vectores), más alto. Por ejemplo, película A con usuario 1: 4,5·5 + 0,3·0,2 = 22,56.</p>
+<res>Usuario 1 → A (fan de la acción); usuario 2 → B (romance); usuario 3 → A (16,71, por delante de B con 15,19 y C con 15,00)</res>
+</sol></ej>
+</tema>
+
+<tema id="p3-4" n="4" t="Ejercicio 4 · Una base de colores" eyebrow="Ejercicio 4" lede="Los colores RGB son vectores de ℝ³: tres colores pueden ser una base y cualquier otro color, una combinación de ellos.">
+<ej id="p3-4" n="Ejercicio 4 (a–d)" t="coordenadas de un color">
+<p>Elige tres colores (que no sean rojo, verde y azul). a) ¿Son base? b) Elige otro color y calcula sus coordenadas en esa base. c) Comprueba que es la mezcla de los de la base. d) ¿Tiene sentido cualquier combinación lineal?</p>
+<sol>
+<p>Con los del cuaderno: verde lima (112, 251, 0), verde oliva (112, 151, 66) y violeta (106, 30, 118), y el color lila (207, 181, 230).</p>
+<sage t="Ejercicio 4">A = column_matrix(QQ, [(112, 251, 0), (112, 151, 66), (106, 30, 118)])
+print(A.rank(), A.det())                      # rango 3: son base
+c = vector(QQ, (207, 181, 230))
+x = A.solve_right(c)
+show(x, x.n(digits=4))
+print(x[0]*A.column(0) + x[1]*A.column(1) + x[2]*A.column(2) == c)
+def muestra(rgb, x0):
+    col = tuple(min(max(t / 255, 0), 1) for t in rgb)
+    return polygon([(x0, 0), (x0 + 1, 0), (x0 + 1, 1), (x0, 1)], color=col, edgecolor='black')
+show(sum(muestra(A.column(i), i) for i in range(3)) + muestra(c, 3.5), axes=False, aspect_ratio=1)</sage>
+<salida>3 212636
+(-377967/106318, 13625/1802, -242395/106318) ≈ (-3.555, 7.561, -2.280)
+True</salida>
+<p>a) rango 3 ⇒ base. b) Coordenadas (−377967/106318, 13625/1802, −242395/106318) ≈ (−3,56, 7,56, −2,28). c) La combinación reconstruye exactamente (207, 181, 230).</p>
+<p>d) <b>No</b>: matemáticamente cualquier combinación es un vector de ℝ³, pero un color RGB tiene cada componente entre 0 y 255, y como es mezcla <b>aditiva de luz</b> no existe «luz negativa». Las coordenadas negativas del lila significan que no se puede conseguir proyectando esas tres luces.</p>
+</sol></ej>
+</tema>
+
+<tema id="p3-5" n="5" t="Ejercicios 5 a 7 · Ampliación" eyebrow="No entran en el examen" lede="Filtros de imagen, la factorización de Cholesky y un dron: aplicaciones reales de lo anterior.">
+<ej id="p3-5" n="Ejercicio 5" t="filtros sobre imágenes">
+<p>Lee <code>leon.jpg</code> en escala de grises como una matriz y aplica el <b>kernel</b> K = <m>−1 −1 −1; −1 8 −1; −1 −1 −1</m>: el nuevo valor de cada píxel es la suma de los productos elemento a elemento de K por el entorno 3 × 3 del píxel (convolución). Prueba otros kernels. ¿Cómo se pasa una imagen en negativo a normal?</p>
+<sol>
+<sage t="Ejercicio 5">import numpy as np
+from PIL import Image
+img = np.array(Image.open("leon.jpg").convert('L'), dtype=float)
+print(img.shape)                        # (filas, columnas)
+def aplicar_filtro(img, k):
+    h, w = img.shape
+    nueva = np.zeros((h - 2, w - 2))
+    for i in range(h - 2):
+        for j in range(w - 2):
+            nueva[i, j] = np.sum(img[i:i+3, j:j+3] * k)
+    return nueva
+K = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+bordes = np.clip(aplicar_filtro(img, K), 0, 255)
+show(graphics_array([matrix_plot(img, cmap='gray'), matrix_plot(bordes, cmap='gray')]), axes=False)</sage>
+<p>Este kernel suma 0 (8 − 8·1): en zonas de color uniforme da 0 (negro) y sólo «se enciende» donde hay cambios bruscos: <b>detecta bordes</b>. Otros: <m sm>1/9 1/9 1/9; 1/9 1/9 1/9; 1/9 1/9 1/9</m> desenfoca (media), <m sm>0 −1 0; −1 5 −1; 0 −1 0</m> enfoca. Para invertir un negativo basta 255 − valor en cada píxel (es su propio inverso).</p>
+</sol></ej>
+<ej id="p3-6" n="Ejercicio 6" t="Cholesky">
+<p>Una matriz simétrica y definida positiva (xᵗAx &gt; 0 para todo x ≠ 0) se factoriza como A = M·Mᵗ con M triangular inferior (Cholesky). Con <code>cholesky()</code>, factoriza las matrices de <code>ejercicio6Cholesky.sobj</code>.</p>
+<sol>
+<sage t="Ejercicio 6">A, B, C = load('ejercicio6Cholesky.sobj')
+for X in (A, B, C):
+    M = X.cholesky()
+    print(X.nrows(), M.is_triangular("lower"), (M * M.transpose() - X).norm() < 1e-10)</sage>
+<p>Cholesky es como una LU «simétrica» (U = Mᵗ): cuesta la mitad y es más estable. Siempre se puede aplicar a AᵗA si las columnas de A son independientes, que es justo la matriz de las ecuaciones normales de los mínimos cuadrados (práctica 6).</p>
+</sol></ej>
+<ej id="p3-7" n="Ejercicio 7" t="el dron: 8000 sistemas por segundo">
+<p>Un dron de 6 motores calcula en cada instante la potencia x de cada motor resolviendo A·x = b, con A fija (geometría) y b, los datos de 6 sensores. A 8 kHz son 8000 sistemas por segundo. Factoriza A una vez y resuelve 8000 sistemas aleatorios con la LU: ¿cuánto se tarda?</p>
+<figure class="fig-amd"><img src="datos/p3/dron.png" alt="Esquema de un dron de seis motores con los seis canales de los sensores" loading="lazy"><figcaption>Los seis canales del sensor de vuelo: empuje, alabeo, cabeceo, guiñada y las aceleraciones X e Y.</figcaption></figure>
+<sol>
+<sage t="Ejercicio 7 (necesita resolucion_triangular)">A = matrix(RDF, [[5, 1, 1, 0, 0, 0], [1, 5, 1, 1, 0, 0], [1, 1, 5, 0, 1, 0],
+                 [0, 1, 0, 5, 1, 1], [0, 0, 1, 1, 5, 1], [0, 0, 0, 1, 1, 5]])
+P, L, U = A.LU()          # una sola vez, al arrancar
+t = walltime()
+for i in range(8000):
+    b = vector(RDF, [random() for _ in range(6)])
+    y = resolucion_triangular(L, P.transpose() * b, inferior=True)
+    x = resolucion_triangular(U, y)
+print("8000 sistemas en", walltime(t), "segundos")</sage>
+<p>Con la LU calculada de antemano, cada sistema son dos sustituciones de 6 × 6: miles por segundo incluso en Python. (El cuaderno oficial hace sólo 100 iteraciones y no aplica P; con <code>LU()</code> sin opciones SageMath puede permutar filas, por eso aquí se multiplica b por Pᵗ.)</p>
+</sol></ej>
+</tema>

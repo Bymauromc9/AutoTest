@@ -1,0 +1,201 @@
+<!--{
+ "salida": "amd/practicas/p2.html",
+ "titulo": "Práctica 2 · Matrices y factorizaciones",
+ "descripcion": "Práctica 2 de AMD con SageMath: interpretaciones del producto de matrices, tiempo de resolución de sistemas grandes, sistemas diagonales, triangulares y ortogonales y factorizaciones, resuelta y explicada.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 2 · Matrices y factorizaciones",
+ "ops": "A = F₁·F₂",
+ "lead": "Cuatro formas de ver el producto de matrices y por qué importa la <b>forma</b> de la matriz al resolver sistemas grandes: diagonal, triangular u ortogonal se resuelven muchísimo más rápido que una cualquiera. Por eso se factoriza (LU, QR…): se cambia un sistema difícil por dos fáciles.",
+ "marca": "AMD · Práctica 2",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p2-hechos", "data-visto-key": "amd-p2-visto", "data-sage-key": "amd-p2", "data-sage-datos": "amd/practicas/datos/p2/", "data-sage-ficheros": "ejercicio1.sobj,ejercicio2Matrices.sobj,ejercicio2Independientes.sobj,ejercicio3Matrices.sobj,ejercicio3Independientes.sobj,ejercicio4Matrices.sobj,ejercicio4Independientes.sobj,ejercicio5Matrices.sobj,ejercicio5Independientes.sobj,ejercicio6Matrices.sobj,ejercicio6Independientes.sobj,ejercicio6Factores.sobj"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 2, explicados y completados (apartados propuestos incluidos). Los tiempos son orientativos: dependen del ordenador."
+}-->
+
+<tema id="p2-0" n="0" t="Órdenes de la práctica" eyebrow="Práctica 2" lede="Filas, columnas y propiedades de una matriz en SageMath.">
+<ap id="p2-0-1" n="0.1" t="Lo que hay que saber escribir">
+<ul><li><code>M.row(i)</code> / <code>M.column(j)</code>: fila o columna como <b>vector</b>. <code>M[i, :]</code> / <code>M[:, j]</code>: fila o columna como <b>matriz</b> (1 × n o n × 1). La diferencia importa al multiplicar: vector × vector es el producto escalar (un número), columna × fila es una matriz.</li>
+<li><code>A.solve_right(b)</code>: resuelve A·x = b (mucho más rápido que <code>rref</code> para sistemas grandes).</li>
+<li><code>%time orden</code>: mide el tiempo que tarda la orden.</li>
+<li><code>M.dimensions()</code>, <code>M.rank()</code>, <code>M.is_diagonal()</code>, <code>M.is_triangular("upper")</code> / <code>("lower")</code>, <code>M.is_unitary()</code> (¿ortogonal?).</li></ul>
+<p>La función <code>resolucion_triangular(M, b, inferior=False)</code> del enunciado (se da en el examen si hace falta) resuelve un sistema triangular por <b>sustitución</b>: hacia atrás si M es triangular superior y hacia delante si es inferior. Hace n²/2 operaciones, frente a las ~n³/3 de Gauss.</p>
+<sage t="resolucion_triangular (ejecútala antes de los ejercicios 4 y 6)">def resolucion_triangular(M, b, inferior=False):
+    """Resuelve M x = b con M triangular (superior por defecto). Coste O(n^2)."""
+    n = M.nrows()
+    x = [0 for i in range(n)]
+    if inferior:          # sustitución hacia delante: de la primera fila a la última
+        for i in range(n):
+            suma = sum(M[i, j] * x[j] for j in range(i))
+            x[i] = (b[i] - suma) / M[i, i]
+    else:                 # sustitución hacia atrás: de la última fila a la primera
+        for i in range(n - 1, -1, -1):
+            suma = sum(M[i, j] * x[j] for j in range(i + 1, n))
+            x[i] = (b[i] - suma) / M[i, i]
+    return matrix([a for a in x])   # con b columna (n × 1) devuelve una columna</sage>
+<box k="tip" t="Ejemplo a mano (sustitución hacia delante)">
+<p><m>2 0 0; 1 3 0; 4 −2 1</m>x = <m>4; 7; 8</m>: 2x₁ = 4 ⇒ x₁ = 2; 2 + 3x₂ = 7 ⇒ x₂ = 5/3; 4·2 − 2·5/3 + x₃ = 8 ⇒ x₃ = 10/3. Solución (2, 5/3, 10/3). (El cuaderno oficial da x₃ = 2/3 por una errata: 8 − 10/3 + x₃ = 8 da x₃ = 10/3.)</p>
+</box>
+</ap>
+</tema>
+
+<tema id="p2-1" n="1" t="Ejercicio 1 · Interpretaciones del producto" eyebrow="Ejercicio 1" lede="El fichero ejercicio1.sobj trae dos matrices 3 × 3, A y B; sea C = A·B.">
+<ej id="p2-1a" n="Ejercicio 1 (a, b)" t="C₁₁ y filas por columnas">
+<p>a) Calcula C₁₁. b) Calcula C como producto de las filas de A por las columnas de B.</p>
+<sol>
+<p>El elemento C<sub>ij</sub> es (fila i de A)·(columna j de B). Con A = <m>−1 −1 0; −3 −1 0; 1 2 2</m> y B = <m>−2 −2 2; −1 1 −1; −3 1 −1</m>: C₁₁ = (−1, −1, 0)·(−2, −1, −3) = 2 + 1 + 0 = <b>3</b>.</p>
+<sage t="Ejercicio 1 (a, b)">A, B = load('ejercicio1.sobj')
+show("A =", A, "  B =", B)
+show("C11 =", A.row(0) * B.column(0))
+show(matrix([[A.row(i) * B.column(j) for j in range(3)] for i in range(3)]), A * B)</sage>
+<salida>C11 = 3
+[  3   1  -1]
+[  7   5  -5]
+[-10   2  -2]</salida>
+</sol></ej>
+<ej id="p2-1c" n="Ejercicio 1 (c, d)" t="columnas y filas como combinaciones">
+<p>c) Calcula la primera columna de C como combinación lineal de las columnas de A. d) Calcula la primera fila de C como combinación lineal de las filas de B.</p>
+<sol>
+<box t="Las dos lecturas">
+<p>Cada <b>columna</b> de C es combinación de las columnas de A con los coeficientes de la columna correspondiente de B: C<sup>j</sup> = b<sub>1j</sub>A<sup>1</sup> + b<sub>2j</sub>A<sup>2</sup> + ⋯. Cada <b>fila</b> de C es combinación de las filas de B con los coeficientes de la fila de A: C<sub>i</sub> = a<sub>i1</sub>B<sub>1</sub> + a<sub>i2</sub>B<sub>2</sub> + ⋯.</p>
+</box>
+<p>C¹ = −2·(−1, −3, 1) − 1·(−1, −1, 2) − 3·(0, 0, 2) = (2, 6, −2) + (1, 1, −2) + (0, 0, −6) = (3, 7, −10). C₁ = −1·(−2, −2, 2) − 1·(−1, 1, −1) + 0·(…) = (3, 1, −1).</p>
+<sage t="Ejercicio 1 (c, d)">show(B[0,0]*A[:,0] + B[1,0]*A[:,1] + B[2,0]*A[:,2])   # primera columna de C
+show(A[0,0]*B[0,:] + A[0,1]*B[1,:] + A[0,2]*B[2,:])   # primera fila de C</sage>
+</sol></ej>
+<ej id="p2-1e" n="Ejercicio 1 (e, f)" t="suma de matrices de rango 1">
+<p>e) Calcula C como suma de las columnas de A por las filas de B. f) Comprueba que cada sumando es una matriz de rango 1.</p>
+<sol>
+<p>C = A¹B₁ + A²B₂ + A³B₃, donde cada AⁱBᵢ es (columna i de A, n × 1)·(fila i de B, 1 × n): una matriz n × n cuyas filas son todas múltiplos de Bᵢ, así que tiene <b>rango 1</b>. Es la misma idea que la SVD como suma de matrices de rango 1 (tema 4).</p>
+<sage t="Ejercicio 1 (e, f)">S = [A[:,i] * B[i,:] for i in range(3)]
+show(S[0], S[1], S[2])
+print(sum(S) == A * B, [s.rank() for s in S])
+print(A.column(0) * B.row(0))   # ¡ojo! con vectores es el producto escalar: un número</sage>
+<salida>True [1, 1, 1]
+6</salida>
+</sol></ej>
+<ej id="p2-1g" n="Ejercicio 1 (g)" t="propuesto: C₃₃">
+<p>Calcula el elemento C₃₃.</p>
+<sol>
+<p>C₃₃ = (fila 3 de A)·(columna 3 de B) = (1, 2, 2)·(2, −1, −1) = 2 − 2 − 2.</p>
+<res>C₃₃ = −2</res>
+<sage t="Ejercicio 1 (g)">print(A.row(2) * B.column(2), (A * B)[2, 2])</sage>
+</sol></ej>
+</tema>
+
+<tema id="p2-2" n="2" t="Ejercicio 2 · Tiempo de resolución" eyebrow="Ejercicio 2" lede="Tres sistemas de 4 × 4, 40 × 40 y 400 × 400 con coeficientes reales.">
+<ej id="p2-2" n="Ejercicio 2 (a, b)" t="rref() frente a solve_right()">
+<p>a) Resuelve los tres sistemas con <code>rref()</code> y observa el tiempo. b) Resuélvelos con <code>solve_right()</code> y compara.</p>
+<sol>
+<sage t="Ejercicio 2">A, B, C = load('ejercicio2Matrices.sobj')
+a, b, c = load('ejercicio2Independientes.sobj')
+for M, v in [(A, a), (B, b), (C, c)]:
+    n = M.nrows()
+    t = walltime(); M.augment(v).rref(); t1 = walltime(t)
+    t = walltime(); M.solve_right(v); t2 = walltime(t)
+    print(f"{n} x {n}:  rref {t1:.4f} s   solve_right {t2:.4f} s")</sage>
+<salida>4 x 4:  rref 0.0001 s   solve_right 0.0002 s
+40 x 40:  rref 0.0090 s   solve_right 0.0002 s
+400 x 400:  rref 6.8 s   solve_right 0.0030 s</salida>
+<p>Con 4 incógnitas da igual, pero con 400 <code>rref()</code> tarda segundos y <code>solve_right()</code> milésimas: rref calcula la reducida completa (y aquí con números reales en Python), mientras que <code>solve_right</code> usa una factorización LU optimizada (tema 2, práctica 3). <b>Conclusión: para resolver, solve_right; rref sólo cuando quieras ver la reducida.</b></p>
+<box k="warn" t="Ojo con los reales">
+<p>Con números de coma flotante, la reducida tiene entradas como 2,7·10⁻¹⁷ donde debería haber 0: errores de redondeo. Por eso con reales no se compara con <code>==</code> sino viendo que la diferencia es muy pequeña.</p>
+</box>
+</sol></ej>
+</tema>
+
+<tema id="p2-3" n="3" t="Ejercicio 3 · Sistemas diagonales" eyebrow="Ejercicio 3" lede="Tres sistemas con matriz diagonal (4, 40 y 400 incógnitas).">
+<ej id="p2-3" n="Ejercicio 3 (a, b, c)" t="dividir y nada más">
+<p>a) Comprueba que las matrices son diagonales. b) Resuelve usando que lo son (xᵢ = bᵢ / aᵢᵢ) y mide el tiempo. c) Resuélvelos con <code>solve_right()</code> y compara.</p>
+<sol>
+<p>Si A es diagonal, cada ecuación es aᵢᵢxᵢ = bᵢ: basta <b>dividir</b> (n operaciones). Para el de 4 × 4, A = diag(5, 5, −3, −3) y b = (2, 3, −1, 2), luego x = (2/5, 3/5, 1/3, −2/3).</p>
+<sage t="Ejercicio 3">A, B, C = load('ejercicio3Matrices.sobj')
+a, b, c = load('ejercicio3Independientes.sobj')
+print(A.is_diagonal(), B.is_diagonal(), C.is_diagonal())
+print([a[i, 0] / A[i, i] for i in range(4)])
+for M, v in [(A, a), (B, b), (C, c)]:
+    n = M.nrows()
+    t = walltime(); x = [v[i, 0] / M[i, i] for i in range(n)]; t1 = walltime(t)
+    t = walltime(); y = M.solve_right(v); t2 = walltime(t)
+    print(f"{n}: dividiendo {t1:.5f} s, solve_right {t2:.5f} s, iguales: {vector(x) == y.column(0)}")</sage>
+<salida>True True True
+[2/5, 3/5, 1/3, -2/3]</salida>
+<p>Dividir es instantáneo incluso con 400 incógnitas; <code>solve_right</code> también es rápido, pero no sabe que la matriz es diagonal y hace más trabajo del necesario.</p>
+</sol></ej>
+</tema>
+
+<tema id="p2-4" n="4" t="Ejercicio 4 · Sistemas triangulares" eyebrow="Ejercicio 4" lede="Sistemas triangulares superiores de tamaño 4, 40 y 400.">
+<ej id="p2-4" n="Ejercicio 4" t="sustitución hacia atrás">
+<p>Carga los sistemas de <code>ejercicio4Matrices.sobj</code> y <code>ejercicio4Independientes.sobj</code>, resuélvelos con <code>resolucion_triangular()</code> y estudia el tiempo.</p>
+<sol>
+<p>A = <m>1 −4 0 0; 0 2 −4 2; 0 0 −2 2; 0 0 0 −3</m>, b = (0, −3, 3, 4). Hacia atrás: −3x₄ = 4 ⇒ x₄ = −4/3; −2x₃ + 2x₄ = 3 ⇒ x₃ = −17/6; 2x₂ − 4x₃ + 2x₄ = −3 ⇒ x₂ = −35/6; x₁ − 4x₂ = 0 ⇒ x₁ = −70/3.</p>
+<sage t="Ejercicio 4 (necesita la celda de resolucion_triangular)">A, B, C = load('ejercicio4Matrices.sobj')
+a, b, c = load('ejercicio4Independientes.sobj')
+print(A.is_triangular('upper'), B.is_triangular('upper'), C.is_triangular('upper'))
+show(resolucion_triangular(A, a))
+for M, v in [(A, a), (B, b), (C, c)]:
+    t = walltime(); x = resolucion_triangular(M, v); t1 = walltime(t)
+    print(M.nrows(), f"{t1:.4f} s", x == M.solve_right(v))</sage>
+<salida>True True True
+[-70/3]
+[-35/6]
+[-17/6]
+[ -4/3]</salida>
+</sol></ej>
+</tema>
+
+<tema id="p2-5" n="5" t="Ejercicio 5 · Sistemas ortogonales" eyebrow="Ejercicio 5" lede="Tres sistemas cuya matriz M cumple M·Mᵗ = Mᵗ·M = I.">
+<ej id="p2-5" n="Ejercicio 5 (a, b, c)" t="la inversa es la traspuesta">
+<p>a) Comprueba que M·Mᵗ = Mᵗ·M = Id (matrices ortogonales). b) Resuelve los sistemas usando esa propiedad y mide el tiempo. c) Resuélvelos con <code>rref()</code> y compara.</p>
+<sol>
+<p>Si M es ortogonal, M<sup>−1</sup> = M<sup>t</sup>, así que M·x = b ⇒ <b>x = Mᵗ·b</b>: un solo producto matriz por vector, sin resolver nada.</p>
+<sage t="Ejercicio 5">A, B, C = load('ejercicio5Matrices.sobj')
+a, b, c = load('ejercicio5Independientes.sobj')
+print(A.dimensions(), B.dimensions(), C.dimensions())
+print(A.is_unitary(), B.is_unitary(), C.is_unitary())
+print((A * A.transpose() - identity_matrix(4)).norm() < 1e-12)   # con reales, «casi» la identidad
+for M, v in [(A, a), (B, b), (C, c)]:
+    t = walltime(); x = M.transpose() * v; t1 = walltime(t)
+    t = walltime(); r = M.augment(v).rref(); t2 = walltime(t)
+    print(M.nrows(), f"traspuesta {t1:.4f} s, rref {t2:.4f} s, error {(M * x - v).norm():.1e}")</sage>
+<p>El producto por la traspuesta es casi instantáneo; rref en el de 400 tarda varios segundos. Con reales, A·Aᵗ da 0,9999999… y 10⁻¹⁶ en vez de 1 y 0: por eso <code>is_unitary()</code> tolera un pequeño error.</p>
+</sol></ej>
+</tema>
+
+<tema id="p2-6" n="6" t="Ejercicio 6 · Resolver con factorizaciones" eyebrow="Ejercicio 6" lede="Cada matriz de ejercicio6Matrices.sobj es el producto de un par de matrices de ejercicio6Factores.sobj.">
+<ej id="p2-6" n="Ejercicio 6 (a–d)" t="un sistema difícil = dos fáciles">
+<p>a) Calcula el tamaño de cada sistema. b) Averigua qué tipo de matrices son los factores. c) Comprueba que el producto de cada par da la matriz del sistema. d) Elige una forma adecuada de resolver cada sistema.</p>
+<sol>
+<p>Si M = F₁·F₂, el sistema F₁·(F₂·x) = b se resuelve en dos pasos: primero F₁·y = b y después F₂·x = y. Si los factores son triangulares u ortogonales, cada paso es inmediato.</p>
+<ul><li>A (40 × 40) = T1[0]·T1[1], con T1[0] <b>triangular superior</b> y T1[1] <b>triangular inferior</b>: hacia atrás y luego hacia delante.</li>
+<li>B (30 × 30) = T2[0]·T2[1], inferior por superior (una LU): hacia delante y luego hacia atrás.</li>
+<li>C (50 × 50) = T3[0]·T3[1], con T3[0] <b>ortogonal</b> y T3[1] triangular superior (una QR): F₂·x = F₁ᵗ·c y hacia atrás.</li></ul>
+<sage t="Ejercicio 6 (necesita resolucion_triangular)">A, B, C = load('ejercicio6Matrices.sobj')
+a, b, c = load('ejercicio6Independientes.sobj')
+T1, T2, T3 = load('ejercicio6Factores.sobj')
+print(A.dimensions(), B.dimensions(), C.dimensions())
+print(T1[0] * T1[1] == A, T1[0].is_triangular("upper"), T1[1].is_triangular("lower"))
+y = resolucion_triangular(T1[0], a)                       # F1 y = a  (superior)
+x = resolucion_triangular(T1[1], y, inferior=True)   # F2 x = y (inferior)
+print("A:", A * x == a)
+print(T2[0] * T2[1] == B, T2[0].is_triangular("lower"), T2[1].is_triangular("upper"))
+y = resolucion_triangular(T2[0], b, inferior=True)
+x = resolucion_triangular(T2[1], y)
+print("B:", B * x == b)
+print(T3[0] * T3[1] == C, T3[0].is_unitary(), T3[1].is_triangular("upper"))
+x = resolucion_triangular(T3[1], T3[0].transpose() * c)
+print("C: error", (C * x - c).norm())</sage>
+<salida>((40, 40), (30, 30), (50, 50))
+True True True
+A: True
+True True True
+B: True
+True True True
+C: error 1.5861050345164257e-13</salida>
+<p>En el sistema C la comprobación con <code>==</code> da <code>False</code> porque hay números reales: la norma del error, del orden de 10⁻¹³, demuestra que la solución es correcta salvo redondeo.</p>
+<box k="tip" t="Para el examen">
+<p>La idea de toda la práctica: <b>factorizar una vez y resolver muchas</b>. La factorización (LU, QR) cuesta como un Gauss, pero después cada sistema con la misma matriz se resuelve en n² operaciones.</p>
+</box>
+</sol></ej>
+</tema>

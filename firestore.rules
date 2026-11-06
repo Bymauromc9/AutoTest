@@ -1,7 +1,7 @@
 rules_version = '2';
 // Reglas de Firestore de la web (Firebase → Firestore Database → Reglas → pegar y «Publicar»).
 //
-//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, gohp, w<semana>, bloqueado, admin,
+//   usuarios/{uid}   nombre, id, puntos, tests, ultimo, creado, fli, fc, ip, gohp, amd, w<semana>, bloqueado, admin,
 //                    insignias { <id>: { f: fecha, n: veces, m?: motivo } }, vitrina [ids], reclamada
 //                    Lo lee cualquiera (es el ranking y el perfil público); su dueño sólo lo escribe para:
 //                    · sumar los puntos de UN test: tests +1, los mismos puntos en el total, en una asignatura y
@@ -31,10 +31,12 @@ service cloud.firestore {
     function delta() { return nuevo().puntos - viejo().puntos; }
     function cambio(k) { return nuevo().get(k, 0) - viejo().get(k, 0); }
     function unaAsignatura() {
-      return (cambio('fli') == delta() && cambio('fc') == 0 && cambio('ip') == 0 && cambio('gohp') == 0)
-          || (cambio('fc') == delta() && cambio('fli') == 0 && cambio('ip') == 0 && cambio('gohp') == 0)
-          || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('gohp') == 0)
-          || (cambio('gohp') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('ip') == 0);
+      // Exactamente una asignatura recibe todos los puntos del test: el resto no cambia.
+      return (cambio('fli') == delta() && cambio('fc') == 0 && cambio('ip') == 0 && cambio('gohp') == 0 && cambio('amd') == 0)
+          || (cambio('fc') == delta() && cambio('fli') == 0 && cambio('ip') == 0 && cambio('gohp') == 0 && cambio('amd') == 0)
+          || (cambio('ip') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('gohp') == 0 && cambio('amd') == 0)
+          || (cambio('gohp') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('ip') == 0 && cambio('amd') == 0)
+          || (cambio('amd') == delta() && cambio('fli') == 0 && cambio('fc') == 0 && cambio('ip') == 0 && cambio('gohp') == 0);
     }
     function esSuyo(uid) { return request.auth != null && request.auth.uid == uid; }
     function esAdmin() { return request.auth != null && request.auth.token.get('admin', false) == true; }
@@ -74,7 +76,7 @@ service cloud.firestore {
       // El dueño, al terminar un test.
       allow update: if esSuyo(uid)
         && viejo().get('bloqueado', false) != true
-        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', 'gohp', semana()])
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'tests', 'ultimo', 'fli', 'fc', 'ip', 'gohp', 'amd', semana()])
         && nuevo().ultimo == request.time
         && nuevo().tests == viejo().tests + 1
         && delta() >= 0 && delta() <= 2025
@@ -94,8 +96,8 @@ service cloud.firestore {
       // Un administrador, desde el panel: corregir puntos (nunca negativos), bloquear o desbloquear y dar, quitar
       // o cambiar insignias (y quitarlas de la vitrina).
       allow update: if esAdmin()
-        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'gohp', 'bloqueado', semana(), 'insignias', 'vitrina'])
-        && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural('gohp') && natural(semana())
+        && nuevo().diff(viejo()).affectedKeys().hasOnly(['puntos', 'fli', 'fc', 'ip', 'gohp', 'amd', 'bloqueado', semana(), 'insignias', 'vitrina'])
+        && natural('puntos') && natural('fli') && natural('fc') && natural('ip') && natural('gohp') && natural('amd') && natural(semana())
         && nuevo().get('bloqueado', false) is bool
         && nuevo().get('insignias', {}) is map
         && nuevo().get('vitrina', []) is list && nuevo().get('vitrina', []).size() <= 6;
@@ -113,7 +115,7 @@ service cloud.firestore {
         && nuevo().rareza in ['comun', 'rara', 'epica', 'legendaria']
         && nuevo().activa is bool && natural('orden')
         && (nuevo().tipo == 'manual'
-            || (nuevo().tipo == 'auto' && nuevo().campo in ['puntos', 'tests', 'fli', 'fc', 'ip', 'gohp']
+            || (nuevo().tipo == 'auto' && nuevo().campo in ['puntos', 'tests', 'fli', 'fc', 'ip', 'gohp', 'amd']
                 && nuevo().umbral is int && nuevo().umbral >= 1))
         && nuevo().actualizado == request.time && texto('por', 40);
       allow delete: if esAdmin();

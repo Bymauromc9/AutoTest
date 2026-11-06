@@ -1,0 +1,154 @@
+<!--{
+ "salida": "amd/practicas/p6.html",
+ "titulo": "Práctica 6 · Mínimos cuadrados",
+ "descripcion": "Práctica 6 de AMD con SageMath: la mejor solución de sistemas incompatibles, ecuaciones normales, rectas y parábolas de regresión con datos de ficheros y por qué hay que usar QR cuando los números son grandes.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 6 · Mínimos cuadrados",
+ "ops": "AᵗA·x = Aᵗb",
+ "lead": "Cuando A·x = b no tiene solución, se busca la x que hace ‖A·x − b‖ lo más pequeño posible: A·x es la proyección de b sobre el espacio columna de A y se calcula con las <b>ecuaciones normales</b> AᵗA·x = Aᵗb. Con eso se ajustan rectas, parábolas y cúbicas a nubes de puntos.",
+ "marca": "AMD · Práctica 6",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p6-hechos", "data-visto-key": "amd-p6-visto", "data-sage-key": "amd-p6", "data-sage-datos": "amd/practicas/datos/p6/", "data-sage-ficheros": "/amd/sage/geometria.py,triangular.sage,practica6Ejercicio1Matrices.sobj,practica6Ejercicio1Independientes.sobj,ejercicio3APuntos.sobj,ejercicio3BPuntos.sobj,ejercicio4Puntos.sobj,ejercicio5Puntos.sobj,ejercicio6Puntos.sobj", "data-sage-prep": "from geometria import *"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 6, explicados y completados. Los apartados que dependen de los datos de un fichero (3 b y 6) se resuelven con el mismo código: ejecútalo para ver los coeficientes. El ejercicio 5 no entra en el examen."
+}-->
+
+<tema id="p6-0" n="0" t="El método" eyebrow="Práctica 6" lede="Mínimos cuadrados en cuatro líneas.">
+<ap id="p6-0-1" n="0.1" t="Ecuaciones normales">
+<ol><li>Se plantea A·x = b (incompatible).</li>
+<li>Se buscan las x que minimizan ‖A·x − b‖²: A·x debe ser la proyección ortogonal de b sobre C(A), así que A·x − b es perpendicular a las columnas de A: <b>Aᵗ(A·x − b) = 0</b>.</li>
+<li>Ecuaciones normales: <b>AᵗA·x = Aᵗb</b>. Siempre son compatibles.</li>
+<li>Si las columnas de A son independientes, AᵗA es invertible y la solución es única: x₀ = (AᵗA)⁻¹Aᵗb. Si no, hay infinitas soluciones de mínimos cuadrados (todas con la misma A·x).</li></ol>
+<box k="tip" t="Órdenes">
+<p><code>(A.T*A).augment(A.T*b, subdivide=True).rref()</code> o <code>(A.T*A).solve_right(A.T*b)</code>. Para ajustes de curvas, SageMath también tiene <code>find_fit(datos, modelo)</code>, que sirve para comprobar.</p>
+</box>
+</ap>
+</tema>
+
+<tema id="p6-1" n="1" t="Ejercicio 1 · Cuatro sistemas" eyebrow="Ejercicio 1" lede="Determina si los sistemas de practica6Ejercicio1*.sobj son compatibles; si no, su solución por mínimos cuadrados.">
+<ej id="p6-1a" n="Ejercicio 1 · sistema A" t="3 ecuaciones, 2 incógnitas">
+<p><sys>x₁ + x₂ = 3; −2x₁ + 3x₂ = 1; 2x₁ − x₂ = 2</sys></p>
+<sol>
+<p>La reducida de (A | a) tiene la fila (0 0 | 1): incompatible. Ecuaciones normales:</p>
+<md>AᵗA = <m>9 −7; −7 11</m>,  Aᵗa = <m>5; 4</m>  ⇒  <m>1 0 | 83/50; 0 1 | 71/50</m></md>
+<res>x₁ = 83/50, x₂ = 71/50 (solución de mínimos cuadrados)</res>
+<sage t="Sistema A">A, B, C, D = load('practica6Ejercicio1Matrices.sobj')
+a, b, c, d = load('practica6Ejercicio1Independientes.sobj')
+print(A.dimensions(), B.dimensions(), C.dimensions(), D.dimensions())
+show(A.augment(a, subdivide=True).rref())
+S = (A.T * A).augment(A.T * a, subdivide=True)
+show(S, S.rref())
+sol1 = S.rref().column(2)
+from geometria import *
+plano([A.column(0), A.column(1)]) + vectores([vector(a)], color=rojo) + vectores([A * sol1], color=azul) + vectores([vector(a) - A * sol1], color=verde)</sage>
+<p>En el dibujo: el plano es C(A), a (rojo) se sale de él, A·x₀ (azul) es su proyección y la diferencia (verde) es perpendicular al plano.</p>
+</sol></ej>
+<ej id="p6-1b" n="Ejercicio 1 · sistema B" t="propuesto">
+<p><sys>−3x₁ + 5x₂ = 0; x₁ − x₂ = 0; 2x₁ − x₂ = 2</sys></p>
+<sol>
+<p>Las dos primeras dan x₁ = x₂ = 0 y la tercera dice 0 = 2: incompatible (rg A = 2, rg(A | b) = 3).</p>
+<md>BᵗB = <m>14 −18; −18 27</m>,  Bᵗb = <m>4; −2</m>  ⇒  x₁ = 4/3, x₂ = 22/27</md>
+<res>x₀ = (4/3, 22/27); B·x₀ = (2/27, 14/27, 50/27) y el error mínimo es ‖B·x₀ − b‖² = 8/27</res>
+<sage t="Sistema B">show(B.augment(b, subdivide=True).rref())
+x0 = (B.T * B).solve_right(B.T * b)
+show(x0, B * x0, (b - B * x0).norm()^2)</sage>
+</sol></ej>
+<ej id="p6-1c" n="Ejercicio 1 · sistema C" t="infinitas soluciones de mínimos cuadrados">
+<p><sys>x₁ + x₂ − x₃ = 1; x₁ − x₂ = 0; 2x₁ − x₃ = 2</sys></p>
+<sol>
+<p>Incompatible (la reducida de la ampliada tiene la fila (0 0 0 | 1)). Pero además las columnas de C son dependientes (la tercera es −½ de la suma de las otras dos), así que CᵗC no es invertible:</p>
+<md><m>6 0 −3 | 5; 0 2 −1 | 1; −3 −1 2 | −3</m> ∼ <m>1 0 −1/2 | 5/6; 0 1 −1/2 | 1/2; 0 0 0 | 0</m></md>
+<res>x₀ = (5/6 + t/2, 1/2 + t/2, t), t ∈ ℝ: infinitas soluciones, todas con la misma C·x₀ = (4/3, 1/3, 5/3)</res>
+<sage t="Sistema C">S = (C.T * C).augment(C.T * c, subdivide=True)
+show(S.rref())
+var('t'); x0 = column_matrix([5/6 + t/2, 1/2 + t/2, t])
+show(C * x0)        # no depende de t</sage>
+</sol></ej>
+<ej id="p6-1d" n="Ejercicio 1 · sistema D" t="propuesto">
+<p><sys>x₁ + x₂ − x₃ = 1; x₁ − x₂ = 0; x₁ − x₃ = 1</sys></p>
+<sol>
+<p>Aquí rg D = rg(D | d) = 3: el sistema es <b>compatible determinado</b> y no hace falta aproximar. Su solución es exacta (y es también la que dan las ecuaciones normales, con error 0):</p>
+<res>x = (0, 0, −1)</res>
+<sage t="Sistema D">show(D.augment(d, subdivide=True).rref())
+show((D.T * D).solve_right(D.T * d))</sage>
+</sol></ej>
+</tema>
+
+<tema id="p6-2" n="2" t="Ejercicio 2 · Interpretación geométrica" eyebrow="Ejercicio 2" lede="Con la solución de mínimos cuadrados del sistema C del ejercicio 1.">
+<ej id="p6-2" n="Ejercicio 2 (a, b, c)" t="proyección y perpendicular">
+<p>a) Comprueba que C·x₀ está en el espacio columna C(C). b) Comprueba que c − C·x₀ es perpendicular a C(C). c) Represéntalo.</p>
+<sol>
+<p>a) C·x₀ = (4/3, 1/3, 5/3) es combinación de las columnas de C (por definición, cualquier C·x lo es); es la <b>proyección ortogonal</b> de c sobre C(C) y no depende de t. b) Cᵗ(c − C·x₀) = 0: el error es perpendicular a todas las columnas. El mínimo de ‖C·x − c‖² vale ‖(−1/3, −1/3, 1/3)‖² = 1/3.</p>
+<sage t="Ejercicio 2 (necesita el sistema C)">var('t'); x0 = column_matrix([5/6 + t/2, 1/2 + t/2, t])
+show(C.transpose() * (c - C * x0), (c - C * x0).norm()^2)
+from geometria import *
+G = plano([vector(C[:, 0]), vector(C[:, 1])]) + vectores([vector(c)], color=azul)
+G + vectores([vector(C * x0)], color=rojo) + vectores([vector(c - C * x0)], color=verde) + segmentos([vector(C * x0), vector(c)])</sage>
+<p>c) C(C) es un plano (rango 2) porque las columnas son dependientes; c está fuera, C·x₀ es su sombra perpendicular sobre el plano y el segmento entre ambos mide √(1/3).</p>
+</sol></ej>
+</tema>
+
+<tema id="p6-3" n="3" t="Ejercicios 3 y 4 · Regresión" eyebrow="Ejercicios 3 y 4" lede="Recta y parábola que mejor se ajustan a nubes de puntos guardadas en ficheros.">
+<ej id="p6-3" n="Ejercicio 3 (a, b)" t="rectas de regresión">
+<p>Calcula la recta de regresión y = a + bx de los datos de <code>ejercicio3APuntos.sobj</code> y <code>ejercicio3BPuntos.sobj</code> y dibújala con la nube de puntos.</p>
+<sol>
+<p>Cada punto (xᵢ, yᵢ) da una ecuación a + b·xᵢ = yᵢ: A tiene filas (1, xᵢ) y el término independiente son los yᵢ. Para el fichero A sale <b>y = 2,0453 − 1,9051x</b> (los datos bajan casi en línea recta). El fichero B, propuesto, se resuelve con la misma función:</p>
+<sage t="Ejercicio 3">def recta_regresion(datos):
+    A = matrix(RDF, [[1, p[0]] for p in datos])
+    B = vector(RDF, [p[1] for p in datos])
+    a, b = (A.T * A).solve_right(A.T * B)
+    x0, x1 = min(p[0] for p in datos) - 0.2, max(p[0] for p in datos) + 0.2
+    show("y =", a, "+", b, "x")
+    return point(datos, size=30) + plot(a + b * x, (x, x0, x1), color='red', thickness=2)
+var('x')
+show(recta_regresion(load('ejercicio3APuntos.sobj')))
+show(recta_regresion(load('ejercicio3BPuntos.sobj')))
+var('a1 a2'); model(x) = a1 + a2 * x
+print(find_fit(load('ejercicio3APuntos.sobj'), model))   # comprobación</sage>
+<salida>y = 2.0452712051743 + -1.90512683024215 x
+[a1 == 2.0452712075131005, a2 == -1.905126831400444]</salida>
+</sol></ej>
+<ej id="p6-4" n="Ejercicio 4" t="parábola de regresión">
+<p>Calcula la parábola y = a + bx + cx² que mejor se ajusta a los datos de <code>ejercicio4Puntos.sobj</code> y dibújala con los puntos.</p>
+<sol>
+<p>Igual, con filas (1, xᵢ, xᵢ²): la curva no es una recta pero sí es <b>lineal en los coeficientes</b> a, b, c, que es lo que importa.</p>
+<sage t="Ejercicio 4">datos = load('ejercicio4Puntos.sobj')
+A = matrix(RDF, [[1, p[0], p[0]^2] for p in datos])
+B = vector(RDF, [p[1] for p in datos])
+a, b, c = (A.T * A).solve_right(A.T * B)
+var('x'); show("y =", a + b*x + c*x^2)
+point(datos, size=30) + plot(a + b*x + c*x^2, (x, min(p[0] for p in datos) - 0.2, max(p[0] for p in datos) + 0.2), color='red')</sage>
+<res>y = −5,0739 + 5,9792x − 1,6425x² (coincide con find_fit)</res>
+</sol></ej>
+</tema>
+
+<tema id="p6-5" n="5" t="Ejercicios 5 y 6" eyebrow="Ampliación y propuesto" lede="Cuando los números son enormes, las ecuaciones normales pierden precisión: QR al rescate. Y una cúbica de regresión.">
+<ej id="p6-5" n="Ejercicio 5" t="números grandes: Gauss frente a QR">
+<p>Los puntos de <code>ejercicio5Puntos.sobj</code> tienen coordenadas del orden de 10⁹ y muy próximas entre sí. a) Dibújalos. b) Recta de regresión con Gauss (o LU) sobre las ecuaciones normales. c) Con QR. d) Compara las rectas.</p>
+<sol>
+<p>b) AᵗA tiene entradas de 10¹⁹: al escalonarla en coma flotante (16 cifras) la segunda fila se anula y Gauss «cree» que hay infinitas soluciones: sale una recta horizontal, absurda.</p>
+<p>c) Con A = QR, las ecuaciones normales se convierten en <b>R·x = Qᵗ·b</b> (porque AᵗA = RᵗR y Rᵗ se simplifica). No se forma AᵗA, así que no se pierden las cifras. Sale y ≈ 625,58 + 0,99999938x, mucho mejor; y <code>find_fit</code>, que usa métodos todavía más robustos, da y ≈ 1 + 1,000000004x.</p>
+<sage t="Ejercicio 5">load('triangular.sage')
+datos = load('ejercicio5Puntos.sobj')
+A = matrix(RDF, [[1, p[0]] for p in datos]); B = vector(RDF, [p[1] for p in datos])
+show((A.T * A).augment(A.T * B, subdivide=True).rref())        # Gauss: degenerado
+Q, R = A.QR(full=False)
+sol = (R).solve_right(Q.T * B)
+show("QR: y =", sol[0], "+", sol[1], "x")
+var('x a1 a2'); model(x) = a1 + a2 * x
+show(find_fit(datos, model))</sage>
+<p>d) Dibujando las tres con los puntos, sólo la de QR (y la de find_fit) pasan por la nube. Moraleja: para mínimos cuadrados con datos mal condicionados, <b>QR en vez de ecuaciones normales</b>.</p>
+</sol></ej>
+<ej id="p6-6" n="Ejercicio 6" t="propuesto: cúbica de regresión">
+<p>Calcula el polinomio cúbico que mejor se ajusta a los datos de <code>ejercicio6Puntos.sobj</code> y dibújalo con la nube de puntos.</p>
+<sol>
+<p>y = a + bx + cx² + dx³: cada punto da una fila (1, xᵢ, xᵢ², xᵢ³). Con el mismo esquema:</p>
+<sage t="Ejercicio 6">datos = load('ejercicio6Puntos.sobj')
+A = matrix(RDF, [[1, p[0], p[0]^2, p[0]^3] for p in datos]); B = vector(RDF, [p[1] for p in datos])
+a, b, c, d = (A.T * A).solve_right(A.T * B)
+var('x'); f = a + b*x + c*x^2 + d*x^3; show("y =", f)
+point(datos, size=30) + plot(f, (x, min(p[0] for p in datos) - 0.2, max(p[0] for p in datos) + 0.2), color='red')</sage>
+<p>Al ejecutarlo verás los cuatro coeficientes y la curva sobre los puntos. Para comprobar: <code>find_fit(datos, a1 + a2*x + a3*x^2 + a4*x^3)</code> con un modelo de cuatro parámetros.</p>
+</sol></ej>
+</tema>

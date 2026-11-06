@@ -1,0 +1,126 @@
+/* sage.css — celdas y cuadernos de SageMath (assets/js/sage.js). Usa los tokens de assets/css/guia.css.
+   Los editores son de SageMathCell (CodeMirror): aquí se adaptan a los colores de la web y al modo oscuro. */
+
+.sage, .sage-nb {
+  --sg-code: color-mix(in srgb, var(--surface) 90%, var(--accent) 10%);   /* fondo del código */
+  --sg-edge: color-mix(in srgb, var(--accent) 30%, var(--rule));
+  --sg-kw: #7A2E9C; --sg-num: #0F6F5C; --sg-str: #A1440F; --sg-com: #6B7670; --sg-def: #1F4FB5; --sg-op: #8A5A00;
+}
+:root[data-theme="dark"] .sage, :root[data-theme="dark"] .sage-nb {
+  --sg-kw: #D3A4F5; --sg-num: #7FD8C0; --sg-str: #F2B27E; --sg-com: #8F9C95; --sg-def: #9DBBFA; --sg-op: #E8C26E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .sage, :root:not([data-theme="light"]) .sage-nb {
+    --sg-kw: #D3A4F5; --sg-num: #7FD8C0; --sg-str: #F2B27E; --sg-com: #8F9C95; --sg-def: #9DBBFA; --sg-op: #E8C26E;
+  }
+}
+
+/* ---------- Celda de la resolución ---------- */
+.sage { margin: var(--s-3) 0 var(--s-4); border: 1px solid var(--sg-edge); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.sage-t { max-width: none; margin: 0; padding: 7px 12px; font: 700 .8rem var(--f-display); color: var(--accent); background: var(--accent-soft); border-bottom: 1px solid var(--sg-edge); }
+.sage-t::before { content: "Sage"; display: inline-block; margin-right: 8px; padding: 0 6px; border-radius: 4px; background: var(--accent); color: var(--surface); font: 700 .7rem/1.5 var(--f-mono); vertical-align: 1px; }
+.sage > pre { margin: 0; padding: 10px 14px; overflow-x: auto; font: 400 .86rem/1.55 var(--f-mono); tab-size: 4; background: var(--sg-code); }
+.sage > pre code { font: inherit; white-space: pre; background: none; padding: 0; border: 0; border-radius: 0; color: inherit; }
+.sage.is-live > pre, .sage.is-live > .sage-out { display: none; }   /* el editor sustituye al código y a la salida de referencia */
+
+/* Botones (celdas de la resolución y de los cuadernos) */
+.sage-bar, .nb-barra, .nb-pie { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sage-bar { padding: 8px 10px; border-top: 1px solid var(--sg-edge); }
+.sage-bar button, .nb-barra button, .nb-pie button, .nb-abrir {
+  min-height: 34px; padding: 4px 12px; border-radius: 8px; border: 1px solid var(--sg-edge);
+  background: var(--surface); color: var(--accent); font: 700 .82rem var(--f-display); cursor: pointer;
+}
+.sage-bar .sage-run, .nb-barra .nb-run, .nb-abrir { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.sage-bar button:hover:not(:disabled), .nb-barra button:hover:not(:disabled), .nb-pie button:hover:not(:disabled), .nb-abrir:hover:not(:disabled) { border-color: var(--accent); filter: brightness(1.08); }
+.sage-bar button:disabled, .nb-barra button:disabled, .nb-pie button:disabled, .nb-abrir:disabled { opacity: .55; cursor: default; }
+.sage-bar button:focus-visible, .nb-barra button:focus-visible, .nb-pie button:focus-visible, .nb-abrir:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.sage-msg { margin: 0; padding: 8px 12px; background: var(--false-soft); color: var(--false); font-size: .9rem; }
+.sage-out { border-top: 1px solid var(--rule); background: color-mix(in srgb, var(--true-soft) 45%, transparent); }
+.sage-out > p { max-width: none; margin: 0; padding: 5px 12px 0; font: 700 .72rem var(--f-display); color: var(--true); }
+.sage-out pre { margin: 0; padding: 4px 14px 10px; overflow-x: auto; font: 400 .82rem/1.45 var(--f-mono); }
+.sage-out img { display: block; max-width: 100%; height: auto; margin: 4px 12px 12px; border-radius: 6px; background: #fff; }
+
+/* Estado de la sesión: punto de color + texto (el detalle va en el título) */
+.sage-estado { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; font: 600 .74rem var(--f-display); color: var(--muted); }
+.sage-estado[hidden] { display: none; }
+.sage-estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.sage-estado[data-estado="conectando"]::before { background: var(--warn); animation: sage-latido 1s ease-in-out infinite; }
+.sage-estado[data-estado="listo"]::before { background: var(--true); }
+.sage-estado[data-estado="aviso"] { color: var(--warn); cursor: help; }
+.sage-estado[data-estado="aviso"]::before { background: var(--warn); }
+.sage-estado[data-estado="error"], .sage-estado[data-estado="cerrado"] { color: var(--false); cursor: help; }
+.sage-estado[data-estado="error"]::before, .sage-estado[data-estado="cerrado"]::before { background: var(--false); }
+@keyframes sage-latido { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .sage-estado::before { animation: none !important; } }
+
+/* ---------- Cuaderno de cada ejercicio ---------- */
+.sage-nb { margin: var(--s-3) 0; border: 1.5px dashed var(--sg-edge); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.sage-nb.is-open { border-style: solid; background: var(--surface); }
+.nb-cab { display: flex; align-items: center; gap: 8px; padding: 8px 12px; }
+.sage-nb.is-open .nb-cab { border-bottom: 1px dashed var(--sg-edge); }
+.nb-t { display: inline-flex; align-items: center; gap: 7px; font: 800 .82rem var(--f-display); color: var(--accent); }
+.nb-t::before { content: "Σ"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: var(--accent); color: var(--surface); font: 700 .75rem var(--f-mono); }
+.nb-cerrado { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 0 12px 12px; }
+.nb-nota { font-size: .86rem; color: var(--muted); }
+.nb-celdas { list-style: none; margin: 0; padding: 12px 12px 4px; display: grid; gap: 14px; }
+.nb-celda { display: grid; grid-template-columns: 2.6em minmax(0, 1fr); gap: 6px; }
+.nb-n { padding-top: 9px; font: 600 .76rem var(--f-mono); color: var(--accent); text-align: right; }
+.nb-cuerpo { min-width: 0; }
+.nb-barra { margin-top: 6px; }
+.nb-barra .nb-quitar { margin-left: auto; min-width: 34px; padding: 4px 8px; color: var(--muted); }
+.nb-pie { padding: 4px 12px 8px calc(18px + 2.6em); }
+.nb-pie .nb-add { border-style: dashed; }
+.nb-ayuda { max-width: none; margin: 0; padding: 0 12px 12px calc(18px + 2.6em); font-size: .84rem; color: var(--muted); }
+.nb-ayuda kbd { font: 600 .74rem var(--f-mono); padding: 0 5px; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; background: var(--surface); }
+.sage-nb > .sage-msg { margin: 0 12px 12px; border-radius: 8px; }
+@media (max-width: 560px) {
+  .nb-celda { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .nb-n { padding: 0; text-align: left; }
+  .nb-pie, .nb-ayuda { padding-left: 12px; }
+}
+
+/* ---------- Editor y salida de SageMathCell ---------- */
+.sage-editor, .sage-salida { min-width: 0; }
+.sage.is-live .sage-editor { padding: 10px 10px 0; background: var(--sg-code); }
+.sage-editor .sagecell_input { margin: 0; padding: 0; border: 0; background: none; }
+.sage-editor .CodeMirror {
+  height: auto; border: 1px solid var(--sg-edge); border-radius: 8px;
+  background: var(--sg-code); color: var(--ink); font: 400 14px/1.55 var(--f-mono);
+}
+.sage-editor .CodeMirror-focused { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.sage-editor .CodeMirror-scroll { min-height: 2.4em; max-height: 60vh; }
+.sage-editor .CodeMirror-gutters { border-right: 1px solid var(--sg-edge); border-radius: 8px 0 0 8px; background: color-mix(in srgb, var(--sg-code) 85%, var(--rule)); }
+.sage-editor .CodeMirror-linenumber { color: var(--muted); }
+.sage-editor .CodeMirror-cursor { border-left-color: var(--ink); }
+.sage-editor .CodeMirror-selected, .sage-editor .CodeMirror-focused .CodeMirror-selected { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.sage-editor .CodeMirror-matchingbracket { color: var(--true) !important; font-weight: 700; }
+.sage-editor .cm-keyword { color: var(--sg-kw); font-weight: 600; }
+.sage-editor .cm-number { color: var(--sg-num); }
+.sage-editor .cm-string, .sage-editor .cm-string-2 { color: var(--sg-str); }
+.sage-editor .cm-comment { color: var(--sg-com); font-style: italic; }
+.sage-editor .cm-def, .sage-editor .cm-builtin { color: var(--sg-def); }
+.sage-editor .cm-operator { color: var(--sg-op); }
+.sage-editor .cm-variable, .sage-editor .cm-variable-2, .sage-editor .cm-property { color: var(--ink); }
+
+/* Salida: un recuadro sólo cuando hay algo; sin el pie «Help | Powered by» de cada celda (el crédito va en la página) */
+.sage-salida .sagecell_poweredBy, .sage-salida .sagecell_sessionFiles, .sage-salida .sagecell_permalink { display: none; }
+.sage-salida .sagecell_output_elements, .sage-salida .sagecell_output { margin: 0; padding: 0; border: 0; background: none; }
+.sage-salida .sagecell_sessionOutput {
+  position: relative; margin-top: 8px; padding: 8px 12px 10px; overflow: auto hidden;   /* MathJax sobresale unos px: sin barra vertical */
+  border: 1px solid var(--rule); border-left: 3px solid var(--true); border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--true-soft) 40%, var(--surface)); color: var(--ink);
+}
+.sage.is-live .sage-salida .sagecell_sessionOutput { margin: 10px; }
+.sage-salida pre { margin: 0; padding: 0; border: 0; white-space: pre-wrap; font: 400 13px/1.5 var(--f-mono); color: inherit; background: none; }
+.sage-salida .sagecell_stderr, .sage-salida .sagecell_pyerr { color: var(--false); }
+.sage-salida img, .sage-salida iframe, .sage-salida canvas, .sage-salida svg { max-width: 100%; }
+.sage-salida img { height: auto; border-radius: 6px; background: #fff; }
+.sage-salida iframe { border: 1px solid var(--rule); border-radius: 8px; background: #fff; }
+.sage-salida mjx-container { color: var(--ink); }
+.sage-motor { display: none !important; }
+
+@media print {
+  .sage-bar, .sage-msg, .sage-editor, .sage-salida, .sage-nb { display: none !important; }
+  .sage.is-live > pre, .sage.is-live > .sage-out { display: block !important; }
+}

@@ -38,7 +38,7 @@ assets/
   css/admin.css             Estilos del panel de administración
   css/reportes.css          Diálogo «Reportar un error» (autosuficiente, como nav.css)
   css/retro.css             Estilos del modo terminal (fósforo verde sobre cualquier página)
-  css/guia.css              Guías con índice lateral (FC, IP y L1): estructura, temas, cajas, ejercicios,
+  css/guia.css              Guías con índice lateral (FC, IP, GOHP, AMD y L1): estructura, temas, cajas, ejercicios,
                             «Más a fondo» plegable, subrayador y piezas para los diagramas (.dg)
   js/guia.js                Guías con índice lateral: «Hecho», progreso, índice, plegables, «Marcar como
                             estudiado», pestaña y mapa de cada tema y leyenda
@@ -142,6 +142,28 @@ gohp/                       Gestión de Organizaciones y Habilidades Profesional
     simulacro.js
     herramientas.js         Calculadoras de la página de herramientas
     data/banco.js           Banco de preguntas (GOHP.TOPICS; tema 11 = seminario, no entra en el simulacro)
+amd/                        Álgebra y Matemática Discreta (temas 0–5 y prácticas 1–9 con SageMath). Salvo el autotest,
+                            sus páginas las genera scripts/amd/generar.py (ver «AMD: páginas generadas y SageMath»)
+  index.html                Portada de AMD (la genera assets/js/hub.js)
+  teoria/
+    guia.html               Guía de teoría: repaso de bachillerato y temas 1–5, con celdas de SageMath
+    ejercicios.html         Hojas 1–4 y ejercicios de clase resueltos (177 ejercicios)
+    autotest.html           Tests de los temas 1–5, test general (#test-G) y repaso de fallos (#test-R)
+  practicas/
+    p1.html … p9.html       Las nueve prácticas resueltas y explicadas; cada ejercicio con su cuaderno «Tu SageMath»
+    sage.html               Consola de SageMath y chuleta de órdenes
+    datos/p1 … datos/p9     Ficheros de las prácticas (.sobj, triangular.sage, .obj, imágenes)
+  examen/
+    parciales.html          Primeros parciales 2025-26 resueltos y simulacros del 2.º parcial y de prácticas
+  sage/geometria.py         Módulo de dibujo de la asignatura (una sola copia: la versión corregida de la práctica 7)
+  css/amd.css               Matrices, sistemas y fracciones (notación de las guías de AMD)
+  css/autotest.css          Componentes del autotest (copia de ip/css/ip.css)
+  js/util.js · autotest.js  AMD.fmt / AMD.LETTERS y el autotest (copia de los de IP)
+  js/data/banco.js          Banco de preguntas del autotest (AMD.ORDER: temas 1–5)
+assets/js/sage.js           SageMath en la web: celdas y cuadernos (SageMathCell); assets/css/sage.css, sus estilos
+scripts/amd/
+  generar.py                Convierte scripts/amd/contenido/*.html en las páginas de AMD
+  contenido/                Fuente de cada página: etiquetas cortas para matrices, sistemas, ejercicios y celdas
 ```
 
 Cada página carga sólo lo que necesita, en este orden: `core.js` (en el `<head>`, para aplicar el tema
@@ -195,7 +217,45 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 4. Para que cuente en el ranking y su progreso se guarde con la cuenta: añade su id a `ASIG` en
    `assets/js/cuentas.js`, a `esProgreso` en `assets/js/core.js` y a `firestore.rules` (`unaAsignatura()`
    y las listas `hasOnly` y `natural` del dueño y del administrador), y publica las reglas con
-   `node scripts/admin/admin.js reglas`. Opcional: su descripción para la IA en `api/chat.js` y `assets/js/asistente.js`.
+   `node scripts/admin/admin.js reglas`. Opcional: su descripción para la IA en `api/chat.js` y `assets/js/asistente.js`,
+   y una insignia automática por sus puntos (`CAMPOS` en `assets/js/insignias.js`, la lista `campo` de
+   `firestore.rules` y el pack inicial de `assets/js/admin.js`).
+
+## AMD: páginas generadas y SageMath
+
+Las páginas de teoría, prácticas y exámenes de AMD no se editan a mano: su fuente está en
+`scripts/amd/contenido/` y se generan con
+
+```
+python3 scripts/amd/generar.py            # todas (o: python3 scripts/amd/generar.py p8 para filtrar)
+```
+
+El script (sólo biblioteca estándar de Python) convierte etiquetas cortas en el HTML de las guías
+(`<tema>`, `<ap>`, `<ej>…<sol>…</sol></ej>`, `<box>`, `<res>`, `<m>1 2; 3 4</m>` para matrices,
+`<sys>` para sistemas, `<fr>a|b</fr>` para fracciones, `<sage t="…">código</sage>` para celdas), pone a cada
+ejercicio de las páginas con SageMath su cuaderno y la lista de ficheros descargables, y actualiza en
+`assets/js/core.js` el número de ejercicios y de apartados de cada página. El comentario inicial de cada
+fuente (JSON) da el título, la salida y los atributos del `<body>`.
+
+**SageMath** (`assets/js/sage.js`) se ejecuta en **SageMathCell** (sagecell.sagemath.org), el servicio
+público del proyecto SageMath: nada que instalar ni servidor que mantener (JupyterLab necesitaría uno y
+JupyterLite no puede ejecutar SageMath). Su cliente se descarga al ejecutar la primera celda.
+
+- Todas las celdas de una página comparten una sesión. Las de la resolución se ven como código y se
+  convierten en editor al ejecutarlas. Cada ejercicio de las prácticas y del examen tiene además un
+  cuaderno **«Tu SageMath»**: celdas para escribir las propias órdenes, que se añaden («＋ Celda debajo»,
+  «Añadir celda»), se quitan y se ejecutan una a una (Mayús+Intro) o todas; el código se guarda en el
+  navegador (`sage-cuaderno:<página>`; no viaja con la cuenta).
+- Ficheros de la sesión: el `<body>` los declara con `data-sage-datos` (carpeta), `data-sage-ficheros`
+  (nombres en esa carpeta o rutas desde la raíz como `/amd/sage/geometria.py`) y `data-sage-prep` (código
+  que se ejecuta después, por ejemplo `from geometria import *`). Al abrir la sesión, una celda oculta los
+  deja en la carpeta de trabajo: el navegador los lee de la propia web y se los manda, y los de más de 2 MB
+  (o todos si la página se abre con doble clic) los descarga el servidor de **raw.githubusercontent.com**,
+  porque los núcleos de SageMathCell sólo pueden conectarse a una lista cerrada de sitios (GitHub sí,
+  Vercel no). Si cambia el repositorio o la rama, cambia `GITHUB` en `assets/js/sage.js`.
+- Dos detalles de SageMathCell que `sage.js` esquiva: el código pedido mientras el núcleo se conecta
+  saldría en la primera celda (por eso nada se ejecuta hasta que el núcleo está abierto), y el núcleo se
+  cierra a los 15 minutos sin uso (se detecta y la siguiente ejecución abre otro y repite la preparación).
 
 ## Datos guardados en el navegador
 
@@ -230,6 +290,10 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `gohp-settings`, `gohp-seen`, `gohp-best-1` … `gohp-best-11`, `gohp-best-G` | Opciones, preguntas vistas y mejores notas del autotest de GOHP (11 = seminario) |
 | `gohp-teoria-estudio`, `gohp-teoria-visto`, `gohp-practicas-hechos`, `gohp-practicas-visto`, `gohp-examen-hechos` | Avance en las guías de GOHP |
 | `gohp-sim-best`, `gohp-sim-hist`, `gohp-sim-time` | Mejor nota (sobre 10), historial y reloj elegido del simulacro de GOHP |
+| `amd-settings`, `amd-seen`, `amd-best-1` … `amd-best-5`, `amd-best-G` | Opciones, preguntas vistas y mejores notas del autotest de AMD |
+| `amd-teoria-estudio`, `amd-ejercicios-hechos`, `amd-p1-hechos` … `amd-p9-hechos`, `amd-examen-hechos` | Apartados estudiados y ejercicios hechos de AMD |
+| `amd-teoria-visto`, `amd-ejercicios-visto`, `amd-p1-visto` … `amd-p9-visto`, `amd-sage-visto`, `amd-examen-visto` | Última parte vista de cada página de AMD |
+| `sage-cuaderno:<página>` | Código de los cuadernos «Tu SageMath» de cada página (sólo en este navegador) |
 
 | `<asig>-repaso` | Repaso de fallos de cada asignatura: `{ huella: { b: caja 0–4, d: cuándo toca, f: fallos, t: tema }, _dom }` |
 | `<asig>-hist` | Últimos 400 tests terminados: `{ d, tipo, tema, ok, n, nota }` (estadísticas y plan) |
@@ -240,7 +304,7 @@ El test del autotest y el simulacro en curso se guardan en `sessionStorage` (sob
 
 ## Repaso de fallos, plan de estudio y estadísticas
 
-- **Repaso de fallos** (`App.repaso` en core.js, en los cuatro autotests y en los simulacros): cada pregunta
+- **Repaso de fallos** (`App.repaso` en core.js, en los cinco autotests y en los simulacros): cada pregunta
   fallada o en blanco entra en la caja 0 y se puede repasar ya desde la portada del autotest («Repaso de
   fallos», o el enlace `autotest.html#test-R`). Acertarla cuando toca la sube de caja y la programa a 1, 3, 7
   y 14 días; acertada en la última se da por dominada. Las preguntas se identifican por una huella del
@@ -355,7 +419,7 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
 
 - **Authentication** con correo y contraseña: cada usuario es `<usuario>@usuarios.web-ing-inf.firebaseapp.com`
   (en minúsculas y sin tildes; no se manda ningún correo). Firebase impide dos usuarios iguales.
-- **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip` y de cada
+- **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip`/`gohp`/`amd` y de cada
   semana `w<n>`; es público porque es el ranking), `progreso/<uid>` (el progreso; sólo su dueño),
   `config/web` (el aviso y las fechas de examen del panel; lo lee cualquiera, lo escribe un administrador)
   `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores),

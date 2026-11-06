@@ -1,0 +1,270 @@
+<!--{
+ "salida": "amd/examen/parciales.html",
+ "titulo": "Exámenes de AMD resueltos",
+ "descripcion": "Exámenes de Álgebra y Matemática Discreta resueltos y explicados: los dos primeros parciales del curso 2025-26, un simulacro del segundo parcial y otro del examen de prácticas con SageMath.",
+ "eyebrow": "Álgebra y Matemática Discreta · Exámenes",
+ "h1": "Exámenes resueltos",
+ "ops": "6 + 4",
+ "lead": "Los primeros parciales del curso 2025-26 (grupos 1 y 2 y grupos 3 y 4) resueltos paso a paso, con las erratas de las soluciones oficiales corregidas, y dos simulacros para lo que queda: el segundo parcial (aplicaciones lineales, diagonalización, SVD y aritmética modular) y el examen de prácticas con SageMath.",
+ "marca": "AMD · Exámenes",
+ "sym": "✓",
+ "body": {"data-storage-key": "amd-examen-hechos", "data-visto-key": "amd-examen-visto", "data-sage-key": "amd-examen", "data-sage-ficheros": "/amd/sage/geometria.py", "data-sage-prep": "from geometria import *"},
+ "paginas": [["../teoria/guia.html", "Guía de teoría"], ["../teoria/ejercicios.html", "Hojas de ejercicios"], ["../teoria/autotest.html", "Autotest"], ["../practicas/sage.html", "SageMath en la web"], ["parciales.html", "Exámenes"]],
+ "paginas_label": "Páginas de AMD",
+ "pie": "Parciales: enunciados y soluciones oficiales del curso 2025-26, revisados y recalculados. Los simulacros están elaborados para esta web con el estilo y el temario de la asignatura; todas sus soluciones están comprobadas."
+}-->
+
+<tema id="ex-0" n="0" t="Cómo se evalúa" eyebrow="Evaluación" lede="Según la presentación de la asignatura.">
+<ap id="ex-0-1" n="0.1" t="Durante el curso y en la convocatoria de enero">
+<ul><li><b>Teoría (6 puntos)</b>: dos exámenes teórico-prácticos de 3 puntos. El primero ya se hizo; el segundo coincide con la convocatoria de enero, el <b>17 de diciembre por la mañana</b>.</li>
+<li><b>Prácticas con SageMath (4 puntos)</b>: prácticas evaluables de 2 puntos cada una.</li>
+<li><b>Evaluación global</b> (17 de diciembre): examen global teórico-práctico (6 puntos) o el segundo parcial si vas por evaluación continua, y examen práctico con SageMath (4 puntos). La nota de prácticas del curso se puede guardar (entera, no por prácticas sueltas).</li>
+<li>Convocatorias II (13 de mayo, tarde) y III (25 de junio, tarde): escrito (6) y práctico con SageMath (4); se puede guardar la parte aprobada.</li></ul>
+<box k="tip" t="El día del examen de prácticas">
+<p>En el aula se arranca Ubuntu (usuario alumno), se inicia sesión en micampus.um.es (sin eso no hay acceso a internet), se descargan los enunciados desde Recursos › PRÁCTICA › ENUNCIADOS del Aula Virtual con «Guardar enlace como» y se abre SageMath buscando «sage» en el menú de aplicaciones. Lleva practicadas las funciones que se reutilizan, como <code>resolucion_triangular</code>.</p>
+</box>
+</ap>
+</tema>
+
+<tema id="ex-1" n="1" t="Primer parcial 2025-26 · Grupos 1 y 2" eyebrow="Parcial resuelto" lede="Subespacios, Gram-Schmidt, bases adaptadas y mínimos cuadrados (3 puntos).">
+<ej id="ex-1-1a" n="1 (a)" t="bases y dimensiones · 0,25 p">
+<p>W₁ = ⟨(1, 1, 0, 1), (2, 2, 0, 2)⟩ y W₂ = {(x, y, z, t) ∈ ℝ⁴ | x + y + t = 0, −y − z + t = 0}. Base y dimensión de W₁ y W₂.</p>
+<sol>
+<p>W₁: el segundo generador es el doble del primero (al escalonar queda una fila de ceros). Base {(1, 1, 0, 1)}, <b>dim W₁ = 1</b>.</p>
+<p>W₂: resolvemos el sistema. <m>1 1 0 1; 0 −1 −1 1</m> <op>−F₂, F₁ − F₂</op> <m>1 0 −1 2; 0 1 1 −1</m>: x = z − 2t, y = −z + t, con z, t libres:</p>
+<md>(z − 2t, −z + t, z, t) = z(1, −1, 1, 0) + t(−2, 1, 0, 1)</md>
+<res>W₁: base {(1, 1, 0, 1)}, dim 1.  W₂: base {(1, −1, 1, 0), (−2, 1, 0, 1)}, dim 2 (= 4 incógnitas − 2 ecuaciones independientes)</res>
+</sol></ej>
+<ej id="ex-1-1b" n="1 (b)" t="implícitas de W₁ · 0,25 p">
+<p>Ecuaciones implícitas de W₁.</p>
+<sol>
+<p>(x, y, z, t) ∈ W₁ si es a(1, 1, 0, 1): a = x, a = y, 0 = z, a = t. Eliminando a (o escalonando la ampliada <m>1 | x; 1 | y; 0 | z; 1 | t</m>) quedan las condiciones de compatibilidad:</p>
+<res>W₁ = {x − y = 0, z = 0, x − t = 0}  (dim 4 − 3 = 1)</res>
+</sol></ej>
+<ej id="ex-1-1c" n="1 (c)" t="¿iguales? ¿contenidos? · 0,25 p">
+<p>Indica si son iguales y si alguno está contenido en el otro.</p>
+<sol>
+<p>Distinta dimensión ⇒ no son iguales, y W₂ (dim 2) no puede estar dentro de W₁ (dim 1). Queda ver si W₁ ⊂ W₂: basta con que el generador cumpla las ecuaciones de W₂. 1 + 1 + 1 = 3 ≠ 0: no las cumple.</p>
+<res>No son iguales y ninguno contiene al otro</res>
+<sage t="Ejercicio 1 del parcial 1-2">W1 = span([vector(QQ, [1, 1, 0, 1]), vector(QQ, [2, 2, 0, 2])])
+W2 = matrix(QQ, [[1, 1, 0, 1], [0, -1, -1, 1]]).right_kernel()
+print(W1.dimension(), W2.dimension(), W1.is_subspace(W2), W2.is_subspace(W1))
+show(W2.basis(), W1.complement().basis())        # la última: coeficientes de unas implícitas de W1</sage>
+</sol></ej>
+<ej id="ex-1-2a" n="2 (a)" t="Gram-Schmidt · 0,4 p">
+<p>W = ⟨(1, 1, 0, 0, 0), (1, 1, 1, 1, 0)⟩. Base ortonormal de W con Gram-Schmidt.</p>
+<sol>
+<p>u₁ = (1, 1, 0, 0, 0). u₂ = (1, 1, 1, 1, 0) − <fr>2|2</fr>(1, 1, 0, 0, 0) = (0, 0, 1, 1, 0). Normalizando (las dos tienen norma √2):</p>
+<res>B = {(1, 1, 0, 0, 0)/√2, (0, 0, 1, 1, 0)/√2}</res>
+</sol></ej>
+<ej id="ex-1-2b" n="2 (b)" t="v = w + w⊥ · 0,35 p">
+<p>Escribe v = (1, 2, 1, 2, 0) como suma de un vector de W y otro perpendicular a W.</p>
+<sol>
+<p>v₁ = proy<sub>W</sub>v = (v·e₁)e₁ + (v·e₂)e₂ = <fr>3|2</fr>(1, 1, 0, 0, 0) + <fr>3|2</fr>(0, 0, 1, 1, 0); v₂ = v − v₁.</p>
+<res>v = (3/2, 3/2, 3/2, 3/2, 0) + (−1/2, 1/2, −1/2, 1/2, 0)</res>
+<p>Comprobación: v₂·(1, 1, 0, 0, 0) = 0 y v₂·(1, 1, 1, 1, 0) = 0.</p>
+<sage t="Ejercicio 2 del parcial 1-2">A = matrix(QQ, [[1, 1, 0, 0, 0], [1, 1, 1, 1, 0]]); v = vector(QQ, [1, 2, 1, 2, 0])
+G, M = A.gram_schmidt(); show(G)                  # filas ortogonales: falta dividir por √2
+v1 = sum((v*g)/(g*g)*g for g in G.rows()); print(v1, v - v1, A*(v - v1))</sage>
+</sol></ej>
+<ej id="ex-1-3" n="3" t="base adaptada a un plano · 0,75 p">
+<p>Π = ⟨(1, 1, 1), (1, 0, 1)⟩. Base de ℝ³ con vectores de longitud 2, el primero perpendicular a Π y los otros dos en el plano formando un ángulo de 30°.</p>
+<sol>
+<p>Normal: u = (1, 1, 1) × (1, 0, 1) = (1, 0, −1). En el plano, v = (1, 1, 1) y w = u × v = (1, −2, 1) (perpendicular a los dos, así que también está en Π). Base ortonormal {u₁, u₂, u₃} = {(1, 0, −1)/√2, (1, 1, 1)/√3, (1, −2, 1)/√6}.</p>
+<p>Un vector unitario del plano que forma 30° con u₂ es cos 30°·u₂ + sin 30°·u₃. Multiplicando por 2:</p>
+<res>{2u₁, 2u₂, 2(cos 30°·u₂ + sin 30°·u₃)} = {(√2, 0, −√2), (2/√3)(1, 1, 1), (1, 1, 1) + (1, −2, 1)/√6}</res>
+<sage t="Ejercicio 3 del parcial 1-2">u = vector([1, 1, 1]).cross_product(vector([1, 0, 1])); v = vector([1, 1, 1]); w = u.cross_product(v)
+u1, u2, u3 = u.normalized(), v.normalized(), w.normalized()
+b3 = 2*(cos(pi/6)*u2 + sin(pi/6)*u3)
+print(b3.norm().simplify_full(), arccos(2*u2*b3/(2*b3.norm())).simplify_full(), u*b3)</sage>
+</sol></ej>
+<ej id="ex-1-4" n="4" t="recta de regresión · 0,75 p">
+<p>Recta de regresión, por mínimos cuadrados, de los puntos (0, 20), (4, 0) y (−1, −17).</p>
+<sol>
+<p>y = a + bx en cada punto da el sistema incompatible <m>1 0; 1 4; 1 −1</m><m>a; b</m> = <m>20; 0; −17</m>. Ecuaciones normales AᵗA·x̂ = Aᵗb:</p>
+<md><m>3 3; 3 17</m><m>a; b</m> = <m>3; 17</m></md>
+<res>a = 0, b = 1: la recta es y = x</res>
+<sage t="Ejercicio 4 del parcial 1-2">A = matrix(QQ, [[1, 0], [1, 4], [1, -1]]); b = vector(QQ, [20, 0, -17])
+print((A.T*A).solve_right(A.T*b))</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-2" n="2" t="Primer parcial 2025-26 · Grupos 3 y 4" eyebrow="Parcial resuelto" lede="El mismo esquema con otros datos.">
+<ej id="ex-2-1a" n="1 (a)" t="independencia y ampliar a una base · 0,25 p">
+<p>¿Son independientes (1, 0, 0, 1), (−1, 1, 0, −1) y (1, 1, 0, 1)? Si no, elige un subconjunto independiente y amplíalo a una base de ℝ⁴.</p>
+<sol>
+<p>Por columnas y escalonando: <m>1 −1 1; 0 1 1; 0 0 0; 1 −1 1</m> ∼ <m>1 0 2; 0 1 1; 0 0 0; 0 0 0</m>. La tercera columna no es pivote: (1, 1, 0, 1) = 2(1, 0, 0, 1) + 1(−1, 1, 0, −1).</p>
+<res>Son <b>dependientes</b>; {(1, 0, 0, 1), (−1, 1, 0, −1)} es independiente y con (0, 0, 1, 0) y (0, 0, 0, 1) forma una base de ℝ⁴</res>
+<box k="warn" t="Errata en la solución oficial">
+<p>Dice «los tres vectores son linealmente independientes»; se refiere a que son dependientes (como demuestra el propio cálculo). Para comprobar que la ampliación es base: el determinante de los cuatro vectores vale 1 ≠ 0.</p>
+</box>
+</sol></ej>
+<ej id="ex-2-1b" n="1 (b)" t="base, dimensión e implícitas · 0,25 p">
+<p>Base, dimensión e implícitas del subespacio generado por los tres vectores.</p>
+<sol>
+<p>Base {(1, 0, 0, 1), (−1, 1, 0, −1)}, dimensión 2. Implícitas: (x₁, x₂, x₃, x₄) está si <m>1 −1 x₁; 0 1 x₂; 0 0 x₃; 1 −1 x₄</m> tiene rango 2; escalonando, las dos últimas filas quedan (0 0 | x₃) y (0 0 | x₄ − x₁).</p>
+<res>dim 2;  x₃ = 0, x₄ − x₁ = 0</res>
+</sol></ej>
+<ej id="ex-2-1c" n="1 (c)" t="pertenencia y coordenadas · 0,25 p">
+<p>Comprueba que (1, 1, 0, 1) está en el subespacio y escríbelo en la base anterior.</p>
+<sol>
+<p>Cumple las implícitas (tercera componente 0 y 1 − 1 = 0). Coordenadas: de la reducción del apartado (a), la tercera columna es (2, 1).</p>
+<res>(1, 1, 0, 1) = 2·(1, 0, 0, 1) + 1·(−1, 1, 0, −1)</res>
+<sage t="Ejercicio 1 del parcial 3-4">v1, v2, v3 = vector(QQ, [1, 0, 0, 1]), vector(QQ, [-1, 1, 0, -1]), vector(QQ, [1, 1, 0, 1])
+show(column_matrix([v1, v2, v3]).rref())
+print(matrix([v1, v2, [0, 0, 1, 0], [0, 0, 0, 1]]).det())
+V = span([v1, v2]); show(V.complement().basis()); print(V.subspace_with_basis([v1, v2]).coordinate_vector(v3))</sage>
+</sol></ej>
+<ej id="ex-2-2a" n="2 (a)" t="base ortonormal de W⊥ · 0,4 p">
+<p>W = ⟨(1, 1, 0, 0), (1, 1, 1, 0)⟩. Base ortonormal de W⊥.</p>
+<sol>
+<p>W⊥ son los vectores perpendiculares a los generadores: x₁ + x₂ = 0 y x₁ + x₂ + x₃ = 0, de donde x₃ = 0, x₁ = −x₂, x₄ libre: W⊥ = ⟨(−1, 1, 0, 0), (0, 0, 0, 1)⟩. Ya son ortogonales, así que Gram-Schmidt no los cambia: sólo hay que normalizar.</p>
+<res>{(−1, 1, 0, 0)/√2, (0, 0, 0, 1)}</res>
+</sol></ej>
+<ej id="ex-2-2b" n="2 (b)" t="v = w + w⊥ · 0,35 p">
+<p>Escribe v = (1, 2, 1, 2) como suma de un vector de W y otro de W⊥.</p>
+<sol>
+<p>Proyectamos sobre W⊥, que ya tiene base ortonormal: z₂ = (v·w₁)w₁ + (v·w₂)w₂ = <fr>1|2</fr>(−1, 1, 0, 0) + 2(0, 0, 0, 1). Y z₁ = v − z₂.</p>
+<res>v = (3/2, 3/2, 1, 0) + (−1/2, 1/2, 0, 2)</res>
+<p>z₁ = ½(1, 1, 0, 0) + (1, 1, 1, 0) está en W ✓.</p>
+<sage t="Ejercicio 2 del parcial 3-4">A = matrix(QQ, [[1, 1, 0, 0], [1, 1, 1, 0]]); v = vector(QQ, [1, 2, 1, 2])
+Wp = A.right_kernel(); show(Wp.basis())
+z2 = sum((v*w)/(w*w)*w for w in [vector([-1, 1, 0, 0]), vector([0, 0, 0, 1])]); print(z2, v - z2)</sage>
+</sol></ej>
+<ej id="ex-2-3" n="3" t="base adaptada a una recta · 0,75 p">
+<p>r = ⟨(1, 2, −1)⟩. Base de ℝ³ con vectores de longitud 2, el primero en la recta y los otros perpendiculares a ella formando un ángulo de 45°.</p>
+<sol>
+<p>w₁ = (1, 2, −1)/√6; v = (1, 0, 1) es perpendicular a la recta, w₂ = (1, 0, 1)/√2, y w₃ = u × v = (2, −2, −2) ∼ (1, −1, −1)/√3.</p>
+<res>{2w₁, 2w₂, 2(cos 45°·w₂ + sin 45°·w₃)} = {(2, 4, −2)/√6, (√2, 0, √2), (1, 0, 1) + √(2/3)·(1, −1, −1)}</res>
+<box k="warn" t="Errata en la solución oficial">
+<p>La respuesta oficial escribe 2(cos 30°·w₂ + sin 30°·w₃), copiada del modelo de los grupos 1 y 2. El ángulo pedido es 45°.</p>
+</box>
+<sage t="Ejercicio 3 del parcial 3-4">u = vector([1, 2, -1]); v = vector([1, 0, 1]); w = u.cross_product(v)
+w1, w2, w3 = u.normalized(), v.normalized(), w.normalized()
+b2, b3 = 2*w2, 2*(cos(pi/4)*w2 + sin(pi/4)*w3)
+print(w, b3.simplify_full(), arccos(b2*b3/4).simplify_full(), u*b3)</sage>
+</sol></ej>
+<ej id="ex-2-4" n="4" t="mínimos cuadrados · 0,75 p">
+<p>Mejor solución por mínimos cuadrados de x + 2y = 1, y = 3, −x = −2.</p>
+<sol>
+<p>A = <m>1 2; 0 1; −1 0</m>, b = (1, 3, −2). AᵗA = <m>2 2; 2 5</m> y Aᵗb = (3, 5). Restando: 3y = 2.</p>
+<res>x = 5/6, y = 2/3</res>
+<sage t="Ejercicio 4 del parcial 3-4">A = matrix(QQ, [[1, 2], [0, 1], [-1, 0]]); b = vector(QQ, [1, 3, -2])
+print((A.T*A).solve_right(A.T*b))</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-3" n="3" t="Simulacro del segundo parcial" eyebrow="Simulacro" lede="Temas 3 a 5, con el formato de los parciales. Elaborado para esta web.">
+<ej id="ex-3-1" n="S1" t="aplicación lineal · 1 p">
+<p>f: ℝ³ → ℝ³, f(x, y, z) = (x + y, y − z, x + z). a) Matriz en la base canónica. b) Base y dimensión del núcleo y de la imagen; implícitas de la imagen. c) ¿Es inyectiva? ¿Sobreyectiva? d) Matriz de f en la base B = {(1, 1, 0), (0, 1, 1), (1, 0, 1)}.</p>
+<sol>
+<p>a) Por columnas, las imágenes de e₁, e₂, e₃: A = <m>1 1 0; 0 1 −1; 1 0 1</m>; det A = 0.</p>
+<p>b) Núcleo: x + y = 0, y − z = 0 (la tercera ecuación es la suma de las dos) ⇒ Ker f = ⟨(1, −1, −1)⟩, dim 1. Imagen: dim 3 − 1 = 2, generada por las columnas independientes (1, 0, 1) y (1, 1, 0); su normal es (1, 0, 1) × (1, 1, 0) = (−1, 1, 1).</p>
+<res>Ker f = ⟨(1, −1, −1)⟩;  Im f = ⟨(1, 0, 1), (1, 1, 0)⟩ = {−x + y + z = 0}</res>
+<p>c) Ni inyectiva (núcleo no nulo) ni sobreyectiva (imagen de dimensión 2 &lt; 3).</p>
+<p>d) M<sub>B</sub> = P⁻¹AP con P = [b₁ b₂ b₃] por columnas. Directamente: f(b₁) = (2, 1, 1) = b₁ + b₃, f(b₂) = (1, 0, 1) = b₃, f(b₃) = (1, −1, 2) = −b₁ + 2b₃:</p>
+<res>M<sub>B</sub> = <m>1 0 −1; 0 0 0; 1 1 2</m></res>
+<sage t="Simulacro S1">A = matrix(QQ, [[1, 1, 0], [0, 1, -1], [1, 0, 1]]); P = column_matrix([[1, 1, 0], [0, 1, 1], [1, 0, 1]])
+show(A.det(), A.right_kernel().basis(), A.column_space().basis(), A.column_space().complement().basis())
+show(P.inverse()*A*P)</sage>
+</sol></ej>
+<ej id="ex-3-2" n="S2" t="diagonalización · 1 p">
+<p>a) Diagonaliza ortogonalmente A = <m>3 1 1; 1 3 1; 1 1 3</m>. b) ¿Para qué valores de a es diagonalizable B = <m>1 a 0; 0 1 0; 0 0 2</m>?</p>
+<sol>
+<p>a) Las filas suman 5: (1, 1, 1) es propio de valor 5. A − 2I tiene todas las filas (1, 1, 1): rango 1, así que λ = 2 es doble con subespacio x + y + z = 0 = ⟨(−1, 1, 0), (−1, 0, 1)⟩. Al ser simétrica, propios de valores distintos ya son ortogonales; en λ = 2 se ortogonaliza: (−1, 0, 1) − ½(−1, 1, 0) = −½(1, 1, −2).</p>
+<res>Q = [(1, 1, 1)/√3, (−1, 1, 0)/√2, (1, 1, −2)/√6] (columnas), Qᵗ A Q = diag(5, 2, 2)</res>
+<p>b) Triangular: valores propios 1 (doble) y 2. Para λ = 1, B − I = <m>0 a 0; 0 0 0; 0 0 1</m> tiene rango 2 si a ≠ 0 (subespacio propio de dimensión 1 &lt; 2) y rango 1 si a = 0.</p>
+<res>B es diagonalizable sólo para a = 0</res>
+<sage t="Simulacro S2">A = matrix(QQ, [[3, 1, 1], [1, 3, 1], [1, 1, 3]]); show(A.eigenvectors_right())
+Q = column_matrix([vector([1, 1, 1]).normalized(), vector([-1, 1, 0]).normalized(), vector([1, 1, -2]).normalized()])
+show(Q.T*A*Q)
+var('a'); B = matrix(SR, [[1, a, 0], [0, 1, 0], [0, 0, 2]])
+print([B.subs(a=k).change_ring(QQ).is_diagonalizable() for k in (0, 1, -3)])</sage>
+</sol></ej>
+<ej id="ex-3-3" n="S3" t="SVD · 0,5 p">
+<p>Descomposición en valores singulares de A = <m>3 0; 4 5</m>.</p>
+<sol>
+<p>AᵗA = <m>25 20; 20 25</m>: valores propios 45 y 5 con vectores (1, 1)/√2 y (1, −1)/√2. Valores singulares σ₁ = √45 = 3√5 y σ₂ = √5. Las columnas de U son uᵢ = Avᵢ/σᵢ: u₁ = (3, 9)/(√2·3√5) = (1, 3)/√10 y u₂ = (3, −1)/√10.</p>
+<res>A = U Σ Vᵗ con U = <fr>1|√10</fr><m>1 3; 3 −1</m>, Σ = <m>3√5 0; 0 √5</m>, V = <fr>1|√2</fr><m>1 1; 1 −1</m></res>
+<sage t="Simulacro S3">A = matrix(QQ, [[3, 0], [4, 5]])
+U = matrix([[1, 3], [3, -1]])/sqrt(10); S = diagonal_matrix([3*sqrt(5), sqrt(5)]); V = matrix([[1, 1], [1, -1]])/sqrt(2)
+show((A.T*A).eigenvalues(), (U*S*V.T).simplify_full() == A)</sage>
+</sol></ej>
+<ej id="ex-3-4" n="S4" t="aritmética modular · 1 p">
+<p>a) Inverso de 17 módulo 43 con el algoritmo de Euclides extendido. b) Resuelve 17x ≡ 5 (mod 43). c) Calcula φ(360) y, con el teorema de Euler, 7⁹⁸ mod 360. d) Calcula 3¹⁰⁰ mod 7.</p>
+<sol>
+<p>a) 43 = 2·17 + 9; 17 = 1·9 + 8; 9 = 1·8 + 1. Hacia atrás: 1 = 9 − 8 = 9 − (17 − 9) = 2·9 − 17 = 2(43 − 2·17) − 17 = 2·43 − 5·17. Luego 17⁻¹ ≡ −5 ≡ 38.</p>
+<p>b) x ≡ 38·5 = 190 ≡ 18 (mod 43). Comprobación: 17·18 = 306 = 7·43 + 5 ✓.</p>
+<p>c) 360 = 2³·3²·5, así que φ(360) = 360·(1 − ½)(1 − ⅓)(1 − ⅕) = 96. Como mcd(7, 360) = 1, Euler da 7⁹⁶ ≡ 1 (mod 360) y 7⁹⁸ = 7⁹⁶·7² ≡ 49.</p>
+<p>d) Pequeño teorema de Fermat: 3⁶ ≡ 1 (mod 7) y 100 = 6·16 + 4, así que 3¹⁰⁰ ≡ 3⁴ = 81 ≡ 4.</p>
+<res>a) 38;  b) x ≡ 18 (mod 43);  c) φ(360) = 96 y 7⁹⁸ ≡ 49 (mod 360);  d) 4</res>
+<sage t="Simulacro S4">print(xgcd(17, 43), inverse_mod(17, 43), mod(38*5, 43))
+print(euler_phi(360), power_mod(7, 98, 360), power_mod(3, 100, 7))</sage>
+</sol></ej>
+<ej id="ex-3-5" n="S5" t="simetría · 0,5 p">
+<p>Matriz de la simetría respecto al plano x + y − z = 0 e imagen de (1, 2, 0).</p>
+<sol>
+<p>Con n = (1, 1, −1), nᵗn = 3: S = I − <fr>2|3</fr>nnᵗ. Para (1, 2, 0): n·v = 3, así que S v = v − 2·<fr>3|3</fr>n = (1, 2, 0) − (2, 2, −2).</p>
+<res>S = <fr>1|3</fr><m>1 −2 2; −2 1 2; 2 2 1</m>;  S(1, 2, 0) = (−1, 0, 2)</res>
+<p>Comprobaciones: S n = −n, S² = I y Sᵗ = S (es ortogonal y simétrica).</p>
+<sage t="Simulacro S5">n = vector([1, 1, -1]); S = identity_matrix(3) - 2*n.column()*n.row()/(n*n)
+show(S, S*vector([1, 2, 0]), S*n == -n, S^2 == 1)</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-4" n="4" t="Simulacro del examen de prácticas" eyebrow="SageMath" lede="Lo que se pide en el aula: programar y usar las herramientas de las prácticas.">
+<ap id="ex-4-0" n="4.0" t="La función que hay que llevar preparada">
+<p>El cuaderno del examen de prácticas del subgrupo 2.4 sólo trae esta función, que resuelve M·x = b cuando M es triangular (superior o inferior, incluso no cuadrada) y se reutiliza con LU, QR y mínimos cuadrados. Sustitución hacia delante si es inferior (de la primera incógnita a la última) y hacia atrás si es superior; coste O(n²).</p>
+<sage t="resolucion_triangular">def resolucion_triangular(M, b, inferior=False):
+    m, n = M.nrows(), M.ncols(); k = min(m, n)
+    x = [0 for _ in range(n)]
+    if inferior:                                   # sustitución hacia delante
+        for i in range(k):
+            x[i] = (b[i] - sum(M[i, j]*x[j] for j in range(i))) / M[i, i]
+    else:                                          # sustitución hacia atrás
+        for i in range(k - 1, -1, -1):
+            x[i] = (b[i] - sum(M[i, j]*x[j] for j in range(i + 1, n))) / M[i, i]
+    return matrix(n, 1, x)                         # columna n × 1
+
+print(resolucion_triangular(matrix(QQ, [[2, 1], [0, 3]]), [5, 6]).T)</sage>
+</ap>
+<ej id="ex-4-1" n="P1" t="sistema con LU">
+<p>Resuelve A x = b con A = <m>2 1 1; 4 3 3; 8 7 9</m> y b = (4, 10, 24) usando la factorización LU y dos sistemas triangulares.</p>
+<sol>
+<p>Sin necesidad de pivotar: L = <m>1 0 0; 2 1 0; 4 3 1</m>, U = <m>2 1 1; 0 1 1; 0 0 2</m>. A x = b ⇔ L y = b (hacia delante: y = (4, 2, 2)) y U x = y (hacia atrás).</p>
+<res>x = (1, 1, 1)</res>
+<sage t="Prácticas P1 (ejecuta antes la celda de resolucion_triangular)">A = matrix(QQ, [[2, 1, 1], [4, 3, 3], [8, 7, 9]]); b = vector(QQ, [4, 10, 24])
+P, L, U = A.LU(); show(P, L, U)
+y = resolucion_triangular(L, P.T*b, inferior=True)
+x = resolucion_triangular(U, y.column(0)); print(y.T, x.T, A*x.column(0) == b)</sage>
+</sol></ej>
+<ej id="ex-4-2" n="P2" t="regresión con QR">
+<p>Recta de regresión de (0, 1), (1, 3), (2, 4), (3, 4), (4, 6) usando la descomposición QR, y dibújala con los puntos.</p>
+<sol>
+<p>Con A = QR (Q de columnas ortonormales), las ecuaciones normales AᵗA x = Aᵗb se reducen a <b>R x = Qᵗ b</b>, triangular. Sale lo mismo que con AᵗA x = Aᵗb = (18, 47):</p>
+<res>y = 7/5 + 11/10·x</res>
+<sage t="Prácticas P2 (necesita resolucion_triangular)">datos = [(0, 1), (1, 3), (2, 4), (3, 4), (4, 6)]
+A = matrix(RDF, [[1, x] for x, y in datos]); b = vector(RDF, [y for x, y in datos])
+Q, R = A.QR(); Q, R = Q[:, :2], R[:2, :]               # QR reducida
+c = resolucion_triangular(R, Q.T*b); print(c.T)
+var('t'); points(datos, size=40) + plot(c[0, 0] + c[1, 0]*t, (t, -0.5, 4.5), color='red')</sage>
+</sol></ej>
+<ej id="ex-4-3" n="P3" t="proyección y distancia">
+<p>W = ⟨(1, 1, 0, 1), (1, 0, 1, 1)⟩ y v = (1, 2, 3, 4). Base ortogonal de W, proyección de v sobre W y distancia de v a W.</p>
+<sol>
+<p>Gram-Schmidt: w₁ = (1, 1, 0, 1), w₂ = (1, 0, 1, 1) − ⅔(1, 1, 0, 1) = (1/3, −2/3, 1, 1/3). proy = <fr>v·w₁|w₁·w₁</fr>w₁ + <fr>v·w₂|w₂·w₂</fr>w₂ = 7/3·w₁ + 2·w₂.</p>
+<res>proy<sub>W</sub>v = (3, 1, 2, 3);  v − proy = (−2, 1, 1, 1);  d(v, W) = √7</res>
+<sage t="Prácticas P3">A = matrix(QQ, [[1, 1, 0, 1], [1, 0, 1, 1]]); v = vector(QQ, [1, 2, 3, 4])
+G, M = A.gram_schmidt(); p = sum((v*g)/(g*g)*g for g in G.rows())
+print(G, p, v - p, (v - p).norm(), A*(v - p))</sage>
+</sol></ej>
+<ej id="ex-4-4" n="P4" t="figura en 3D">
+<p>Dibuja un prisma pentagonal de altura 2 con la base centrada en (1, 1, 1), radio 1 y perpendicular a la recta de dirección (1, 2, 2).</p>
+<sol>
+<p>Base adaptada: w = (1, 2, 2)/3 (normal), u = (−2, 1, 0)/√5, v = w × u. Vértices C + cos(2πk/5)u + sin(2πk/5)v; la tapa es la base + 2w.</p>
+<sage t="Prácticas P4">from geometria import *
+C = vector([1, 1, 1]); w = vector([1, 2, 2]).normalized(); u = vector([-w[1], w[0], 0]).normalized(); v = w.cross_product(u)
+base = [C + cos(2*pi*k/5)*u + sin(2*pi*k/5)*v for k in range(5)]
+recta(w, C=C) + prisma(base + [P + 2*w for P in base], wire=True)</sage>
+</sol></ej>
+</tema>

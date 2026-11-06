@@ -1,0 +1,243 @@
+<!--{
+ "salida": "amd/practicas/p4.html",
+ "titulo": "Práctica 4 · Subespacios vectoriales",
+ "descripcion": "Práctica 4 de AMD con SageMath: implícitas y paramétricas, base y dimensión, inclusión, igualdad, intersección y suma de subespacios, filtros de color, redes y un recomendador de películas.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 4 · Subespacios vectoriales",
+ "ops": "⟨u, v⟩ ∩ W",
+ "lead": "Pasar de generadores a ecuaciones y al revés con SageMath (escalonando con letras), calcular bases, intersecciones y sumas, dibujarlas en 3D con el módulo <code>geometria.py</code> y, al final, recomendar películas buscando las más cercanas a un subespacio.",
+ "marca": "AMD · Práctica 4",
+ "sym": "▶",
+ "body": {"data-storage-key": "amd-p4-hechos", "data-visto-key": "amd-p4-visto", "data-sage-key": "amd-p4", "data-sage-datos": "amd/practicas/datos/p4/", "data-sage-ficheros": "/amd/sage/geometria.py,mikasa.jpg,num_p.sobj,movie_titles.sobj,movie_ids.sobj,movie_to_idx.sobj,votos_por_pelicula.sobj,pelicula_vectores.sobj", "data-sage-prep": "from geometria import *"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados y resolución oficial de la práctica 4, explicados, corregidos donde el cuaderno tenía erratas y completados (apartados propuestos y ejercicios 6 y 7). Los vectores de películas pesan 12 MB: los descarga el propio servidor de SageMath."
+}-->
+
+<tema id="p4-0" n="0" t="Herramientas" eyebrow="Práctica 4" lede="Escalonar con letras, el núcleo y el módulo de dibujo geometria.py.">
+<ap id="p4-0-1" n="0.1" t="Órdenes de la práctica">
+<ul><li><b>Escalonar con letras</b>: <code>R.&lt;x,y,z&gt; = QQ[]</code> crea un anillo de polinomios con variables x, y, z; con <code>column_matrix(R, …)</code> se pueden poner letras en la matriz. Se escalona con <code>echelon_form()</code>, <b>nunca con rref()</b>: rref divide por las letras como si fueran números distintos de 0 y deja una identidad sin información.</li>
+<li><code>A.right_kernel()</code>: el núcleo Nuc(A) (soluciones de A·x = 0); <code>.basis()</code> da una base y <code>A.right_kernel_matrix()</code> la pone en filas.</li>
+<li><code>from geometria import *</code> carga el módulo de dibujo de la asignatura (<a href="../sage/geometria.py" download>geometria.py</a>; en esta página ya está en la sesión): <code>ejes()</code>, <code>vectores([u, v])</code>, <code>plano(ec='x-y+z=0')</code>, <code>recta(ec=['…', '…'])</code> y <code>ayuda('plano')</code> para ver los parámetros. Los dibujos se suman con +.</li></ul>
+<sage t="Probar geometria.py">from geometria import *
+u, v = vector([1, 2, 1]), vector([1, 3, 2])
+ejes() + plano(ec='x-y+z=0', color=azul, opacidad=0.6) + vectores([u, v])</sage>
+</ap>
+</tema>
+
+<tema id="p4-1" n="1" t="Ejercicio 1 · Implícitas" eyebrow="Ejercicio 1" lede="Calcula las ecuaciones implícitas del subespacio generado por cada conjunto y dibújalo cuando se pueda.">
+<ej id="p4-1a" n="Ejercicio 1 (a)" t="{(1, 2, 1), (1, 3, 2)}">
+<p>Implícitas de W = ⟨(1, 2, 1), (1, 3, 2)⟩.</p>
+<sol>
+<p>(x, y, z) ∈ W ⇔ a(1, 2, 1) + b(1, 3, 2) = (x, y, z) tiene solución. Escalonando la ampliada con letras:</p>
+<md><m>1, 1 | x; 2, 3 | y; 1, 2 | z</m> <op>F₂ − 2F₁, F₃ − F₁</op> <m>1, 1 | x; 0, 1 | y − 2x; 0, 1 | z − x</m> <op>F₃ − F₂</op> <m>1, 1 | x; 0, 1 | y − 2x; 0, 0 | x − y + z</m></md>
+<res>W = {x − y + z = 0}: un plano de ℝ³</res>
+<sage t="Ejercicio 1 (a)">R.<x,y,z> = QQ[]
+A = column_matrix(R, [[1, 2, 1], [1, 3, 2]])
+B = A.augment(column_matrix(R, [x, y, z]), subdivide=True)
+show(B.echelon_form())          # NO rref: con letras da una identidad sin sentido
+from geometria import *
+ejes() + plano(ec='x-y+z=0') + vectores([vector([1, 2, 1]), vector([1, 3, 2])])</sage>
+<salida>[        1         0|  3*x - y]
+[        0         1| -2*x + y]
+[        0         0|x - y + z]</salida>
+</sol></ej>
+<ej id="p4-1b" n="Ejercicio 1 (b)" t="{(1, 3, 2)}">
+<p>Implícitas de W = ⟨(1, 3, 2)⟩.</p>
+<sol>
+<md><m>1 | x; 3 | y; 2 | z</m> <op>F₂ − 3F₁, F₃ − 2F₁</op> <m c>1 | x; 0 | y − 3x; 0 | z − 2x</m></md>
+<res>W = {−3x + y = 0, −2x + z = 0}: una recta, intersección de dos planos</res>
+<sage t="Ejercicio 1 (b)">R.<x,y,z> = QQ[]
+B = column_matrix(R, [[1, 3, 2]]).augment(column_matrix(R, [x, y, z]), subdivide=True)
+show(B.echelon_form())
+from geometria import *
+ejes() + plano(ec='-3*x+y=0', color=azul) + plano(ec='-2*x+z=0') + recta(ec=['-3*x+y=0', '-2*x+z=0'], l=12)</sage>
+</sol></ej>
+<ej id="p4-1c" n="Ejercicio 1 (c)" t="{(1, 2, 1, 2), (1, 1, 3, 2)} ⊆ ℝ⁴">
+<p>Implícitas de W = ⟨(1, 2, 1, 2), (1, 1, 3, 2)⟩.</p>
+<sol>
+<sage t="Ejercicio 1 (c)">R.<x,y,z,t> = QQ[]
+A = column_matrix(R, [[1, 2, 1, 2], [1, 1, 3, 2]])
+show(A.augment(column_matrix(R, [x, y, z, t]), subdivide=True).echelon_form())</sage>
+<salida>[             1              0|        -x + y]
+[             0              1|       2*x - y]
+[             0              0|-5*x + 2*y + z]
+[             0              0|      -2*x + t]</salida>
+<res>W = {−5x + 2y + z = 0, −2x + t = 0}: un plano de ℝ⁴ (4 − 2 = 2 ecuaciones)</res>
+</sol></ej>
+<ej id="p4-1d" n="Ejercicio 1 (d)" t="{(1, 0, 2, 1), (0, 1, 3, 2), (1, 2, 1, 1)} ⊆ ℝ⁴">
+<p>Implícitas de W = ⟨(1, 0, 2, 1), (0, 1, 3, 2), (1, 2, 1, 1)⟩.</p>
+<sol>
+<box k="warn" t="Errata en la resolución oficial">
+<p>En el cuaderno resuelto se teclea el tercer vector como (0, 1, 3, 2) (repetido) en vez de (1, 2, 1, 1), y sale un subespacio de dimensión 2 con dos ecuaciones. Con los vectores del enunciado los tres son independientes:</p>
+</box>
+<sage t="Ejercicio 1 (d)">R.<x,y,z,t> = QQ[]
+A = column_matrix(R, [[1, 0, 2, 1], [0, 1, 3, 2], [1, 2, 1, 1]])
+show(A.augment(column_matrix(R, [x, y, z, t]), subdivide=True).echelon_form())</sage>
+<p>Tres pivotes (dimensión 3, un hiperplano de ℝ⁴) y una sola condición de compatibilidad, que normalizada es:</p>
+<res>W = {x − 2y − 4z + 7t = 0}</res>
+<p>Comprobación: (1, 0, 2, 1) → 1 − 8 + 7 = 0; (0, 1, 3, 2) → −2 − 12 + 14 = 0; (1, 2, 1, 1) → 1 − 4 − 4 + 7 = 0 ✓</p>
+</sol></ej>
+<ej id="p4-1e" n="Ejercicio 1 (e, f)" t="propuestos: en ℝ³">
+<p>e) {(1, 2, 1), (1, 3, 2), (0, 1, 0)}. f) {(1, 2, 1), (1, 3, 2), (0, 1, 1)}.</p>
+<sol>
+<p>e) det = <m det>1 1 0; 2 3 1; 1 2 0</m> = 1·(0 − 2) − 1·(0 − 1) + 0 = −1 ≠ 0: los tres son independientes y generan <b>todo ℝ³</b>. No hay ecuaciones (o la ecuación trivial 0 = 0).</p>
+<p>f) (0, 1, 1) = (1, 3, 2) − (1, 2, 1): es combinación de los otros dos, así que W es el mismo plano del apartado (a).</p>
+<res>e) W = ℝ³;  f) W = {x − y + z = 0}</res>
+<sage t="Ejercicio 1 (e, f)">R.<x,y,z> = QQ[]
+for gens in ([[1, 2, 1], [1, 3, 2], [0, 1, 0]], [[1, 2, 1], [1, 3, 2], [0, 1, 1]]):
+    B = column_matrix(R, gens).augment(column_matrix(R, [x, y, z]), subdivide=True)
+    show(B.echelon_form())</sage>
+</sol></ej>
+</tema>
+
+<tema id="p4-2" n="2" t="Ejercicio 2 · Base y dimensión" eyebrow="Ejercicio 2" lede="Para cada subespacio dado en implícitas, una base y su dimensión: es resolver el sistema homogéneo.">
+<ej id="p4-2abc" n="Ejercicio 2 (a, b, c)" t="con right_kernel">
+<p>a) W = {x − y + 3z = 0}. b) W = {2x − 2y + 5z = 0, 4x − y + 3z = 0}. c) W = {x − z + t = 0, 2x + y + t = 0} ⊆ ℝ⁴.</p>
+<sol>
+<p>W = Nuc(H), donde H tiene en sus filas los coeficientes (que son vectores perpendiculares a W). dim W = n − rg H.</p>
+<p>a) A mano: x = a, z = b (libres) ⇒ y = a + 3b: (x, y, z) = a(1, 1, 0) + b(0, 3, 1). Base {(1, 1, 0), (0, 3, 1)}, dimensión 2 (plano).</p>
+<sage t="Ejercicio 2 (a, b, c)">for H in ([[1, -1, 3]], [[2, -2, 5], [4, -1, 3]], [[1, 0, -1, 1], [2, 1, 0, 1]]):
+    W = matrix(QQ, H).right_kernel()
+    print(W.dimension(), W.basis())</sage>
+<salida>2 [(1, 1, 0), (0, 3, 1)]
+1 [(1, -14, -6)]
+2 [(1, 0, -1, -2), (0, 1, -1, -1)]</salida>
+<res>a) dim 2, {(1, 1, 0), (0, 3, 1)};  b) dim 1, {(1, −14, −6)} (una recta);  c) dim 2, {(1, 0, −1, −2), (0, 1, −1, −1)}</res>
+</sol></ej>
+<ej id="p4-2d" n="Ejercicio 2 (d)" t="propuesto: en ℝ⁵">
+<p>W = {x − y + 3z + t = 0, 2x − 3y + 3u = 0, x − y + z − t − u = 0} ⊆ ℝ⁵.</p>
+<sol>
+<p>La matriz de coeficientes tiene rango 3, así que dim W = 5 − 3 = 2.</p>
+<sage t="Ejercicio 2 (d)">H = matrix(QQ, [[1, -1, 3, 1, 0], [2, -3, 0, 0, 3], [1, -1, 1, -1, -1]])
+print(H.rank())
+show(H.right_kernel().basis())</sage>
+<res>dim W = 2, base {(6, 4, −1, 1, 0), (15, 12, −1, 0, 2)} (SageMath puede dar otra base equivalente, escalonada)</res>
+<p>Comprobación del primero: 6 − 4 − 3 + 1 = 0; 12 − 12 + 0 = 0; 6 − 4 − 1 − 1 − 0 = 0 ✓</p>
+</sol></ej>
+</tema>
+
+<tema id="p4-3" n="3" t="Ejercicio 3 · Comparar subespacios" eyebrow="Ejercicio 3" lede="Para cada par: ¿alguno contiene al otro?, ¿son iguales?, base y dimensión de la intersección, y dibujarlos.">
+<ej id="p4-3a" n="Ejercicio 3 (a)" t="propuesto: en ℝ²">
+<p>W₁ = ⟨(1, 1)⟩, W₂ = {x + 2y = 0}.</p>
+<sol>
+<p>(1, 1) no cumple x + 2y = 0 (da 3): W₁ ⊄ W₂. Son dos rectas distintas por el origen, así que tampoco W₂ ⊂ W₁ y se cortan sólo en el origen.</p>
+<res>Ninguno contiene al otro; W₁ ∩ W₂ = {0}</res>
+</sol></ej>
+<ej id="p4-3b" n="Ejercicio 3 (b)" t="un plano y una recta">
+<p>W₁ = ⟨(1, 1, 1), (1, 2, 2)⟩, W₂ = {x − y + 3z = 0, 2x − 3y = 0}.</p>
+<sol>
+<p>W₁: los dos generadores son independientes (plano). Implícitas: escalonando (1 1 | x; 1 2 | y; 1 2 | z) sale la condición <b>−y + z = 0</b>. W₂: dos ecuaciones independientes en ℝ³, una recta, de director (1, −1, 3) × (2, −3, 0) = (9, 6, −1).</p>
+<ul><li>W₂ ⊂ W₁? (9, 6, −1) da −6 − 1 = −7 ≠ 0: no.</li><li>W₁ ⊂ W₂? Imposible: dim 2 &gt; 1. Distintos.</li></ul>
+<sage t="Ejercicio 3 (b)">R.<x,y,z> = QQ[]
+B = column_matrix(R, [[1, 1, 1], [1, 2, 2]]).augment(column_matrix(R, [x, y, z]), subdivide=True)
+show(B.echelon_form())                       # implícita de W1: -y + z = 0
+I = matrix(QQ, [[1, -1, 3], [2, -3, 0], [0, -1, 1]])
+print(I.rank(), I.right_kernel().basis())      # intersección
+from geometria import *
+ejes() + plano(ec='-y+z=0', color=azul) + recta(ec=['x-y+3*z=0', '2*x-3*y=0'], l=12, color=rojo)</sage>
+<res>W₁ ∩ W₂ = Nuc(1 −1 3; 2 −3 0; 0 −1 1) = {0} (rango 3): la recta atraviesa el plano por el origen</res>
+<box k="warn" t="Ojo con la resolución oficial">
+<p>En el cuaderno, la celda que calcula las implícitas de W₁ reutiliza por error los vectores del apartado (c) y muestra −x − y + z = 0; la cuenta a mano del mismo cuaderno (−y + z = 0) es la correcta. La intersección {0} no cambia.</p>
+</box>
+</sol></ej>
+<ej id="p4-3c" n="Ejercicio 3 (c)" t="dos planos">
+<p>W₁ = ⟨(1, 0, 1), (0, 1, 1)⟩, W₂ = {x − y + 3z = 0}.</p>
+<sol>
+<p>W₁ = {−x − y + z = 0}. Los generadores de W₁ no cumplen la ecuación de W₂ ((1, 0, 1) da 4): son planos distintos, y dos planos distintos por el origen se cortan en una recta.</p>
+<md>W₁ ∩ W₂ = Nuc<m>−1 −1 1; 1 −1 3</m> = ⟨(1, −2, −1)⟩</md>
+<sage t="Ejercicio 3 (c)">print(matrix(QQ, [[-1, -1, 1], [1, -1, 3]]).right_kernel().basis())
+var('x y z')
+implicit_plot3d(-x - y + z, (x, -2, 2), (y, -2, 2), (z, -2, 2), color='yellow') + \
+implicit_plot3d(x - y + 3*z, (x, -2, 2), (y, -2, 2), (z, -2, 2)) + \
+line([(0, 0, 0), (1, -2, -1)], color='red', thickness=5)</sage>
+<res>Distintos, ninguno contiene al otro; W₁ ∩ W₂ = ⟨(1, −2, −1)⟩, dimensión 1</res>
+</sol></ej>
+<ej id="p4-3d" n="Ejercicio 3 (d)" t="propuesto: en ℝ⁵">
+<p>W₁ = ⟨(1, 1, 1, 0, 0), (0, 1, 1, 1, 1)⟩, W₂ = {x − y + 3z + t = 0, 2x − 3y + 3u = 0, x − y + z − t − u = 0}.</p>
+<sol>
+<p>dim W₁ = 2 y dim W₂ = 2 (ejercicio 2 d). Implícitas de W₁ (escalonando con letras): y − z = 0, x − y + t = 0, x − y + u = 0. Juntando las seis ecuaciones, el rango es 5:</p>
+<sage t="Ejercicio 3 (d)">V = QQ^5
+W1 = V.span([(1, 1, 1, 0, 0), (0, 1, 1, 1, 1)])
+W2 = matrix(QQ, [[1, -1, 3, 1, 0], [2, -3, 0, 0, 3], [1, -1, 1, -1, -1]]).right_kernel()
+print(W1.is_subspace(W2), W2.is_subspace(W1))
+print(W1.intersection(W2).dimension(), (W1 + W2).dimension())</sage>
+<res>Ninguno contiene al otro; W₁ ∩ W₂ = {0}; además dim(W₁ + W₂) = 2 + 2 − 0 = 4</res>
+</sol></ej>
+</tema>
+
+<tema id="p4-5" n="5" t="Ejercicio 5 · Ajustes de color" eyebrow="Ejercicio 5" lede="Filtros de color como vectores de ℝ³ (R, G, B): una familia de filtros W₁ y una restricción de hardware W₂.">
+<ej id="p4-5" n="Ejercicio 5 (a, b)" t="filtros seguros y variedad total">
+<p>W₁ = ⟨(1, 0, 1), (0, 1, 1)⟩ (ajustes magenta y cian) y W₂ = {R − G + 3B = 0}. a) ¿Qué filtros de W₁ son seguros (están en W₂)? b) ¿Qué variedad de ajustes se obtiene combinando las dos familias?</p>
+<sol>
+<p>a) Es la <b>intersección</b>. Implícita de W₁: (R, G, B) = a(1, 0, 1) + b(0, 1, 1) ⇒ B = R + G, es decir −R − G + B = 0. Con la de W₂: −2G + 4B = 0 ⇒ G = 2B, y R = −B.</p>
+<res>a) W₁ ∩ W₂ = ⟨(−1, 2, 1)⟩: una única dirección de filtros seguros</res>
+<p>b) Es la <b>suma</b>: se juntan los generadores de W₁ con los de W₂ = ⟨(1, 1, 0), (0, 3, 1)⟩. Los cuatro tienen rango 3:</p>
+<res>b) W₁ + W₂ = ℝ³ (Grassmann: 2 + 2 − 1 = 3)</res>
+<sage t="Ejercicio 5">print(matrix(QQ, [[1, -1, 3], [-1, -1, 1]]).right_kernel_matrix())
+T = column_matrix(QQ, [[1, 0, 1], [0, 1, 1], [1, 1, 0], [0, 3, 1]])
+print(T.rank())
+# Curiosidad: aplicar el filtro a(1,0,1) + b(0,1,1) a una imagen
+from PIL import Image
+import numpy as np
+img = Image.open("mikasa.jpg").resize((200, 200))
+data = np.array(img) / 255.0
+a, b = 0.2, 0.1
+nueva = np.clip(data + np.array([a, b, a + b]), 0, 1)
+show(graphics_array([matrix_plot(data), matrix_plot(nueva)]), axes=False)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p4-6" n="6" t="Ejercicios 6 a 8 · Aplicaciones" eyebrow="Ampliación" lede="Redes, segmentos de usuarios y un recomendador de películas. Los ejercicios 6 y 7 no forman parte de la práctica obligatoria.">
+<ej id="p4-6" n="Ejercicios 6 y 7" t="flujos en una red y segmentos de usuarios">
+<p>En los dos aparecen los mismos subespacios de ℝ⁵: W₁ = ⟨(1, 1, 1, 0, 0), (0, 1, 1, 1, 1)⟩ (patrones de backup / usuarios premium) y W₂ = {x − y + 3z + t = 0, 2x − 3y + 3u = 0, x − y + z − t − u = 0} (restricciones de la red / usuarios internacionales). Calcula base y dimensión de W₁ ∩ W₂ y de W₁ + W₂.</p>
+<sol>
+<p>Matemáticamente es el ejercicio 3 (d): la interpretación cambia, las cuentas no.</p>
+<res>W₁ ∩ W₂ = {0} (ningún patrón de backup no nulo es viable; no hay «premium internacionales» en este modelo) y W₁ + W₂ tiene dimensión 4, con base {(1, 1, 1, 0, 0), (0, 1, 1, 1, 1), (6, 4, −1, 1, 0), (15, 12, −1, 0, 2)}</res>
+<sage t="Ejercicios 6 y 7">V = QQ^5
+W1 = V.span([(1, 1, 1, 0, 0), (0, 1, 1, 1, 1)])
+W2 = matrix(QQ, [[1, -1, 3, 1, 0], [2, -3, 0, 0, 3], [1, -1, 1, -1, -1]]).right_kernel()
+show(W1.intersection(W2), (W1 + W2).basis())</sage>
+</sol></ej>
+<ej id="p4-8" n="Ejercicio 8" t="recomendador de películas">
+<p>Cada película de la base de datos MovieLens se representa por un vector, de forma que películas parecidas tienen vectores parecidos. Un usuario ha visto 25 películas de Disney y Pixar (Blancanieves, Pinocho, Cenicienta… Toy Story, Buscando a Nemo). a) Construye el subespacio que generan sus vectores. b) Busca las 10 películas, con al menos 30 votos, más próximas a ese subespacio. ¿Cuáles le recomendarías?</p>
+<sol>
+<p>La «proximidad» a un subespacio W es la distancia de v a su proyección: ‖v − proy<sub>W</sub>(v)‖, dividida por ‖v‖ para no favorecer vectores cortos. Para proyectar se ortonormaliza antes la base de W con <b>Gram-Schmidt</b> (tema 2) y se suman las proyecciones sobre cada vector.</p>
+<sage t="Ejercicio 8 (descarga 12 MB la primera vez)">pelicula_vectores = load('pelicula_vectores.sobj'); movie_titles = load('movie_titles.sobj')
+movie_to_idx = load('movie_to_idx.sobj'); votos = load('votos_por_pelicula.sobj')
+movie_ids = load('movie_ids.sobj'); num_p = load('num_p.sobj')
+def buscar_idx(nombre):
+    for m_id, titulo in movie_titles.items():
+        if nombre.lower() in titulo.lower() and m_id in movie_to_idx:
+            return movie_to_idx[m_id]
+vistas = ["Snow White and the Seven Dwarfs", "Pinocchio", "Cinderella", "Alice in Wonderland", "Peter Pan",
+          "Lady and the Tramp", "Sleeping Beauty", "101 Dalmatians", "Sword in the Stone, The", "Jungle Book, The",
+          "Aristocats, The", "Fox and the Hound, The", "Little Mermaid, The", "Beauty and the Beast", "Aladdin",
+          "Lion King, The", "Pocahontas", "Hunchback of Notre Dame, The", "Hercules", "Mulan", "Toy Story",
+          "Toy Story 2", "Bug's Life, A", "Monsters, Inc.", "Finding Nemo"]
+indices = [i for i in (buscar_idx(t) for t in vistas) if i is not None]
+base = []                                    # Gram-Schmidt
+for v in (pelicula_vectores[i] for i in indices):
+    w = v - sum((v * b) * b for b in base)
+    if w.norm() > 1e-6: base.append(w / w.norm())
+res = []
+for i in range(num_p):
+    if i in indices or votos[i] < 30: continue
+    v = pelicula_vectores[i]
+    if v.norm() < 1e-6: continue
+    proy = sum((v * b) * b for b in base)
+    res.append(((v - proy).norm() / v.norm(), movie_titles.get(movie_ids[i])))
+for k, (d, t) in enumerate(sorted(res)[:10], 1): print(k, round(d, 4), t)</sage>
+<salida>1 0.5424 Robin Hood (1973)
+2 0.6269 Dumbo (1941)
+3 0.6396 Bambi (1942)
+4 0.6476 Incredibles, The (2004)
+5 0.6524 Flintstones, The (1994)
+6 0.6542 Casper (1995)
+7 0.6562 James and the Giant Peach (1996)
+8 0.6576 Shrek (2001)
+9 0.6803 Indian in the Cupboard, The (1995)
+10 0.6845 Jungle Book, The (1967)</salida>
+<p>Le recomendaríamos Robin Hood, Dumbo, Bambi, Los Increíbles… Todo cine de animación o familiar: el subespacio ha capturado «el gusto Disney» sin que nadie le haya dicho qué es Disney. (El Libro de la selva de 1967 sale porque la búsqueda por título encontró otra versión al construir la base.)</p>
+</sol></ej>
+</tema>

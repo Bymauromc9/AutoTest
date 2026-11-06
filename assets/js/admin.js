@@ -252,7 +252,7 @@
     confirmar(dlg.querySelector("#g-cero"), async () => {
       ocupado(dlg, true);
       try {
-        Object.assign(u, await cambiarUsuario(uid, () => ({ puntos: 0, fli: 0, fc: 0, ip: 0, gohp: 0, [semana]: 0 })));
+        Object.assign(u, await cambiarUsuario(uid, () => ({ puntos: 0, fli: 0, fc: 0, ip: 0, gohp: 0, amd: 0, [semana]: 0 })));
         hecho(`Los puntos de ${u.nombre} están a cero.`);
       } catch (e) { fallo(e); }
     });
@@ -528,6 +528,7 @@
     ["fc_2000", "Hacker del bit", "2000 puntos en FC.", "💾", "hexagono", "esmeralda", "rara", "auto", "fc", 2000],
     ["ip_2000", "Programador", "2000 puntos en IP.", "💻", "hexagono", "zafiro", "rara", "auto", "ip", 2000],
     ["gohp_2000", "Empresario", "2000 puntos en GOHP.", "💼", "hexagono", "rubi", "rara", "auto", "gohp", 2000],
+    ["amd_2000", "Matemático", "2000 puntos en AMD.", "🧮", "hexagono", "oro", "rara", "auto", "amd", 2000],
     ["semana_oro", "Campeón de la semana", "Primero del ranking semanal.", "🥇", "medalla", "oro", "epica", "manual", "", 0],
     ["semana_plata", "Subcampeón de la semana", "Segundo del ranking semanal.", "🥈", "medalla", "plata", "rara", "manual", "", 0],
     ["semana_bronce", "Podio de la semana", "Tercero del ranking semanal.", "🥉", "medalla", "bronce", "rara", "manual", "", 0],
