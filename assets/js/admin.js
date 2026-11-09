@@ -288,12 +288,15 @@
           </div>
           <label>Mostrar hasta el día (incluido; vacío = hasta que lo quites)<input type="date" id="av-h" min="${hoy()}" value="${esc(c.avisoHasta || "")}"></label>
           <label class="adm-check"><input type="checkbox" id="av-push" checked> Enviar también como notificación a quien las tenga activadas <small class="muted" id="av-push-n"></small></label>
+          <p class="adm-push-diag" id="av-push-diag" hidden></p>
           <div class="adm-acts">
             <button type="submit" class="btn">Publicar aviso</button>
             ${c.aviso ? '<button type="button" class="btn danger" id="av-quitar">Quitar el aviso</button>' : ""}
           </div>
         </form>
         <section class="adm-card"><h2>Vista previa</h2><div id="av-prev"></div>
+          <p class="muted">Para comprobar que las notificaciones llegan sin publicar nada: activa las tuyas en «Tu cuenta» y</p>
+          <button type="button" class="btn ghost" id="av-prueba">${icon("bell")}Enviarme una notificación de prueba</button>
           <p class="muted">${c.aviso ? "Publicado " + (c.avisoHasta ? "hasta el " + esc(fechaLarga(c.avisoHasta)) : "sin fecha de fin") + "." : "Ahora mismo no hay ningún aviso publicado."}</p>
         </section>
       </div>`;
@@ -316,6 +319,11 @@
       const ok = await guardarConfig(form, { aviso: texto, avisoTipo: tipo(), avisoEnlace: l.value.trim(), avisoTextoEnlace: lt.value.trim(), avisoHasta: h.value, avisoId: Date.now().toString(36) }, "Aviso publicado: ya sale en la portada.");
       if (ok && conPush) enviarPush({ titulo: tipo() === "importante" ? "Aviso importante" : "Aviso", texto, url: l.value.trim() || "index.html" });
     });
+    el.querySelector("#av-prueba").onclick = async (e) => {
+      const b = e.currentTarget; b.disabled = true;
+      await enviarPush({ titulo: "Notificación de prueba", texto: "Si ves esto, las notificaciones funcionan en este dispositivo.", url: "admin.html#avisos", tag: "prueba", soloMias: true });
+      b.disabled = false;
+    };
     // ¿Están configuradas las notificaciones en el servidor? (api/push.js)
     fetch(ROOT + "api/push", { cache: "no-store" }).then((r) => r.ok ? r.json() : {}).catch(() => ({})).then((d) => {
       const cb = el.querySelector("#av-push"), nota = el.querySelector("#av-push-n");
@@ -352,8 +360,18 @@
       const r = await fetch(ROOT + "api/push", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + s.t }, body: JSON.stringify(m) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || "Error " + r.status);
-      aviso(d.total ? `Notificación enviada a ${fmt(d.enviadas)} de ${fmt(d.total)} dispositivos${d.borradas ? ` (${fmt(d.borradas)} suscripciones caducadas borradas)` : ""}.` : "Aviso publicado. Aún no hay ningún dispositivo con las notificaciones activadas.");
-    } catch (e) { aviso("El aviso está publicado, pero no se pudo enviar la notificación: " + e.message, "error"); }
+      const prueba = m.soloMias;
+      if (!d.total) aviso(prueba ? "No tienes ningún dispositivo con las notificaciones activadas: actívalas en «Tu cuenta»." : "Aviso publicado. Aún no hay ningún dispositivo con las notificaciones activadas.", prueba ? "error" : undefined);
+      else aviso(`Notificación ${prueba ? "de prueba " : ""}enviada a ${fmt(d.enviadas)} de ${fmt(d.total)} dispositivos${d.borradas ? ` (${fmt(d.borradas)} suscripciones caducadas borradas)` : ""}.`, d.enviadas ? undefined : "error");
+      diagnostico(d.errores || []);
+    } catch (e) { aviso((m.soloMias ? "No se pudo enviar la prueba: " : "El aviso está publicado, pero no se pudo enviar la notificación: ") + e.message, "error"); }
+  }
+  /** Por qué ha fallado el envío a cada servicio de push (lo que respondió Google, Mozilla, Apple…). */
+  function diagnostico(errores) {
+    const p = document.getElementById("av-push-diag");
+    if (!p) return;
+    p.hidden = !errores.length;
+    p.innerHTML = errores.length ? "<b>No llegó a:</b><br>" + errores.map((x) => `${esc(x.servicio)} · ${x.status ? "respuesta " + esc(x.status) : "sin respuesta"}${x.detalle ? " · " + esc(x.detalle) : ""}`).join("<br>") : "";
   }
 
   /* ---------------- Exámenes ---------------- */

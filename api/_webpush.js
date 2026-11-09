@@ -51,7 +51,7 @@ async function clavePrivada(publicKey, privateKey) {
 /** Cabecera Authorization «vapid t=…, k=…» para el servicio de push del endpoint. */
 async function cabeceraVapid(endpoint, vapid) {
   const aud = new URL(endpoint).origin;
-  const exp = Math.floor(Date.now() / 1000) + 12 * 3600;
+  const exp = Math.floor(Date.now() / 1000) + 3600;     // 1 h: Apple no admite más; Google y Mozilla, hasta 24 h
   const cab = b64u(enc.encode(JSON.stringify({ typ: "JWT", alg: "ES256" })));
   const cuerpo = b64u(enc.encode(JSON.stringify({ aud, exp, sub: vapid.subject })));
   const firmado = cab + "." + cuerpo;
@@ -92,17 +92,22 @@ async function cifrar(texto, sub, efimera, salt) {
 
 /**
  * Envía un mensaje a una suscripción { endpoint, keys: { p256dh, auth } }.
- * Devuelve { ok, status, caducada } — caducada = el servicio dice que ya no existe (404/410): hay que borrarla.
+ * Devuelve { ok, status, caducada, detalle } — caducada = el servicio dice que ya no existe (404/410): hay que
+ * borrarla; detalle = lo que respondió el servicio de push (o el error) cuando falla, para poder diagnosticarlo.
  */
 async function enviar(sub, mensaje, vapid, opts) {
   const o = opts || {};
-  const cuerpo = await cifrar(typeof mensaje === "string" ? mensaje : JSON.stringify(mensaje), sub);
+  let cuerpo, autorizacion;
+  try {
+    cuerpo = await cifrar(typeof mensaje === "string" ? mensaje : JSON.stringify(mensaje), sub);
+    autorizacion = await cabeceraVapid(sub.endpoint, vapid);
+  } catch (e) { return { ok: false, status: 0, caducada: false, detalle: "Error al preparar el mensaje: " + (e && e.message || e) }; }
   let r;
   try {
     r = await fetch(sub.endpoint, {
       method: "POST",
       headers: {
-        Authorization: await cabeceraVapid(sub.endpoint, vapid),
+        Authorization: autorizacion,
         "Content-Encoding": "aes128gcm",
         "Content-Type": "application/octet-stream",
         TTL: String(o.ttl || 86400),
@@ -111,8 +116,11 @@ async function enviar(sub, mensaje, vapid, opts) {
       },
       body: cuerpo
     });
-  } catch (e) { return { ok: false, status: 0, caducada: false }; }
-  return { ok: r.status >= 200 && r.status < 300, status: r.status, caducada: r.status === 404 || r.status === 410 };
+  } catch (e) { return { ok: false, status: 0, caducada: false, detalle: "Sin respuesta del servicio de push: " + (e && (e.cause && e.cause.message || e.message) || e) }; }
+  const ok = r.status >= 200 && r.status < 300;
+  let detalle = "";
+  if (!ok) { try { detalle = (await r.text()).replace(/\s+/g, " ").slice(0, 300); } catch (e) { /* sin cuerpo */ } }
+  return { ok, status: r.status, caducada: r.status === 404 || r.status === 410, detalle };
 }
 
 module.exports = { enviar, cifrar, cabeceraVapid, b64u, deB64u };

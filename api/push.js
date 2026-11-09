@@ -13,8 +13,9 @@
  *   FIREBASE_PROJECT_ID opcional (por defecto web-ing-inf, el de assets/js/cuentas.js)
  *
  * GET  /api/push  → { ok, configurado, publicKey }   (la página la usa para suscribirse)
- * POST /api/push  → { titulo, texto, url?, tag? } con «Authorization: Bearer <id token de un admin>»
- *                 → { ok, total, enviadas, fallidas, borradas }
+ * POST /api/push  → { titulo, texto, url?, tag?, soloMias? } con «Authorization: Bearer <id token de un admin>»
+ *                 → { ok, total, enviadas, fallidas, borradas, errores: [{ servicio, status, detalle }] }
+ *   soloMias: true  sólo a los dispositivos del administrador que llama (notificación de prueba)
  */
 "use strict";
 
@@ -61,13 +62,13 @@ async function suscripciones(token) {
   const out = [];
   let pagina = "";
   do {
-    const url = DB + "/push?pageSize=300&mask.fieldPaths=endpoint&mask.fieldPaths=p256dh&mask.fieldPaths=auth" + (pagina ? "&pageToken=" + encodeURIComponent(pagina) : "");
+    const url = DB + "/push?pageSize=300&mask.fieldPaths=uid&mask.fieldPaths=endpoint&mask.fieldPaths=p256dh&mask.fieldPaths=auth" + (pagina ? "&pageToken=" + encodeURIComponent(pagina) : "");
     const r = await fetch(url, { headers: { Authorization: "Bearer " + token } });
     if (!r.ok) { const e = new Error("Firestore " + r.status); e.status = r.status; throw e; }
     const d = await r.json();
     for (const doc of d.documents || []) {
       const f = doc.fields || {}, s = (k) => (f[k] && f[k].stringValue) || "";
-      if (s("endpoint") && s("p256dh") && s("auth")) out.push({ id: doc.name.split("/").pop(), endpoint: s("endpoint"), keys: { p256dh: s("p256dh"), auth: s("auth") } });
+      if (s("endpoint") && s("p256dh") && s("auth")) out.push({ id: doc.name.split("/").pop(), uid: s("uid"), endpoint: s("endpoint"), keys: { p256dh: s("p256dh"), auth: s("auth") } });
     }
     pagina = d.nextPageToken || "";
   } while (pagina && out.length < 20000);
@@ -104,17 +105,29 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  // Prueba: sólo los dispositivos de quien llama (su uid va en el token, que Firestore ya ha validado al leer).
+  if (b.soloMias === true) { const yo = claims(token).user_id || claims(token).sub; subs = subs.filter((s) => s.uid && s.uid === yo); }
+
   let enviadas = 0, fallidas = 0;
-  const caducadas = [];
+  const caducadas = [], errores = [];
   for (let i = 0; i < subs.length; i += EN_PARALELO) {
     const lote = subs.slice(i, i + EN_PARALELO);
-    const rs = await Promise.all(lote.map((s) => enviar(s, mensaje, v, { ttl: 3 * 86400, tema: "aviso" }).catch(() => ({ ok: false }))));
-    rs.forEach((r, k) => { if (r.ok) enviadas++; else { fallidas++; if (r.caducada) caducadas.push(lote[k].id); } });
+    const rs = await Promise.all(lote.map((s) => enviar(s, mensaje, v, { ttl: 3 * 86400, tema: "aviso" })
+      .catch((e) => ({ ok: false, status: 0, detalle: "Error inesperado: " + (e && e.message || e) }))));
+    rs.forEach((r, k) => {
+      if (r.ok) { enviadas++; return; }
+      fallidas++;
+      if (r.caducada) caducadas.push(lote[k].id);
+      let servicio = "?";
+      try { servicio = new URL(lote[k].endpoint).host; } catch (e) { /* endpoint raro */ }
+      if (errores.length < 10) errores.push({ servicio, status: r.status, detalle: r.detalle || "" });
+    });
   }
   // Las caducadas se borran (las reglas dejan a los administradores borrar suscripciones).
   let borradas = 0;
   await Promise.all(caducadas.map((id) => fetch(DB + "/push/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + token } })
     .then((r) => { if (r.ok) borradas++; }).catch(() => {})));
 
-  res.status(200).json({ ok: true, total: subs.length, enviadas, fallidas, borradas });
+  if (errores.length) console.error("push: fallos", JSON.stringify(errores));   // también en los logs de Vercel
+  res.status(200).json({ ok: true, total: subs.length, enviadas, fallidas, borradas, errores });
 };

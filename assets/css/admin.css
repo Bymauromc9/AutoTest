@@ -154,3 +154,4 @@ a.adm-tile:hover { border-color: var(--accent); }
 /* Casilla suelta en un formulario (p. ej. «Enviar también como notificación») */
 .adm-check { display: flex !important; flex-direction: row !important; align-items: center; flex-wrap: wrap; gap: 8px; min-height: 44px; font-weight: 400 !important; }
 .adm-check small { flex-basis: 100%; }
+.adm-push-diag { margin: 0; padding: 12px 16px; border-radius: 8px; background: var(--bad-soft); color: var(--ink); font-size: 14px; overflow-wrap: anywhere; }
