@@ -50,8 +50,10 @@
       <div class="cta-actions" id="admin-acc" hidden>
         <a class="btn ghost" href="${ROOT}admin.html">${icon("shield")}Panel de administración</a>
       </div>
-    </section>`;
+    </section>
+    <section class="cta-card cta-app" id="cta-app" aria-labelledby="h-app" hidden></section>`;
     cursos.selector(document.getElementById("mis-cursos"), { ayuda: "La portada, la cuenta atrás de los exámenes y las estadísticas enseñan sólo las asignaturas de estos cursos." });
+    pintarApp(ses);
     // Sólo para administradores (se comprueba con un token nuevo, por si el rol se acaba de dar).
     if (!ses.local) C.esAdmin(true).then((si) => { const b = document.getElementById("admin-acc"); if (b) b.hidden = !si; }).catch(() => {});
     document.getElementById("salir").onclick = async (e) => {
@@ -59,6 +61,57 @@
       await C.salir();
       location.replace(ROOT + "cuenta.html");
     };
+  }
+
+  /* ---------------- App instalable y notificaciones (ver assets/js/pwa.js) ---------------- */
+  function pintarApp(ses) {
+    const caja = document.getElementById("cta-app");
+    const P = window.Pwa;
+    if (!caja) return;
+    if (!P) { setTimeout(() => pintarApp(ses), 300); return; }        // pwa.js llega justo después
+    if (!P.soporte() && !P.esIOS()) return;                          // p. ej. abierta desde un archivo
+    let ocupado = false;
+    const TXT = {
+      "activo": ["Activadas en este dispositivo", "Te llega una notificación cuando se publica un aviso (cambios de examen, novedades…)."],
+      "inactivo": ["Desactivadas", "Actívalas para enterarte de los avisos aunque no tengas la web abierta."],
+      "denegado": ["Bloqueadas en el navegador", "Las has bloqueado para esta web. Para activarlas, permite las notificaciones en los ajustes del sitio del navegador y vuelve aquí."],
+      "instalar-ios": ["Primero, instala la web", "En iPhone y iPad las notificaciones sólo funcionan con la web añadida a la pantalla de inicio: pulsa Compartir y luego «Añadir a pantalla de inicio», y ábrela desde el icono."],
+      "configurar": ["Aún no disponibles", "Falta configurar las notificaciones en el servidor."],
+      "no-soportado": ["No disponibles", "Este navegador no admite notificaciones."]
+    };
+    async function pintar(msg) {
+      const est = await P.push.estado();
+      if (ses.local && (est === "activo" || est === "inactivo")) { TXT.inactivo = ["Sólo con cuenta", "Los perfiles locales no pueden recibir avisos: entra con una cuenta."]; }
+      const [t, d] = TXT[est] || TXT["no-soportado"];
+      const puedeTocar = !ses.local && (est === "activo" || est === "inactivo");
+      const instalar = P.instalada() ? `<p class="muted cta-app__ok">${icon("check")}Ya la estás usando como app.</p>`
+        : P.puedeInstalar() ? `<button type="button" class="btn ghost" id="app-instalar">${icon("download")}Instalar la app</button>`
+        : P.esIOS() ? `<p class="muted">En iPhone y iPad: botón <b>Compartir</b> → <b>Añadir a pantalla de inicio</b>.</p>`
+        : `<p class="muted">Desde el menú del navegador: <b>Instalar aplicación</b> (o «Añadir a pantalla de inicio» en el móvil).</p>`;
+      caja.innerHTML = `<h2 id="h-app">App y notificaciones</h2>
+        <div class="cta-app__fila">
+          <div><b>Instálala en tu móvil u ordenador</b><p class="muted">Se abre como una app, sin barra del navegador, y las páginas que ya has visto funcionan sin conexión.</p></div>
+          ${instalar}
+        </div>
+        <div class="cta-app__fila">
+          <div><b>Notificaciones de avisos</b> <span class="cta-app__estado" data-e="${est}">${esc(t)}</span><p class="muted">${esc(d)}</p></div>
+          ${puedeTocar ? `<button type="button" class="btn${est === "activo" ? " ghost" : ""}" id="app-push" aria-pressed="${est === "activo"}">${icon("bell")}${est === "activo" ? "Desactivar" : "Activar notificaciones"}</button>` : ""}
+        </div>
+        ${msg ? `<p class="cta-err" role="alert">${esc(msg)}</p>` : ""}`;
+      caja.hidden = false;
+      const bi = caja.querySelector("#app-instalar");
+      if (bi) bi.onclick = async () => { await P.instalar(); pintar(); };
+      const bp = caja.querySelector("#app-push");
+      if (bp) bp.onclick = async () => {
+        if (ocupado) return;
+        ocupado = true; bp.disabled = true;
+        try { if (est === "activo") await P.push.desactivar(); else await P.push.activar(); await pintar(); }
+        catch (e) { await pintar(e.message || "No se ha podido cambiar."); }
+        finally { ocupado = false; }
+      };
+    }
+    pintar();
+    window.addEventListener("pwa:instalable", () => pintar());
   }
 
   /* ---------------- Sin sesión (o cambiando): elegir, entrar o crear ---------------- */

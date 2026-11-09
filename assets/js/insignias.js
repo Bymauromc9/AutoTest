@@ -91,7 +91,7 @@
       <g fill="url(#${id}i)">${forma(f, 0.84)}</g>
       ${anillo}
       <path d="M22 34 Q50 12 78 34" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".28"/>
-      <text x="50" y="${f === "medalla" ? 63 : 57}" text-anchor="middle" dominant-baseline="middle" font-size="${icono.length > 2 && !/\p{Extended_Pictographic}/u.test(icono) ? 22 : 36}" font-family="'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',var(--f-display),sans-serif" font-weight="800" fill="${ink}">${esc(icono)}</text>
+      <text x="50" y="${f === "medalla" ? 63 : 57}" text-anchor="middle" dominant-baseline="middle" font-size="${icono.length > 2 && !/\p{Extended_Pictographic}/u.test(icono) ? 22 : 36}" font-family="'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',var(--f-display),sans-serif" font-weight="600" fill="${ink}">${esc(icono)}</text>
       ${chispas}${brillo}
     </svg>`;
   }

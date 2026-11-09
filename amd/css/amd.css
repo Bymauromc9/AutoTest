@@ -19,7 +19,7 @@
 .mx.det::before, .mx.det::after { width: 0; border-radius: 0; }
 .mx.det::after { border-left: 0; border-right-width: 1.5px; }
 .mx > .ab { border-left: 1.3px solid currentColor; padding-left: .6em; }   /* columna ampliada: (A | b) */
-.mx > .pv { color: var(--accent); font-weight: 700; }                      /* pivote */
+.mx > .pv { color: var(--accent); font-weight: 600; }                      /* pivote */
 .mx.sm { font-size: .9em; column-gap: .6em; }
 
 /* ---------- Sistemas de ecuaciones: llave y los «=» alineados ---------- */
@@ -40,16 +40,16 @@
 
 /* ---------- Enlaces a cada práctica / hoja dentro de la cabecera ---------- */
 .amd-pages { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
-.amd-pages a { font: 700 .85rem var(--f-display); text-decoration: none; padding: 5px 12px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); }
-.amd-pages a:hover { border-color: var(--accent); color: var(--accent); }
-.amd-pages a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.amd-pages a { display: inline-flex; align-items: center; min-height: 36px; font: 500 .875rem var(--f-display); text-decoration: none; padding: 4px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.amd-pages a:hover { background: color-mix(in srgb, var(--ink) 5%, var(--surface)); }
+.amd-pages a[aria-current="page"] { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
 
 /* ---------- Enunciados con datos (figuras de las prácticas) ---------- */
 .fig-amd { margin: var(--s-3) auto; text-align: center; }
 .fig-amd img { max-width: min(100%, 520px); height: auto; border-radius: 8px; border: 1px solid var(--rule); background: #fff; }
-.fig-amd figcaption { font-size: .88rem; color: var(--muted); margin-top: 4px; }
+.fig-amd figcaption { font-size: .875rem; color: var(--muted); margin-top: 4px; }
 .files { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--s-2) 0 var(--s-3); padding: 0; list-style: none; }
-.files a { display: inline-block; font: 600 .78rem var(--f-mono); padding: 3px 9px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); color: var(--accent); text-decoration: none; }
+.files a { display: inline-block; font: 600 .75rem var(--f-mono); padding: 3px 9px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); color: var(--accent); text-decoration: none; }
 .files a:hover { border-color: var(--accent); }
 
 @media print {

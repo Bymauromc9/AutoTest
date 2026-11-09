@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sin conexión</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F9F8F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  /* Autosuficiente: se sirve desde la caché del service worker cuando no hay conexión. */
+  :root { --bg: #F9F8F6; --surface: #FFFFFF; --ink: #2F2E2B; --muted: #63615C; --line: #E7E5E0; --accent: #2563C0; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #191919; --surface: #222222; --ink: #E8E7E4; --muted: #A09E99; --line: #323232; --accent: #6EA8F2; color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 Inter, "Segoe UI", system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
+  .ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface); color: var(--muted); }
+  h1 { margin: 0; font-size: 1.728rem; line-height: 1.2; font-weight: 600; letter-spacing: -.015em; }
+  p { margin: 0; color: var(--muted); }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .btn { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--accent);
+    background: var(--accent); color: var(--surface); font: 500 15px inherit; font-family: inherit; text-decoration: none; cursor: pointer; }
+  .btn.ghost { background: var(--surface); border-color: var(--line); color: var(--ink); }
+  ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <span class="ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a15 15 0 0 1 20 0M5.5 12a10 10 0 0 1 13 0M9 15.5a5 5 0 0 1 6 0"/><path d="M12 19h.01"/><path d="M3 3l18 18"/></svg></span>
+  <h1>Sin conexión</h1>
+  <p>Esta página aún no está guardada en este dispositivo. Las páginas que ya has abierto con conexión siguen funcionando sin ella.</p>
+  <ul id="guardadas" hidden></ul>
+  <div class="acts">
+    <button type="button" class="btn" onclick="location.reload()">Reintentar</button>
+    <a class="btn ghost" href="index.html">Ir a mis asignaturas</a>
+  </div>
+</main>
+<script>
+  // Lista de las páginas guardadas sin conexión (las que ha guardado el service worker).
+  (async function () {
+    if (!("caches" in window)) return;
+    try {
+      const nombres = await caches.keys();
+      const paginas = new Map();
+      for (const n of nombres) {
+        const c = await caches.open(n);
+        for (const r of await c.keys()) {
+          const u = new URL(r.url);
+          if (u.origin === location.origin && /\.html$/.test(u.pathname) && !/offline\.html$/.test(u.pathname)) paginas.set(u.pathname, u.pathname);
+        }
+      }
+      if (!paginas.size) return;
+      const ul = document.getElementById("guardadas");
+      ul.innerHTML = [...paginas.keys()].sort().slice(0, 30).map((p) => '<li><a href="' + p + '">' + decodeURIComponent(p.replace(/^\//, "")) + "</a></li>").join("");
+      ul.hidden = false;
+    } catch (e) { /* sin lista */ }
+  })();
+</script>
+</body>
+</html>

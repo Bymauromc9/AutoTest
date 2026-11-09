@@ -1,0 +1,24 @@
+{
+  "name": "Mis asignaturas · Ingeniería Informática",
+  "short_name": "Asignaturas",
+  "description": "Teoría, prácticas y preparación del examen de cada asignatura de Ingeniería Informática (Universidad de Murcia).",
+  "lang": "es",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F9F8F6",
+  "theme_color": "#F9F8F6",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "assets/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Ranking", "url": "./ranking.html", "icons": [{ "src": "assets/img/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Tu cuenta", "url": "./cuenta.html", "icons": [{ "src": "assets/img/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

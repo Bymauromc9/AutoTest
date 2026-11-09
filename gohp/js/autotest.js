@@ -192,8 +192,8 @@ function quiz(){
   app.innerHTML=`
   <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)}${S.key==="G"?" · Tema "+q.t:""}${S.batch>1?" · Tanda "+S.batch:""}${q.src&&q.src.x?" · De examen":""}</span><h2>Pregunta ${S.i+1} de ${n}</h2></div>
     <div class="qtools">
-      <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar preguntas</button>
-      <a class="btn ghost" href="guia.html" target="_blank" rel="noopener">Guía de teoría ↗</a>
+      <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar<span class="qt-l"> preguntas</span></button>
+      <a class="btn ghost" href="guia.html" target="_blank" rel="noopener">Guía<span class="qt-l"> de teoría</span> ↗</a>
       <button class="btn ghost" id="quit">Salir</button>
     </div></div>
   ${S.flash?`<p class="swapnote" role="status">Nuevas preguntas cargadas: ninguna se repite de la tanda anterior.</p>`:""}

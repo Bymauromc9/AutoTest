@@ -61,9 +61,14 @@
   "use strict";
   const { esc, icon, daysTo, sesion, ROOT, cursos } = window.App;
 
-  const ex = document.getElementById("exams");
+  const ex = document.getElementById("exams"), exWrap = document.getElementById("exams-wrap");
+  const VISIBLES = 3;            // los más cercanos; el resto, tras «Ver todos»
+  let todos = false;
   function pintarExamenes() {
-    const items = cursos.asignaturas().map((s) => {
+    // Ordenados por cercanía; los que no tienen fecha, al final.
+    const lista = cursos.asignaturas().map((s) => ({ s, d: s.exam ? daysTo(s.exam.date) : Infinity }))
+      .filter((x) => x.d >= 0).sort((a, b) => a.d - b.d);
+    const items = lista.map(({ s }) => {
       if (!s.exam) return `<div class="exam-cd is-tbd"><span class="exam-cd__n">?</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">fecha del examen por confirmar</small><small class="exam-cd__s">sin fecha</small></span></div>`;
       const d = daysTo(s.exam.date);
       if (d < 0) return "";
@@ -71,9 +76,13 @@
       const [y, m, dd] = s.exam.date.split("-").map(Number);
       const corta = new Date(y, m - 1, dd).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
       return `<a class="exam-cd" href="${esc(s.exam.href || s.home)}" title="${esc(s.name)} · ${esc(s.exam.label)}"><span class="exam-cd__n">${d}</span><span class="exam-cd__t"><b>${esc(s.short)}${s.exam.name ? " · " + esc(s.exam.name) : ""}</b><small class="exam-cd__l">${txt} · ${esc(s.exam.label.split(" · ")[0])}${(s.examsLeft || []).length ? " · luego " + s.examsLeft.map((e) => esc(e.name || "examen") + " en " + daysTo(e.date) + " días").join(", ") : ""}</small><small class="exam-cd__s">${d === 1 ? "día" : "días"} · ${esc(corta)}</small></span></a>`;
-    }).join("");
-    ex.innerHTML = items;
-    ex.hidden = !items;
+    });
+    const ocultos = todos ? 0 : Math.max(0, items.length - VISIBLES);
+    ex.innerHTML = items.slice(0, items.length - ocultos).join("") +
+      (items.length > VISIBLES ? `<button type="button" class="exams-more" aria-expanded="${todos}">${todos ? "Ver sólo los próximos" : "Ver todos (" + items.length + ")"}</button>` : "");
+    const mas = ex.querySelector(".exams-more");
+    if (mas) mas.onclick = () => { todos = !todos; pintarExamenes(); };
+    if (exWrap) exWrap.hidden = !items.length;
   }
   if (ex) { pintarExamenes(); window.addEventListener("app:config", pintarExamenes); window.addEventListener("app:cursos", pintarExamenes); }
 

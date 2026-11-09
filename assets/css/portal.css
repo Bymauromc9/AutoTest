@@ -1,31 +1,32 @@
 /* portal.css — portada del sitio (lista de asignaturas). Móvil primero. Usa también assets/css/hub.css. */
 .portal{max-width:980px}
-.portal header.top h1{font-size:clamp(32px,8vw,48px)}
-.subjects{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
-.subject__link{display:flex;flex-direction:column;gap:8px;padding:16px;height:100%;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);text-decoration:none;transition:border-color .15s,box-shadow .15s,transform .15s}
-.subject__link:hover{border-color:var(--accent);box-shadow:0 8px 22px -14px var(--accent)}
-.subject__link:active{transform:scale(.99)}
-.subject__top{display:flex;align-items:center;gap:10px}
-.subject__short{white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:19px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:52px;height:52px;display:grid;place-items:center;padding:0 8px}
-.subject__exam{display:inline-flex;align-items:center;gap:6px;font:700 12.5px var(--f-mono);color:var(--bad);background:var(--bad-soft);border-radius:999px;padding:4px 10px}
-.subject__exam .ico{width:15px;height:15px}
-.subject__go{margin-left:auto;color:var(--muted)}
-.subject__name{font-family:var(--f-display);font-weight:800;font-size:20px;line-height:1.2;text-wrap:balance;margin-top:4px}
-.subject__desc{color:var(--muted);font-size:15px}
-.subject__sections{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.subject__sections span{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
-.subject__sections .ico{width:14px;height:14px}
-.subject__prog{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:6px}
-.subject__prog .res-bar{flex:1;margin:0;--k:var(--ok)}
-.subject__pct{font:600 13px var(--f-mono);color:var(--muted);min-width:3.2em;text-align:right}
+.portal header.top h1{font-size:clamp(2.074rem,6vw,2.986rem);letter-spacing:-.025em}
+.subjects{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.subject__link{display:flex;flex-direction:column;gap:8px;padding:16px;height:100%;border:1px solid var(--line);border-radius:var(--r-l);background:var(--surface);color:var(--ink);text-decoration:none;transition:background-color .15s,border-color .15s}
+.subject__link:hover{border-color:var(--line-strong);background:color-mix(in srgb,var(--surface) 96%,var(--ink))}
+.subject__top{display:flex;align-items:center;gap:12px}
+.subject__short{white-space:nowrap;font:600 15px var(--f-display);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-m);min-width:48px;height:40px;display:grid;place-items:center;padding:0 8px}
+.subject__exam{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:500;color:var(--bad);font-variant-numeric:tabular-nums}
+.subject__exam .ico{width:16px;height:16px}
+.subject__go{margin-left:auto;color:var(--muted);opacity:.6}
+.subject__link:hover .subject__go{opacity:1;color:var(--ink)}
+.subject__name{font:600 1.2rem/1.25 var(--f-display);text-wrap:balance;margin-top:4px;letter-spacing:-.01em}
+.subject__desc{color:var(--muted);font-size:14px;line-height:1.5}
+.subject__sections{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:4px}
+.subject__sections span{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}
+.subject__sections b{font-weight:500;color:var(--ink)}
+.subject__sections .ico{width:16px;height:16px}
+.subject__prog{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:8px}
+.subject__prog .res-bar{flex:1;margin:0}
+.subject__pct{font-size:13px;color:var(--muted);min-width:3.2em;text-align:right;font-variant-numeric:tabular-nums}
 .portal-note{font-size:14px;margin:0}
 @media (min-width:720px){
-  .subjects{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .subject__link{padding:20px}
+  .subjects{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .subject__link{padding:24px}
 }
 
 /* Una lista por curso cuando la cuenta tiene varios */
-.asignaturas{display:flex;flex-direction:column;gap:22px}
-.curso-grupo{display:flex;flex-direction:column;gap:10px}
-.curso-grupo__h{display:flex;align-items:baseline;gap:10px;font-size:22px}
-.curso-grupo__h small{font:600 13px var(--f-body);color:var(--muted)}
+.asignaturas{display:flex;flex-direction:column;gap:32px}
+.curso-grupo{display:flex;flex-direction:column;gap:12px}
+.curso-grupo__h{display:flex;align-items:baseline;gap:12px;font-size:1.44rem}
+.curso-grupo__h small{font:400 14px var(--f-body);color:var(--muted)}

@@ -76,20 +76,20 @@ h1, h2, h3, h4, .card-head, .tema-head { break-after: avoid; }
 .tablewrap, .tw { overflow: visible !important; }
 pre, pre code { white-space: pre-wrap !important; word-break: break-word; }
 a { color: inherit; text-decoration: none; }
-.pdfh { font: 800 22px "Bricolage Grotesque", system-ui, sans-serif; margin: 0 0 6px; }
+.pdfh { font: 600 22px "Inter", system-ui, sans-serif; margin: 0 0 6px; }
 .pdfsub { color: #5a6573; margin: 0 0 18px; font-size: 13px; }
-.pdftopic { font: 800 17px "Bricolage Grotesque", system-ui, sans-serif; margin: 22px 0 10px; padding-bottom: 4px; border-bottom: 2px solid #27467A; color: #15202C; break-after: avoid; }
-.pdfq { margin: 0 0 12px; padding: 9px 12px; border: 1px solid #D7DDE4; border-radius: 8px; font-size: 12.5px; line-height: 1.45; color: #15202C; }
-.pdfq .n { font-weight: 800; color: #27467A; margin-right: 4px; }
+.pdftopic { font: 600 17px "Inter", system-ui, sans-serif; margin: 22px 0 10px; padding-bottom: 4px; border-bottom: 2px solid #2563C0; color: #2F2E2B; break-after: avoid; }
+.pdfq { margin: 0 0 12px; padding: 9px 12px; border: 1px solid #E7E5E0; border-radius: 8px; font-size: 12.5px; line-height: 1.45; color: #2F2E2B; }
+.pdfq .n { font-weight: 600; color: #2563C0; margin-right: 4px; }
 .pdfq p { margin: 0 0 6px; }
 .pdfq ol { list-style: none; margin: 0 0 6px; padding: 0; }
 .pdfq li { padding: 2px 6px; border-radius: 4px; margin: 1px 0; }
 .pdfq li b.k { display: inline-block; width: 1.4em; color: #5a6573; }
-.pdfq li.ok { background: #E2F2E8; color: #14532D; font-weight: 700; }
+.pdfq li.ok { background: #E2F2E8; color: #14532D; font-weight: 600; }
 .pdfq li.ok b.k { color: #14532D; }
-.pdfq .e { color: #3b4652; font-size: 12px; border-left: 3px solid #27467A; padding-left: 8px; margin: 4px 0 0; }
+.pdfq .e { color: #3b4652; font-size: 12px; border-left: 3px solid #2563C0; padding-left: 8px; margin: 4px 0 0; }
 .pdfq code, .pdfq .f { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .92em; }
-.pdf-part > h2.pdf-parth { font: 800 20px "Bricolage Grotesque", system-ui, sans-serif; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid #27467A; }
+.pdf-part > h2.pdf-parth { font: 600 20px "Inter", system-ui, sans-serif; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid #2563C0; }
 `;
 
 /* ---------------- preparadores (se ejecutan dentro de la página) ---------------- */

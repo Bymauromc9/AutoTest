@@ -275,8 +275,8 @@
     el.innerHTML = `
       <div class="adm-cols adm-cols--2">
         <form class="adm-card adm-form" id="av-form" novalidate>
-          <h2>Aviso para toda la web</h2>
-          <p class="muted">Sale debajo de la barra superior en todas las páginas, hasta la fecha que pongas. Cada usuario puede cerrarlo; si publicas uno nuevo, vuelve a salir.</p>
+          <h2>Aviso</h2>
+          <p class="muted">Sale en la portada hasta la fecha que pongas y, si marcas la casilla, llega como notificación a quien las tenga activadas. Cada usuario puede cerrarlo; si publicas uno nuevo, vuelve a salir.</p>
           <label>Texto del aviso<textarea id="av-t" rows="3" maxlength="500" required placeholder="Por ejemplo: el examen de FC se ha movido al 20 de enero.">${esc(c.aviso || "")}</textarea><small class="adm-count" id="av-n"></small></label>
           <fieldset class="adm-radios"><legend>Tipo</legend>
             <label><input type="radio" name="av-tipo" value="info"${c.avisoTipo !== "importante" ? " checked" : ""}> Información</label>
@@ -287,6 +287,7 @@
             <label>Texto del enlace<input type="text" id="av-lt" maxlength="60" placeholder="Más información" value="${esc(c.avisoTextoEnlace || "")}"></label>
           </div>
           <label>Mostrar hasta el día (incluido; vacío = hasta que lo quites)<input type="date" id="av-h" min="${hoy()}" value="${esc(c.avisoHasta || "")}"></label>
+          <label class="adm-check"><input type="checkbox" id="av-push" checked> Enviar también como notificación a quien las tenga activadas <small class="muted" id="av-push-n"></small></label>
           <div class="adm-acts">
             <button type="submit" class="btn">Publicar aviso</button>
             ${c.aviso ? '<button type="button" class="btn danger" id="av-quitar">Quitar el aviso</button>' : ""}
@@ -311,7 +312,16 @@
       const texto = t.value.trim();
       if (!texto) { aviso("Escribe el texto del aviso.", "error"); t.focus(); return; }
       if (l.value.trim() && /^(javascript|data|vbscript):/i.test(l.value.trim())) { aviso("Ese enlace no está permitido.", "error"); l.focus(); return; }
-      await guardarConfig(form, { aviso: texto, avisoTipo: tipo(), avisoEnlace: l.value.trim(), avisoTextoEnlace: lt.value.trim(), avisoHasta: h.value, avisoId: Date.now().toString(36) }, "Aviso publicado: ya sale en toda la web.");
+      const conPush = el.querySelector("#av-push").checked;
+      const ok = await guardarConfig(form, { aviso: texto, avisoTipo: tipo(), avisoEnlace: l.value.trim(), avisoTextoEnlace: lt.value.trim(), avisoHasta: h.value, avisoId: Date.now().toString(36) }, "Aviso publicado: ya sale en la portada.");
+      if (ok && conPush) enviarPush({ titulo: tipo() === "importante" ? "Aviso importante" : "Aviso", texto, url: l.value.trim() || "index.html" });
+    });
+    // ¿Están configuradas las notificaciones en el servidor? (api/push.js)
+    fetch(ROOT + "api/push", { cache: "no-store" }).then((r) => r.ok ? r.json() : {}).catch(() => ({})).then((d) => {
+      const cb = el.querySelector("#av-push"), nota = el.querySelector("#av-push-n");
+      if (!cb || d.configurado) return;
+      cb.checked = false; cb.disabled = true;
+      nota.textContent = "(no disponibles: faltan las claves VAPID en Vercel; ver el README)";
     });
     const quitar = el.querySelector("#av-quitar");
     if (quitar) confirmar(quitar, () => guardarConfig(form, { aviso: "", avisoTipo: "info", avisoEnlace: "", avisoTextoEnlace: "", avisoHasta: "", avisoId: "" }, "Aviso quitado."));
@@ -331,7 +341,19 @@
       config.actualizar(st.cfg);                     // se ve ya en esta pestaña
       pintar();
       aviso(ok);
-    } catch (e) { ocupado(form, false); aviso(msgError(e), "error"); }
+      return true;
+    } catch (e) { ocupado(form, false); aviso(msgError(e), "error"); return false; }
+  }
+
+  /** Manda una notificación push a todos los dispositivos suscritos (api/push.js comprueba que eres admin). */
+  async function enviarPush(m) {
+    try {
+      const s = await D.sesion();
+      const r = await fetch(ROOT + "api/push", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + s.t }, body: JSON.stringify(m) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Error " + r.status);
+      aviso(d.total ? `Notificación enviada a ${fmt(d.enviadas)} de ${fmt(d.total)} dispositivos${d.borradas ? ` (${fmt(d.borradas)} suscripciones caducadas borradas)` : ""}.` : "Aviso publicado. Aún no hay ningún dispositivo con las notificaciones activadas.");
+    } catch (e) { aviso("El aviso está publicado, pero no se pudo enviar la notificación: " + e.message, "error"); }
   }
 
   /* ---------------- Exámenes ---------------- */

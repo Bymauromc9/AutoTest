@@ -5,22 +5,22 @@
    Es autosuficiente: define sus propios colores para poder usarse en páginas con hojas de estilo propias
    (guías, equivalencias, ejercicios). Diseño móvil primero: los estilos base son los del móvil. */
 .site-nav, .tabbar, .site-aviso, .to-top, .side-back {
-  --sn-ink: #15202C; --sn-muted: #5A6573; --sn-line: #D7DDE4; --sn-surface: #FFFFFF; --sn-soft: #E4EAF4;
-  --sn-accent: #27467A; --sn-accent-ink: #FFFFFF; --sn-bar: rgba(255, 255, 255, .92);
-  font-family: "Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
-  color: var(--sn-ink);
+  --sn-ink: #2F2E2B; --sn-muted: #63615C; --sn-line: #E7E5E0; --sn-surface: #FFFFFF; --sn-soft: #EBF1FA;
+  --sn-accent: #2563C0; --sn-accent-ink: #FFFFFF; --sn-bar: #FFFFFF; --sn-hover: rgba(55, 53, 47, .06);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--sn-ink); -webkit-font-smoothing: antialiased;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .site-nav, :root:not([data-theme="light"]) .tabbar, :root:not([data-theme="light"]) .site-aviso,
   :root:not([data-theme="light"]) .to-top, :root:not([data-theme="light"]) .side-back {
-    --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
-    --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
+    --sn-ink: #E8E7E4; --sn-muted: #A09E99; --sn-line: #323232; --sn-surface: #222222; --sn-soft: #1D2836;
+    --sn-accent: #6EA8F2; --sn-accent-ink: #191919; --sn-bar: #202020; --sn-hover: rgba(255, 255, 255, .06);
   }
 }
 :root[data-theme="dark"] .site-nav, :root[data-theme="dark"] .tabbar, :root[data-theme="dark"] .site-aviso,
 :root[data-theme="dark"] .to-top, :root[data-theme="dark"] .side-back {
-  --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
-  --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
+  --sn-ink: #E8E7E4; --sn-muted: #A09E99; --sn-line: #323232; --sn-surface: #222222; --sn-soft: #1D2836;
+    --sn-accent: #6EA8F2; --sn-accent-ink: #191919; --sn-bar: #202020; --sn-hover: rgba(255, 255, 255, .06);
 }
 .site-nav .ico, .tabbar .ico { width: 20px; height: 20px; flex: none; }
 
@@ -29,35 +29,35 @@
 .site-nav__inner { display: flex; align-items: center; gap: 8px 12px; min-height: 52px; padding-bottom: 8px; }
 .site-nav__crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1 1 auto; font-size: 15px; }
 .site-nav a { color: inherit; text-decoration: none; }
-.site-nav a:hover { color: var(--sn-accent); }
-.site-nav a:focus-visible, .site-nav button:focus-visible, .tabbar a:focus-visible { outline: 3px solid var(--sn-accent); outline-offset: 2px; border-radius: 8px; }
-.site-nav__home { display: inline-flex; align-items: center; gap: 6px; color: var(--sn-muted) !important; font-weight: 600; min-height: 44px; padding-right: 2px; }
-.site-nav__sep { color: var(--sn-line); flex: none; }
-.site-nav__subject { font-weight: 800; font-size: 17px; flex: none; display: inline-flex; align-items: center; min-height: 44px; }
-.site-nav__sec { color: var(--sn-muted) !important; font-weight: 600; flex: none; }
-.site-nav__page { color: var(--sn-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.site-nav a:hover { color: var(--sn-ink); }
+.site-nav a:focus-visible, .site-nav button:focus-visible, .tabbar a:focus-visible { outline: 2px solid var(--sn-accent); outline-offset: 2px; border-radius: 8px; }
+.site-nav__home { display: inline-flex; align-items: center; gap: 6px; color: var(--sn-muted) !important; font-weight: 500; min-height: 44px; padding-right: 2px; }
+.site-nav__sep { color: var(--sn-muted); flex: none; opacity: .7; }
+.site-nav__subject { font-weight: 600; font-size: 15px; flex: none; display: inline-flex; align-items: center; min-height: 44px; }
+.site-nav__sec { color: var(--sn-muted) !important; font-weight: 500; flex: none; }
+.site-nav__page { color: var(--sn-muted); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .site-nav__label, .site-nav__d { display: none; }
 .site-nav__tabs { display: none; }
 .site-nav__theme {
-  flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--sn-line);
-  background: var(--sn-surface); color: var(--sn-ink); cursor: pointer; display: grid; place-items: center; padding: 0;
+  flex: none; width: 44px; height: 44px; border-radius: 8px; border: 1px solid transparent;
+  background: transparent; color: var(--sn-ink); cursor: pointer; display: grid; place-items: center; padding: 0;
 }
-.site-nav__theme:hover { border-color: var(--sn-accent); color: var(--sn-accent); }
+.site-nav__theme:hover { background: var(--sn-hover); }
 /* Ranking, reportar un error, panel de administración y cuenta (los pone core.js antes del botón del tema) */
 .site-nav__icon, .site-nav__acct {
   flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; text-decoration: none;
 }
-.site-nav__icon { border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-ink) !important; }
-.site-nav__icon:hover { border-color: var(--sn-accent); color: var(--sn-accent) !important; }
+.site-nav__icon { border: 1px solid transparent; background: transparent; color: var(--sn-muted) !important; border-radius: 8px; }
+.site-nav__icon:hover { background: var(--sn-hover); color: var(--sn-ink) !important; }
 .site-nav__icon { padding: 0; cursor: pointer; font: inherit; }
 .site-nav__icon[hidden] { display: none; }
 /* En pantallas muy estrechas sólo queda «Reportar un error» (el ranking y el panel están en la portada y en «Tu cuenta»). */
 @media (max-width: 420px) { .site-nav__icon:not([data-reportar]) { display: none; } }
 .site-nav__acct {
-  background: var(--sn-accent); color: var(--sn-accent-ink) !important; border: 1px solid var(--sn-accent);
-  font: 800 17px/1 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  background: var(--sn-accent); color: var(--sn-accent-ink) !important; border: 4px solid transparent; background-clip: padding-box;
+  font: 600 15px/1 "Inter", "Segoe UI", system-ui, sans-serif;   /* 44 px táctiles; el círculo visible mide 36 */
 }
-.site-nav__acct:hover { filter: brightness(1.1); }
+.site-nav__acct:hover { filter: brightness(1.08); }
 
 /* ---------- Recursos de la sección (chips) ---------- */
 .site-nav__res { margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0; }
@@ -70,12 +70,12 @@
 .site-nav__res-in::-webkit-scrollbar { display: none; }
 .site-nav__res a {
   flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; gap: 7px; min-height: 40px;
-  padding: 6px 14px 6px 11px; border: 1px solid var(--sn-line); border-radius: 999px; background: var(--sn-surface);
-  font-weight: 600; font-size: 14px; color: var(--sn-muted) !important; white-space: nowrap;
+  padding: 6px 12px 6px 10px; border: 1px solid transparent; border-radius: 8px; background: transparent;
+  font-weight: 500; font-size: 14px; color: var(--sn-muted) !important; white-space: nowrap;
 }
-.site-nav__res a .ico { width: 17px; height: 17px; }
-.site-nav__res a:hover { border-color: var(--sn-accent); color: var(--sn-accent) !important; }
-.site-nav__res a[aria-current="page"] { background: var(--sn-soft); border-color: transparent; color: var(--sn-accent) !important; }
+.site-nav__res a .ico { width: 16px; height: 16px; }
+.site-nav__res a:hover { background: var(--sn-hover); color: var(--sn-ink) !important; }
+.site-nav__res a[aria-current="page"] { background: var(--sn-surface); border-color: var(--sn-line); color: var(--sn-ink) !important; }
 
 /* ---------- Barra inferior (móvil) ---------- */
 .tabbar {
@@ -83,13 +83,14 @@
   display: grid; grid-template-columns: repeat(4, 1fr);
   padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
   background: var(--sn-bar); border-top: 1px solid var(--sn-line);
-  -webkit-backdrop-filter: saturate(1.4) blur(12px); backdrop-filter: saturate(1.4) blur(12px);
 }
-.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; justify-content: center; text-decoration: none; color: var(--sn-muted); font-size: 11.5px; font-weight: 600; letter-spacing: .01em; }
+.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; justify-content: center; text-decoration: none; color: var(--sn-muted); font-size: 12px; font-weight: 500; }
 .tabbar a .ico { width: 34px; height: 28px; padding: 3px 7px; border-radius: 999px; transition: background .15s; }
-.tabbar a[aria-current="true"] { color: var(--sn-accent); }
+.tabbar a[aria-current="true"] { color: var(--sn-ink); }
 .tabbar a[aria-current="true"] .ico { background: var(--sn-soft); }
-body.has-tabbar { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important; }
+body.has-tabbar { padding-bottom: calc(144px + env(safe-area-inset-bottom, 0px)) !important; }
+/* Sin barra inferior, hueco para el botón de la IA al final de la página (para que no tape lo último). */
+@media (max-width: 720px) { body:not(.has-tabbar) { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } }
 /* El botón de la IA sube por encima de la barra; con el panel abierto, la barra se oculta. */
 body.has-tabbar .ai-launch { bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
 html.ai-open .tabbar { display: none; }
@@ -99,9 +100,10 @@ html.ai-open .tabbar { display: none; }
   .site-nav { margin-bottom: 24px; }
   .site-nav__inner { min-height: 60px; padding-bottom: 10px; }
   .site-nav__label, .site-nav__d { display: inline-flex; }
-  .site-nav__tabs { display: inline-flex; background: var(--sn-surface); border: 1px solid var(--sn-line); border-radius: 999px; padding: 3px; gap: 2px; }
-  .site-nav__tabs a { border-radius: 999px; padding: 7px 16px; font-weight: 700; font-size: 15px; color: var(--sn-muted); }
-  .site-nav__tabs a[aria-current="true"] { background: var(--sn-accent); color: var(--sn-accent-ink) !important; }
+  .site-nav__tabs { display: inline-flex; gap: 4px; }
+  .site-nav__tabs a { border-radius: 8px; padding: 8px 12px; font-weight: 500; font-size: 15px; color: var(--sn-muted); }
+  .site-nav__tabs a:hover { background: var(--sn-hover); }
+  .site-nav__tabs a[aria-current="true"] { background: var(--sn-hover); color: var(--sn-ink) !important; }
   .site-nav__theme { width: 40px; height: 40px; }
   .site-nav__res { margin: 0; }
   .site-nav__res-in { padding: 2px 0 12px; -webkit-mask-image: none; mask-image: none; flex-wrap: wrap; overflow: visible; }
@@ -113,30 +115,35 @@ html.ai-open .tabbar { display: none; }
 
 /* ---------- Aviso para toda la web (lo pone un administrador; ver pintarAviso en core.js) ---------- */
 .site-aviso { --av: var(--sn-accent); max-width: 1180px; margin: -8px auto 20px; }
-.site-aviso.is-importante { --av: #B25E00; }
-:root[data-theme="dark"] .site-aviso.is-importante { --av: #E8B85C; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .site-aviso.is-importante { --av: #E8B85C; } }
-.site-aviso__in { display: flex; align-items: flex-start; gap: 10px; padding: 10px 6px 10px 14px; border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--av) 35%, var(--sn-line)); border-left: 4px solid var(--av);
-  background: color-mix(in srgb, var(--av) 9%, var(--sn-surface)); color: var(--sn-ink); }
-.site-aviso__in > .ico { width: 22px; height: 22px; flex: none; margin-top: 1px; color: var(--av); }
-.site-aviso__in p { flex: 1; margin: 0; font-size: 15.5px; line-height: 1.45; font-weight: 600; }
-.site-aviso__in a { color: var(--av); font-weight: 700; white-space: nowrap; }
-.site-aviso__x { flex: none; width: 32px; height: 32px; margin: -4px 0; border: 0; border-radius: 50%; background: transparent; color: var(--sn-muted); font-size: 22px; line-height: 1; cursor: pointer; }
-.site-aviso__x:hover { color: var(--sn-ink); background: color-mix(in srgb, var(--av) 14%, transparent); }
+.site-aviso.is-importante { --av: #865B00; }
+:root[data-theme="dark"] .site-aviso.is-importante { --av: #E2B357; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .site-aviso.is-importante { --av: #E2B357; } }
+.site-aviso__in { display: flex; align-items: center; gap: 8px; padding: 12px 8px 12px 16px; border-radius: 8px;
+  border: 1px solid var(--sn-line);
+  background: var(--sn-surface); color: var(--sn-ink); }
+.site-aviso__in > .ico { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--av); }
+.site-aviso__in p { flex: 1; min-width: 0; margin: 0; font-size: 15px; line-height: 1.5; font-weight: 400;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; }
+.site-aviso.is-open .site-aviso__in p { -webkit-line-clamp: unset; display: block; }
+.site-aviso__mas { flex: none; min-height: 44px; margin: -12px 0; padding: 0 8px; border: 0; background: transparent;
+  color: var(--sn-accent); font: 500 14px "Inter", system-ui, sans-serif; cursor: pointer; border-radius: 8px; }
+.site-aviso__mas:hover { background: var(--sn-hover); }
+.site-aviso__in a { color: var(--sn-accent); font-weight: 500; white-space: nowrap; }
+.site-aviso__x { flex: none; width: 44px; height: 44px; margin: -12px -4px -12px 0; border: 0; border-radius: 50%; background: transparent; color: var(--sn-muted); font-size: 22px; line-height: 1; cursor: pointer; }
+.site-aviso__x:hover { color: var(--sn-ink); background: var(--sn-hover); }
 @media (min-width: 721px) { .site-aviso { margin-top: -12px; } }
 
 /* Enlace «Saltar al contenido» (accesibilidad): invisible hasta que recibe el foco con el teclado. */
-.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 950; padding: 8px 12px; border-radius: 6px; background: #27467A; color: #fff; font: 600 15px system-ui, sans-serif; }
+.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 950; padding: 8px 12px; border-radius: 6px; background: #2563C0; color: #fff; font: 500 15px "Inter", system-ui, sans-serif; }
 .skip-link:focus { left: 16px; }
 /* ---------- Volver (cabecera del índice lateral) y subir arriba ---------- */
 .side-back {
   display: inline-flex; align-items: center; justify-content: center; flex: none;
-  width: 36px; height: 36px; margin-left: -4px; border-radius: 999px;
-  color: var(--accent, var(--sn-accent)); background: var(--accent-soft, var(--sn-soft)); text-decoration: none;
+  width: 40px; height: 40px; margin: 0; border-radius: 8px;   /* sin márgenes negativos: el índice recorta lo que sobresale */
+  color: var(--muted, var(--sn-muted)); background: transparent; border: 1px solid var(--line, var(--sn-line)); text-decoration: none;
 }
-.side-back:hover { filter: brightness(1.1); }
-.side-back:focus-visible { outline: 3px solid var(--accent, var(--sn-accent)); outline-offset: 2px; }
+.side-back:hover { color: var(--ink, var(--sn-ink)); background: var(--sn-hover); }
+.side-back:focus-visible { outline: 2px solid var(--accent, var(--sn-accent)); outline-offset: 2px; }
 .side-back .ico { width: 20px; height: 20px; }
 /* En el escritorio el índice lateral tiene su propio scroll: su cabecera (con «←») se queda arriba. */
 @media (min-width: 901px) {
@@ -144,18 +151,35 @@ html.ai-open .tabbar { display: none; }
 }
 .to-top {
   position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(74px + env(safe-area-inset-bottom, 0px)); z-index: 999;
-  display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; padding: 0;
-  border-radius: 999px; border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-accent);
-  box-shadow: 0 6px 20px rgba(15, 25, 40, .22); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0;
+  border-radius: 999px; border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-ink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .06); cursor: pointer;
   opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s, transform .2s, visibility .2s;
 }
 .to-top.is-on { opacity: 1; visibility: visible; transform: none; }
-.to-top:hover { border-color: var(--sn-accent); }
-.to-top:focus-visible { outline: 3px solid var(--sn-accent); outline-offset: 3px; }
-.to-top .ico { width: 22px; height: 22px; }
-body.has-tabbar .to-top { bottom: calc(134px + env(safe-area-inset-bottom, 0px)); }
+.to-top:hover { background: color-mix(in srgb, var(--sn-surface) 94%, var(--sn-ink)); }
+.to-top:focus-visible { outline: 2px solid var(--sn-accent); outline-offset: 3px; }
+.to-top .ico { width: 20px; height: 20px; }
 html.ai-open .to-top { display: none; }
-@media (min-width: 721px) { body.has-tabbar .to-top { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); } }
+/* Móvil: al lado del botón redondo de la IA (no encima), para tapar lo menos posible */
+@media (max-width: 820px) {
+  .to-top { right: calc(max(16px, env(safe-area-inset-right)) + 56px); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 2px); }
+  body.has-tabbar .to-top { bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (min-width: 821px) { body.has-tabbar .to-top { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); } }
 @media (prefers-reduced-motion: reduce) { .to-top { transition: none; } }
+
+/* ---------- Objetivos táctiles de 44 px en pantallas táctiles (ver .ux-profile.md) ----------
+   En escritorio el índice y los botones pequeños mantienen su densidad; con el dedo, crecen.
+   («:root» delante para ganar a las hojas de las guías, que se cargan después.) */
+@media (pointer: coarse) {
+  :root .toc-tema, :root .toc-sols a, :root .toc-topics a { min-height: 44px; align-content: center; align-items: center; }
+  :root .btn-sol, :root .reset { min-height: 44px; }
+  :root .side-back { width: 44px; height: 44px; }
+  :root details > summary, :root details.sol > summary, :root .toc-toggle { min-height: 44px; }
+  :root .aed-pages a, :root .amd-pages a, :root .gohp-pages a, :root .ip-pages a { min-height: 44px; }
+  :root .tema-map a { min-height: 44px; align-items: center; }
+  :root .rk-link { display: flex; align-items: center; min-height: 44px; }
+}
 
 @media print { .site-nav, .skip-link, .tabbar, .site-aviso, .to-top, .side-back { display: none !important; } body.has-tabbar { padding-bottom: 0 !important; } }

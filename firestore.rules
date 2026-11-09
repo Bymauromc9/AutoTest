@@ -151,6 +151,22 @@ service cloud.firestore {
         && nuevo().actualizado == request.time;
     }
 
+    // Suscripciones a las notificaciones push (una por dispositivo; id = huella del endpoint, ver assets/js/pwa.js).
+    // Cada uno guarda o quita la suya; sólo los administradores las leen (api/push.js las lee con su token para
+    // mandar los avisos) y pueden borrar las caducadas.
+    match /push/{id} {
+      allow create, update: if request.auth != null
+        && nuevo().keys().hasOnly(['uid', 'endpoint', 'p256dh', 'auth', 'creado'])
+        && nuevo().keys().hasAll(['uid', 'endpoint', 'p256dh', 'auth', 'creado'])
+        && nuevo().uid == request.auth.uid
+        && texto('endpoint', 1000) && nuevo().endpoint.matches('https://.+')
+        && texto('p256dh', 200) && texto('auth', 100)
+        && nuevo().creado == request.time
+        && !bloqueada(request.auth.uid);
+      allow read: if esAdmin() || (resource != null && esSuyo(resource.data.uid));
+      allow delete: if esAdmin() || esSuyo(resource.data.uid);
+    }
+
     match /reportes/{id} {
       allow create: if request.auth != null
         && nuevo().keys().hasOnly(['uid', 'nombre', 'pagina', 'titulo', 'contexto', 'texto', 'estado', 'creado'])

@@ -3,16 +3,16 @@
 
 /* ---------- mapas de Karnaugh ---------- */
 .km { margin: var(--s-2) 0 var(--s-3); }
-.km .km-t { font: 700 .8rem var(--f-display); margin: 0 0 var(--s-1) !important; }
-.km .km-n { font-size: .9rem; color: var(--muted); margin: var(--s-1) 0 0 !important; }
+.km .km-t { font: 600 .875rem var(--f-display); margin: 0 0 var(--s-1) !important; }
+.km .km-n { font-size: .875rem; color: var(--muted); margin: var(--s-1) 0 0 !important; }
 .km .tablewrap { width: max-content; max-width: 100%; margin: 0; }
 table.kmap { min-width: 0; width: auto; }
 table.kmap th, table.kmap td { text-align: center; padding: 4px 10px; font-family: var(--f-mono); }
-table.kmap th.corner { font-size: .7rem; color: var(--muted); }
+table.kmap th.corner { font-size: .75rem; color: var(--muted); }
 table.kmap tbody th { background: var(--head); }
 table.kmap td { position: relative; min-width: 3rem; height: 2.4rem; font-family: var(--f-mono) !important; background: transparent !important; }
-table.kmap td .kv { font-weight: 700; font-size: .95rem; }
-table.kmap td .ki { position: absolute; right: 4px; bottom: 1px; font-size: .62rem; color: var(--muted); }
+table.kmap td .kv { font-weight: 600; font-size: 1rem; }
+table.kmap td .ki { position: absolute; right: 4px; bottom: 1px; font-size: .75rem; color: var(--muted); }
 table.kmap td.k1 { background: var(--true-soft) !important; color: var(--true); }
 table.kmap td.kx { background: var(--warn-soft) !important; color: var(--warn); }
 table.kmap td.k0 { color: var(--muted); }
@@ -21,20 +21,21 @@ table.kmap td.k0 { color: var(--muted); }
 .kms > .codeblk { flex: 1 1 220px; min-width: 0; }
 @media (max-width: 520px) {
   table.kmap th, table.kmap td { padding: 3px 6px; }
-  table.kmap td { min-width: 2.2rem; height: 2.1rem; }
-  table.kmap th.corner { font-size: .6rem; }
+  /* el índice de la celda (12 px como mínimo) va a la derecha: hueco para que no pise el valor */
+  table.kmap td { min-width: 2.75rem; height: 2.5rem; padding: 3px 18px 3px 4px; }
+  table.kmap th.corner { font-size: .75rem; }
 }
 
 /* ---------- tabla de verdad del exhibidor ---------- */
 table.tt7 { width: 100%; }
-table.tt7 th, table.tt7 td { text-align: center; font-family: var(--f-mono) !important; font-size: .85rem; padding: 3px 8px; }
-table.tt7 td.hl { background: var(--accent-soft); font-weight: 700; }
+table.tt7 th, table.tt7 td { text-align: center; font-family: var(--f-mono) !important; font-size: .875rem; padding: 3px 8px; }
+table.tt7 td.hl { background: var(--accent-soft); font-weight: 600; }
 
 /* ---------- herramientas ---------- */
 .bytes { display: flex; flex-wrap: wrap; gap: 4px; }
-.bytes span { display: inline-flex; flex-direction: column; align-items: center; font: 700 1.05rem var(--f-mono); background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 2px 8px; }
-.bytes small { font: 400 .62rem var(--f-mono); color: var(--muted); }
-.ieee { display: flex; flex-wrap: wrap; font: .82rem var(--f-mono); overflow-wrap: anywhere; }
+.bytes span { display: inline-flex; flex-direction: column; align-items: center; font: 600 1rem var(--f-mono); background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 2px 8px; }
+.bytes small { font: 400 .75rem var(--f-mono); color: var(--muted); }
+.ieee { display: flex; flex-wrap: wrap; font: .875rem var(--f-mono); overflow-wrap: anywhere; }
 .ieee span { padding: 2px 4px; border-radius: 4px; word-break: break-all; }
 .ieee .f-s { background: var(--false-soft); color: var(--false); }
 .ieee .f-e { background: var(--warn-soft); color: var(--warn); }
@@ -43,16 +44,16 @@ table.tt7 td.hl { background: var(--accent-soft); font-weight: 700; }
 table.dumpt { min-width: 0; width: auto; border: 1px solid var(--rule); border-radius: 8px; }
 table.dumpt th { font: .75rem var(--f-mono); color: var(--muted); background: var(--head); padding: 1px 8px !important; }
 table.dumpt td { padding: 1px !important; border: 0; text-align: left !important; background: transparent !important; }
-table.dumpt td.asc { font: .85rem var(--f-mono); padding: 0 10px; color: var(--muted); white-space: pre; }
-table.dumpt button { font: 600 .85rem var(--f-mono); border: 1px solid transparent; background: none; color: var(--ink); border-radius: 4px; padding: 2px 4px; cursor: pointer; }
+table.dumpt td.asc { font: .875rem var(--f-mono); padding: 0 10px; color: var(--muted); white-space: pre; }
+table.dumpt button { font: 600 .875rem var(--f-mono); border: 1px solid transparent; background: none; color: var(--ink); border-radius: 4px; padding: 2px 4px; cursor: pointer; }
 table.dumpt button:hover { border-color: var(--accent); }
 table.dumpt button.cur { background: var(--accent); color: var(--surface); }
 .tool-out .used { font: .75rem var(--f-mono); color: var(--muted); margin-left: 6px; }
 .tool-out td.na { color: var(--muted); }
-.binc { font-family: var(--f-mono) !important; font-size: .78rem !important; white-space: nowrap; }
-.net { color: var(--accent); font-weight: 700; }
+.binc { font-family: var(--f-mono) !important; font-size: .75rem !important; white-space: nowrap; }
+.net { color: var(--accent); font-weight: 600; }
 .host { color: var(--muted); }
-.calc-out { margin: 0; padding: var(--s-3) var(--s-4); background: var(--paper); border: 1px dashed var(--rule); border-radius: 8px; font: .86rem/1.65 var(--f-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.calc-out { margin: 0; padding: var(--s-3) var(--s-4); background: var(--paper); border: 1px dashed var(--rule); border-radius: 8px; font: .875rem/1.65 var(--f-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
 .calc-out b { color: var(--accent); }
 .km-wrap { width: max-content; max-width: 100%; }
 table.kmap-tool td { padding: 0 !important; height: auto; }
@@ -62,5 +63,5 @@ div[id^="calc-"] { display: flex; flex-direction: column; gap: var(--s-3); min-w
 
 /* ---------- chuleta ---------- */
 .codeblk mark { background: var(--warn-soft); color: var(--warn); border-radius: 3px; padding: 0 .1em; }
-.codeblk.cheat pre { font-size: .84rem; line-height: 1.75; }
-.codeblk.cheat sup { font-size: .7em; }
+.codeblk.cheat pre { font-size: .875rem; line-height: 1.75; }
+.codeblk.cheat sup { font-size: max(12px, .7em); }

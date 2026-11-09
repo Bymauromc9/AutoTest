@@ -1,3 +1,9 @@
 # Claves de administrador de Firebase (secretas)
 clave-admin.json
 *-firebase-adminsdk-*.json
+
+# Skill de diseño (sólo para trabajar en local; no se publica)
+VectorLab UIUX Skills-*
+
+# Claves de las notificaciones push (secretas)
+claves-push.txt

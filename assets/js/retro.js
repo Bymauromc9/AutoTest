@@ -1,7 +1,7 @@
 /*!
  * retro.js — modo terminal «de castigo» (fósforo verde, letra de máquina y líneas de pantalla CRT).
  *
- * Se activa al cerrar con la × el aviso que publican los administradores (core.js llama a Retro.castigo()).
+ * Easter egg escondido: se activa escribiendo «castigo» en cualquier página (fuera de un campo de texto).
  * Se quita así:
  *   teclado   Espacio dos veces seguidas
  *   móvil     dos toques rápidos en la pantalla
@@ -15,6 +15,15 @@
   if (!window.App || !window.App.retro || window.Retro) return;
   const R = window.App.retro;
   const DOBLE = 600;           // ms máximos entre las dos pulsaciones o los dos toques
+
+  // Easter egg: escribir «castigo» (fuera de un campo de texto) activa el modo.
+  const CLAVE = "castigo";
+  let tecleado = "";
+  document.addEventListener("keydown", (e) => {
+    if (R.get() || e.ctrlKey || e.metaKey || e.altKey || e.key.length !== 1 || editable(e.target)) return;
+    tecleado = (tecleado + e.key.toLowerCase()).slice(-CLAVE.length);
+    if (tecleado === CLAVE) { tecleado = ""; castigo(); }
+  });
 
   // Teclado: Espacio, Espacio.
   const editable = (el) => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(el.tagName));
@@ -90,7 +99,7 @@
   function salir() { if (R.get()) animar(LINEAS_OFF, () => R.set(false)); }
 
   if (R.get() && window.console && console.log) {
-    console.log("%c¿Atrapado? Pulsa ␣ ␣", "color:#3f3;background:#000;font:700 13px monospace;padding:4px 8px");
+    console.log("%c¿Atrapado? Pulsa ␣ ␣", "color:#3f3;background:#000;font:600 13px monospace;padding:4px 8px");
   }
   window.Retro = Object.freeze({ castigo, salir });
 })();

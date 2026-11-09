@@ -432,7 +432,9 @@
     chart: '<path d="M4 20V4M4 20h16"/><path d="M7.5 15l3.5-4 3 2.5 5-6"/>',
     repeat: '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
-    star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>'
+    star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    download: '<path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>',
   };
   function icon(name, cls) {
     return `<svg class="ico${cls ? " " + cls : ""}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
@@ -693,7 +695,7 @@
      · En las páginas con índice lateral, la cabecera del índice («GOHP · Teoría») se queda a la vista al
        bajar (fija arriba en el móvil, columna fija en el escritorio). Su símbolo pasa a ser un botón «←»
        que vuelve a la sección de la asignatura, como la miga de pan, sin tener que subir hasta arriba.
-     · En todas las páginas, botón flotante «↑» para subir arriba; sale al bajar algo más de una pantalla. */
+     · En todas las páginas, botón flotante «↑» para subir arriba; sale al bajar algo más de media pantalla. */
   function botonVolver(href, destino) {
     const brand = document.querySelector(".side-brand");
     if (!brand || brand.querySelector(".side-back")) return;
@@ -720,8 +722,9 @@
       window.scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
     });
     body.appendChild(b);
+    // Sale en cuanto se ha bajado un poco (media pantalla, como mucho 480 px), también en páginas medianas.
     let pendiente = false;
-    const mirar = () => { pendiente = false; b.classList.toggle("is-on", window.scrollY > window.innerHeight * 1.2); };
+    const mirar = () => { pendiente = false; b.classList.toggle("is-on", window.scrollY > Math.min(window.innerHeight * 0.6, 480)); };
     window.addEventListener("scroll", () => { if (!pendiente) { pendiente = true; requestAnimationFrame(mirar); } }, { passive: true });
     mirar();
   }
@@ -739,17 +742,28 @@
     if (!nav) return;
     const c = CONFIG;
     let el = document.querySelector(".site-aviso");
-    const vigente = c.aviso && (!c.avisoHasta || daysTo(c.avisoHasta) >= 0) && store(AVISO_VISTO) !== (c.avisoId || c.aviso);
+    // Sólo en la portada del sitio: en el resto de páginas (guías, tests…) quitaría sitio al contenido.
+    const enPortada = !!document.querySelector("main.portal");
+    const vigente = enPortada && c.aviso && (!c.avisoHasta || daysTo(c.avisoHasta) >= 0) && store(AVISO_VISTO) !== (c.avisoId || c.aviso);
     if (!vigente) { if (el) el.remove(); return; }
     if (!el) { el = document.createElement("div"); el.setAttribute("role", "status"); nav.insertAdjacentElement("afterend", el); }
     el.className = "site-aviso" + (c.avisoTipo === "importante" ? " is-importante" : "");
     const href = enlaceAviso(c.avisoEnlace);
     el.innerHTML = `<div class="site-aviso__in">${icon(c.avisoTipo === "importante" ? "alert" : "megaphone")}<p>${esc(c.aviso)}` +
       `${href ? ` <a href="${esc(href)}">${esc(c.avisoTextoEnlace || "Más información")}</a>` : ""}</p>` +
+      `<button type="button" class="site-aviso__mas" aria-expanded="false" hidden>Ver más</button>` +
       `<button type="button" class="site-aviso__x" aria-label="Ocultar este aviso" title="Ocultar este aviso">×</button></div>`;
-    el.querySelector(".site-aviso__x").onclick = () => {
-      store(AVISO_VISTO, c.avisoId || c.aviso); el.remove();
-      if (window.Retro) window.Retro.castigo();      // broma: modo terminal hasta pulsar Espacio dos veces
+    el.querySelector(".site-aviso__x").onclick = () => { store(AVISO_VISTO, c.avisoId || c.aviso); el.remove(); };
+    // Una sola línea; si no cabe, «Ver más» lo despliega.
+    const p = el.querySelector("p"), mas = el.querySelector(".site-aviso__mas");
+    const medir = () => { if (!el.classList.contains("is-open")) mas.hidden = !(p.scrollHeight > p.clientHeight + 2); };
+    medir();
+    if (!pintarAviso.r) { pintarAviso.r = true; window.addEventListener("resize", () => { const m = document.querySelector(".site-aviso"); if (m && m._medir) m._medir(); }); }
+    el._medir = medir;
+    mas.onclick = () => {
+      const abierto = el.classList.toggle("is-open");
+      mas.setAttribute("aria-expanded", String(abierto));
+      mas.textContent = abierto ? "Ver menos" : "Ver más";
     };
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { buildNav(); botonSubir(); });
@@ -803,6 +817,10 @@
     const tjs = document.createElement("script");
     tjs.src = base + "js/retro.js"; tjs.defer = true;
     document.head.appendChild(tjs);
+    // Web instalable (PWA), uso sin conexión y notificaciones push (ver assets/js/pwa.js y sw.js)
+    const wjs = document.createElement("script");
+    wjs.src = base + "js/pwa.js"; wjs.defer = true;
+    document.head.appendChild(wjs);
   })();
 
   window.App = Object.freeze({

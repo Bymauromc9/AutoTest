@@ -28,7 +28,10 @@ assets/
   js/estadisticas.js        «Tus estadísticas» en cuenta.html: evolución de notas, temas, actividad y racha
   js/admin.js               Panel de administración (admin.html)
   js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
-  js/retro.js               Broma: al cerrar el aviso de los administradores la web pasa a modo terminal;
+  js/pwa.js                 Web instalable y notificaciones push: registra sw.js, «Instalar la app» y la suscripción
+                            de cada dispositivo (lo carga core.js; ver «Web instalable y notificaciones push»)
+  img/icon-*.png            Iconos de la app instalable (los genera scripts/pwa/iconos.py)
+  js/retro.js               Easter egg: escribiendo «castigo» la web pasa a modo terminal;
                             se quita con Espacio dos veces (en el móvil, dos toques)
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/insignias.css         Insignias, vitrina, perfil público y estadísticas
@@ -42,7 +45,11 @@ assets/
                             estudiado», pestaña y mapa de cada tema y leyenda
 api/
   chat.js                   Función de Vercel que llama a la IA (la clave va en una variable de entorno)
-vercel.json                 Tiempo máximo de la función del asistente
+  push.js · _webpush.js     Función de Vercel que manda las notificaciones push de los avisos (Web Push sin dependencias)
+manifest.webmanifest        Manifiesto de la app instalable (nombre, iconos, colores)
+sw.js                       Service worker: páginas guardadas para usar sin conexión y notificaciones push
+offline.html                Lo que se ve sin conexión si la página aún no estaba guardada
+vercel.json                 Tiempo máximo de las funciones y cabeceras de sw.js y del manifiesto
 firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso, ranking, configuración y reportes)
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
@@ -313,7 +320,7 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | Clave | Qué guarda |
 |---|---|
 | `app-theme` | Tema elegido (común a todas las asignaturas) |
-| `app-retro` | Modo terminal «de castigo» activado (por cerrar el aviso) |
+| `app-retro` | Modo terminal «de castigo» activado (easter egg: escribir «castigo») |
 | `fli-settings`, `fli-seen` | Opciones del autotest y preguntas ya vistas |
 | `fli-best-1` … `fli-best-4`, `fli-best-G` | Mejores notas del autotest |
 | `fli-exam-current`, `fli-exam-best-N` | Examen en curso y mejores notas de cada examen |
@@ -332,6 +339,7 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `app-owner`, `app-sync`, `u:<cuenta>` | De quién es el progreso cargado, estado de la sincronización y copia del progreso de cada cuenta |
 | `app-pend` | Puntos pendientes de enviar al ranking (si no había conexión) |
 | `app-config`, `app-aviso-visto` | Copia del aviso y las fechas de examen publicadas desde el panel, y último aviso cerrado |
+| `app-push`, `app-push-rev` | Huella de la suscripción a notificaciones de este dispositivo y cuándo se volvió a guardar |
 | `ip-settings`, `ip-seen`, `ip-best-0` … `ip-best-5`, `ip-best-G` | Opciones, preguntas vistas y mejores notas del autotest de IP (5 = bloque de C++) |
 | `ip-practicas-hechos` | Ejercicios de prácticas de IP marcados como hechos |
 | `ip-teoria-visto`, `ip-practicas-visto` | Última parte vista de cada guía de IP |
@@ -433,6 +441,37 @@ sólo una). **No hace falta ejecutarlo a mano**: el flujo `.github/workflows/pdf
 GitHub cada vez que se sube un cambio a `master` y, si algún PDF cambia, hace un commit con ellos.
 
 
+## Web instalable y notificaciones push
+
+La web es una **PWA**: se puede instalar en el móvil o el ordenador (se abre como una app, sin barra del
+navegador) y las páginas que ya se han abierto funcionan **sin conexión**. En «Tu cuenta» hay una tarjeta
+«App y notificaciones» con el botón «Instalar la app» (en iPhone y iPad se explica cómo añadirla a la
+pantalla de inicio) y el interruptor de las **notificaciones de avisos**.
+
+- **Sin conexión** (`sw.js`): cada página y recurso propio se pide primero a la red y se guarda; sin
+  conexión se sirve lo guardado y, si la página no lo estaba, `offline.html` (con la lista de las que sí).
+  Las fuentes y librerías de CDN se sirven de la caché. No se guardan `api/` ni los PDF. Para vaciar las
+  cachés de todos, sube `VERSION` en `sw.js`.
+- **Notificaciones**: al activarlas, el navegador crea una suscripción con la clave pública VAPID (la da
+  `GET /api/push`) y `pwa.js` la guarda en Firestore (`push/<huella del endpoint>`: una por dispositivo).
+  Al publicar un aviso en el panel con «Enviar también como notificación», `admin.js` llama a
+  `POST /api/push` con el token del administrador; la función lee las suscripciones **con ese token** (las
+  reglas sólo dejan leerlas a administradores, así que no hace falta ninguna credencial de Firebase en
+  Vercel), cifra el mensaje para cada dispositivo, lo manda y borra las suscripciones caducadas. Al tocar
+  la notificación se abre el enlace del aviso (o la portada).
+- En **iPhone y iPad** (iOS 16.4 o posterior) sólo funcionan con la web añadida a la pantalla de inicio.
+  No funcionan abriendo los ficheros con doble clic (`file://`).
+
+### Ponerlas en marcha (una vez)
+
+1. **Claves VAPID** en Vercel (Project → Settings → Environment Variables, para Production y Preview):
+   `VAPID_PUBLIC_KEY` y `VAPID_PRIVATE_KEY` (base64url, el formato de la librería `web-push`; un par se
+   genera, por ejemplo, con `npx web-push generate-vapid-keys`). Opcional: `VAPID_SUBJECT`
+   (`mailto:tu@correo`), el contacto que ven los servicios de push. Si cambias las claves, cada uno tendrá
+   que volver a activar las notificaciones.
+2. **Reglas de Firestore** con la colección `push`: `node scripts/admin/admin.js reglas`.
+3. **Desplegar**. Comprobación: `https://<tu-dominio>/api/push` debe responder `"configurado": true`.
+
 ## Cuentas y ranking
 
 Al entrar en la web hay que **crear una cuenta o elegir una** (cuenta.html). Cada cuenta tiene su
@@ -523,9 +562,10 @@ Pestañas del panel:
 - **Usuarios**: buscar y filtrar cuentas. «Gestionar» permite sumar o restar puntos en una asignatura
   (y en la semana), ponerlos a cero y **bloquear** la cuenta: deja de salir en el ranking, no suma
   puntos y no puede mandar reportes. Muestra también los comandos de terminal para esa cuenta.
-- **Aviso**: un aviso para todas las páginas (normal o importante, con enlace y fecha de caducidad
-  opcionales). Cada usuario puede cerrarlo; un aviso nuevo vuelve a salir. Ojo: quien lo cierra se
-  lleva de broma el modo terminal (fósforo verde) hasta que pulse Espacio dos veces (dos toques en el móvil).
+- **Aviso**: un aviso en la portada (normal o importante, con enlace y fecha de caducidad opcionales), en
+  una línea con «Ver más» si no cabe. Cada usuario puede cerrarlo; un aviso nuevo vuelve a salir.
+  Con «Enviar también como notificación» llega además como notificación push a quien las tenga activadas
+  (ver «Web instalable y notificaciones push»); el panel dice a cuántos dispositivos se ha enviado.
 - **Exámenes**: las fechas de la cuenta atrás de la portada y de cada asignatura. Si no se tocan se usan
   las de `assets/js/core.js`; «Volver a las del código» borra las del panel.
 - **Reportes**: lo que mandan los usuarios con el botón ⚠ de la barra superior, con la página (y el

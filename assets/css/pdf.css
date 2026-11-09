@@ -2,12 +2,12 @@
    superior (--sn-*) cuando está dentro de ella y los de la página (--accent…) en la portada. */
 .pdf-btn {
   display: inline-flex; align-items: center; gap: 6px; flex: none; cursor: pointer; white-space: nowrap;
-  font: 700 13.5px/1 "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif; letter-spacing: .01em;
+  font: 600 13.5px/1 "Inter", "Segoe UI", system-ui, sans-serif; letter-spacing: .01em;
   border-radius: 999px; padding: 0 14px; min-height: 36px;
-  border: 1px solid var(--rule, var(--line, #D7DDE4)); background: var(--surface, #fff); color: var(--accent, #27467A);
+  border: 1px solid var(--rule, var(--line, #E7E5E0)); background: var(--surface, #fff); color: var(--accent, #2563C0);
 }
-.pdf-btn:hover { border-color: var(--accent, #27467A); }
-.pdf-btn:focus-visible { outline: 3px solid var(--accent, #27467A); outline-offset: 2px; }
+.pdf-btn:hover { border-color: var(--accent, #2563C0); }
+.pdf-btn:focus-visible { outline: 2px solid var(--accent, #2563C0); outline-offset: 2px; }
 .pdf-btn svg { flex: none; }
 .pdf-btn.is-busy { cursor: progress; opacity: .85; }
 .pdf-btn.is-busy svg { animation: pdf-bob 1s ease-in-out infinite; }

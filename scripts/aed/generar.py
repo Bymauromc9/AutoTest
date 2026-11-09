@@ -452,6 +452,10 @@ def pagina(meta, cuerpo, toc, total_ej):
 <title>{meta["titulo"]} · AED I</title>
 <meta name="description" content="{html.escape(meta["descripcion"], quote=True)}">
 <link rel="icon" href="{root}assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="{root}manifest.webmanifest">
+<link rel="apple-touch-icon" href="{root}assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#F9F8F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FUENTES}">

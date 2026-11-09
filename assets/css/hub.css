@@ -2,82 +2,82 @@
    cabecera con resumen de progreso, «continuar», secciones y tarjetas de recurso con color por tipo.
    Móvil primero: una columna; dos columnas de tarjetas desde 720 px. Requiere assets/css/base.css. */
 
-/* ---------- Color por tipo de recurso (mismo en todas las asignaturas) ---------- */
-:root{--k-guia:#27467A;--k-chuleta:#6B3FA0;--k-autotest:#1D7544;--k-drill:#0E6E78;--k-ejercicios:#8A5A00;--k-simulador:#0E6E78;--k-herramientas:#4A5A6E;--k-examen:#B42318;--k-simulacro:#B42318;--k-general:#3B44A8}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--k-guia:#93B4E6;--k-chuleta:#C3A6EE;--k-autotest:#5CC98C;--k-drill:#5FC6CF;--k-ejercicios:#E8B85C;--k-simulador:#5FC6CF;--k-herramientas:#AEBACB;--k-examen:#F2786D;--k-simulacro:#F2786D;--k-general:#A3AAF0}}
-:root[data-theme="dark"]{--k-guia:#93B4E6;--k-chuleta:#C3A6EE;--k-autotest:#5CC98C;--k-drill:#5FC6CF;--k-ejercicios:#E8B85C;--k-simulador:#5FC6CF;--k-herramientas:#AEBACB;--k-examen:#F2786D;--k-simulacro:#F2786D;--k-general:#A3AAF0}
+/* ---------- Color por tipo de recurso (mismo en todas las asignaturas) ----------
+   Sólo un toque: el color del icono pequeño de cada tarjeta. Todo lo demás es neutro y el acento es único. */
+:root{--k-guia:#2563C0;--k-chuleta:#7A55B0;--k-autotest:#27734A;--k-drill:#1A6C76;--k-ejercicios:#946200;--k-simulador:#1A6C76;--k-herramientas:#63615C;--k-examen:#C0392B;--k-simulacro:#C0392B;--k-general:#4F5BC4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--k-guia:#6EA8F2;--k-chuleta:#B79BE6;--k-autotest:#62C48D;--k-drill:#62C2CC;--k-ejercicios:#E2B357;--k-simulador:#62C2CC;--k-herramientas:#A09E99;--k-examen:#F0806F;--k-simulacro:#F0806F;--k-general:#9AA4F0}}
+:root[data-theme="dark"]{--k-guia:#6EA8F2;--k-chuleta:#B79BE6;--k-autotest:#62C48D;--k-drill:#62C2CC;--k-ejercicios:#E2B357;--k-simulador:#62C2CC;--k-herramientas:#A09E99;--k-examen:#F0806F;--k-simulacro:#F0806F;--k-general:#9AA4F0}
 .k-guia{--k:var(--k-guia)} .k-chuleta{--k:var(--k-chuleta)} .k-autotest{--k:var(--k-autotest)} .k-drill{--k:var(--k-drill)}
 .k-ejercicios{--k:var(--k-ejercicios)} .k-simulador{--k:var(--k-simulador)} .k-herramientas{--k:var(--k-herramientas)}
 .k-examen{--k:var(--k-examen)} .k-simulacro{--k:var(--k-simulacro)} .k-general{--k:var(--k-general)}
 
-.ico{width:22px;height:22px;flex:none}
+.ico{width:20px;height:20px;flex:none}
 
 /* ---------- Cabecera ---------- */
-.hub{gap:28px}
-.hub-hero{display:flex;flex-direction:column;gap:12px}
-.hub-title{display:flex;align-items:center;gap:14px}
-.hub-badge{flex:none;display:grid;place-items:center;min-width:56px;height:56px;padding:0 8px;border-radius:14px;background:var(--accent);color:var(--surface);font:800 20px var(--f-display);letter-spacing:-.01em}
-.hub-title h1{font-size:clamp(26px,7vw,42px)}
-.hub-hero .lead{margin:0;font-size:16px}
+.hub{gap:32px}
+.hub-hero{display:flex;flex-direction:column;gap:16px}
+.hub-title{display:flex;align-items:center;gap:16px}
+.hub-badge{flex:none;display:grid;place-items:center;min-width:52px;height:52px;padding:0 8px;border-radius:var(--r-l);background:var(--surface);border:1px solid var(--line);color:var(--ink);font:600 17px var(--f-display);letter-spacing:-.01em}
+.hub-title h1{font-size:clamp(1.728rem,5vw,2.488rem)}
+.hub-hero .lead{margin:0;font-size:16px;max-width:70ch}
 
 /* Resumen de progreso */
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px}
-.tile{display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:0}
-.tile .v{font:800 26px/1.05 var(--f-display);font-variant-numeric:tabular-nums}
-.tile .v small{font-size:15px;color:var(--muted);font-weight:600;margin-left:1px}
-.tile .l{font-size:13px;color:var(--muted);line-height:1.25}
-.tile-main{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:10px}
-.tile-main .res-bar{flex-basis:100%;margin-top:6px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:4px}
+.tile{display:flex;flex-direction:column;gap:4px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);min-width:0}
+.tile .v{font:600 1.44rem/1.1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tile .v small{font-size:14px;color:var(--muted);font-weight:400;margin-left:1px}
+.tile .l{font-size:13px;color:var(--muted);line-height:1.3}
+.tile-main{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:12px}
+.tile-main .res-bar{flex-basis:100%;margin-top:8px}
 .tiles .tile:not(.tile-main):last-child:nth-child(even){grid-column:1/-1}
-.tile-exam{background:var(--bad-soft);border-color:transparent}
 .tile-exam .v{color:var(--bad)}
 
 /* Continuar */
-.continue{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:56px;border-radius:12px;background:var(--accent);color:var(--surface);text-decoration:none}
-.continue small{display:block;font-size:12.5px;opacity:.85;font-weight:600;letter-spacing:.02em}
-.continue b{display:block;font:700 17px/1.2 var(--f-display)}
-.continue:hover{filter:brightness(1.08)}
+.continue{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:56px;border-radius:var(--r-l);background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;transition:background-color .15s,border-color .15s}
+.continue > .ico{color:var(--accent)}
+.continue small{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.continue b{display:block;font:500 16px/1.3 var(--f-display)}
+.continue:hover{border-color:var(--line-strong);background:var(--hover)}
 
 /* ---------- Secciones ---------- */
-.hub-sec{display:flex;flex-direction:column;gap:14px;padding-top:22px;border-top:1px solid var(--line);scroll-margin-top:12px}
+.hub-sec{display:flex;flex-direction:column;gap:16px;padding-top:24px;border-top:1px solid var(--line);scroll-margin-top:16px}
 .hub-sec-h{display:flex;align-items:center;gap:12px}
 .hub-sec-h > div{flex:1;min-width:0}
-.hub-sec-h h2{font-size:clamp(24px,6vw,32px);letter-spacing:-.02em}
-.hub-sec-ico{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent)}
-.hub-sec-n{flex:none;font:600 12px var(--f-mono);color:var(--muted);letter-spacing:.04em}
-.res-group{display:flex;flex-direction:column;gap:10px}
-.res-group + .res-group{margin-top:6px}
-.res-gh{display:flex;align-items:center;gap:8px;font-size:16px;color:var(--muted);font-weight:700}
-.gtag{font:700 12px var(--f-mono);background:var(--accent);color:var(--surface);border-radius:6px;padding:2px 7px}
+.hub-sec-h h2{font-size:clamp(1.44rem,4vw,1.728rem);letter-spacing:-.015em}
+.hub-sec-ico{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-m);color:var(--muted)}
+.hub-sec-n{flex:none;font-size:13px;color:var(--muted)}
+.res-group{display:flex;flex-direction:column;gap:8px}
+.res-group + .res-group{margin-top:8px}
+.res-gh{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);font-weight:500}
+.gtag{font:500 12px var(--f-body);color:var(--ink);border:1px solid var(--line-strong);border-radius:var(--r-s);padding:1px 6px}
 
 /* ---------- Tarjeta de recurso: toda la tarjeta es el enlace ---------- */
-.res-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
-.res,.exam-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px;min-height:72px;
-  background:var(--surface);border:1px solid var(--line);border-radius:14px;color:var(--ink);text-decoration:none;height:100%;
-  transition:border-color .15s,box-shadow .15s,transform .15s}
-.res:hover,.exam-card:hover{border-color:var(--k,var(--accent));box-shadow:0 6px 18px -12px color-mix(in srgb,var(--k,var(--accent)) 70%,transparent)}
-.res:active,.exam-card:active{transform:scale(.99)}
-.res-ico{display:grid;place-items:center;width:42px;height:42px;border-radius:11px;color:var(--k);background:color-mix(in srgb,var(--k) 13%,var(--surface))}
-.res-body{display:flex;flex-direction:column;gap:3px;min-width:0}
-.res-kind{font:700 11px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--k,var(--accent))}
-.res-t{font:700 17.5px/1.25 var(--f-display);text-wrap:balance}
-.res-d{font-size:14.5px;line-height:1.45;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.res-meta{font:500 12.5px var(--f-mono);color:var(--muted);margin-top:3px}
-.res-meta b{color:var(--ink)}
-.res-bar{display:block;height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
-.res-bar > span{display:block;height:100%;border-radius:3px;background:var(--k,var(--ok))}
-.res-go{align-self:center;color:var(--muted)}
-.res-go .ico{width:20px;height:20px}
-.res:hover .res-go{color:var(--k)}
-.res-empty{margin:0;padding:14px 16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:15px}
+.res-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.res,.exam-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:16px;min-height:72px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);color:var(--ink);text-decoration:none;height:100%;
+  transition:background-color .15s,border-color .15s}
+.res:hover,.exam-card:hover{border-color:var(--line-strong);background:color-mix(in srgb,var(--surface) 96%,var(--ink))}
+.res-ico{display:grid;place-items:center;width:36px;height:36px;border-radius:var(--r-m);color:var(--k);background:color-mix(in srgb,var(--k) 9%,var(--surface))}
+.res-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.res-kind{font-size:12px;font-weight:500;color:var(--muted)}
+.res-t{font:600 16px/1.3 var(--f-display);text-wrap:balance}
+.res-d{font-size:14px;line-height:1.5;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.res-meta{font-size:13px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.res-meta b{color:var(--ink);font-weight:500}
+.res-bar{display:block;height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:8px}
+.res-bar > span{display:block;height:100%;border-radius:2px;background:var(--ok)}
+.res-go{align-self:center;color:var(--muted);opacity:.6}
+.res-go .ico{width:18px;height:18px}
+.res:hover .res-go{opacity:1;color:var(--ink)}
+.res-empty{margin:0;padding:16px;border:1px dashed var(--line-strong);border-radius:var(--r-l);color:var(--muted);font-size:15px}
 
 /* Tarjeta del examen */
-.exam-card{--k:var(--k-examen);background:color-mix(in srgb,var(--k-examen) 7%,var(--surface));border-color:color-mix(in srgb,var(--k-examen) 30%,var(--line))}
-.exam-days{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:58px;height:58px;border-radius:12px;background:var(--k-examen);color:var(--surface)}
-.exam-days .n{font:800 24px/1 var(--f-display);font-variant-numeric:tabular-nums}
-.exam-days .l{font-size:11px;font-weight:700;opacity:.9}
-.exam-txt{display:flex;flex-direction:column;gap:3px;min-width:0}
-.exam-txt .res-t b{color:var(--k-examen)}
+.exam-card{--k:var(--k-examen)}
+.exam-days{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:56px;height:56px;border-radius:var(--r-m);background:var(--bad-soft);color:var(--bad)}
+.exam-days .n{font:600 1.44rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.exam-days .l{font-size:12px;font-weight:500}
+.exam-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.exam-txt .res-t b{color:var(--bad)}
 
 .hub-note{font-size:14px;margin:0}
 
@@ -89,12 +89,11 @@
   .tiles .tile:not(.tile-main):last-child:nth-child(even){grid-column:auto}
 }
 @media (min-width:720px){
-  .hub-hero .lead{font-size:17px}
   .res-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .hub-badge{min-width:68px;height:68px;font-size:24px}
-  .continue{align-self:flex-start;padding-right:22px}
+  .hub-badge{min-width:64px;height:64px;font-size:20px}
+  .continue{align-self:flex-start;padding-right:24px}
 }
 .wrap.hub{max-width:980px}
 /* Aviso de asignatura de otro curso (assets/js/hub.js) */
-.curso-aviso{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.curso-aviso{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
 .curso-aviso p{margin:0;flex:1 1 260px}

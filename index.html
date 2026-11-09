@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mis asignaturas</title>
 <meta name="description" content="Material de estudio del Grado en Ingeniería Informática: teoría, prácticas y preparación del examen de cada asignatura de 1.º y 2.º.">
-<meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#10151B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F9F8F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Math&display=swap">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/nav.css">
 <link rel="stylesheet" href="assets/css/hub.css">
@@ -27,8 +29,6 @@
     <p class="muted">Cada asignatura tiene las mismas tres partes: <b>Teoría</b> (guía, chuleta y autotest), <b>Prácticas</b> (guía, ejercicios y herramientas) y <b>Examen</b> (exámenes, simulacros y test general).</p>
     <div class="cursos" id="cursos" hidden></div>
   </header>
-  <div id="cuenta-strip"></div>
-  <div class="exams-strip" id="exams" aria-label="Cuenta atrás de los exámenes"></div>
   <div id="continue" hidden></div>
   <div class="asignaturas" id="asignaturas">
     <ul class="subjects" aria-label="Asignaturas">
@@ -40,6 +40,11 @@
       <li class="subject"><a class="subject__link" href="aed/index.html"><span class="subject__name">Algoritmos y Estructuras de Datos I</span></a></li>
     </ul>
   </div>
+  <section class="exams-wrap" id="exams-wrap" aria-labelledby="h-exams" hidden>
+    <h2 class="portal-h" id="h-exams">Próximos exámenes</h2>
+    <div class="exams-strip" id="exams"></div>
+  </section>
+  <div id="cuenta-strip"></div>
   <p class="muted portal-note">Tu progreso (notas, exámenes en curso, ejercicios hechos, apartados estudiados) se guarda en tu cuenta, y cada test que terminas suma puntos en el <a href="ranking.html">ranking</a>.</p>
 </main>
 <script src="assets/js/portal.js"></script>

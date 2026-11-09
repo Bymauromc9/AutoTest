@@ -191,7 +191,7 @@ function quiz(){
   app.innerHTML=`
   <div class="qhead"><div><span class="eyebrow">${testLabel(S.key)}${S.key==="G"?" · Tema "+q.t:""}${S.batch>1?" · Tanda "+S.batch:""}</span><h2>Pregunta ${S.i+1} de ${n}</h2></div>
     <div class="qtools">
-      <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar preguntas</button>
+      <button class="btn ghost" id="swap"${canSwap?"":" disabled"} title="${canSwap?"Sustituye todas las preguntas de este test por otras distintas del banco":"Ya estás usando todas las preguntas de este tema"}">↻ Cambiar<span class="qt-l"> preguntas</span></button>
       <a class="btn ghost" href="chuletas.html" target="_blank" rel="noopener">Chuletas ↗</a>
       <button class="btn ghost" id="quit">Salir</button>
     </div></div>
