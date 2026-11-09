@@ -315,6 +315,8 @@
     flag: '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
     chevron: '<path d="M9 6l6 6-6 6"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6L6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
     moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
     calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
@@ -583,6 +585,44 @@
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
     syncThemeButton();
     pintarAviso();
+    if (subject) botonVolver(root + subject.home + (area ? "#" + area : ""), area ? secOf(area).label + " de " + subject.short : subject.short);
+  }
+
+  /* ---------- Volver y subir ----------
+     · En las páginas con índice lateral, la cabecera del índice («GOHP · Teoría») se queda a la vista al
+       bajar (fija arriba en el móvil, columna fija en el escritorio). Su símbolo pasa a ser un botón «←»
+       que vuelve a la sección de la asignatura, como la miga de pan, sin tener que subir hasta arriba.
+     · En todas las páginas, botón flotante «↑» para subir arriba; sale al bajar algo más de una pantalla. */
+  function botonVolver(href, destino) {
+    const brand = document.querySelector(".side-brand");
+    if (!brand || brand.querySelector(".side-back")) return;
+    const a = document.createElement("a");
+    a.className = "side-back";
+    a.href = href;
+    a.title = "Volver a " + destino;
+    a.setAttribute("aria-label", a.title);
+    a.innerHTML = icon("back");
+    const sym = brand.querySelector(".sym");
+    if (sym) sym.replaceWith(a); else brand.insertBefore(a, brand.firstChild);
+  }
+  function botonSubir() {
+    const body = document.body;
+    if (!body || sinSesion || document.querySelector(".to-top")) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "to-top";
+    b.title = "Subir arriba";
+    b.setAttribute("aria-label", "Subir arriba");
+    b.innerHTML = icon("up");
+    b.addEventListener("click", () => {
+      const suave = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+      window.scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
+    });
+    body.appendChild(b);
+    let pendiente = false;
+    const mirar = () => { pendiente = false; b.classList.toggle("is-on", window.scrollY > window.innerHeight * 1.2); };
+    window.addEventListener("scroll", () => { if (!pendiente) { pendiente = true; requestAnimationFrame(mirar); } }, { passive: true });
+    mirar();
   }
 
   /* ---------- Aviso para toda la web (lo pone un administrador desde el panel) ----------
@@ -611,8 +651,8 @@
       if (window.Retro) window.Retro.castigo();      // broma: modo terminal hasta pulsar Espacio dos veces
     };
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildNav);
-  else buildNav();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { buildNav(); botonSubir(); });
+  else { buildNav(); botonSubir(); }
 
   /* ---------- Asistente de IA (panel paralelo; ver assets/js/asistente.js) ---------- */
   (function cargarAsistente() {

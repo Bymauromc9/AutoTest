@@ -4,19 +4,21 @@
      · barra inferior fija en el móvil (Inicio · Teoría · Prácticas · Examen).
    Es autosuficiente: define sus propios colores para poder usarse en páginas con hojas de estilo propias
    (guías, equivalencias, ejercicios). Diseño móvil primero: los estilos base son los del móvil. */
-.site-nav, .tabbar, .site-aviso {
+.site-nav, .tabbar, .site-aviso, .to-top, .side-back {
   --sn-ink: #15202C; --sn-muted: #5A6573; --sn-line: #D7DDE4; --sn-surface: #FFFFFF; --sn-soft: #E4EAF4;
   --sn-accent: #27467A; --sn-accent-ink: #FFFFFF; --sn-bar: rgba(255, 255, 255, .92);
   font-family: "Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--sn-ink);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .site-nav, :root:not([data-theme="light"]) .tabbar, :root:not([data-theme="light"]) .site-aviso {
+  :root:not([data-theme="light"]) .site-nav, :root:not([data-theme="light"]) .tabbar, :root:not([data-theme="light"]) .site-aviso,
+  :root:not([data-theme="light"]) .to-top, :root:not([data-theme="light"]) .side-back {
     --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
     --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
   }
 }
-:root[data-theme="dark"] .site-nav, :root[data-theme="dark"] .tabbar, :root[data-theme="dark"] .site-aviso {
+:root[data-theme="dark"] .site-nav, :root[data-theme="dark"] .tabbar, :root[data-theme="dark"] .site-aviso,
+:root[data-theme="dark"] .to-top, :root[data-theme="dark"] .side-back {
   --sn-ink: #E5EAF0; --sn-muted: #9BA7B4; --sn-line: #2B3642; --sn-surface: #18202A; --sn-soft: #1F2C3E;
   --sn-accent: #93B4E6; --sn-accent-ink: #10151B; --sn-bar: rgba(24, 32, 42, .92);
 }
@@ -127,4 +129,33 @@ html.ai-open .tabbar { display: none; }
 /* Enlace «Saltar al contenido» (accesibilidad): invisible hasta que recibe el foco con el teclado. */
 .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 950; padding: 8px 12px; border-radius: 6px; background: #27467A; color: #fff; font: 600 15px system-ui, sans-serif; }
 .skip-link:focus { left: 16px; }
-@media print { .site-nav, .skip-link, .tabbar, .site-aviso { display: none !important; } body.has-tabbar { padding-bottom: 0 !important; } }
+/* ---------- Volver (cabecera del índice lateral) y subir arriba ---------- */
+.side-back {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 36px; height: 36px; margin-left: -4px; border-radius: 999px;
+  color: var(--accent, var(--sn-accent)); background: var(--accent-soft, var(--sn-soft)); text-decoration: none;
+}
+.side-back:hover { filter: brightness(1.1); }
+.side-back:focus-visible { outline: 3px solid var(--accent, var(--sn-accent)); outline-offset: 2px; }
+.side-back .ico { width: 20px; height: 20px; }
+/* En el escritorio el índice lateral tiene su propio scroll: su cabecera (con «←») se queda arriba. */
+@media (min-width: 901px) {
+  .side > .side-top { position: sticky; top: 0; z-index: 2; background: var(--paper, var(--surface, var(--sn-surface))); padding-bottom: 2px; }
+}
+.to-top {
+  position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(74px + env(safe-area-inset-bottom, 0px)); z-index: 999;
+  display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; padding: 0;
+  border-radius: 999px; border: 1px solid var(--sn-line); background: var(--sn-surface); color: var(--sn-accent);
+  box-shadow: 0 6px 20px rgba(15, 25, 40, .22); cursor: pointer;
+  opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s, transform .2s, visibility .2s;
+}
+.to-top.is-on { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { border-color: var(--sn-accent); }
+.to-top:focus-visible { outline: 3px solid var(--sn-accent); outline-offset: 3px; }
+.to-top .ico { width: 22px; height: 22px; }
+body.has-tabbar .to-top { bottom: calc(134px + env(safe-area-inset-bottom, 0px)); }
+html.ai-open .to-top { display: none; }
+@media (min-width: 721px) { body.has-tabbar .to-top { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); } }
+@media (prefers-reduced-motion: reduce) { .to-top { transition: none; } }
+
+@media print { .site-nav, .skip-link, .tabbar, .site-aviso, .to-top, .side-back { display: none !important; } body.has-tabbar { padding-bottom: 0 !important; } }
