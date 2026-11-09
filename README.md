@@ -26,14 +26,12 @@ assets/
   js/perfil.js              Perfil público (perfil.html); en el tuyo eliges las destacadas de tu vitrina
   js/insignias.js           Insignias: dibujo (SVG), catálogo y las automáticas que se reclaman solas (lo carga core.js)
   js/estadisticas.js        «Tus estadísticas» en cuenta.html: evolución de notas, temas, actividad y racha
-  js/plan.js                Plan de estudio configurable en la portada y en la de cada asignatura (lo carga core.js)
   js/admin.js               Panel de administración (admin.html)
   js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
   js/retro.js               Broma: al cerrar el aviso de los administradores la web pasa a modo terminal;
                             se quita con Espacio dos veces (en el móvil, dos toques)
   css/cuentas.css           Acceso, ranking, avisos de puntos y bloque de cuenta de la portada
   css/insignias.css         Insignias, vitrina, perfil público y estadísticas
-  css/plan.css              Plan de estudio y su diálogo de ajustes
   css/asistente.css         Estilos del panel del asistente
   css/admin.css             Estilos del panel de administración
   css/reportes.css          Diálogo «Reportar un error» (autosuficiente, como nav.css)
@@ -296,24 +294,18 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `sage-cuaderno:<página>` | Código de los cuadernos «Tu SageMath» de cada página (sólo en este navegador) |
 
 | `<asig>-repaso` | Repaso de fallos de cada asignatura: `{ huella: { b: caja 0–4, d: cuándo toca, f: fallos, t: tema }, _dom }` |
-| `<asig>-hist` | Últimos 400 tests terminados: `{ d, tipo, tema, ok, n, nota }` (estadísticas y plan) |
-| `app-plan`, `app-plan-hoy` | Ajustes del plan de estudio y el plan del día (tareas, hechas, de dónde se partía) |
+| `<asig>-hist` | Últimos 400 tests terminados: `{ d, tipo, tema, ok, n, nota }` (estadísticas) |
 | `app-est-asig` | Asignatura elegida en «Tus estadísticas» |
 
 El test del autotest y el simulacro en curso se guardan en `sessionStorage` (sobreviven a recargas, no a cerrar la pestaña).
 
-## Repaso de fallos, plan de estudio y estadísticas
+## Repaso de fallos y estadísticas
 
 - **Repaso de fallos** (`App.repaso` en core.js, en los cinco autotests y en los simulacros): cada pregunta
   fallada o en blanco entra en la caja 0 y se puede repasar ya desde la portada del autotest («Repaso de
   fallos», o el enlace `autotest.html#test-R`). Acertarla cuando toca la sube de caja y la programa a 1, 3, 7
   y 14 días; acertada en la última se da por dominada. Las preguntas se identifican por una huella del
   enunciado, así que reordenar o ampliar el banco no las pierde.
-- **Plan de estudio** (`assets/js/plan.js`): cada uno lo activa, lo apaga y lo ajusta en ⚙ (asignaturas,
-  días, minutos al día, prioridad, días de repaso final antes de cada examen, qué entra y dónde verlo). Cada
-  día reparte lo pendiente (apartados sin estudiar, ejercicios sin hacer, temas del autotest por debajo de 7,
-  repaso de fallos) entre los días de estudio que quedan hasta cada examen. Las tareas se marcan solas al
-  hacerlas. Tiempos estimados: `MIN` al principio del fichero.
 - **Estadísticas** (cuenta.html#estadisticas): salen de `App.historial`, que apunta cada test que llama a
   `App.puntos` (pásale también `nota` sobre 10 y `tema` para que salgan bien).
 

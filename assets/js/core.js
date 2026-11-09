@@ -328,7 +328,6 @@
     medal: '<path d="M8 3l2.5 6M16 3l-2.5 6"/><circle cx="12" cy="15" r="6"/><path d="M12 12.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2-1.45-1.4 2-.3z"/>',
     chart: '<path d="M4 20V4M4 20h16"/><path d="M7.5 15l3.5-4 3 2.5 5-6"/>',
     repeat: '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"/>',
-    plan: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 14.5l2.2 2.2 4.8-4.8"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
     star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>'
   };
@@ -431,7 +430,7 @@
     location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
   }
   /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
-  const esProgreso = (k) => /^(fli|fc|ip|gohp|amd|eq)-|^app-(last|plan)/.test(k);
+  const esProgreso = (k) => /^(fli|fc|ip|gohp|amd|eq)-|^app-last/.test(k);
   /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
       cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
   function puntos(r) {
@@ -640,13 +639,6 @@
     const ijs = document.createElement("script");
     ijs.src = base + "js/insignias.js"; ijs.defer = true;
     document.head.appendChild(ijs);
-    // Plan de estudio (en la portada y en la de cada asignatura; ver assets/js/plan.js)
-    const lcss = document.createElement("link");
-    lcss.rel = "stylesheet"; lcss.href = base + "css/plan.css";
-    document.head.appendChild(lcss);
-    const ljs = document.createElement("script");
-    ljs.src = base + "js/plan.js"; ljs.defer = true;
-    document.head.appendChild(ljs);
     // Botones de descarga en PDF (ver assets/js/pdf.js y scripts/pdf/generar.js)
     const pcss = document.createElement("link");
     pcss.rel = "stylesheet"; pcss.href = base + "css/pdf.css";

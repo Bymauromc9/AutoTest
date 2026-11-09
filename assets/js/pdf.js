@@ -10,7 +10,8 @@
  * páginas, se unen con pdf-lib (assets/vendor, sólo se carga al pulsar) y se añade una portada con el
  * índice. Si no existe pdf/manifest.json, no aparece ningún botón.
  */
-(function () {
+/* core.js lo inserta desde <head>: si llega antes de que exista <body>, espera al DOM. */
+function pdfUI() {
   "use strict";
   if (window.__pdfUI) return;
   window.__pdfUI = true;
@@ -196,4 +197,6 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
   else iniciar();
-})();
+}
+if (document.body) pdfUI();
+else document.addEventListener("DOMContentLoaded", pdfUI);
