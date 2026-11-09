@@ -112,6 +112,7 @@ async function enviar(sub, mensaje, vapid, opts) {
         "Content-Type": "application/octet-stream",
         TTL: String(o.ttl || 86400),
         Urgency: o.urgencia || "normal",
+        // «Topic» (o.tema) es opcional; Apple (web.push.apple.com) responde 400 BadWebPushTopic, así que no se usa por defecto.
         ...(o.tema ? { Topic: o.tema } : {})
       },
       body: cuerpo

@@ -112,7 +112,7 @@ module.exports = async function handler(req, res) {
   const caducadas = [], errores = [];
   for (let i = 0; i < subs.length; i += EN_PARALELO) {
     const lote = subs.slice(i, i + EN_PARALELO);
-    const rs = await Promise.all(lote.map((s) => enviar(s, mensaje, v, { ttl: 3 * 86400, tema: "aviso" })
+    const rs = await Promise.all(lote.map((s) => enviar(s, mensaje, v, { ttl: 3 * 86400 })   // sin «Topic»: Apple lo rechaza (BadWebPushTopic); el tag de la notificación ya sustituye la anterior
       .catch((e) => ({ ok: false, status: 0, detalle: "Error inesperado: " + (e && e.message || e) }))));
     rs.forEach((r, k) => {
       if (r.ok) { enviadas++; return; }
