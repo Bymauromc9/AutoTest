@@ -11,7 +11,7 @@ las guías (assets/css/guia.css + amd/css/amd.css). Empieza con un comentario co
          "eyebrow": "…", "h1": "Guía de teoría", "ops": "Aᵀ λ ⊥", "lead": "…", "marca": "AMD · Teoría",
          "body": {"data-estudio-key": "amd-teoria-estudio"}, "ejercicios": false}-->
 
-Etiquetas de estructura
+Etiquetas de estructura (comunes a todas las guías: scripts/guias/marcado.py)
     <tema id="t1" n="1" t="Título" lede="Entradilla" eyebrow="Tema 1">…</tema>   bloque del índice
     <ap id="t1-1" n="1.1" t="Título">…</ap>                                       apartado (topic)
     <ej id="h1-1a" n="Ejercicio 1 (a)" t="Título">enunciado <sol>resolución</sol></ej>   ejercicio con «Hecho»
@@ -36,24 +36,11 @@ import re
 import sys
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "guias"))
+from marcado import (RAIZ, FUENTES, ErrorContenido, attrs, cajas, estructura, compactar,   # noqa: E402
+                     comprobar_restos, leer, sincronizar_registro, totales)
+
 CONTENIDO = Path(__file__).resolve().parent / "contenido"
-FUENTES = ("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;"
-           "12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,"
-           "opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap")
-
-
-class ErrorContenido(Exception):
-    pass
-
-
-def attrs(texto):
-    """Atributos de una etiqueta corta: k="v" o banderas sueltas (det, sm)."""
-    out = {}
-    for m in re.finditer(r"""([\w-]+)(?:="([^"]*)"|='([^']*)')?""", texto or ""):
-        v = m.group(2) if m.group(2) is not None else m.group(3)
-        out[m.group(1)] = v if v is not None else True
-    return out
 
 
 # ---------------------------------------------------------------- notación matemática
@@ -137,78 +124,6 @@ def sage_celdas(s, guardadas):
         return f"\x00SAGE{len(guardadas) - 1}\x00"
     patron = r"<sage(\s[^>]*)?>(.*?)</sage>(?:\s*<salida(\s[^>]*)?>(.*?)</salida>)?"
     return re.sub(patron, una, s, flags=re.S)
-
-
-# ---------------------------------------------------------------- estructura
-def cajas(s):
-    def box(m):
-        a = attrs(m.group(1))
-        k = a.get("k", "")
-        t = f'<p class="box-t">{a["t"]}</p>' if a.get("t") else ""
-        return f'<div class="box{" " + k if k else ""}">{t}{m.group(2)}</div>'
-    for _ in range(2):   # una caja puede contener otra
-        s = re.sub(r"<box(\s[^>]*)?>((?:(?!<box[\s>]).)*?)</box>", box, s, flags=re.S)
-    s = re.sub(r"<deep(\s[^>]*)?>(.*?)</deep>", lambda m: f'<details class="deep"><summary class="deep-t">{attrs(m.group(1)).get("t", "Más a fondo")}</summary>{m.group(2)}</details>', s, flags=re.S)
-    s = re.sub(r"<res>(.*?)</res>", r'<p class="result"><span class="result-l">Resultado</span>\1</p>', s, flags=re.S)
-    return s
-
-
-def ejercicios(s, tema_id, vistos, cuadernos):
-    def ej(m):
-        a = attrs(m.group(1))
-        eid = a.get("id") or ""
-        if not eid or eid in vistos:
-            raise ErrorContenido("ejercicio sin id o con id repetido: " + eid)
-        vistos.add(eid)
-        cuerpo = m.group(2)
-        sol = ""
-        ms = re.search(r"<sol>(.*)</sol>", cuerpo, flags=re.S)
-        if ms:
-            sol = f'<details class="sol"><summary>Resolución explicada</summary><div class="sol-body">{ms.group(1)}</div></details>'
-            cuerpo = cuerpo[:ms.start()] + cuerpo[ms.end():]
-        titulo = f' <span class="card-title">· {a["t"]}</span>' if a.get("t") else ""
-        nb = f'<div class="sage-nb" data-nb="{eid}"></div>' if cuadernos and a.get("cuaderno") != "no" else ""
-        return (f'<article class="card ex" data-tema="{tema_id}" id="e-{eid}"><div class="card-head">'
-                f'<span class="card-num">{a.get("n", "Ejercicio")}{titulo}</span><span class="card-tools">'
-                f'<label class="done" for="d-{eid}"><input data-key="{eid}" id="d-{eid}" type="checkbox"><span>Hecho</span></label>'
-                f'</span></div><div class="card-body">{cuerpo}{nb}{sol}</div></article>')
-    return re.sub(r"<ej(\s[^>]*)>(.*?)</ej>", ej, s, flags=re.S)
-
-
-def estructura(s, con_ejercicios, cuadernos=False):
-    toc, vistos, ids = [], set(), set()
-    total_ej = 0
-
-    def tema(m):
-        nonlocal total_ej
-        a = attrs(m.group(1))
-        tid = a["id"]
-        cuerpo = m.group(2)
-        temas_ap = []
-
-        def ap(mm):
-            b = attrs(mm.group(1))
-            aid = b["id"]
-            if aid in ids:
-                raise ErrorContenido("id repetido: " + aid)
-            ids.add(aid)
-            temas_ap.append((aid, b.get("n", ""), b["t"]))
-            return (f'<section class="topic" id="{aid}"><h3><span class="tnum">{b.get("n", "")}</span><span>{b["t"]}</span></h3>'
-                    f'<div class="prose">{mm.group(2)}</div></section>')
-        cuerpo = re.sub(r"<ap(\s[^>]*)>(.*?)</ap>", ap, cuerpo, flags=re.S)
-        antes = len(vistos)
-        cuerpo = ejercicios(cuerpo, tid, vistos, cuadernos)
-        total_ej += len(vistos) - antes
-        prog = f'<span class="prog" data-prog="{tid}"></span>' if con_ejercicios and len(vistos) > antes else "<span></span>"
-        sub = "".join(f'<li><a href="#{i}"><span class="tnum">{n}</span>{t}</a></li>' for i, n, t in temas_ap)
-        toc.append(f'<li><a class="toc-tema" href="#{tid}"><span class="tn">{a.get("n", "")}</span><span class="tname">{a["t"]}</span>{prog}</a>'
-                   f'<ol class="toc-topics">{sub}</ol></li>')
-        lede = f'<p class="lede">{a["lede"]}</p>' if a.get("lede") else ""
-        eyebrow = a.get("eyebrow", "Tema " + a.get("n", ""))
-        return (f'<section class="tema guide" id="{tid}"><header class="tema-head"><p class="eyebrow">{eyebrow}</p>'
-                f'<h2>{a["t"]}</h2>{lede}</header>{cuerpo}</section>')
-    s = re.sub(r"<tema(\s[^>]*)>(.*?)</tema>", tema, s, flags=re.S)
-    return s, "".join(toc), total_ej
 
 
 # ---------------------------------------------------------------- página
@@ -296,14 +211,7 @@ def pagina(meta, cuerpo, toc, total_ej, usa_sage):
 
 
 def generar(fichero):
-    texto = fichero.read_text(encoding="utf-8")
-    m = re.match(r"\s*<!--(.*?)-->", texto, flags=re.S)
-    if not m:
-        raise ErrorContenido(fichero.name + ": falta el comentario inicial con los datos de la página")
-    meta = json.loads(m.group(1))
-    s = texto[m.end():]
-    # Comentarios del autor: fuera (no van a la web).
-    s = re.sub(r"<!--.*?-->", "", s, flags=re.S)
+    meta, s = leer(fichero)
     guardadas = []
     s = sage_celdas(s, guardadas)
     s = notacion(s)
@@ -312,32 +220,12 @@ def generar(fichero):
     s, toc, total_ej = estructura(s, True, cuadernos=usa_sage and meta.get("cuadernos", True))
     for i, c in enumerate(guardadas):
         s = s.replace(f"\x00SAGE{i}\x00", c)
-    s = re.sub(r">\s*\n\s*<", "><", s.strip())       # HTML compacto (como el resto de guías)
-    s = re.sub(r"\n{2,}", "\n", s)
-    restos = re.findall(r"</?(?:tema|ap|ej|sol|box|deep|res|m|sys|fr|r|op|md|sage|salida)[\s>]", s)
-    if restos:
-        raise ErrorContenido(fichero.name + ": etiquetas sin convertir: " + ", ".join(sorted(set(restos))))
+    s = compactar(s)
+    comprobar_restos(fichero.name, s, ["tema", "ap", "ej", "sol", "box", "deep", "res", "m", "sys", "fr", "r", "op", "md", "sage", "salida"])
     destino = RAIZ / meta["salida"]
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(pagina(meta, s, toc, total_ej, usa_sage or bool(guardadas)), encoding="utf-8", newline="\n")
-    body = meta.get("body", {})
-    totales = {}
-    if total_ej:
-        totales[body["data-storage-key"]] = total_ej
-    if body.get("data-estudio-key"):
-        totales[body["data-estudio-key"]] = s.count('<section class="topic"')
-    return meta["salida"], total_ej, len(guardadas), totales
-
-
-def sincronizar_registro(totales):
-    """Pone en el registro de assets/js/core.js el total de ejercicios / apartados de cada página."""
-    core = RAIZ / "assets" / "js" / "core.js"
-    s = core.read_text(encoding="utf-8")
-    for clave, n in totales.items():
-        s, k = re.subn(r'(key: "' + re.escape(clave) + r'",[^}]*?total: )\d+', lambda m: m.group(1) + str(n), s)
-        if not k:
-            print(f"aviso: {clave} no está en el registro de core.js", file=sys.stderr)
-    core.write_text(s, encoding="utf-8", newline="\n")
+    return meta["salida"], total_ej, len(guardadas), totales(meta, s, total_ej)
 
 
 def main():

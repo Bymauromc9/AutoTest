@@ -175,12 +175,13 @@
       fc: "Fundamentos de Computadores (representación de la información, circuitos combinacionales, Linux, ensamblador x86-64 y redes)",
       ip: "Introducción a la Programación (notación algorítmica SP de clase y C++ con Geany y g++)",
       gohp: "Gestión de Organizaciones y Habilidades Profesionales (la empresa y su entorno, teorías de la administración, planificación estratégica, organización, producción y punto muerto, marketing, inversión y financiación con VAN y TIR, dirección y motivación, y recursos humanos)",
-      amd: "Álgebra y Matemática Discreta (espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y SVD, aritmética modular y prácticas con SageMath)"
+      amd: "Álgebra y Matemática Discreta (espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y SVD, aritmética modular y prácticas con SageMath)",
+      aed: "Algoritmos y Estructuras de Datos I, de 2.º (tipos abstractos de datos y especificaciones informales y formales, axiomáticas con Maude y constructivas; conjuntos y diccionarios con arrays de booleanos, listas y tablas de dispersión abierta y cerrada; árboles trie, relaciones de equivalencia con punteros al padre, árboles AVL y árboles B; grafos, recorridos, Prim, Kruskal, Dijkstra, Floyd, Warshall, componentes fuertemente conexos, orden topológico, puntos de articulación y circuitos de Euler; notación algorítmica de clase y C++ en la práctica)"
     };
     const recorta = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n) + "\n[…recortado]" : t; };
-    const asig = asignaturas[ctx.asignatura] || "las asignaturas de 1.º del Grado en Ingeniería Informática";
+    const asig = asignaturas[ctx.asignatura] || "las asignaturas de 1.º y 2.º del Grado en Ingeniería Informática";
     return [
-      "Eres el asistente de estudio de una web de apuntes de 1.º del Grado en Ingeniería Informática de la Universidad de Murcia.",
+      "Eres el asistente de estudio de una web de apuntes de 1.º y 2.º del Grado en Ingeniería Informática de la Universidad de Murcia.",
       "El estudiante está leyendo una página de " + asig + " y te pregunta porque algo no le ha quedado claro.",
       "",
       "Cómo responder:",

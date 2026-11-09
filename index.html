@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mis asignaturas</title>
-<meta name="description" content="Material de estudio de 1.º de Ingeniería Informática: teoría, prácticas y preparación del examen de cada asignatura.">
+<meta name="description" content="Material de estudio del Grado en Ingeniería Informática: teoría, prácticas y preparación del examen de cada asignatura de 1.º y 2.º.">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#10151B" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -22,18 +22,24 @@
 <a class="skip-link" href="#app">Saltar al contenido</a>
 <main class="wrap portal" id="app" tabindex="-1">
   <header class="top">
-    <span class="eyebrow">1.º Ingeniería Informática · Universidad de Murcia</span>
+    <span class="eyebrow">Ingeniería Informática · Universidad de Murcia</span>
     <h1>Mis asignaturas</h1>
     <p class="muted">Cada asignatura tiene las mismas tres partes: <b>Teoría</b> (guía, chuleta y autotest), <b>Prácticas</b> (guía, ejercicios y herramientas) y <b>Examen</b> (exámenes, simulacros y test general).</p>
+    <div class="cursos" id="cursos" hidden></div>
   </header>
   <div id="cuenta-strip"></div>
   <div class="exams-strip" id="exams" aria-label="Cuenta atrás de los exámenes"></div>
   <div id="continue" hidden></div>
-  <ul class="subjects" id="subjects" aria-label="Asignaturas">
-    <li class="subject"><a class="subject__link" href="fli/index.html"><span class="subject__name">Fundamentos Lógicos de la Informática</span></a></li>
-    <li class="subject"><a class="subject__link" href="fc/index.html"><span class="subject__name">Fundamentos de Computadores</span></a></li>
-    <li class="subject"><a class="subject__link" href="ip/index.html"><span class="subject__name">Introducción a la Programación</span></a></li>
-  </ul>
+  <div class="asignaturas" id="asignaturas">
+    <ul class="subjects" aria-label="Asignaturas">
+      <li class="subject"><a class="subject__link" href="fli/index.html"><span class="subject__name">Fundamentos Lógicos de la Informática</span></a></li>
+      <li class="subject"><a class="subject__link" href="fc/index.html"><span class="subject__name">Fundamentos de Computadores</span></a></li>
+      <li class="subject"><a class="subject__link" href="ip/index.html"><span class="subject__name">Introducción a la Programación</span></a></li>
+      <li class="subject"><a class="subject__link" href="gohp/index.html"><span class="subject__name">Gestión de Organizaciones y Habilidades Profesionales</span></a></li>
+      <li class="subject"><a class="subject__link" href="amd/index.html"><span class="subject__name">Álgebra y Matemática Discreta</span></a></li>
+      <li class="subject"><a class="subject__link" href="aed/index.html"><span class="subject__name">Algoritmos y Estructuras de Datos I</span></a></li>
+    </ul>
+  </div>
   <p class="muted portal-note">Tu progreso (notas, exámenes en curso, ejercicios hechos, apartados estudiados) se guarda en tu cuenta, y cada test que terminas suma puntos en el <a href="ranking.html">ranking</a>.</p>
 </main>
 <script src="assets/js/portal.js"></script>

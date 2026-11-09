@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exámenes resueltos · AED I</title>
+<meta name="description" content="Exámenes de Algoritmos y Estructuras de Datos I de otros cursos resueltos y explicados: especificaciones en Maude, tablas de dispersión, árboles y grafos.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Math&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../../assets/css/guia.css">
+<link rel="stylesheet" href="../../aed/css/aed.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="aed" data-title="Exámenes resueltos" data-storage-key="aed-examen-hechos" data-visto-key="aed-examen-visto">
+<!-- Generado por scripts/aed/generar.py a partir de scripts/aed/contenido/: no lo edites a mano. -->
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">✎</span> AED I · Examen</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Convocatorias</p><ol class="toc-temas"><li><a class="toc-tema" href="#e26"><span class="tn">E26</span><span class="tname">Enero de 2026</span><span class="prog" data-prog="e26"></span></a><ol class="toc-topics"></ol></li><li><a class="toc-tema" href="#e25b"><span class="tn">M25</span><span class="tname">Mayo de 2025</span><span class="prog" data-prog="e25b"></span></a><ol class="toc-topics"></ol></li><li><a class="toc-tema" href="#e25"><span class="tn">E25</span><span class="tname">Enero de 2025</span><span class="prog" data-prog="e25"></span></a><ol class="toc-topics"></ol></li></ol></nav>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Algoritmos y Estructuras de Datos I · 2.º GII · Examen</p><h1>Exámenes resueltos <span class="ops">1 · 2 · 3 · 4</span></h1><p class="lead">Tres exámenes finales de convocatorias anteriores con la solución oficial explicada paso a paso y comprobada (las especificaciones, en Maude). El examen tiene <b>una pregunta por tema</b> y casi nunca es «aplica el algoritmo»: plantean una estructura nueva (una tabla de dispersión rara, un AVL modificado…) o un problema que hay que modelar como grafo. Intenta cada problema antes de abrir su solución.</p><nav class="aed-pages" aria-label="Páginas de AED I"><a href="../teoria/guia.html">Guía de teoría</a><a href="../teoria/autotest.html">Autotest</a><a href="../teoria/ejercicios.html">Ejercicios de examen</a><a href="examenes.html" aria-current="page">Exámenes resueltos</a><a href="../practicas/guia.html">Guía de la práctica</a></nav></header><div class="soltools"><button type="button" class="btn-sol" data-sol="open">Abrir todas las soluciones</button><button type="button" class="btn-sol" data-sol="close">Cerrarlas</button><span class="soltools-note">Intenta cada problema antes de abrir su solución y márcalo como hecho.</span></div><section class="tema guide" id="e26"><header class="tema-head"><p class="eyebrow">Examen final · 15 de enero de 2026</p><h2>Enero de 2026</h2><p class="lede">Especificar una lista con la mayor secuencia creciente, la «dispersión empujón», el mínimo en un AVL y en un trie, y los prerrequisitos de un grado como orden topológico.</p></header><article class="card ex" data-tema="e26" id="e-e26-1"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Especificación: la mayor secuencia creciente de una lista</span></span><span class="card-tools"><label class="done" for="d-e26-1"><input data-key="e26-1" id="d-e26-1" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Tenemos el TAD Lista[T], con T con una comparación <code>esMenor</code>, y las operaciones <b>Vacía</b> e <b>Insertar(elemento, lista)</b> (al principio). Queremos añadir <b>LongSecCreciente(lista)</b>, la longitud de la mayor secuencia creciente de la lista, y <b>SecCreciente(lista)</b>, esa secuencia. Por ejemplo, con l = (1, 3, 5, 6, 2, 2, 4, 5, 7, 8, 1, 9), SecCreciente(l) = (2, 4, 5, 7, 8) y LongSecCreciente(l) = 5.</p><p>Escribe la especificación formal axiomática. Puedes añadir operaciones auxiliares; en los naturales tienes <code>máximo</code>. Pista: una función auxiliar que calcule la secuencia creciente que empieza con el primer elemento.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>La clave es la pista: una operación <b>PrefijoCreciente(l)</b> con la secuencia creciente que empieza en el primer elemento y sigue mientras cada elemento sea mayor que el anterior (en el ejemplo, (1, 3, 5, 6)). Añadimos también <b>Longitud</b>. Los constructores son Vacía e Insertar, así que hay un axioma por constructor (PrefijoCreciente necesita mirar dos elementos y tiene tres).</p>
+<div class="codeblk spec"><p class="code-t">Especificación</p><pre><code class="lang-pseudo"><span class="tk-k">NOMBRE</span>
+    Lista[T]
+<span class="tk-k">CONJUNTOS</span>
+    L     Conjunto de las listas de <span class="tk-k">tipo</span> Lista[T]
+    T     Conjunto de elementos (con una <span class="tk-k">operación</span> esMenor)
+    N     Conjunto de los naturales
+    Bool  Conjunto de los booleanos {true, false}
+<span class="tk-k">SINTAXIS</span>
+    Vacía:                  → L
+    Insertar:         T x L → L
+    Longitud:         L     → N
+    PrefijoCreciente: L     → L
+    SecCreciente:     L     → L
+    LongSecCreciente: L     → N
+<span class="tk-k">SEMÁNTICA</span>   ∀ x, y ∈ T; ∀ l ∈ L
+    Longitud (Vacía) = cero
+    Longitud (Insertar (x, l)) = sucesor (Longitud (l))
+    PrefijoCreciente (Vacía) = Vacía
+    PrefijoCreciente (Insertar (x, Vacía)) = Insertar (x, Vacía)
+    PrefijoCreciente (Insertar (x, Insertar (y, l))) =
+        Insertar (x, <span class="tk-k">SI</span> esMenor (x, y) ⇒ PrefijoCreciente (Insertar (y, l)) | Vacía)
+    SecCreciente (Vacía) = Vacía
+    SecCreciente (Insertar (x, l)) =
+        <span class="tk-k">SI</span> esMenor (LongSecCreciente (l), Longitud (PrefijoCreciente (Insertar (x, l))))
+            ⇒ PrefijoCreciente (Insertar (x, l))
+            | SecCreciente (l)
+    LongSecCreciente (l) = Longitud (SecCreciente (l))</code></pre></div>
+<p>La idea de SecCreciente: la mejor secuencia de la lista o es la que empieza en el primer elemento (su prefijo creciente) o está en el resto. Se comparan las longitudes y se queda la mayor; si empatan, la del resto. En Maude, con naturales, el ejemplo da <code>insertar(2, insertar(4, insertar(5, insertar(7, insertar(8, vacia)))))</code> y longitud 5.</p><div class="box tip"><p class="box-t">Para la pregunta 1</p>Es el patrón de casi todos los años: definir primero operaciones auxiliares sencillas (Longitud, un prefijo, un contador…) y escribir la operación pedida en función de ellas, con un axioma por constructor.</div></div></details></div></article><article class="card ex" data-tema="e26" id="e-e26-2"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· La dispersión empujón</span></span><span class="card-tools"><label class="done" for="d-e26-2"><input data-key="e26-2" id="d-e26-2" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Es una variante de la dispersión cerrada en la que se prioriza el último elemento insertado: si se inserta x y su cubeta está ocupada por y, x se queda en su cubeta y <b>empuja</b> a y, que se mueve D(y) posiciones: a (pos + D(y)) mod B. Si esa también está ocupada por z, y empuja a z, y así hasta que alguien caiga en una cubeta vacía.</p><p>(a) Define el tipo de datos para un diccionario con claves C y valores V con tabla de tamaño fijo B y escribe la inserción (h y D están dadas). (b) Explica cómo sería la consulta y compara la eficiencia con la dispersión cerrada.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><b>(a)</b> Los tipos son los de la dispersión cerrada: <code>tipo Par = registro clave: C; valor: V finregistro</code> y <code>tipo TablaHash = array [0..B−1] de Par</code>, más el número de elementos.</p><p>Detalle que es fácil pasar por alto: ¿y si x <b>ya estaba</b> en la tabla (no necesariamente en h(x))? Entonces no hay que empujar a nadie, sólo cambiar su valor. ¿Dónde puede estar x? En h(x), h(x) + D(x), h(x) + 2·D(x)… (mod B): exactamente la <b>redispersión doble</b> hᵢ(x) = (h(x) + i·D(x)) mod B. Así que primero se busca:</p>
+<div class="codeblk"><p class="code-t">Inserción con empujones</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> Actualizar (<span class="tk-k">var</span> t: TablaHash; c: C; v: V): booleano
+    pos:= h(c); i:= 1
+    <span class="tk-k">mientras</span> t[pos].clave ≠ NULO <span class="tk-k">AND</span> t[pos].clave ≠ c <span class="tk-k">AND</span> i &lt; B <span class="tk-k">hacer</span>
+        i:= i + 1
+        pos:= (pos + D(c)) mod B
+    <span class="tk-k">finmientras</span>
+    <span class="tk-k">si</span> t[pos].clave == c <span class="tk-k">entonces</span>
+        t[pos].valor:= v
+        <span class="tk-k">devolver</span> TRUE
+    <span class="tk-k">sino</span> <span class="tk-k">devolver</span> FALSE
+
+<span class="tk-k">operación</span> Insertar (<span class="tk-k">var</span> t: TablaHash; c: C; v: V)
+    <span class="tk-k">si</span> <span class="tk-k">NOT</span> Actualizar(t, c, v) <span class="tk-k">entonces</span>
+        <span class="tk-k">si</span> t.numElem == B <span class="tk-k">entonces</span> <span class="tk-k">ERROR</span>(<span class="tk-s">"La tabla está llena"</span>)
+        pos:= h(c)
+        <span class="tk-k">mientras</span> t[pos].clave ≠ NULO <span class="tk-k">hacer</span>       <span class="tk-c">// empujar al que está</span>
+            tmp:= t[pos]
+            t[pos]:= Par(c, v)
+            c:= tmp.clave; v:= tmp.valor        <span class="tk-c">// ahora se mueve el empujado</span>
+            pos:= (pos + D(c)) mod B
+        <span class="tk-k">finmientras</span>
+        t[pos]:= Par(c, v)
+        t.numElem:= t.numElem + 1
+    <span class="tk-k">finsi</span></code></pre></div>
+<p><b>(b)</b> La consulta es <b>exactamente la de la dispersión cerrada</b> con redispersión doble de salto D(x) (la operación Actualizar sin modificar). La eficiencia esperada también es O(1/(1 − n/B)): en cada colisión se alarga en 1 una secuencia de búsqueda, sólo que salta el elemento viejo en lugar del nuevo. Ventaja: los elementos <b>recientes</b> tienen secuencias más cortas (útil si se consultan más, como los mensajes recientes). Inconvenientes:</p><ul><li>Si los saltos no son coprimos con B puede haber un <b>bucle infinito</b> de empujones (B = 10, saltos de 5: x empuja a y, y a z y z otra vez a x). Se evita con B primo, como en la cerrada.</li><li>Aun así puede haber más colisiones que en la cerrada (los empujados pueden empujar a otros hacia atrás).</li><li>La inserción necesita dos recorridos (buscar y luego empujar); la cerrada, uno.</li></ul></div></details></div></article><article class="card ex" data-tema="e26" id="e-e26-3"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· El menor elemento en un AVL y en un trie</span></span><span class="card-tools"><label class="done" for="d-e26-3"><input data-key="e26-3" id="d-e26-3" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>(a) Escribe un algoritmo para encontrar el menor elemento de un conjunto representado con un AVL y otro con un trie, con los tipos de datos. (b) Analiza su orden de complejidad y compáralo con el de una tabla de dispersión cerrada de B cubetas.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="codeblk"><p class="code-t">Menor elemento</p><pre><code class="lang-pseudo"><span class="tk-k">tipo</span> NodoAVL = <span class="tk-k">registro</span>
+    clave: T
+    izq, der: Puntero[NodoAVL]
+    altura: entero
+<span class="tk-k">finregistro</span>
+
+<span class="tk-k">operación</span> BuscarMenor (n: Puntero[NodoAVL]): T          <span class="tk-c">// bajar siempre a la izquierda</span>
+    <span class="tk-k">si</span> n == NULO <span class="tk-k">entonces</span> <span class="tk-k">ERROR</span>(<span class="tk-s">"El árbol está vacío"</span>)
+    <span class="tk-k">si</span> n→izq == NULO <span class="tk-k">entonces</span> <span class="tk-k">devolver</span> n→clave
+    <span class="tk-k">sino</span> <span class="tk-k">devolver</span> BuscarMenor(n→izq)
+
+<span class="tk-k">operación</span> BuscarMenor (n: NodoTrie): cadena              <span class="tk-c">// con las operaciones genéricas del nodo</span>
+    <span class="tk-k">si</span> HayMarca(n) <span class="tk-k">entonces</span> <span class="tk-k">devolver</span> <span class="tk-s">""</span>                  <span class="tk-c">// la palabra vacía es la menor</span>
+    <span class="tk-k">para</span> <span class="tk-k">cada</span> carácter c hijo del nodo n <span class="tk-k">hacer</span>
+        <span class="tk-k">devolver</span> c + BuscarMenor(Consulta(n, c))         <span class="tk-c">// sólo se usa el primer hijo</span></code></pre></div>
+<p>El <code>para cada</code> del trie sale en la primera vuelta: sólo sirve para llegar al primer hijo, que es el menor alfabéticamente. Vale para nodos con arrays o con listas.</p><p><b>(b)</b> Los dos son proporcionales a la altura. AVL: <b>O(log n)</b>. Trie: <b>O(m)</b>, con m la longitud de la menor palabra; con nodos lista el primer hijo está en O(1), con arrays hay que buscar la primera posición no nula (× tamaño del alfabeto). Tabla cerrada: no hay orden, hay que recorrer todas las cubetas, <b>O(B)</b> con B ≥ n: mucho peor que el AVL. El trie, además, no depende del número de palabras.</p></div></details></div></article><article class="card ex" data-tema="e26" id="e-e26-4"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Prerrequisitos de un grado</span></span><span class="card-tools"><label class="done" for="d-e26-4"><input data-key="e26-4" id="d-e26-4" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Ciertas asignaturas tienen prerrequisitos: Programación I y Matemáticas Discretas no tienen; Estructuras de Datos requiere Programación I; Algoritmos, Estructuras de Datos y Matemáticas Discretas; Bases de Datos, Programación I; Inteligencia Artificial, Algoritmos; y el TFG, Bases de Datos e Inteligencia Artificial. Tenemos una matriz M con M[i][j] = 1 si la asignatura i tiene como prerrequisito la j. (a) Escribe un algoritmo eficiente que diga si se puede terminar el grado sin contradicciones y, en ese caso, proponga un orden válido. (b) Ejecútalo sobre el ejemplo.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Es una <b>ordenación topológica</b> en un grafo dirigido acíclico: nodos = asignaturas y una arista de j a i si i requiere j. Ojo: M[i][j] corresponde a la arista ⟨j, i⟩ (al revés que la matriz de adyacencia normal). Si hay un ciclo, hay contradicciones. Se usa el algoritmo por grados de entrada, con una cola para los nodos de grado 0:</p>
+<div class="codeblk"><p class="code-t">Ordenación topológica con la matriz de prerrequisitos</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> OrdenTopológico (n: entero; M: array [1..n, 1..n] de booleano)
+    GE: array [1..n] de entero
+    cola: Cola[entero]
+    <span class="tk-k">para</span> i:= 1..n <span class="tk-k">hacer</span>
+        GE[i]:= 0
+        <span class="tk-k">para</span> j:= 1..n <span class="tk-k">hacer</span> <span class="tk-k">si</span> M[i][j] <span class="tk-k">entonces</span> GE[i]:= GE[i] + 1   <span class="tk-c">// nº de prerrequisitos</span>
+        <span class="tk-k">si</span> GE[i] == 0 <span class="tk-k">entonces</span> InsertaCola(i, cola)
+    <span class="tk-k">finpara</span>
+    posición:= 0
+    <span class="tk-k">mientras</span> <span class="tk-k">NOT</span> EsVacíaCola(cola) <span class="tk-k">hacer</span>
+        v:= FrenteCola(cola); SuprimirCola(cola)
+        posición:= posición + 1
+        Escribir(<span class="tk-s">"Asignatura "</span>, v, <span class="tk-s">" en la posición "</span>, posición)
+        <span class="tk-k">para</span> w:= 1..n <span class="tk-k">hacer</span>
+            <span class="tk-k">si</span> M[w][v] <span class="tk-k">entonces</span>                <span class="tk-c">// w tenía a v como prerrequisito</span>
+                GE[w]:= GE[w] − 1
+                <span class="tk-k">si</span> GE[w] == 0 <span class="tk-k">entonces</span> InsertaCola(w, cola)
+            <span class="tk-k">finsi</span>
+        <span class="tk-k">finpara</span>
+    <span class="tk-k">finmientras</span>
+    <span class="tk-k">si</span> posición &lt; n <span class="tk-k">entonces</span> <span class="tk-k">ERROR</span>(<span class="tk-s">"Hay contradicciones en los prerrequisitos"</span>)</code></pre></div>
+<p>Con la matriz es <b>O(n²)</b>. La versión con la BPP (orden posterior al revés) también da un orden, pero no detecta los ciclos sin comprobaciones extra; la de grados de entrada sí: si quedan nodos sin visitar, había un ciclo.</p><p><b>(b)</b> Numerando 1 Programación I, 2 Matemáticas Discretas, 3 Estructuras de Datos, 4 Algoritmos, 5 Bases de Datos, 6 Inteligencia Artificial, 7 TFG, los grados de entrada son (0, 0, 1, 2, 1, 1, 2). La cola empieza con 1 y 2. Sale 1 → bajan 3 (a 0) y 5 (a 0); sale 2 → baja 4 (a 1); sale 3 → 4 llega a 0; sale 5 → 7 baja a 1; sale 4 → 6 llega a 0; sale 6 → 7 llega a 0; sale 7.</p><p class="result"><span class="result-l">Resultado</span>Programación I, Matemáticas Discretas, Estructuras de Datos, Bases de Datos, Algoritmos, Inteligencia Artificial, TFG. Hay otros órdenes válidos.</p></div></details></div></article></section><section class="tema guide" id="e25b"><header class="tema-head"><p class="eyebrow">Examen · 29 de mayo de 2025</p><h2>Mayo de 2025</h2><p class="lede">Descifrar una especificación en Maude sobre árboles binarios, las tablas «trifásicas», el AVL2 (diferencia de alturas 2) y escapar de una plaga en un laberinto.</p></header><article class="card ex" data-tema="e25b" id="e-e25b-1"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· ¿Qué hace misterio?</span></span><span class="card-tools"><label class="done" for="d-e25b-1"><input data-key="e25b-1" id="d-e25b-1" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Con árboles binarios de naturales (<code>arbolVacio</code>, <code>arbol(v, izq, der)</code>), <code>cero</code>, <code>sucesor</code> y <code>suma</code>, explica qué hace <code>misterio</code> y pon un ejemplo:</p>
+<div class="codeblk"><p class="code-t">Especificación en Maude</p><pre><code class="lang-maude"><span class="tk-k">op</span> misterio : AB N -&gt; N .
+<span class="tk-k">op</span> auxiliar : AB N N -&gt; N .
+<span class="tk-k">var</span> v n m : N .
+<span class="tk-k">var</span> a1 a2 : AB .
+<span class="tk-k">eq</span> misterio(arbolVacio, n) = cero .
+<span class="tk-k">eq</span> misterio(arbol(v, a1, a2), n) = auxiliar(arbol(v, a1, a2), n, cero) .
+<span class="tk-k">eq</span> auxiliar(arbolVacio, n, m) = cero .
+<span class="tk-k">eq</span> auxiliar(arbol(v, a1, a2), n, n) = v .
+<span class="tk-k">eq</span> auxiliar(arbol(v, a1, a2), n, m) =
+   suma(auxiliar(a1, n, sucesor(m)), auxiliar(a2, n, sucesor(m))) .</code></pre></div>
+<details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><code>misterio(a, n)</code> calcula la <b>suma de los nodos que están a profundidad n</b> (la raíz tiene profundidad 0, sus hijos 1…). <code>auxiliar(a, n, m)</code> lleva en m la profundidad actual, empezando en 0: baja a los dos hijos sumando 1 a m y, cuando m llega a n, devuelve el valor del nodo.</p><p>Ejemplo con el árbol 5(3(1, ·), 8(6, 9)): misterio(a, 0) = 5; misterio(a, 1) = 3 + 8 = 11; misterio(a, 2) = 1 + 6 + 9 = 16; misterio(a, 3) = 0. (Comprobado en Maude.)</p><p>Se puede especificar sin la auxiliar, bajando n en lugar de subir m:</p>
+<div class="codeblk"><p class="code-t">Versión más simple</p><pre><code class="lang-maude"><span class="tk-k">eq</span> contar(arbolVacio, n) = cero .
+<span class="tk-k">eq</span> contar(arbol(v, a1, a2), cero) = v .
+<span class="tk-k">eq</span> contar(arbol(v, a1, a2), sucesor(n)) = suma(contar(a1, n), contar(a2, n)) .</code></pre></div>
+<div class="box warn"><p class="box-t">Un detalle de Maude</p>Los dos últimos axiomas de auxiliar se solapan cuando m = n (el tercero también encaja). Maude podría aplicar cualquiera; para que sea correcto, el tercero tiene que aplicarse sólo si m ≠ n (en Maude se marca con <code>[owise]</code>). La versión con contar no tiene ese problema.</div></div></details></div></article><article class="card ex" data-tema="e25b" id="e-e25b-2"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Tablas de dispersión trifásicas</span></span><span class="card-tools"><label class="done" for="d-e25b-2"><input data-key="e25b-2" id="d-e25b-2" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>En una tabla trifásica cada cubeta tiene siempre <b>3 huecos</b>: si la cubeta tiene 0, 1 o 2 elementos, el nuevo cabe; si tiene 3, se produce un error. (a) Define el tipo (claves C, valores V, B cubetas) y programa la inserción y la consulta (h(C) devuelve un natural de 32 bits). (b) Analiza la memoria con n elementos frente a la abierta y la cerrada. (c) Compara los tiempos de los tres métodos.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><b>(a)</b> Es un término medio: varios elementos por cubeta (como la abierta) pero un número limitado (como la cerrada). Como «cada cubeta tiene 3 huecos», un array de 3 pares:</p>
+<div class="codeblk"><p class="code-t">Tipo, inserción y consulta</p><pre><code class="lang-pseudo"><span class="tk-k">tipo</span> Par = <span class="tk-k">registro</span> clave: C; valor: V <span class="tk-k">finregistro</span>
+<span class="tk-k">tipo</span> TablaTrifásica = array [0..B−1, 0..2] de Par
+
+<span class="tk-k">operación</span> Insertar (<span class="tk-k">var</span> T: TablaTrifásica; clave: C; valor: V)
+    pos:= h(clave) mod B                     <span class="tk-c">// h da un número grande: hace falta el mod</span>
+    i:= 0
+    <span class="tk-k">mientras</span> i &lt; 3 <span class="tk-k">AND</span> T[pos, i].clave ≠ NULO <span class="tk-k">AND</span> T[pos, i].clave ≠ clave <span class="tk-k">hacer</span>
+        i:= i + 1
+    <span class="tk-k">si</span> i &lt; 3 <span class="tk-k">entonces</span>                         <span class="tk-c">// hueco libre o la clave ya estaba</span>
+        T[pos, i].clave:= clave
+        T[pos, i].valor:= valor
+    <span class="tk-k">sino</span> <span class="tk-k">ERROR</span>(<span class="tk-s">"Se ha llenado la cubeta "</span>, pos)
+
+<span class="tk-k">operación</span> Consultar (T: TablaTrifásica; clave: C): V
+    pos:= h(clave) mod B
+    i:= 0
+    <span class="tk-k">mientras</span> i &lt; 3 <span class="tk-k">AND</span> T[pos, i].clave ≠ NULO <span class="tk-k">AND</span> T[pos, i].clave ≠ clave <span class="tk-k">hacer</span>
+        i:= i + 1
+    <span class="tk-k">si</span> i &lt; 3 <span class="tk-k">AND</span> T[pos, i].clave == clave <span class="tk-k">entonces</span> <span class="tk-k">devolver</span> T[pos, i].valor
+    <span class="tk-k">sino</span> <span class="tk-k">devolver</span> NULO</code></pre></div>
+<p>Error grave típico: hacer que la consulta recorra todas las cubetas. La clave sólo puede estar en la cubeta h(clave).</p><p><b>(b)</b> Con k₁ bytes por puntero y k₂ por par:</p><div class="tablewrap"><table><thead><tr><th>Tabla</th><th>Memoria</th></tr></thead><tbody><tr><td>Trifásica</td><td>3·k₂·B</td></tr><tr><td>Cerrada</td><td>k₂·B</td></tr><tr><td>Abierta</td><td>k₁·B + (k₁ + k₂)·n</td></tr></tbody></table></div><p>La trifásica gasta el triple que la cerrada con la misma B, pero cabe el triple. Frente a la abierta depende de n y B, pero la abierta sólo guarda los elementos que existen y la trifásica reserva 3B huecos: en general gastará más.</p><p><b>(c)</b> Abierta: O(1 + n/B). Cerrada: O(1/(1 − n/B)), con n ≤ B. Trifásica: si se reparte uniformemente, como la abierta, O(1 + n/B); pero en cuanto <b>una sola cubeta</b> recibe 4 elementos hay error, aunque el resto esté vacío. Con un millón de cubetas vacías y 4 sinónimos, falla. Por eso no tiene utilidad práctica salvo que se cambie lo que pasa al llenarse una cubeta.</p></div></details></div></article><article class="card ex" data-tema="e25b" id="e-e25b-3"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· AVL2: diferencia de alturas 2</span></span><span class="card-tools"><label class="done" for="d-e25b-3"><input data-key="e25b-3" id="d-e25b-3" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>En un AVL2 la diferencia de alturas entre los subárboles de cada nodo puede ser como máximo <b>2</b>. (a) Dibuja el peor caso para h = 0 … 5 y da N(h) en general. (b) Comprueba con alturas si el desbalanceo izquierda-izquierda se arregla con una RSI. (c) Inserta 62, 32, 14, 87, 75, 68, 70 en un AVL y en un AVL2 y compara.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><b>(a)</b> El peor caso (mínimo de nodos) tiene un subárbol peor caso de altura h − 1 y otro de altura h − 3:</p><p class="formula">N(h) = N(h−1) + N(h−3) + 1</p><p>Con N(0) = 1, N(1) = 2, N(2) = 3 (una cadena de 3: la diferencia en la raíz es 2, permitida), N(3) = 3 + 1 + 1 = 5, N(4) = 5 + 2 + 1 = 8, N(5) = 8 + 3 + 1 = 12.</p><p><b>(b)</b> El cálculo es el mismo que en el AVL: antes de insertar, la raíz C tiene a la izquierda A de altura h − 1 y a la derecha δ de altura h − 3; al insertar x bajo α, A pasa a h y la diferencia es 3. Tras RSI(C), A es la raíz con α (h − 1) a la izquierda y C a la derecha con β (h − 2 o h − 3) y δ (h − 3): C queda con altura h − 1 o h − 2 y diferencias ≤ 1 en C y ≤ 2 en A. Sí, se arregla con RSI, y la altura vuelve a ser la de antes.</p><p><b>(c)</b> Con <b>AVL</b>:</p><div class="trees"><figure class="dg tree"><svg viewBox="0 0 144 110" width="144" height="110" role="img" aria-label="62, 32, 14: caso II(62) → RSI(62)"><line class="ar" x1="72" y1="28" x2="32" y2="82"/><line class="ar" x1="72" y1="28" x2="112" y2="82"/><g class="nd"><circle cx="32" cy="82" r="16"/><text x="32" y="86.5" text-anchor="middle">14</text></g><g class="nd"><circle cx="72" cy="28" r="16"/><text x="72" y="32.5" text-anchor="middle">32</text></g><g class="nd"><circle cx="112" cy="82" r="16"/><text x="112" y="86.5" text-anchor="middle">62</text></g></svg><figcaption>62, 32, 14: caso II(62) → RSI(62)</figcaption></figure><figure class="dg tree"><svg viewBox="0 0 224 164" width="224" height="164" role="img" aria-label="87 y 75: caso DI(62) → RDD(62)"><line class="ar" x1="72" y1="28" x2="32" y2="82"/><line class="ar" x1="72" y1="28" x2="152" y2="82"/><line class="ar" x1="152" y1="82" x2="112" y2="136"/><line class="ar" x1="152" y1="82" x2="192" y2="136"/><g class="nd"><circle cx="32" cy="82" r="16"/><text x="32" y="86.5" text-anchor="middle">14</text></g><g class="nd"><circle cx="72" cy="28" r="16"/><text x="72" y="32.5" text-anchor="middle">32</text></g><g class="nd"><circle cx="112" cy="136" r="16"/><text x="112" y="140.5" text-anchor="middle">62</text></g><g class="nd"><circle cx="152" cy="82" r="16"/><text x="152" y="86.5" text-anchor="middle">75</text></g><g class="nd"><circle cx="192" cy="136" r="16"/><text x="192" y="140.5" text-anchor="middle">87</text></g></svg><figcaption>87 y 75: caso DI(62) → RDD(62)</figcaption></figure><figure class="dg tree"><svg viewBox="0 0 264 164" width="264" height="164" role="img" aria-label="68: caso DI(32) → RDD(32)"><line class="ar" x1="72" y1="82" x2="32" y2="136"/><line class="ar" x1="112" y1="28" x2="72" y2="82"/><line class="ar" x1="112" y1="28" x2="192" y2="82"/><line class="ar" x1="192" y1="82" x2="152" y2="136"/><line class="ar" x1="192" y1="82" x2="232" y2="136"/><g class="nd"><circle cx="32" cy="136" r="16"/><text x="32" y="140.5" text-anchor="middle">14</text></g><g class="nd"><circle cx="72" cy="82" r="16"/><text x="72" y="86.5" text-anchor="middle">32</text></g><g class="nd"><circle cx="112" cy="28" r="16"/><text x="112" y="32.5" text-anchor="middle">62</text></g><g class="nd"><circle cx="152" cy="136" r="16"/><text x="152" y="140.5" text-anchor="middle">68</text></g><g class="nd"><circle cx="192" cy="82" r="16"/><text x="192" y="86.5" text-anchor="middle">75</text></g><g class="nd"><circle cx="232" cy="136" r="16"/><text x="232" y="140.5" text-anchor="middle">87</text></g></svg><figcaption>68: caso DI(32) → RDD(32)</figcaption></figure><figure class="dg tree"><svg viewBox="0 0 304 218" width="304" height="218" role="img" aria-label="70: sin rotación"><line class="ar" x1="72" y1="82" x2="32" y2="136"/><line class="ar" x1="112" y1="28" x2="72" y2="82"/><line class="ar" x1="112" y1="28" x2="232" y2="82"/><line class="ar" x1="152" y1="136" x2="192" y2="190"/><line class="ar" x1="232" y1="82" x2="152" y2="136"/><line class="ar" x1="232" y1="82" x2="272" y2="136"/><g class="nd"><circle cx="32" cy="136" r="16"/><text x="32" y="140.5" text-anchor="middle">14</text></g><g class="nd"><circle cx="72" cy="82" r="16"/><text x="72" y="86.5" text-anchor="middle">32</text></g><g class="nd"><circle cx="112" cy="28" r="16"/><text x="112" y="32.5" text-anchor="middle">62</text></g><g class="nd"><circle cx="152" cy="136" r="16"/><text x="152" y="140.5" text-anchor="middle">68</text></g><g class="nd"><circle cx="192" cy="190" r="16"/><text x="192" y="194.5" text-anchor="middle">70</text></g><g class="nd"><circle cx="232" cy="82" r="16"/><text x="232" y="86.5" text-anchor="middle">75</text></g><g class="nd"><circle cx="272" cy="136" r="16"/><text x="272" y="140.5" text-anchor="middle">87</text></g></svg><figcaption>70: sin rotación</figcaption></figure></div><p>Con <b>AVL2</b>: 62, 32, 14 forman una cadena (diferencia 2, permitida); 87 y 75 no desbalancean; con 68 tampoco: 62(32(14, ·), 87(75(68, ·), ·)). Al insertar 70 bajo el 68, el 87 queda con diferencia 3 a la izquierda (caso II) → RSI(87):</p><figure class="dg tree"><svg viewBox="0 0 304 218" width="304" height="218" role="img" aria-label="AVL2 final tras RSI(87)"><line class="ar" x1="72" y1="82" x2="32" y2="136"/><line class="ar" x1="112" y1="28" x2="72" y2="82"/><line class="ar" x1="112" y1="28" x2="232" y2="82"/><line class="ar" x1="152" y1="136" x2="192" y2="190"/><line class="ar" x1="232" y1="82" x2="152" y2="136"/><line class="ar" x1="232" y1="82" x2="272" y2="136"/><g class="nd"><circle cx="32" cy="136" r="16"/><text x="32" y="140.5" text-anchor="middle">14</text></g><g class="nd"><circle cx="72" cy="82" r="16"/><text x="72" y="86.5" text-anchor="middle">32</text></g><g class="nd"><circle cx="112" cy="28" r="16"/><text x="112" y="32.5" text-anchor="middle">62</text></g><g class="nd"><circle cx="152" cy="136" r="16"/><text x="152" y="140.5" text-anchor="middle">68</text></g><g class="nd"><circle cx="192" cy="190" r="16"/><text x="192" y="194.5" text-anchor="middle">70</text></g><g class="nd"><circle cx="232" cy="82" r="16"/><text x="232" y="86.5" text-anchor="middle">75</text></g><g class="nd"><circle cx="272" cy="136" r="16"/><text x="272" y="140.5" text-anchor="middle">87</text></g></svg><figcaption>AVL2 final tras RSI(87)</figcaption></figure><p>El AVL ha necesitado 3 rotaciones y el AVL2 sólo 1, con el mismo árbol final. En general el AVL2 rota menos pero sus árboles están algo más desbalanceados; y como cada rotación es O(1), rotar más no significa ser más lento.</p></div></details></div></article><article class="card ex" data-tema="e25b" id="e-e25b-4"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Escapar de la plaga en el laberinto</span></span><span class="card-tools"><label class="done" for="d-e25b-4"><input data-key="e25b-4" id="d-e25b-4" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Un laberinto de n celdas es un grafo no dirigido con matriz de adyacencia A. Gervasio está en la celda g y avanza 1 celda al día (o se queda). En la celda t empieza una plaga que se extiende a todas las celdas adyacentes, pero sólo cada 2 días. Gervasio tiene que sobrevivir D días sin que la plaga le alcance. Escribe un algoritmo eficiente que diga qué movimientos debe hacer, si es posible.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Dos partes: (1) <b>cuándo se infecta cada celda</b>: una BPA desde t en la que cada arista cuesta 2 días, T[i] = día en que se infecta i (∞ si nunca); (2) <b>un camino de Gervasio</b> desde g hasta una celda s con T[s] &gt; D sin pisar celdas ya infectadas: otra BPA desde g (todas sus aristas cuestan 1), que sólo entra en w si T[w] &gt; G[v] + 1.</p>
+<div class="codeblk"><p class="code-t">Dos búsquedas en anchura</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> Plaga (A: array [1..n, 1..n] de booleano; t: entero): array [1..n] de entero
+    T[1..n]:= ∞; T[t]:= 0
+    C: Cola[entero]; InsertaCola(t, C)
+    <span class="tk-k">mientras</span> <span class="tk-k">NOT</span> EsVacíaCola(C) <span class="tk-k">hacer</span>
+        v:= FrenteCola(C); SuprimirCola(C)
+        <span class="tk-k">para</span> <span class="tk-k">cada</span> nodo w adyacente a v <span class="tk-k">hacer</span>
+            <span class="tk-k">si</span> T[w] == ∞ <span class="tk-k">entonces</span>            <span class="tk-c">// no visitado</span>
+                T[w]:= T[v] + 2
+                InsertaCola(w, C)
+    <span class="tk-k">devolver</span> T
+
+<span class="tk-k">operación</span> Gervasio (A; T; g, D: entero; <span class="tk-k">var</span> Camino: array [1..n] de entero): entero
+    G[1..n]:= ∞; G[g]:= 0
+    C: Cola[entero]; InsertaCola(g, C)
+    <span class="tk-k">mientras</span> <span class="tk-k">NOT</span> EsVacíaCola(C) <span class="tk-k">hacer</span>
+        v:= FrenteCola(C); SuprimirCola(C)
+        <span class="tk-k">si</span> T[v] &gt; D <span class="tk-k">entonces</span> <span class="tk-k">devolver</span> v      <span class="tk-c">// aquí no llega la plaga a tiempo</span>
+        <span class="tk-k">para</span> <span class="tk-k">cada</span> nodo w adyacente a v <span class="tk-k">hacer</span>
+            <span class="tk-k">si</span> G[w] == ∞ <span class="tk-k">AND</span> T[w] &gt; G[v] + 1 <span class="tk-k">entonces</span>    <span class="tk-c">// no visitado y aún sano al llegar</span>
+                G[w]:= G[v] + 1
+                Camino[w]:= v
+                InsertaCola(w, C)
+    <span class="tk-k">devolver</span> −1                              <span class="tk-c">// no hay solución</span>
+
+<span class="tk-c">// Programa: T:= Plaga(A, t); s:= Gervasio(A, T, g, D, Camino)</span>
+<span class="tk-c">// Si s = −1, no hay solución; si no, el camino es g → … → Camino[Camino[s]] → Camino[s] → s</span>
+<span class="tk-c">// y al llegar a s, Gervasio se queda quieto.</span></code></pre></div>
+<p>Son dos BPA: <b>O(n²)</b> con la matriz y O(n + a) con listas. Dijkstra (añadiendo la condición de no pisar celdas infectadas) también valdría, pero con todas las aristas de coste 1 no mejora a la BPA; haría falta si los movimientos tuvieran costes distintos.</p></div></details></div></article></section><section class="tema guide" id="e25"><header class="tema-head"><p class="eyebrow">Examen final · 16 de enero de 2025</p><h2>Enero de 2025</h2><p class="lede">Descifrar una ordenación en Maude, polinomios escasos con tablas de dispersión, listar las palabras entre dos dadas y la propagación de la gripe.</p></header><article class="card ex" data-tema="e25" id="e-e25-1"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· ¿Qué hacen misterio, auxiliar1 y auxiliar2?</span></span><span class="card-tools"><label class="done" for="d-e25-1"><input data-key="e25-1" id="d-e25-1" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Con listas de naturales (<code>listaVacia</code>, <code>insertar(n, l)</code> al principio) y <code>esMenorIgual</code>:</p>
+<div class="codeblk"><p class="code-t">Especificación en Maude</p><pre><code class="lang-maude"><span class="tk-k">op</span> misterio : L -&gt; L .
+<span class="tk-k">op</span> auxiliar1 : L -&gt; Bool .
+<span class="tk-k">op</span> auxiliar2 : L -&gt; L .
+<span class="tk-k">var</span> n m : N .
+<span class="tk-k">var</span> l : L .
+<span class="tk-k">eq</span> misterio(l) = <span class="tk-k">if</span> auxiliar1(l) <span class="tk-k">then</span> l <span class="tk-k">else</span> misterio(auxiliar2(l)) <span class="tk-k">fi</span> .
+<span class="tk-k">eq</span> auxiliar1(listaVacia) = true .
+<span class="tk-k">eq</span> auxiliar1(insertar(n, listaVacia)) = true .
+<span class="tk-k">eq</span> auxiliar1(insertar(n, insertar(m, l))) = esMenorIgual(n, m) and auxiliar1(insertar(m, l)) .
+<span class="tk-k">eq</span> auxiliar2(listaVacia) = listaVacia .
+<span class="tk-k">eq</span> auxiliar2(insertar(n, listaVacia)) = insertar(n, listaVacia) .
+<span class="tk-k">eq</span> auxiliar2(insertar(n, insertar(m, l))) =
+   <span class="tk-k">if</span> esMenorIgual(n, m) <span class="tk-k">then</span> insertar(n, auxiliar2(insertar(m, l)))
+   <span class="tk-k">else</span> insertar(m, auxiliar2(insertar(n, l))) <span class="tk-k">fi</span> .</code></pre></div>
+<details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><ul><li><b>auxiliar1(l)</b>: true si la lista está <b>ordenada</b> de menor a mayor (comprueba cada par consecutivo).</li><li><b>auxiliar2(l)</b>: una <b>pasada de la burbuja</b>: recorre los pares consecutivos y los intercambia si están desordenados. No deja la lista ordenada, pero sí lleva el mayor al final.</li><li><b>misterio(l)</b>: si la lista está ordenada la devuelve; si no, hace una pasada y vuelve a empezar. Como cada pasada coloca un elemento más al final, en n − 1 pasadas como mucho está ordenada: es la <b>ordenación por el método de la burbuja</b>.</li></ul><p>Ejemplo: misterio((3, 1, 2)): no está ordenada → auxiliar2 da (1, 2, 3) → ya está ordenada → (1, 2, 3).</p></div></details></div></article><article class="card ex" data-tema="e25" id="e-e25-2"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Polinomios escasos con tablas de dispersión</span></span><span class="card-tools"><label class="done" for="d-e25-2"><input data-key="e25-2" id="d-e25-2" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Polinomios de grado hasta 10 000 pero con como mucho <b>50 coeficientes no nulos</b>, p. ej. p₁(x) = 4,5·x³⁷ + 3,71·x¹⁹⁸ + 0,37·x²⁵⁰⁰ − 1,62·x³⁰³⁰, con las operaciones <code>polinomioNulo()</code>, <code>añadir_coef(p, i, a)</code> (añade a·xⁱ) y <code>eval(p, x)</code>. Describe cómo representarlos con tablas de dispersión: tipo, decisiones de diseño (tipo de tabla, función, tamaño, reestructuración), un ejemplo, el pseudocódigo y la eficiencia.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Un polinomio es un <b>diccionario</b> grado → coeficiente: p₁ = {37 → 4,5; 198 → 3,71; 2500 → 0,37; 3030 → −1,62}.</p>
+<div class="codeblk"><p class="code-t">Tipos</p><pre><code class="lang-pseudo"><span class="tk-k">tipo</span> Término = <span class="tk-k">registro</span> grado: entero (0..10000); coeficiente: real <span class="tk-k">finregistro</span>
+<span class="tk-k">tipo</span> PolinomioDA = array [0..B−1] de Lista[Término]     <span class="tk-c">// dispersión abierta</span>
+<span class="tk-k">tipo</span> PolinomioDC = array [0..B−1] de Término           <span class="tk-c">// dispersión cerrada (grado −1 = vacío)</span></code></pre></div>
+<ul><li><b>Tipo de tabla</b>: valen las dos. Con la misma B la abierta es más rápida (1 + n/B frente a 1/(1 − n/B)): con n = 50 y B = 100 la cerrada da secuencias de 2, lo mismo que la abierta con B = 50. Con pocos términos la abierta gasta menos memoria. En conjunto, la abierta encaja mejor.</li><li><b>Tamaño</b>: n ≤ 50. Abierta: B ≈ 50, mejor primo (47 o 53). Cerrada: mucho más de 50; para secuencias medias ≤ 3, 1/(1 − 50/B) ≤ 3 ⇒ B ≥ 75, mejor primo: 79.</li><li><b>Función</b>: sólo sobre la clave, h(grado) = grado mod B (o multiplicación o centro del cuadrado). En la cerrada, redispersión doble hᵢ = (h + i·C(grado)) mod B con B primo.</li><li><b>Reestructuración</b>: no hace falta (n ≤ 50), aunque se podría empezar con B pequeña y duplicar.</li><li>En la cerrada, el «vacío» se marca con grado −1, no 0: el grado 0 es válido (el término independiente).</li></ul>
+<div class="codeblk"><p class="code-t">Operaciones con dispersión abierta</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> polinomioNulo (): PolinomioDA
+    crear la tabla con las B listas vacías              <span class="tk-c">// O(B)</span>
+
+<span class="tk-k">operación</span> añadir_coef (<span class="tk-k">var</span> p: PolinomioDA; i: entero; a: real)
+    pos:= h(i)
+    <span class="tk-k">para</span> <span class="tk-k">cada</span> término t en p[pos] <span class="tk-k">hacer</span>
+        <span class="tk-k">si</span> t.grado == i <span class="tk-k">entonces</span>                    <span class="tk-c">// ya había término de grado i: se suma</span>
+            t.coeficiente:= t.coeficiente + a
+            <span class="tk-k">acabar</span>
+    <span class="tk-k">finpara</span>
+    InsertarFinal(p[pos], Término(i, a))
+
+<span class="tk-k">operación</span> eval (p: PolinomioDA; x: real): real
+    valor:= 0
+    <span class="tk-k">para</span> i:= 0..B−1 <span class="tk-k">hacer</span>
+        <span class="tk-k">para</span> <span class="tk-k">cada</span> término t en p[i] <span class="tk-k">hacer</span>
+            valor:= valor + t.coeficiente · pow(x, t.grado)
+    <span class="tk-k">devolver</span> valor</code></pre></div>
+<p><b>Eficiencia</b>: polinomioNulo O(B); añadir_coef O(1 + n/B) (cerrada O(1/(1 − n/B))); eval recorre toda la tabla: O(B + n) en la abierta y O(B) en la cerrada.</p></div></details></div></article><article class="card ex" data-tema="e25" id="e-e25-3"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Listar las palabras entre pmin y pmax</span></span><span class="card-tools"><label class="done" for="d-e25-3"><input data-key="e25-3" id="d-e25-3" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Con un conjunto de palabras guardado en un árbol (el que elijas de clase), escribe una operación eficiente que liste las palabras alfabéticamente entre pmin y pmax (incluidas), p. ej. entre «caballo» y «cabello». Si usas un trie, usa sólo <code>Consulta</code> y el iterador de hijos.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p><b>Con AVL</b>: el recorrido en <b>inorden</b> es alfabético. La versión simple recorre todo el árbol; la buena <b>poda</b> las ramas que no pueden tener palabras del rango:</p>
+<div class="codeblk"><p class="code-t">AVL: inorden con poda</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> ListarEntre (a: Puntero[NodoAVL]; pmin, pmax: cadena)
+    <span class="tk-k">si</span> a ≠ NULO <span class="tk-k">entonces</span>
+        <span class="tk-k">si</span> a→palabra &gt; pmin <span class="tk-k">entonces</span> ListarEntre(a→izq, pmin, pmax)   <span class="tk-c">// a la izquierda hay menores</span>
+        <span class="tk-k">si</span> pmin ≤ a→palabra <span class="tk-k">AND</span> a→palabra ≤ pmax <span class="tk-k">entonces</span> Escribir(a→palabra)
+        <span class="tk-k">si</span> a→palabra &lt; pmax <span class="tk-k">entonces</span> ListarEntre(a→der, pmin, pmax)   <span class="tk-c">// a la derecha hay mayores</span>
+    <span class="tk-k">finsi</span></code></pre></div>
+<p><b>Con trie</b>: como ListarTodas, pero sin bajar por ramas cuyo prefijo ya está fuera del rango:</p>
+<div class="codeblk"><p class="code-t">Trie: ListarTodas con poda</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> ListarEntre (n: NodoTrie; palabra, pmin, pmax: cadena)
+    <span class="tk-k">para</span> <span class="tk-k">cada</span> carácter car hijo del nodo n <span class="tk-k">hacer</span>
+        <span class="tk-k">si</span> car == $ <span class="tk-k">entonces</span>
+            <span class="tk-k">si</span> pmin ≤ palabra <span class="tk-k">AND</span> palabra ≤ pmax <span class="tk-k">entonces</span> Escribir(palabra)
+        <span class="tk-k">sino</span> <span class="tk-k">si</span> palabra+car ≤ pmax <span class="tk-k">AND</span> pmin ≤ palabra+car+char(255) <span class="tk-k">entonces</span>
+            ListarEntre(Consulta(n, car), palabra+car, pmin, pmax)
+        <span class="tk-k">finsi</span>
+    <span class="tk-k">finpara</span>
+<span class="tk-c">// Llamada inicial: ListarEntre(raíz, "", pmin, pmax)</span></code></pre></div>
+<p>¿Por qué <code>palabra+car+char(255)</code>? Buscando a partir de pmin = «fuerza», el prefijo «fu» es menor que «fuerza», pero por esa rama sí hay palabras mayores (fuerza, fuerte…). Añadir el carácter más alto («como poner una z») da «fu\255» &gt; «fuerza» y la rama no se poda. (En la solución oficial la llamada recursiva aparece como ListarTodas: es una errata, se llama a sí misma.)</p><p><b>Coste</b> en el peor caso, todo el árbol: AVL <b>O(n)</b>; trie con listas O(p) (unos 2p + 1 nodos) y con arrays O(d·p), con d el tamaño del alfabeto. Con la poda, en la práctica sólo se recorre la parte del rango.</p></div></details></div></article><article class="card ex" data-tema="e25" id="e-e25-4"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· La propagación de la gripe</span></span><span class="card-tools"><label class="done" for="d-e25-4"><input data-key="e25-4" id="d-e25-4" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Hay n personas; M (simétrica) dice si i y j se encuentran a diario y E[i] si i está enferma el día 1. Al día siguiente de encontrarse con un enfermo, una persona sana enferma y ya puede contagiar. Calcula (1) cuántas personas acaban contagiadas, (2) el día en que ya no hay más contagios y (3) quién no se contagia nunca.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><p>Grafo no dirigido sin pesos (personas y encuentros, M es la matriz de adyacencia). El contagio es una <b>búsqueda en anchura que empieza a la vez desde todos los enfermos</b>: los que se contagian el día 1 son sus vecinos, luego los vecinos de estos… El array de marcas guarda el día de contagio (−1 = nunca).</p>
+<div class="codeblk"><p class="code-t">BPA desde varios orígenes</p><pre><code class="lang-pseudo"><span class="tk-k">operación</span> Contagio (M: array [1..n, 1..n] de booleano; E: array [1..n] de booleano;
+                    <span class="tk-k">var</span> numContagiadas, díaMáximo: entero; <span class="tk-k">var</span> día: array [1..n] de entero)
+    C: Cola[entero]
+    numContagiadas:= 0; díaMáximo:= 0
+    <span class="tk-k">para</span> i:= 1..n <span class="tk-k">hacer</span>
+        <span class="tk-k">si</span> E[i] <span class="tk-k">entonces</span>
+            día[i]:= 0; InsertaCola(i, C); numContagiadas:= numContagiadas + 1
+        <span class="tk-k">sino</span> día[i]:= −1
+    <span class="tk-k">finpara</span>
+    <span class="tk-k">mientras</span> <span class="tk-k">NOT</span> EsVacíaCola(C) <span class="tk-k">hacer</span>
+        x:= FrenteCola(C); SuprimirCola(C)
+        <span class="tk-k">para</span> y:= 1..n <span class="tk-k">hacer</span>
+            <span class="tk-k">si</span> M[x, y] <span class="tk-k">AND</span> día[y] == −1 <span class="tk-k">entonces</span>
+                día[y]:= día[x] + 1
+                InsertaCola(y, C)
+                numContagiadas:= numContagiadas + 1
+                díaMáximo:= día[y]          <span class="tk-c">// la cola va por días: el último es el mayor</span>
+            <span class="tk-k">finsi</span>
+    <span class="tk-k">finmientras</span>
+<span class="tk-c">// Las personas que no se contagian son las i con día[i] == −1.</span></code></pre></div>
+<p>Es una BPA con matriz: <b>O(n²)</b> en el peor caso (O(n) si no hay ningún contagio que propagar). Plantearlo como caminos mínimos (Dijkstra desde cada enfermo) también es correcto, pero mucho más caro.</p></div></details></div></article></section>
+    <p class="foot">Enunciados y soluciones de los exámenes de AED I de la Universidad de Murcia (Ginés García Mateos). Las soluciones se han reescrito para explicarlas mejor; donde la oficial tenía alguna errata se indica y se corrige. Las especificaciones están comprobadas con Maude 3.5.1.</p>
+  </main>
+</div>
+<script src="../../assets/js/guia.js"></script>
+</body>
+</html>

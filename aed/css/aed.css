@@ -1,0 +1,98 @@
+/* aed.css — añadidos de AED I a las guías (se carga después de assets/css/guia.css): enlaces entre páginas,
+   resaltado del código (pseudocódigo de clase, C++ y Maude), diapositivas de clase y los dibujos que genera
+   scripts/aed/generar.py: árboles binarios y B, tablas de dispersión y arrays. */
+:root { --kw: #7A2E8E; --st: #9A4A12; --cm: #6E7A73; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --kw: #D7A2F0; --st: #F2B37E; --cm: #8E9A94; } }
+:root[data-theme="dark"] { --kw: #D7A2F0; --st: #F2B37E; --cm: #8E9A94; }
+
+/* ---------- enlaces entre las páginas de AED (en la cabecera) ---------- */
+.aed-pages { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
+.aed-pages a { font: 700 .85rem var(--f-display); text-decoration: none; padding: 5px 12px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); }
+.aed-pages a:hover { border-color: var(--accent); color: var(--accent); }
+.aed-pages a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+/* ---------- código ---------- */
+.codeblk code .tk-k { color: var(--kw); font-weight: 600; }
+.codeblk code .tk-s { color: var(--st); }
+.codeblk code .tk-c { color: var(--cm); font-style: italic; }
+.codeblk.spec { border-color: color-mix(in srgb, var(--t, var(--accent)) 40%, var(--rule)); }
+.codeblk.spec .code-t { background: color-mix(in srgb, var(--t, var(--accent)) 12%, var(--surface)); color: var(--t, var(--accent)); }
+.codeblk.out .code-t { background: var(--true-soft); color: var(--true); }
+.codeblk.out pre { background: color-mix(in srgb, var(--true-soft) 40%, transparent); }
+/* dos bloques lado a lado cuando hay sitio (especificación | implementación, C | C++…) */
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--s-3); align-items: start; margin: var(--s-2) 0 var(--s-4); }
+.pair > .codeblk { margin: 0; }
+
+/* ---------- diapositivas de clase ---------- */
+.fig.slide { max-width: 600px; }
+.fig.slide img { border-radius: 10px; box-shadow: 0 1px 0 var(--rule), 0 8px 22px -16px color-mix(in srgb, var(--ink) 60%, transparent); }
+.slide-src { display: inline-block; font: 600 .74rem var(--f-display); color: var(--muted); background: var(--head); border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--s-3); margin: var(--s-3) 0 var(--s-4); }
+.figs > .fig { margin: 0; max-width: none; }
+.figs .fig figcaption { font-size: .84rem; }
+
+/* ---------- árboles (binarios y B) ---------- */
+.dg.tree { display: flex; flex-direction: column; align-items: center; padding: var(--s-3); }
+.dg.tree svg { max-width: 100%; height: auto; overflow: visible; }
+.dg.tree .ar { stroke: var(--muted); stroke-width: 1.8; }
+.dg.tree .ar.del { stroke-dasharray: 4 4; opacity: .5; }
+.dg.tree .nd circle { fill: var(--surface); stroke: color-mix(in srgb, var(--t, var(--accent)) 70%, var(--rule)); stroke-width: 2; }
+.dg.tree .nd text, .dg.tree .bk text { font: 600 13px var(--f-mono); fill: var(--ink); }
+.dg.tree .nd.new circle { fill: var(--true-soft); stroke: var(--true); stroke-width: 2.5; }
+.dg.tree .nd.bad circle { fill: var(--false-soft); stroke: var(--false); stroke-width: 2.5; }
+.dg.tree .nd.del { opacity: .45; }
+.dg.tree .nd.del circle { stroke-dasharray: 4 3; }
+.dg.tree .nota { font: 600 11px var(--f-mono); fill: var(--t, var(--accent)); }
+.dg.tree .bk rect { fill: var(--surface); stroke: color-mix(in srgb, var(--t, var(--accent)) 70%, var(--rule)); stroke-width: 1.5; }
+.dg.tree .bk.vacio rect { fill: color-mix(in srgb, var(--head) 70%, var(--surface)); }
+.dg.tree .bk.new rect { fill: var(--true-soft); stroke: var(--true); }
+.trees { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--s-3); align-items: start; margin: var(--s-2) 0 var(--s-4); }
+.trees > .dg { margin: 0; }
+
+/* ---------- origen de un ejercicio (examen, texto guía) ---------- */
+.ex-orig { display: inline-block; font: 600 .74rem var(--f-display); color: var(--muted); background: var(--head); border-radius: 999px; padding: 1px 9px; }
+
+/* ---------- grafos ---------- */
+.dg.graph { display: flex; flex-direction: column; align-items: center; padding: var(--s-3); }
+.dg.graph svg { max-width: 100%; height: auto; overflow: visible; }
+.dg.graph .ed { fill: none; stroke: var(--muted); stroke-width: 1.6; }
+.dg.graph .ed.hl { stroke: var(--t, var(--accent)); stroke-width: 3.2; }
+.dg.graph .ed.dash { stroke-dasharray: 5 4; opacity: .75; }
+.dg.graph .punta { fill: var(--muted); }
+.dg.graph .punta.hl { fill: var(--t, var(--accent)); }
+.dg.graph .et { font: 600 12px var(--f-mono); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.dg.graph .et.hl { fill: var(--t, var(--accent)); }
+.dg.graph .nd circle { fill: var(--surface); stroke: color-mix(in srgb, var(--t, var(--accent)) 70%, var(--rule)); stroke-width: 2; }
+.dg.graph .nd text { font: 600 13px var(--f-mono); fill: var(--ink); }
+.dg.graph .nd.new circle { fill: var(--true-soft); stroke: var(--true); stroke-width: 2.5; }
+.dg.graph .nd.bad circle { fill: var(--false-soft); stroke: var(--false); stroke-width: 2.5; }
+
+/* ---------- tablas de dispersión y arrays ---------- */
+.ht { margin: var(--s-2) 0 var(--s-4); max-width: 100%; overflow-x: auto; }
+.ht table { border-collapse: collapse; font-family: var(--f-mono); }
+.ht th { font: 600 .74rem var(--f-mono); color: var(--muted); padding: 2px 4px; text-align: center; }
+.ht th.nom { font: 700 .82rem var(--f-display); color: var(--ink); padding-right: var(--s-2); text-align: right; vertical-align: bottom; }
+.ht td { min-width: 3em; height: 2.2em; padding: 2px 6px; text-align: center; font-size: .9rem; font-weight: 600; border: 1.5px solid color-mix(in srgb, var(--t, var(--accent)) 45%, var(--rule)); background: var(--surface); }
+.ht td.vac { background: color-mix(in srgb, var(--head) 60%, var(--surface)); }
+.ht td.hl { background: var(--true-soft); border-color: var(--true); color: var(--true); }
+.ht td.borr { color: var(--false); background: var(--false-soft); }
+.ht.arr td { min-width: 2.4em; }
+.hta { margin: var(--s-2) 0 var(--s-4); }
+.hta ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.hta li { display: flex; align-items: center; gap: 22px; margin: 0 !important; }
+.hta .cub { flex: none; display: grid; place-items: center; width: 2.4em; height: 2em; font: 600 .8rem var(--f-mono); color: var(--muted); background: var(--head); border: 1px solid var(--rule); border-radius: 6px; position: relative; }
+.hta .nd { position: relative; display: grid; place-items: center; min-width: 3em; height: 2em; padding: 0 6px; font: 600 .88rem var(--f-mono); border: 1.5px solid color-mix(in srgb, var(--t, var(--accent)) 50%, var(--rule)); border-radius: 6px; background: var(--surface); }
+.hta .nd.hl { background: var(--true-soft); border-color: var(--true); color: var(--true); }
+.hta .cub:has(+ .nd)::after, .hta .nd + .nd::before { content: "→"; position: absolute; color: var(--muted); font: 600 .9rem var(--f-mono); }
+.hta .cub:has(+ .nd)::after { right: -19px; }
+.hta .nd + .nd::before { left: -19px; }
+.hta .nil { font: italic .82rem var(--f-display); color: var(--muted); }
+
+/* ---------- comparativas de coste (chuleta) ---------- */
+.cost td:not(:first-child) { font-family: var(--f-mono); font-size: .88rem; white-space: nowrap; }
+.cost .good { color: var(--true); font-weight: 600; }
+.cost .bad { color: var(--false); font-weight: 600; }
+
+@media print {
+  .fig.slide img { box-shadow: none; }
+}

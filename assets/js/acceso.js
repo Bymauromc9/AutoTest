@@ -7,7 +7,7 @@
  */
 (function () {
   "use strict";
-  const { esc, icon, ROOT } = window.App;
+  const { esc, icon, ROOT, cursos } = window.App;
   const C = window.Cuentas;
   const box = document.getElementById("acceso");
   if (!box || !C) return;
@@ -34,6 +34,7 @@
         <div><b>${fmt(d.tests)}</b><span>tests hechos</span></div>
         <div><b>${d.posicion ? "#" + d.posicion : "—"}</b><span>en el ranking</span></div>
       </div>
+      <div class="cta-cursos" id="mis-cursos" hidden></div>
       <div class="cta-actions">
         <a class="btn" href="${ROOT}index.html">${icon("home")}Mis asignaturas</a>
         <a class="btn ghost" href="${ROOT}ranking.html">${icon("trophy")}Ver el ranking</a>
@@ -50,6 +51,7 @@
         <a class="btn ghost" href="${ROOT}admin.html">${icon("shield")}Panel de administración</a>
       </div>
     </section>`;
+    cursos.selector(document.getElementById("mis-cursos"), { ayuda: "La portada, la cuenta atrás de los exámenes y las estadísticas enseñan sólo las asignaturas de estos cursos." });
     // Sólo para administradores (se comprueba con un token nuevo, por si el rol se acaba de dar).
     if (!ses.local) C.esAdmin(true).then((si) => { const b = document.getElementById("admin-acc"); if (b) b.hidden = !si; }).catch(() => {});
     document.getElementById("salir").onclick = async (e) => {
@@ -98,6 +100,7 @@
             <input type="text" name="nombre" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="20" required></label>
           <label class="cta-field">Contraseña <small>Al menos 6 caracteres.</small><input type="password" name="pass" autocomplete="new-password" minlength="6" required></label>
           <label class="cta-field">Repite la contraseña<input type="password" name="pass2" autocomplete="new-password" minlength="6" required></label>
+          <div class="cta-cursos" data-cursos hidden></div>
           ${adoptar}
           <p class="cta-err" hidden></p>
           <button class="btn" type="submit">Crear cuenta y entrar</button>
@@ -109,6 +112,7 @@
           Puedes crear un <b>perfil local</b>: guarda tu progreso sólo en este navegador y no entra en el ranking.</p>
         <form class="cta-form" id="f-local">
           <label class="cta-field">Tu nombre<input type="text" name="nombre" autocapitalize="none" spellcheck="false" minlength="3" maxlength="20" required></label>
+          <div class="cta-cursos" data-cursos hidden></div>
           ${adoptar}
           <p class="cta-err" hidden></p>
           <button class="btn" type="submit">Crear perfil y entrar</button>
@@ -144,6 +148,10 @@
       };
     });
 
+    /* Cursos de la cuenta nueva (por defecto 1.º): se guardan al crearla */
+    const cursosNuevos = (f) => f && f.querySelector("[data-cursos]") ? cursos.selector(f.querySelector("[data-cursos]"), { local: true, inicial: [1],
+      titulo: "¿De qué cursos tienes asignaturas?", ayuda: "Puedes marcar varios y cambiarlo cuando quieras desde la portada." }) : null;
+
     /* Entrar / crear */
     box.querySelectorAll(".cta-seg button").forEach((b) => b.onclick = () => { modo = b.dataset.m; pintarAcceso().then(() => { const f = document.querySelector(modo === "entrar" ? "#f-entrar" : "#f-crear"); if (f) f.querySelector("input").focus(); }); });
     const fe = document.getElementById("f-entrar");
@@ -152,18 +160,18 @@
       try { await C.entrar(fe.nombre.value, fe.pass.value); ir(); }
       catch (e) { ocupado(fe, false); err(fe, e.message); }
     };
-    const fc = document.getElementById("f-crear");
+    const fc = document.getElementById("f-crear"), cursosC = cursosNuevos(fc);
     if (fc) fc.onsubmit = async (ev) => {
       ev.preventDefault(); err(fc, "");
       if (fc.pass.value !== fc.pass2.value) return err(fc, "Las dos contraseñas no coinciden.");
       ocupado(fc, true);
-      try { await C.registrar(fc.nombre.value, fc.pass.value, fc.adoptar ? fc.adoptar.checked : false); ir(); }
+      try { await C.registrar(fc.nombre.value, fc.pass.value, fc.adoptar ? fc.adoptar.checked : false); cursos.set(cursosC.get()); ir(); }
       catch (e) { ocupado(fc, false); err(fc, e.message); }
     };
-    const fl = document.getElementById("f-local");
+    const fl = document.getElementById("f-local"), cursosL = cursosNuevos(fl);
     if (fl) fl.onsubmit = async (ev) => {
       ev.preventDefault(); err(fl, ""); ocupado(fl, true);
-      try { await C.crearLocal(fl.nombre.value, fl.adoptar ? fl.adoptar.checked : false); ir(); }
+      try { await C.crearLocal(fl.nombre.value, fl.adoptar ? fl.adoptar.checked : false); cursos.set(cursosL.get()); ir(); }
       catch (e) { ocupado(fl, false); err(fl, e.message); }
     };
   }

@@ -8,7 +8,7 @@
  */
 (function () {
   "use strict";
-  const { SUBJECTS, SECTIONS, KINDS, store, esc, icon, daysTo, progress } = window.App;
+  const { SUBJECTS, SECTIONS, KINDS, store, esc, icon, daysTo, progress, cursos } = window.App;
   const body = document.body, root = body.dataset.root || "";
   const S = SUBJECTS.find((s) => s.id === body.dataset.subject);
   const app = document.getElementById("app");
@@ -93,11 +93,25 @@
     return `<a class="continue" href="${root}${r.href}">${icon("arrow")}<span><small>Continuar donde lo dejaste</small><b>${esc(r.title)}</b></span></a>`;
   }
 
+  /** Aviso si la asignatura es de un curso que la cuenta no tiene marcado (se llega desde un enlace). */
+  function otroCurso() {
+    if (cursos.tiene(S.curso)) return "";
+    const c = cursos.LISTA.find((x) => x.n === S.curso);
+    return `<div class="callout curso-aviso"><p>${esc(S.short)} es de <b>${esc(c ? c.largo : S.curso + ".º curso")}</b>, que no está entre tus cursos, así que no sale en tu portada.</p>
+      <button type="button" class="btn ghost" data-anadir-curso="${S.curso}">Añadir ${esc(c ? c.nombre : S.curso + ".º")} a mis cursos</button></div>`;
+  }
+  app.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-anadir-curso]");
+    if (b) cursos.set(cursos.get().concat(Number(b.dataset.anadirCurso)));
+  });
+  window.addEventListener("app:cursos", () => { const a = app.querySelector(".curso-aviso"); if (a && cursos.tiene(S.curso)) a.remove(); });
+
   document.title = S.short + " · " + S.name;
   function pintar() {
     app.innerHTML = `
       <header class="hub-hero">
-        <span class="eyebrow">1.º Grado en Ingeniería Informática · Universidad de Murcia</span>
+        <span class="eyebrow">${esc(S.curso)}.º Grado en Ingeniería Informática · Universidad de Murcia</span>
+        ${otroCurso()}
         <div class="hub-title"><span class="hub-badge" aria-hidden="true">${esc(S.short)}</span><h1>${esc(S.name)}</h1></div>
         <p class="lead">${esc(S.intro)}</p>
         ${stats()}

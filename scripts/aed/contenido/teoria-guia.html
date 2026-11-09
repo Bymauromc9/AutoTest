@@ -1,0 +1,1700 @@
+<!--{
+ "salida": "aed/teoria/guia.html",
+ "titulo": "Guía de teoría",
+ "descripcion": "Guía de teoría de Algoritmos y Estructuras de Datos I: abstracciones y especificaciones, conjuntos y diccionarios con tablas de dispersión, tries, relaciones de equivalencia, AVL, árboles B y grafos, con las diapositivas de clase y ejemplos paso a paso.",
+ "eyebrow": "Algoritmos y Estructuras de Datos I · 2.º GII · Teoría",
+ "h1": "Guía de teoría",
+ "ops": "h(k) · O(log n)",
+ "lead": "Los cinco temas de la asignatura con las <b>diapositivas de clase</b> en su sitio, todo lo que hay que saber definir, el pseudocódigo de cada operación, ejemplos resueltos paso a paso (tablas de dispersión, rotaciones de AVL, árboles B, Dijkstra, Floyd…) y el coste de cada cosa. Al final, una <b>chuleta</b> con todos los costes. Marca cada apartado como estudiado al terminarlo: tu avance sale en la portada de AED I.",
+ "marca": "AED I · Teoría",
+ "sym": "{ }",
+ "body": {"data-visto-key": "aed-teoria-visto", "data-estudio-key": "aed-teoria-estudio", "data-storage-key": "aed-teoria-hechos"},
+ "paginas": [["guia.html", "Guía de teoría"], ["autotest.html", "Autotest"], ["ejercicios.html", "Ejercicios de examen"], ["../examen/examenes.html", "Exámenes resueltos"], ["../practicas/guia.html", "Guía de la práctica"]],
+ "ejercicios_en_registro": false,
+ "pie": "AED I · Algoritmos y Estructuras de Datos I · 2.º GII · Universidad de Murcia. Hecho a partir de las diapositivas de clase (temas 0–4), los apuntes del grupo 3, el texto guía (García Mateos et al.) y los resúmenes de los temas 2 y 3. Las diapositivas son del profesorado de la asignatura; todos los ejemplos numéricos están recalculados. Ante cualquier duda manda lo que diga el profesorado."
+}-->
+
+<tema id="t0" n="0" t="Introducción" eyebrow="Tema 0" lede="Qué es un problema, un algoritmo y una estructura de datos, cómo se resuelve un problema con método y por qué la eficiencia no es un detalle: con buenas estructuras, lo imposible pasa a tardar milisegundos.">
+
+<ap id="t0-1" n="0.1" t="Problemas, algoritmos, estructuras de datos y programas">
+<p>El objetivo de la asignatura es ser capaz de <b>analizar, comprender y resolver</b> problemas computacionales diseñando soluciones <b>eficientes y de calidad</b>, siguiendo un proceso metódico. Para eso hay que tener claras cuatro palabras:</p>
+<div class="box def"><p class="box-t">Definiciones</p><ul>
+<li><b>Problema</b>: conjunto de hechos o circunstancias que dificultan la consecución de algún fin.</li>
+<li><b>Algoritmo</b>: conjunto de reglas <b>finito e inambiguo</b>.</li>
+<li><b>Estructura de datos</b>: disposición en memoria de la información.</li>
+<li><b>Programa</b> = algoritmos + estructuras de datos.</li></ul></div>
+<fig src="t0-4" alt="Diapositiva: el problema se resuelve con un programa, que es algoritmos más estructuras de datos">Un programa son algoritmos trabajando sobre estructuras de datos: elegir mal cualquiera de las dos partes estropea la solución.</fig>
+<p>AED I se centra en las <b>estructuras de datos</b> (conjuntos, diccionarios, árboles y grafos) y en los algoritmos básicos sobre ellas. AED II se dedica a las técnicas de diseño de algoritmos (divide y vencerás, voraces, programación dinámica, backtracking…).</p>
+</ap>
+
+<ap id="t0-2" n="0.2" t="Resolver problemas con método">
+<p>¿Cómo resuelve un ingeniero un problema de programación? No tecleando código sin más, sino siguiendo un <b>proceso metódico</b>, igual que un arquitecto no empieza un puente poniendo ladrillos:</p>
+<fig src="t0-6" alt="Comparación entre las fases de construir un puente y las de hacer un programa">Las cuatro fases son las mismas en la arquitectura y en la informática.</fig>
+<ol class="steps">
+<li><b>Análisis del problema</b>: entender qué se pide, los requisitos y las restricciones (como el estudio de viabilidad del terreno).</li>
+<li><b>Diseño del programa</b>: elegir los algoritmos y las estructuras de datos (los planos y los materiales).</li>
+<li><b>Implementación</b>: programarlo (poner los ladrillos según los planos).</li>
+<li><b>Verificación y pruebas</b>: comprobar que funciona (la supervisión técnica).</li></ol>
+<p>Es la misma idea que el <b>método científico</b> (observación, hipótesis, experimentación y verificación). La práctica de la asignatura sigue exactamente estas fases.</p>
+<box k="tip" t="Consejos de la asignatura"><ul><li>No empezar tecleando código como locos.</li><li>No reinventar la rueda: usar las estructuras y algoritmos que ya se conocen.</li><li>Lo bueno, si rápido, dos veces bueno: la eficiencia importa.</li><li>Principio <b>KISS</b> (<i>keep it simple, stupid</i>): la solución más sencilla que funcione.</li></ul></box>
+</ap>
+
+<ap id="t0-3" n="0.3" t="La evolución de los lenguajes: cada vez más abstracciones">
+<p>La historia de la programación es la historia de añadir <b>abstracciones</b>:</p>
+<div class="tablewrap"><table><thead><tr><th>Lenguajes</th><th>Ejemplos</th><th>Qué aportan</th></tr></thead><tbody>
+<tr><td><b>De bajo nivel</b></td><td>Basic, Fortran, ensamblador</td><td>Nada de abstracciones: no hay procedimientos ni funciones, ni tipos definidos por el usuario, ni bloques estructurados (<code>while</code>…). Funciona, pero un programa de un juego es una sopa de <code>GO TO</code> imposible de mantener.</td></tr>
+<tr><td><b>Estructurados</b></td><td>Pascal, C, Modula, ADA</td><td><b>Procedimientos y funciones</b> (abstracciones de control), <b>tipos definidos por el usuario</b> (abstracciones de datos) y <b>módulos o unidades</b> con interfaz separada de la implementación (abstracciones de funcionalidades).</td></tr>
+<tr><td><b>Orientados a objetos</b></td><td>Smalltalk, C++, Java, Python</td><td>La <b>clase</b>: encapsula los datos de un tipo y sus operaciones. Es a la vez un tipo abstracto de datos y un módulo, con separación clara entre interfaz (pública) e implementación (oculta).</td></tr></tbody></table></div>
+<p>Los lenguajes estructurados tenían inconvenientes: los datos y sus operaciones van por separado, hay que garantizar a mano la ocultación de la implementación, proliferan las variables globales y los programas se vuelven difíciles de mantener. La orientación a objetos los resuelve uniendo datos y operaciones en la clase.</p>
+</ap>
+
+<ap id="t0-4" n="0.4" t="La eficiencia importa: tres ejemplos">
+<h4>Anagramas (Saber y ganar)</h4>
+<p>Dado un diccionario de unos 2 millones de palabras, buscar todos los anagramas de una palabra. Dos opciones: (1) generar todas las permutaciones y buscar cada una en el diccionario; (2) recorrer el diccionario y comprobar si cada palabra tiene las mismas letras.</p>
+<div class="tablewrap"><table><thead><tr><th>Palabra</th><th>Opción 1 (permutaciones)</th><th>Opción 2 (recorrer)</th><th>Mejor</th></tr></thead><tbody>
+<tr><td>AMOR</td><td>4! = 24 búsquedas</td><td>2 000 000 comprobaciones</td><td>Opción 1</td></tr>
+<tr><td>ESTRAFALARIO</td><td>12! = 479 001 600 búsquedas</td><td>2 000 000 comprobaciones</td><td>Opción 2</td></tr></tbody></table></div>
+<p>La mejor solución <b>depende del tamaño de los datos</b>: no hay un algoritmo bueno para todo.</p>
+<h4>Un buscador de Internet</h4>
+<p>¿Cómo encontrar en medio segundo las páginas que contienen unas palabras entre 60 billones de páginas? Guardar para cada página su lista de palabras obliga a recorrerlas todas (unos 20 segundos aunque se usen 100 000 ordenadores). Guardar para <b>cada palabra su lista de páginas</b> (un <b>índice invertido</b>) en un array ordenado permite una búsqueda binaria: unos log₂ n ≈ 49 pasos, menos de una milésima de milisegundo en un solo ordenador.</p>
+<fig src="t0-31" alt="Para cada palabra (agua, ayudante, cosa, las), la lista de páginas que la contienen">La estructura de datos adecuada (palabra → páginas) convierte el problema en una búsqueda rápida. Es la idea de la práctica: buscar productos por palabras.</fig>
+<h4>Un planificador de rutas</h4>
+<p>Los lugares son <b>nodos</b> y las carreteras <b>aristas</b> de un grafo. Probar todos los caminos entre 20 ciudades con 6 carreteras por ciudad da unos 95 billones de caminos; el <b>algoritmo de Dijkstra</b> (tema 4) lo resuelve en unos 400 pasos.</p>
+<fig src="t0-38" alt="Mapa de carreteras de España representado como un grafo">El mapa de carreteras como grafo: nodos = ciudades, aristas = carreteras con su longitud.</fig>
+</ap>
+</tema>
+
+<tema id="t1" n="1" t="Abstracciones y especificaciones" lede="Qué es abstraer y qué es un tipo abstracto de datos (TAD), cómo se especifica una operación o un TAD de manera informal y cómo se hace de manera formal: con axiomas (el método algebraico, que se ejecuta en Maude) o con pre y postcondiciones (el método constructivo). Es la pregunta 1 del examen.">
+
+<ap id="t1-1" n="1.1" t="Abstraer: mecanismos de abstracción">
+<p><b>Abstraer</b> es eliminar lo irrelevante y quedarse con lo realmente importante. Al usar <code>ordenar(a, b)</code>, una <code>persona</code> o una <code>pila</code>, lo importante es <b>qué hacen</b>, no cómo están hechos por dentro.</p>
+<div class="box def"><p class="box-t">Los dos mecanismos de abstracción</p><ul>
+<li><b>Abstracción por especificación</b>: sólo necesitamos conocer <b>qué hace</b> un procedimiento, no cómo funciona. Da lugar a la <b>encapsulación</b> y a la <b>ocultación de la implementación</b>.</li>
+<li><b>Abstracción por parametrización</b>: un algoritmo, un tipo o una variable se definen en función de unos <b>parámetros</b>. Da lugar a la <b>genericidad</b> (por ejemplo, una Lista[T] para cualquier tipo T).</li></ul></div>
+</ap>
+
+<ap id="t1-2" n="1.2" t="Tipos de abstracciones y el TAD">
+<div class="tablewrap"><table><thead><tr><th>Tipo de abstracción</th><th>Qué se obtiene</th></tr></thead><tbody>
+<tr><td>Abstracciones <b>funcionales</b></td><td>Rutinas, funciones y procedimientos</td></tr>
+<tr><td>Abstracciones de <b>datos</b></td><td>Tipos abstractos de datos (TAD)</td></tr>
+<tr><td>Abstracciones de <b>iteradores</b></td><td>Iteradores (recorrer una colección sin saber cómo está hecha)</td></tr></tbody></table></div>
+<p>Hay tres conceptos que no hay que confundir:</p>
+<fig src="t1-6" alt="Definiciones de tipo abstracto de datos, tipo de datos y estructura de datos">Las tres definiciones tal y como se dan en clase.</fig>
+<div class="tablewrap"><table><thead><tr><th>Concepto</th><th>Qué es</th><th>Ejemplo: los enteros</th></tr></thead><tbody>
+<tr><td><b>Tipo abstracto de datos</b> (TAD)</td><td>Dominio abstracto de valores junto con las operaciones aplicables sobre él.</td><td>ℤ con +, −, ×…</td></tr>
+<tr><td><b>Tipo de datos</b></td><td>Conjunto de valores que puede tomar una variable, un parámetro o una expresión.</td><td><code>int</code> de C/C++, <code>Integer</code> de Java</td></tr>
+<tr><td><b>Estructura de datos</b></td><td>Disposición en memoria de los datos necesarios para almacenar valores de un tipo.</td><td>Enteros de 32 o 64 bits, listas de dígitos (enteros largos)…</td></tr></tbody></table></div>
+<box k="warn" t="Ojo">El TAD es lo que ve el usuario (valores y operaciones); la estructura de datos es cómo se guarda por dentro. Un mismo TAD (el conjunto) se puede implementar con muchas estructuras distintas: arrays de booleanos, listas, tablas de dispersión, árboles… Eso es justo lo que se estudia en los temas 2 y 3.</box>
+</ap>
+
+<ap id="t1-3" n="1.3" t="El TAD en C y en C++: la pila">
+<p>En los lenguajes estructurados el TAD se hace con un tipo definido por el usuario y funciones aparte; en los orientados a objetos, con una <b>clase</b> que une datos y operaciones:</p>
+<div class="pair">
+<code t="C: struct y funciones aparte" lang="cpp">
+struct Pila {
+    int tope;
+    int datos[10];
+};
+void push (Pila *p, int valor);
+void pop (Pila *p);
+int top (Pila p);
+</code>
+<code t="C++: una clase" lang="cpp">
+class Pila {
+  private:
+    int tope;
+    int datos[10];
+  public:
+    void push (int valor);
+    void pop ();
+    int top ();
+};
+</code>
+</div>
+<p>La diferencia se ve al usarlas. Si un usuario escribe <code>p1.tope = 243;</code>, en C <b>compila</b> y el error sale en ejecución (al hacer <code>top</code> se lee fuera del array <code>datos</code>), mientras que en C++ es un <b>error de compilación</b>, porque <code>tope</code> es privado. La clase garantiza la ocultación de la implementación.</p>
+<fig src="t1-10" alt="La pila en C (struct) y en C++ (clase) con su representación en memoria: un array datos y el índice tope">La misma pila en C y en C++: el array <code>datos</code> y el índice <code>tope</code> del último elemento.</fig>
+<p>La <b>parametrización de tipos</b> se hace en C++ con plantillas (<code>template</code>): se escribe la pila una vez y se <b>instancia</b> para cada tipo.</p>
+<code t="Plantilla de C++: Pila[T]" lang="cpp">
+template &lt;class T&gt;
+class Pila {
+  private:
+    int tope;
+    int maxDatos;
+    T *datos;
+  public:
+    Pila (int maximo = 10);
+    void Push (T valor);
+    T Pop ();
+};
+
+Pila&lt;int&gt; p1;      // instanciación: pila de enteros
+Pila&lt;string&gt; p2;   // y pila de cadenas
+</code>
+</ap>
+
+<ap id="t1-4" n="1.4" t="Especificación informal de operaciones">
+<p>Las especificaciones pueden ser <b>informales</b> (en lenguaje natural) o <b>formales</b>, que a su vez son <b>algebraicas</b> (axiomáticas) u <b>operacionales</b> (constructivas). La notación informal de una operación es:</p>
+<code t="Notación de una operación" k="spec">
+Operación &lt;nombre&gt; (ent &lt;id&gt;: &lt;tipo&gt;; &lt;id&gt;: &lt;tipo&gt;, ..., sal &lt;tipo&gt;)
+    Requiere: restricciones de uso.
+    Modifica: los datos de entrada que se modifican (si alguno).
+    Calcula: descripción textual del comportamiento.
+</code>
+<p>Dos ejemplos de clase:</p>
+<code t="Ejemplos" k="spec">
+Operación QuitarDuplic (ent a: array [entero])
+    Modifica: a
+    Calcula: Quita los elementos repetidos de a. El límite inferior del array
+        no varía, pero sí lo puede hacer el superior.
+
+Operación Buscar (ent a: array [entero]; x: entero; sal i: entero)
+    Requiere: a debe estar ordenado de forma ascendente.
+    Calcula: Si x está en a, i contiene el índice de x tal que a[i] = x.
+        Si x no está en a, entonces i = sup+1, donde sup es el índice
+        superior del array a.
+</code>
+<p><b>Generalización</b>: la operación se define independientemente del tipo de sus parámetros, pidiendo en <b>Requiere</b> lo que el tipo debe tener:</p>
+<code t="Operaciones genéricas" k="spec">
+Operación QuitarDuplic [T: tipo] (ent a: array [T])
+    Requiere: T debe tener una operación de comparación IgualQue(ent T, T; sal booleano).
+    Modifica: a
+    Calcula: ...
+
+Operación Buscar [T: tipo] (ent a: array [T]; x: T; sal i: entero)
+    Requiere: T debe tener dos operaciones de comparación MenorQue(ent T, T; sal bool)
+        e Igual(ent T, T; sal bool). a debe estar ordenado de forma ascendente.
+    Calcula: ...
+</code>
+<p>Un ejemplo real de especificación informal es la documentación de la STL de C++ (cplusplus.com): nombre de la operación, sintaxis, descripción, parámetros, valor devuelto, ejemplo de uso y <b>orden de complejidad</b>.</p>
+</ap>
+
+<ap id="t1-5" n="1.5" t="Especificación informal de un TAD">
+<code t="Notación de un TAD" k="spec">
+TAD &lt;nombre_tipo&gt; es &lt;lista_operaciones&gt;
+    Descripción
+        Descripción textual del tipo
+    Operaciones
+        Especificación informal de las operaciones de la lista anterior
+Fin &lt;nombre_tipo&gt;.
+</code>
+<code t="Ejemplo: conjunto de enteros" k="spec">
+TAD CjtoEnteros es Vacío, Insertar, Suprimir, Miembro, EsVacío, Unión, Intersección, Cardinalidad
+    Descripción
+        Los CjtoEnteros son conjuntos matemáticos modificables, que almacenan valores enteros.
+    Operaciones
+        Operación Vacío (sal CjtoEnteros)
+            Calcula: Devuelve un conjunto de enteros vacío.
+        Operación Insertar (ent c: CjtoEnteros; x: entero)
+            Modifica: c.
+            Calcula: Añade x a los elementos de c. Después de la inserción, el nuevo conjunto es c ∪ {x}.
+        ...
+Fin CjtoEnteros.
+</code>
+<p>Con la <b>parametrización de tipo</b>, en lugar de ListaEnteros, ListaCadenas, ListaReales… se define una sola <b>Lista[T]</b> y se <b>instancia</b>: Lista[entero], Lista[cadena]… Es lo útil para los tipos <b>contenedores</b> o colecciones (listas, pilas, colas, arrays, conjuntos).</p>
+<code t="TAD genérico" k="spec">
+TAD Conjunto[T: tipo] es Vacío, Insertar, Suprimir, Miembro, EsVacío, Unión, Intersección, Cardinalidad
+    Descripción
+        Los Conjunto[T] son conjuntos matemáticos modificables, que almacenan valores de tipo T.
+    Operaciones
+        Operación Vacío (sal Conjunto[T])
+        Operación Insertar (ent c: Conjunto[T]; x: T)
+        Operación Suprimir (ent c: Conjunto[T]; x: T)
+        Operación Miembro (ent c: Conjunto[T]; x: T; sal booleano)
+        ...
+Fin Conjunto.
+</code>
+</ap>
+
+<ap id="t1-6" n="1.6" t="Abstracciones de iteradores">
+<p>Si sobre CjtoEnteros queremos la suma, el producto, la varianza… no tiene sentido añadir una operación para cada cosa. Lo que necesitamos son abstracciones del tipo «<b>para cada</b> elemento i del conjunto A hacer acción sobre i». Un <b>iterador</b> permite definir un recorrido abstracto sobre los elementos de una colección, sin saber cómo está guardada. Se puede definir de dos formas:</p>
+<h4>Como abstracción funcional (una instrucción de iteración)</h4>
+<code t="Iterador funcional" k="spec">
+Iterador ParaTodoHacer [T: tipo] (ent C: Conjunto[T]; acción: Operación)
+    Requiere: acción debe ser una operación que recibe un parámetro de tipo T y no
+        devuelve nada, acción(ent T).
+    Calcula: Recorre todos los elementos c del conjunto C, aplicando sobre ellos acción(c).
+</code>
+<p>En C++ es el <code>for</code> de rango: <code>for (auto e: cola) { … }</code>, <code>for (int i: lista) { … }</code>, <code>for (auto c: cadena) { … }</code>.</p>
+<h4>Como abstracción de datos (un tipo iterador)</h4>
+<code t="Iterador como TAD" k="spec">
+TipoIterador IteradorPreorden [T: tipo] es Iniciar, Actual, Avanzar, EsFinal
+    Descripción
+        Iteradores sobre árboles binarios de cualquier tipo T. Los elementos se
+        devuelven en preorden. El iterador se debe inicializar con Iniciar.
+    Operaciones
+        Operación Iniciar (ent A: ArbolBinario[T]; sal IteradorPreorden)
+            Calcula: Devuelve un iterador nuevo, colocado sobre la raíz de A.
+        Operación Actual (ent iter: IteradorPreorden; sal T)
+        ...
+Fin IteradorPreorden.
+
+i:= Iniciar(A)
+mientras NOT EsFinal(i) hacer
+    Acción sobre Actual(i)
+    i:= Avanzar(i)
+finmientras
+</code>
+<p>Es el <b>primer modelo de acceso secuencial</b> de Introducción a la Programación. En la STL de C++, <code>begin()</code> es Iniciar, <code>!= end()</code> es «no EsFinal», <code>*it</code> es Actual e <code>it++</code> es Avanzar:</p>
+<fig src="t1-30" alt="Recorrido de una list de la STL con un iterador: begin, end, *it e it++">Los iteradores de la STL siguen exactamente el TAD iterador.</fig>
+</ap>
+
+<ap id="t1-7" n="1.7" t="Especificaciones formales: partes y métodos">
+<p>Las especificaciones en lenguaje natural son <b>ambiguas e imprecisas</b>. Una especificación <b>formal</b> define un TAD o una operación con un lenguaje matemático, lo que permite:</p>
+<ul><li><b>Prototipado</b>: las especificaciones formales pueden llegar a ser <b>ejecutables</b> (Maude).</li>
+<li><b>Corrección del programa</b>: verificación automática y formal de que funciona.</li>
+<li><b>Reusabilidad</b>: usar la especificación en distintos ámbitos.</li></ul>
+<div class="box def"><p class="box-t">Las cuatro partes de una especificación formal</p><ol>
+<li><b>NOMBRE</b>: nombre genérico del TAD.</li>
+<li><b>CONJUNTOS</b>: conjuntos de datos que intervienen en la definición.</li>
+<li><b>SINTAXIS</b>: signatura de las operaciones, <code>&lt;nombre&gt; : &lt;conj_dominio&gt; → &lt;conj_resultado&gt;</code>.</li>
+<li><b>SEMÁNTICA</b>: el significado de las operaciones, cuál es su resultado.</li></ol></div>
+<p>Los métodos se diferencian en cómo escriben la semántica:</p>
+<div class="tablewrap"><table><thead><tr><th>Método</th><th>Cómo define la semántica</th><th>Significado de las operaciones</th></tr></thead><tbody>
+<tr><td><b>Axiomático</b> o algebraico</td><td>Con <b>axiomas</b>: relaciones entre unas operaciones y otras.</td><td><b>Implícito</b></td></tr>
+<tr><td><b>Constructivo</b> u operacional</td><td>Cada operación por sí misma, con <b>pre y postcondiciones</b> basadas en un <b>modelo subyacente</b>.</td><td><b>Explícito</b></td></tr></tbody></table></div>
+</ap>
+
+<ap id="t1-8" n="1.8" t="Método axiomático: axiomas, completitud y tipos de operaciones">
+<p>La semántica es un conjunto de <b>axiomas</b>: reglas que establecen la igualdad de dos expresiones, <code>&lt;Expresión 1&gt; = &lt;Expresión 2&gt;</code>. Por ejemplo, <code>tope(push(x, pila)) = x</code> u <code>OR(verdadero, b) = verdadero</code>.</p>
+<div class="box def"><p class="box-t">Los axiomas deben cumplir dos propiedades</p><ul>
+<li><b>Completitud</b>: hay los axiomas suficientes para deducir el significado de <b>cualquier</b> expresión.</li>
+<li><b>Corrección</b>: a partir de una expresión sólo se puede obtener <b>un</b> resultado (los axiomas no se contradicen).</li></ul></div>
+<p>Dado un TAD T, sus operaciones son de tres tipos:</p>
+<div class="tablewrap"><table><thead><tr><th>Tipo</th><th>Qué hacen</th><th>Forma</th></tr></thead><tbody>
+<tr><td><b>Constructores</b></td><td>Conjunto <b>mínimo</b> de operaciones con el que se puede obtener cualquier valor de T.</td><td>c₁: → T, c₂: V → T…</td></tr>
+<tr><td><b>Modificación</b></td><td>A partir de un valor de T obtienen otro de T, y no son constructores.</td><td>m₁: T → T, m₂: T × V → T…</td></tr>
+<tr><td><b>Consulta</b></td><td>Devuelven un valor que <b>no</b> es de T.</td><td>o₁: T → V, o₂: T × V → V′…</td></tr></tbody></table></div>
+<p>Ejecutar una expresión es aplicar los axiomas hasta que no se puedan aplicar más: la ejecución acaba cuando la expresión queda escrita <b>sólo con constructores</b>.</p>
+<box k="tip" t="Receta para que la especificación sea completa y correcta">Escribe un axioma para cada pareja (operación de modificación o consulta, constructor): cada operación aplicada a cada forma posible de construir el valor. Y no añadas axiomas que se puedan deducir de otros.</box>
+</ap>
+
+<ap id="t1-9" n="1.9" t="Ejemplo: el TAD Natural">
+<code t="Especificación axiomática del TAD Natural" k="spec">
+NOMBRE
+    Natural
+CONJUNTOS
+    N     Conjunto de naturales
+    Bool  Conjunto de booleanos {true, false}
+SINTAXIS
+    cero:              → N
+    sucesor:  N        → N
+    suma:     N x N    → N
+    esCero:   N        → Bool
+    esIgual:  N x N    → Bool
+SEMÁNTICA   ∀ m, n ∈ N
+    1. suma (cero, n) = n
+    2. suma (sucesor (m), n) = sucesor (suma (m, n))
+    3. esCero (cero) = true
+    4. esCero (sucesor (n)) = false
+    5. esIgual (cero, n) = esCero (n)
+    6. esIgual (sucesor (n), cero) = false
+    7. esIgual (sucesor (n), sucesor (m)) = esIgual (n, m)
+</code>
+<p>Los constructores son <code>cero</code> y <code>sucesor</code> (el 2 es <code>sucesor(sucesor(cero))</code>). Cada operación tiene un axioma por constructor de su primer argumento (y <code>esIgual</code>, que distingue los dos argumentos, tiene tres). Los axiomas se basan en un <b>razonamiento inductivo</b>.</p>
+<ej id="t1-nat-a" n="Ejecución (a)" t="suma(suma(sucesor(cero), cero), sucesor(cero))"><p>Calcula el valor de la expresión aplicando los axiomas.</p>
+<sol><ol class="steps"><li>Primero la suma de dentro: <code>suma(sucesor(cero), cero)</code> = <code>sucesor(suma(cero, cero))</code> (axioma 2) = <code>sucesor(cero)</code> (axioma 1).</li>
+<li>Queda <code>suma(sucesor(cero), sucesor(cero))</code> = <code>sucesor(suma(cero, sucesor(cero)))</code> (axioma 2).</li>
+<li>= <code>sucesor(sucesor(cero))</code> (axioma 1).</li></ol><res>sucesor(sucesor(cero)), es decir, 1 + 0 + 1 = 2.</res></sol></ej>
+<ej id="t1-nat-b" n="Ejecución (b)" t="esIgual(sucesor(sucesor(cero)), suma(suma(sucesor(cero), cero), sucesor(cero)))"><p>Calcula el valor de la expresión.</p>
+<sol><p>El segundo argumento es la expresión del apartado (a): <code>sucesor(sucesor(cero))</code>.</p><ol class="steps"><li><code>esIgual(s(s(cero)), s(s(cero)))</code> = <code>esIgual(s(cero), s(cero))</code> (axioma 7).</li>
+<li>= <code>esIgual(cero, cero)</code> (axioma 7).</li><li>= <code>esCero(cero)</code> (axioma 5) = <code>true</code> (axioma 3).</li></ol><res>true</res></sol></ej>
+</ap>
+
+<ap id="t1-10" n="1.10" t="Ejemplo: el TAD Pila[T] axiomático">
+<code t="Especificación axiomática de la pila" k="spec">
+NOMBRE
+    Pila [T]
+CONJUNTOS
+    P     Conjunto de pilas
+    T     Conjunto de elementos que pueden ser almacenados
+    Bool  Conjunto de booleanos {true, false}
+    M     Conjunto de mensajes {"Error. La pila está vacía"}
+SINTAXIS
+    pilaVacía:          → P
+    esVacía:   P        → Bool
+    pop:       P        → P
+    tope:      P        → T ∪ M
+    push:      T x P    → P
+SEMÁNTICA   ∀ t ∈ T; ∀ p ∈ P
+    1. esVacía (pilaVacía) = true
+    2. esVacía (push (t, p)) = false
+    3. pop (pilaVacía) = pilaVacía
+    4. pop (push (t, p)) = p
+    5. tope (pilaVacía) = "Error. La pila está vacía"
+    6. tope (push (t, p)) = t
+</code>
+<p>Los constructores son <code>pilaVacía</code> y <code>push</code>. ¿Qué devuelve <code>tope</code> con la pila vacía? Se añade el conjunto <b>M de mensajes</b> y la imagen pasa a ser <b>T ∪ M</b>. La forma sistemática de sacar los axiomas es rellenar la tabla «operación × constructor»:</p>
+<fig src="t1-43" alt="Tabla con las operaciones esVacía, pop y tope en filas y los constructores pilaVacía y push en columnas">Una casilla por cada operación aplicada a cada constructor: seis casillas, seis axiomas.</fig>
+<ej id="t1-pila-a" n="Ejecución (a)" t="pop(push(3, push(2, pop(pilaVacía))))"><p>Calcula la expresión.</p><sol><ol class="steps"><li><code>pop(pilaVacía)</code> = <code>pilaVacía</code> (axioma 3).</li><li>Queda <code>pop(push(3, push(2, pilaVacía)))</code> = <code>push(2, pilaVacía)</code> (axioma 4).</li></ol><res>push(2, pilaVacía): una pila con el 2.</res></sol></ej>
+<ej id="t1-pila-b" n="Ejecución (b)" t="tope(pop(push(1, push(2, pilaVacía))))"><p>Calcula la expresión.</p><sol><ol class="steps"><li><code>pop(push(1, push(2, pilaVacía)))</code> = <code>push(2, pilaVacía)</code> (axioma 4).</li><li><code>tope(push(2, pilaVacía))</code> = 2 (axioma 6).</li></ol><res>2</res></sol></ej>
+<ej id="t1-pila-c" n="Ampliación" t="Comparar dos pilas y sacar el tope a la vez"><p>(1) Añade una operación <code>esIgual</code> que compare dos pilas. (2) ¿Cómo hacer que <code>pop</code> devuelva el tope y a la vez lo saque de la pila?</p>
+<sol><p>(1) Necesitamos que T tenga su propia igualdad (la escribimos <code>t == s</code>). Sintaxis: <code>esIgual: P x P → Bool</code>. Un axioma por cada par de constructores:</p>
+<code t="Semántica de esIgual" k="spec">
+esIgual (pilaVacía, pilaVacía) = true
+esIgual (pilaVacía, push (t, p)) = false
+esIgual (push (t, p), pilaVacía) = false
+esIgual (push (t, p), push (s, q)) = SI t == s ⇒ esIgual (p, q) | false
+</code>
+<p>(2) Una operación sólo devuelve un valor, así que hay que devolver un <b>par</b>: <code>popTope: P → (T x P) ∪ M</code>, con <code>popTope(push(t, p)) = (t, p)</code> y <code>popTope(pilaVacía) = "Error. La pila está vacía"</code>. Es lo que hacen muchas implementaciones reales (<code>T Pop()</code> en la plantilla de C++ del apartado 1.3).</p></sol></ej>
+</ap>
+
+<ap id="t1-11" n="1.11" t="Condicionales en los axiomas: el TAD Bolsa">
+<p>Para escribir el resultado de un axioma se pueden usar condicionales: <code>SI &lt;condición&gt; ⇒ &lt;valor si cierto&gt; | &lt;valor si falso&gt;</code>. Una <b>bolsa</b> es como un conjunto pero con elementos <b>repetidos</b> (importa cuántas veces está cada uno, no el orden).</p>
+<code t="Especificación axiomática de la bolsa" k="spec">
+NOMBRE
+    Bolsa[T]
+CONJUNTOS
+    B     Conjunto de bolsas
+    T     Conjunto de elementos (con una igualdad ==)
+    Bool  Conjunto de booleanos {true, false}
+    N     Conjunto de naturales
+SINTAXIS
+    bolsaVacía:          → B
+    poner:     T x B     → B
+    esVacía:   B         → Bool
+    cuántos:   T x B     → N
+SEMÁNTICA   ∀ t, s ∈ T; ∀ b ∈ B
+    1. esVacía (bolsaVacía) = true
+    2. esVacía (poner (t, b)) = false
+    3. cuántos (t, bolsaVacía) = cero
+    4. cuántos (t, poner (s, b)) = SI t == s ⇒ sucesor (cuántos (t, b)) | cuántos (t, b)
+</code>
+<ej id="t1-bolsa" n="Ampliación" t="quitar, quitarTodos y esIgual en la bolsa"><p>Añade (1) una operación <code>quitar</code> que saque <b>una</b> aparición de un elemento, (2) <code>quitarTodos</code>, que las saque todas, y (3) <code>esIgual</code>, que compare dos bolsas.</p>
+<sol><code t="Sintaxis y semántica nuevas" k="spec">
+quitar:      T x B  → B
+quitarTodos: T x B  → B
+esIgual:     B x B  → Bool
+
+quitar (t, bolsaVacía) = bolsaVacía
+quitar (t, poner (s, b)) = SI t == s ⇒ b | poner (s, quitar (t, b))
+quitarTodos (t, bolsaVacía) = bolsaVacía
+quitarTodos (t, poner (s, b)) = SI t == s ⇒ quitarTodos (t, b) | poner (s, quitarTodos (t, b))
+esIgual (bolsaVacía, c) = esVacía (c)
+esIgual (poner (t, b), c) = SI esCero (cuántos (t, c)) ⇒ false | esIgual (b, quitar (t, c))
+</code>
+<p>La idea de <code>esIgual</code>: cada elemento de la primera bolsa tiene que estar en la segunda; se quita una aparición de la segunda y se sigue comparando el resto. Si al final la primera se vacía, la segunda también tiene que estar vacía. Todo esto está comprobado en Maude (apartado 1.12).</p></sol></ej>
+</ap>
+
+<ap id="t1-12" n="1.12" t="Especificaciones ejecutables con Maude">
+<p><b>Maude</b> es una herramienta que ejecuta especificaciones axiomáticas: automatiza la reducción de expresiones. Es la de la actividad del tema 1. La especificación va en un módulo <code>fmod … endfm</code>; los TAD se llaman <b>sort</b>, las operaciones <b>op</b> y los axiomas <b>eq</b> (ecuaciones).</p>
+<code t="natural.maude" lang="maude">
+fmod NATURAL is
+   protecting BOOL .
+   sort N .
+   op cero : -> N .
+   op sucesor : N -> N .
+   op suma : N N -> N .
+   op esCero : N -> Bool .
+   op esIgual : N N -> Bool .
+   vars n m : N .
+   eq suma(cero, n) = n .
+   eq suma(sucesor(m), n) = sucesor(suma(m, n)) .
+   eq esCero(cero) = true .
+   eq esCero(sucesor(n)) = false .
+   eq esIgual(cero, n) = esCero(n) .
+   eq esIgual(sucesor(n), cero) = false .
+   eq esIgual(sucesor(n), sucesor(m)) = esIgual(n, m) .
+endfm
+</code>
+<p>Las órdenes básicas son <code>in fichero .</code> (lee un fichero), <code>red expresión .</code> (reduce una expresión con los axiomas) y <code>quit</code>. Los condicionales se escriben <code>if … then … else … fi</code>.</p>
+<div class="pair">
+<code t="prueba.maude" lang="maude">
+in natural .
+red suma(suma(sucesor(cero), cero), sucesor(cero)) .
+red esIgual(sucesor(cero), cero) .
+quit
+</code>
+<code t="Salida de Maude 3.5.1 (resumida)" k="out" lang="none">
+reduce in NATURAL : suma(suma(sucesor(cero), cero), sucesor(cero)) .
+rewrites: 4
+result N: sucesor(sucesor(cero))
+reduce in NATURAL : esIgual(sucesor(cero), cero) .
+rewrites: 1
+result Bool: false
+</code>
+</div>
+<box k="warn" t="La sintaxis de Maude es muy estricta"><ul><li>Hacen falta <b>espacios</b> antes y después de <code>:</code>, <code>-&gt;</code> y <code>=</code>.</li><li>Cada sentencia acaba en <b>espacio + punto</b> (<code> .</code>).</li><li>Distingue mayúsculas y minúsculas; revisa los paréntesis.</li><li>Si hay un fallo puede pasar de todo: lo indica bien, falla en un sitio extraño o se queda colgado.</li></ul></box>
+<deep t="Más a fondo · la pila y la bolsa en Maude"><code t="pila.maude (elementos naturales)" lang="maude">
+in natural .
+fmod PILA is
+   protecting NATURAL .
+   sorts Pila .
+   op pilaVacia : -> Pila .
+   op push : N Pila -> Pila .
+   op pop : Pila -> Pila .
+   op tope : Pila -> N .
+   op esVacia : Pila -> Bool .
+   var t : N .
+   var p : Pila .
+   eq esVacia(pilaVacia) = true .
+   eq esVacia(push(t, p)) = false .
+   eq pop(pilaVacia) = pilaVacia .
+   eq pop(push(t, p)) = p .
+   eq tope(push(t, p)) = t .
+endfm
+</code>
+<p>Sin axioma para <code>tope(pilaVacia)</code>, Maude no puede reducirlo y devuelve la expresión tal cual (<code>result N: tope(pilaVacia)</code>): es la forma de ver que la especificación está incompleta en ese caso. La bolsa con <code>if … then … else … fi</code>:</p>
+<code t="Axiomas de la bolsa en Maude" lang="maude">
+eq cuantos(t, poner(s, b)) = if esIgual(t, s) then sucesor(cuantos(t, b)) else cuantos(t, b) fi .
+eq quitar(t, poner(s, b)) = if esIgual(t, s) then b else poner(s, quitar(t, b)) fi .
+eq esIgualB(poner(t, b), c) = if esCero(cuantos(t, c)) then false else esIgualB(b, quitar(t, c)) fi .
+</code></deep>
+</ap>
+
+<ap id="t1-13" n="1.13" t="Método constructivo: pre y postcondiciones">
+<p>En el método constructivo cada operación se define por sí misma con dos condiciones lógicas:</p>
+<div class="box def"><ul><li><b>Precondición</b>: relación que deben cumplir los datos de entrada para que la operación se pueda aplicar.</li><li><b>Postcondición</b>: relaciones que se cumplen después de ejecutar la operación.</li></ul></div>
+<code t="Notación y ejemplo: el máximo de dos reales" k="spec">
+pre-&lt;nombre&gt;(&lt;param_entrada&gt;) ::= &lt;condición_lógica&gt;
+post-&lt;nombre&gt;(&lt;param_entrada&gt;; &lt;param_salida&gt;) ::= &lt;condición_lógica&gt;
+
+máximo: R x R → R
+    pre-máximo(x, y) ::= true
+    post-máximo(x, y; r) ::= (r ≥ x) ∧ (r ≥ y) ∧ (r = x ∨ r = y)
+
+máximop: R x R → R          (sólo para positivos)
+    pre-máximop(x, y) ::= (x ≥ 0) ∧ (y ≥ 0)
+    post-máximop(x, y; r) ::= (r ≥ x) ∧ (r ≥ y) ∧ (r = x ∨ r = y)
+</code>
+<p>Si <code>x</code> o <code>y</code> son negativos no se cumple la precondición y <b>no se puede asegurar</b> que se cumpla la postcondición. En C/C++ las pre y postcondiciones se comprueban con <code>assert</code>:</p>
+<code t="Pre y postcondición con assert" lang="cpp">
+#include &lt;cassert&gt;
+
+double maximop (double x, double y)
+{
+    assert(x >= 0 && y >= 0);                        // precondición
+    double r;
+    if (x > y) r = x; else r = y;
+    assert(r >= x && r >= y && (r == x || r == y));  // postcondición
+    return r;
+}
+</code>
+<p>Otra opción es no poner precondición y tratar el error en la operación, con un conjunto M de mensajes:</p>
+<code t="Alternativa: tratar el error dentro" k="spec">
+máximop2: R x R → R ∪ M
+    pre-máximop2(x, y) ::= true
+    post-máximop2(x, y; r) ::= SI (x ≥ 0) ∧ (y ≥ 0) ⇒ (r ≥ x) ∧ (r ≥ y) ∧ (r = x ∨ r = y)
+                                | r = "Fuera de rango"
+</code>
+<div class="box def"><p class="box-t">La especificación como contrato</p><p>Si se cumplen unas condiciones en los parámetros de entrada, la operación garantiza un resultado correcto.</p><div class="tablewrap"><table><thead><tr><th></th><th>Obligación</th><th>Derecho</th></tr></thead><tbody><tr><td><b>Implementador</b></td><td>Cumplir la postcondición</td><td>Sabe que se cumple la precondición</td></tr><tr><td><b>Usuario</b></td><td>Cumplir la precondición</td><td>Sabe que se cumple la postcondición</td></tr></tbody></table></div><p>La operación no trata todos los casos de error: la responsabilidad de comprobar la precondición es de quien la usa.</p></div>
+</ap>
+
+<ap id="t1-14" n="1.14" t="El modelo subyacente: Lista[T] y la pila constructiva">
+<p>Para TAD más complejos (colecciones) las pre y postcondiciones necesitan un <b>modelo subyacente</b> sobre el que hablar, y no siempre hay uno adecuado. En clase se define <b>Lista[T]</b> por el método axiomático y se usa para definir <b>Pila[T]</b> por el constructivo.</p>
+<fig src="t1-57" alt="Sintaxis del TAD Lista con un dibujo de primero, cola, cabecera y último">Las operaciones de la lista: <b>primero</b> y <b>cola</b> (todo menos el primero), <b>último</b> y <b>cabecera</b> (todo menos el último).</fig>
+<deep t="Más a fondo · la semántica completa de Lista[T]"><p>Constructores: <code>crearLista</code>, <code>formarLista</code> (lista de un elemento) y <code>concatenar</code>.</p><code t="SEMÁNTICA de Lista[T]   ∀ t ∈ T; a, b ∈ L" k="spec">
+ 1. último (crearLista) = "La lista está vacía"
+ 2. último (formarLista (t)) = t
+ 3. último (concatenar (a, b)) = SI esListaVacía (b) ⇒ último (a) | último (b)
+ 4. cabecera (crearLista) = crearLista
+ 5. cabecera (formarLista (t)) = crearLista
+ 6. cabecera (concatenar (a, b)) = SI esListaVacía (b) ⇒ cabecera (a) | concatenar (a, cabecera (b))
+ 7. primero (crearLista) = "La lista está vacía"
+ 8. primero (formarLista (t)) = t
+ 9. primero (concatenar (a, b)) = SI esListaVacía (a) ⇒ primero (b) | primero (a)
+10. cola (crearLista) = crearLista
+11. cola (formarLista (t)) = crearLista
+12. cola (concatenar (a, b)) = SI esListaVacía (a) ⇒ cola (b) | concatenar (cola (a), b)
+13. longitud (crearLista) = cero
+14. longitud (formarLista (t)) = sucesor (cero)
+15. longitud (concatenar (a, b)) = suma (longitud (a), longitud (b))
+16. esListaVacía (crearLista) = true
+17. esListaVacía (formarLista (t)) = false
+18. esListaVacía (concatenar (a, b)) = esListaVacía (a) AND esListaVacía (b)
+</code></deep>
+<p>La pila constructiva, en su versión <b>con contratos</b> (las precondiciones impiden los casos de error, así que no hace falta el conjunto de mensajes):</p>
+<code t="Pila[T] por el método constructivo   ∀ t ∈ T; s, r ∈ S; b ∈ Bool" k="spec">
+SINTAXIS
+    crearPila:          → S
+    tope:       S       → T
+    pop:        S       → S
+    push:       T x S   → S
+    esVacíaPila: S      → Bool
+SEMÁNTICA
+     1. pre-crearPila () ::= true
+     2. post-crearPila (s) ::= s = crearLista
+     3. pre-tope (s) ::= NOT esListaVacía (s)
+     4. post-tope (s; t) ::= t = primero (s)
+     5. pre-pop (s) ::= NOT esListaVacía (s)
+     6. post-pop (s; r) ::= r = cola (s)
+     7. pre-push (t, s) ::= true
+     8. post-push (t, s; r) ::= r = concatenar (formarLista (t), s)
+     9. pre-esVacíaPila (s) ::= true
+    10. post-esVacíaPila (s; b) ::= b = esListaVacía (s)
+</code>
+<p>En la versión <b>sin contratos</b>, todas las precondiciones son <code>true</code>, la sintaxis pasa a <code>tope: S → T ∪ M</code> y <code>pop: S → S ∪ M</code>, y la postcondición trata el error: <code>post-pop(s; p) ::= SI esListaVacía(s) ⇒ p = "La pila está vacía" | p = cola(s)</code>.</p>
+<p>Ejecutar una especificación constructiva es comprobar las precondiciones y aplicar las postcondiciones de todas las operaciones de la expresión.</p>
+<ej id="t1-pc-a" n="Ejecución (a)" t="tope(push(4, pop(push(2, crearPila))))"><p>Ejecuta la expresión con la pila con contratos (elementos naturales).</p><sol><ol class="steps"><li><code>crearPila</code> = crearLista (lista vacía, [ ]).</li><li><code>push(2, [ ])</code>: pre true; resultado concatenar(formarLista(2), [ ]) = [2].</li><li><code>pop([2])</code>: pre NOT esListaVacía([2]) = true ✓; resultado cola([2]) = [ ].</li><li><code>push(4, [ ])</code> = [4].</li><li><code>tope([4])</code>: pre ✓; resultado primero([4]) = 4.</li></ol><res>4</res></sol></ej>
+<ej id="t1-pc-b" n="Ejecución (b)" t="esVacíaPila(push(2, pop(crearPila)))"><p>Ejecuta la expresión.</p><sol><p><code>pop(crearPila)</code> = <code>pop([ ])</code>: la precondición NOT esListaVacía([ ]) es <b>falsa</b>. El usuario ha incumplido el contrato: la especificación no dice nada del resultado y <b>la expresión no está definida</b>. Con la versión sin contratos, <code>pop</code> devolvería el mensaje "La pila está vacía", y entonces <code>push(2, mensaje)</code> tampoco tiene sentido (el segundo argumento no es una pila).</p></sol></ej>
+<ej id="t1-cola" n="Ejercicio" t="La cola constructiva"><p>¿Cómo sería la especificación constructiva de <b>Cola[T]</b>, con las operaciones crearCola, frente, inserta (por el final), resto y esVacíaCola, usando Lista[T] como modelo?</p>
+<sol><code t="Cola[T]   ∀ t ∈ T; c, r ∈ C; b ∈ Bool" k="spec">
+SINTAXIS
+    crearCola:          → C
+    frente:      C      → T
+    inserta:     T x C  → C
+    resto:       C      → C
+    esVacíaCola: C      → Bool
+SEMÁNTICA
+    pre-crearCola () ::= true
+    post-crearCola (c) ::= c = crearLista
+    pre-frente (c) ::= NOT esListaVacía (c)
+    post-frente (c; t) ::= t = primero (c)
+    pre-inserta (t, c) ::= true
+    post-inserta (t, c; r) ::= r = concatenar (c, formarLista (t))
+    pre-resto (c) ::= NOT esListaVacía (c)
+    post-resto (c; r) ::= r = cola (c)
+    pre-esVacíaCola (c) ::= true
+    post-esVacíaCola (c; b) ::= b = esListaVacía (c)
+</code><p>La única diferencia con la pila está en <code>inserta</code>: el elemento nuevo se concatena <b>al final</b> (en la pila, al principio).</p></sol></ej>
+</ap>
+
+<ap id="t1-15" n="1.15" t="Axiomático frente a constructivo">
+<div class="tablewrap"><table><thead><tr><th></th><th>Axiomático (algebraico)</th><th>Constructivo (operacional)</th></tr></thead><tbody>
+<tr><td>Semántica</td><td>Axiomas que relacionan unas operaciones con otras</td><td>Pre y postcondiciones de cada operación</td></tr>
+<tr><td>Significado</td><td>Implícito</td><td>Explícito</td></tr>
+<tr><td>Necesita</td><td>Razonamiento inductivo sobre los constructores</td><td>Un modelo subyacente (no siempre lo hay)</td></tr>
+<tr><td>Potencia</td><td>Más potente</td><td>Limitada por el modelo</td></tr>
+<tr><td>En un programa</td><td>Ejecutable con herramientas como Maude</td><td>Fácil de incluir con asertos (<code>assert</code>)</td></tr></tbody></table></div>
+<box k="warn" t="Ojo en el examen">No confundas especificación con implementación: la especificación dice <b>qué</b> hace cada operación, nunca cómo. En la pregunta del tema 1 suele pedirse una especificación axiomática de una lista con operaciones nuevas: piensa en los constructores (Vacía e Insertar), escribe un axioma por constructor y no tengas miedo de añadir operaciones auxiliares (ver los exámenes resueltos).</box>
+</ap>
+</tema>
+
+<tema id="t2" n="2" t="Conjuntos y diccionarios" lede="El TAD conjunto y el TAD diccionario, sus implementaciones básicas (arrays de booleanos y listas) y las tablas de dispersión (hashing), abierta y cerrada: funciones de dispersión y de redispersión, eliminación y eficiencia. Es la pregunta 2 del examen y la base de la práctica.">
+
+<ap id="t2-1" n="2.1" t="El TAD Conjunto">
+<div class="box def"><p class="box-t">Definición</p><ul><li><b>Conjunto</b>: colección <b>no ordenada</b> de elementos (o miembros) <b>distintos</b>.</li><li><b>Elemento</b>: cualquier cosa; un elemento primitivo o, a su vez, un conjunto.</li></ul></div>
+<p>En programación se impone que todos los elementos sean del <b>mismo tipo</b>: Conjunto[T] (de enteros, de caracteres, de cadenas…).</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>Orden</th><th>Repetidos</th></tr></thead><tbody>
+<tr><td><b>Lista</b></td><td>Sí: importa la posición de cada elemento</td><td>Sí: un elemento puede estar en varias posiciones</td></tr>
+<tr><td><b>Bolsa</b></td><td>No</td><td>Sí: importa cuántas veces está cada uno</td></tr>
+<tr><td><b>Conjunto</b></td><td>No</td><td>No: insertar un elemento que ya está no cambia nada</td></tr></tbody></table></div>
+<box k="warn" t="«No ordenada» se refiere al orden de inserción">Puede existir una relación de orden «&lt;» entre los elementos: <b>transitiva</b> (si a &lt; b y b &lt; c, entonces a &lt; c) y de <b>orden total</b> (para todo a, b, sólo una de a &lt; b, b &lt; a o a = b es cierta). Que el conjunto sea «no ordenado» quiere decir que no importa en qué orden se insertaron sus elementos, no que no se puedan comparar.</box>
+<p>Notación: por extensión (A = {a, b, c}) o con una proposición (D = {x | x es primo y menor que 90}); pertenencia x ∈ A, no pertenencia x ∉ A, vacío ∅, universal 𝒰 (todos los elementos que podrían formar parte de los conjuntos con los que trabajamos), inclusión A ⊆ B, intersección A ∩ B, unión A ∪ B y diferencia A − B.</p>
+<div class="tablewrap"><table><thead><tr><th>Operación</th><th>Signatura</th><th>Significado</th></tr></thead><tbody>
+<tr><td>Vacío</td><td>→ C</td><td>a := ∅</td></tr>
+<tr><td>Unión, Intersección, Diferencia</td><td>C × C → C</td><td>c := a ∪ b, a ∩ b, a − b</td></tr>
+<tr><td>Combina</td><td>C × C → C</td><td>c := a ∪ b, sabiendo que a ∩ b = ∅</td></tr>
+<tr><td>Miembro</td><td>T × C → Bool</td><td>x ∈ a</td></tr>
+<tr><td>Inserta, Suprime</td><td>T × C → C</td><td>a := a ∪ {x}, a := a − {x}</td></tr>
+<tr><td>Min, Max</td><td>C → T</td><td>menor y mayor elemento</td></tr>
+<tr><td>Igual</td><td>C × C → Bool</td><td>a == b</td></tr></tbody></table></div>
+<p>¿Cómo representar el conjunto para que estas operaciones sean rápidas con un uso razonable de memoria? Hay dos implementaciones básicas, <b>arrays de booleanos</b> y <b>listas de elementos</b>, y la mejor depende de la aplicación: qué operaciones son más frecuentes y cómo de grandes y variables son los conjuntos.</p>
+<fig src="t2-10" alt="Un conjunto {8, 3, 1, 5} representado como array de booleanos de 10 posiciones y como lista enlazada">El conjunto {1, 3, 5, 8} con las dos representaciones básicas.</fig>
+</ap>
+
+<ap id="t2-2" n="2.2" t="Conjuntos con arrays de booleanos">
+<p><b>Idea</b>: cada elemento del conjunto universal se representa con <b>un bit</b>, que vale 1 si el elemento pertenece al conjunto y 0 si no. <code>tipo Conjunto[T] = array [1..Rango(T)] de booleano</code>, donde Rango(T) es el tamaño del conjunto universal.</p>
+<fig src="t2-12" alt="Los conjuntos A = {a, c, d, e, g} y B = {c, e, f, g} como arrays de bits sobre a…g">Con T = {a, …, g}: A = {a, c, d, e, g} y B = {c, e, f, g}. La unión, la intersección y la diferencia se convierten en operaciones booleanas bit a bit.</fig>
+<code t="Operaciones con arrays de booleanos">
+operación Unión (A, B: Conjunto[T]; var C: Conjunto[T])
+    para cada i en Rango(T) hacer
+        C[i]:= A[i] OR B[i]
+
+operación Intersección (A, B: Conjunto[T]; var C: Conjunto[T])
+    para cada i en Rango(T) hacer
+        C[i]:= A[i] AND B[i]
+
+operación Diferencia (A, B: Conjunto[T]; var C: Conjunto[T])
+    para cada i en Rango(T) hacer
+        C[i]:= A[i] AND NOT B[i]
+
+operación Inserta (x: T; var C: Conjunto[T])
+    C[x]:= 1
+operación Suprime (x: T; var C: Conjunto[T])
+    C[x]:= 0
+operación Miembro (x: T; C: Conjunto[T]): booleano
+    devolver C[x] == 1
+</code>
+<p><b>Costes</b> (con R = Rango(T)): Inserta, Suprime y Miembro son <b>O(1)</b>; Unión, Intersección, Diferencia e Igual recorren todo el array, <b>O(R)</b>; Min y Max buscan el primer y el último 1, <b>O(R)</b> en el peor caso.</p>
+<p>Con un universo pequeño es imbatible. Con T = {1, …, 64}, un conjunto cabe en un <code>unsigned long long</code> y las operaciones son instrucciones de la CPU:</p>
+<code t="Conjuntos de 1..64 en un entero de 64 bits" lang="cpp">
+typedef unsigned long long Conjunto;          // bit x-1 a 1  ⇔  x pertenece
+
+Conjunto unionC (Conjunto a, Conjunto b)        { return a | b; }
+Conjunto interseccion (Conjunto a, Conjunto b)  { return a & b; }
+Conjunto diferencia (Conjunto a, Conjunto b)    { return a & ~b; }
+Conjunto inserta (int x, Conjunto c)            { return c | (1ULL << (x-1)); }
+Conjunto suprime (int x, Conjunto c)            { return c & ~(1ULL << (x-1)); }
+bool miembro (int x, Conjunto c)                { return (c >> (x-1)) & 1; }
+</code>
+<div class="tablewrap"><table><thead><tr><th>Ventajas</th><th>Inconvenientes</th></tr></thead><tbody><tr><td>Operaciones muy sencillas de implementar.<br>No hace falta memoria dinámica.<br>Inserta, Suprime y Miembro en O(1).</td><td>El tamaño es proporcional al <b>conjunto universal</b>, no a los elementos que tenga. Con T = enteros de 32 bits, cada conjunto ocupa 2³² bits = <b>0,5 GB</b> aunque tenga uno o dos elementos, y las operaciones tardan en proporción.</td></tr></tbody></table></div>
+<box k="warn">Fíjate en el detalle del 1ULL: escribir <code>1 &lt;&lt; (x-1)</code> desplaza un <code>int</code> de 32 bits y falla para x &gt; 32. En la diapositiva aparece así por simplicidad.</box>
+</ap>
+
+<ap id="t2-3" n="2.3" t="Conjuntos con listas de elementos">
+<p><b>Idea</b>: guardar en una lista los elementos que pertenecen al conjunto: <code>tipo Conjunto[T] = Lista[T]</code>.</p>
+<div class="tablewrap"><table><thead><tr><th>Ventajas</th><th>Inconvenientes</th></tr></thead><tbody><tr><td>Espacio proporcional al tamaño del conjunto, no al universal.<br>El conjunto universal puede ser muy grande o incluso infinito.</td><td>Operaciones menos eficientes si el universo es reducido.<br>Gasta más memoria y tiempo si los conjuntos están muy llenos.<br>Más complejo de implementar.</td></tr></tbody></table></div>
+<h4>Listas no ordenadas</h4>
+<code t="Miembro e Intersección con listas no ordenadas">
+operación Miembro (x: T; C: Conjunto[T]): booleano
+    Primero(C)
+    mientras NOT EsFinal(C) AND Actual(C) ≠ x hacer     // evaluación en cortocircuito
+        Avanzar(C)
+    devolver NOT EsFinal(C)
+
+operación Intersección (A, B: Conjunto[T]; var C: Conjunto[T])
+    C:= ListaVacía
+    Primero(A)
+    mientras NOT EsFinal(A) hacer
+        si Miembro(Actual(A), B) entonces
+            InsLista(C, Actual(A))
+        Avanzar(A)
+    finmientras
+</code>
+<p>Miembro es <b>O(n)</b>; Inserta también (hay que comprobar que no está) y Suprime igual. Unión, Intersección y Diferencia recorren B una vez por cada elemento de A: <b>O(n·m)</b> (O(n²) si las dos miden n).</p>
+<h4>Listas ordenadas</h4>
+<p>Con la lista ordenada, Miembro, Inserta y Suprime pueden <b>parar</b> al encontrar un elemento mayor que el buscado (siguen siendo O(n) en el peor caso, pero la mitad en promedio), y Unión, Intersección y Diferencia hacen un <b>recorrido simultáneo y único</b> de las dos listas, como la mezcla de la ordenación por mezcla: <b>O(n + m)</b>.</p>
+<code t="Miembro y Unión con listas ordenadas">
+operación Miembro (x: T; C: Conjunto[T]): booleano
+    Primero(C)
+    mientras NOT EsFinal(C) AND Actual(C) < x hacer
+        Avanzar(C)
+    devolver NOT EsFinal(C) AND Actual(C) == x
+
+operación Unión (A, B: Conjunto[T]; var C: Conjunto[T])
+    C:= ListaVacía
+    Primero(A); Primero(B)
+    mientras NOT (EsFinal(A) AND EsFinal(B)) hacer
+        si EsFinal(B) entonces
+            InsLista(C, Actual(A)); Avanzar(A)
+        sino si EsFinal(A) entonces
+            InsLista(C, Actual(B)); Avanzar(B)
+        sino si Actual(A) < Actual(B) entonces
+            InsLista(C, Actual(A)); Avanzar(A)
+        sino si Actual(A) > Actual(B) entonces
+            InsLista(C, Actual(B)); Avanzar(B)
+        sino                                 // iguales: se mete una sola vez
+            InsLista(C, Actual(A)); Avanzar(A); Avanzar(B)
+        finsi
+    finmientras
+</code>
+<fig src="t2-24" alt="Unión de A = {1, 3, 5, 8} y B = {3, 4, 5, 9} avanzando a la vez por las dos listas">La unión de dos listas ordenadas avanza a la vez por las dos, metiendo siempre el menor (InsLista inserta al final).</fig>
+<ej id="t2-inter" n="Ejercicio" t="Intersección y diferencia con listas ordenadas"><p>Escribe la Intersección y la Diferencia con listas ordenadas en O(n + m). ¿Cómo serían Min y Max? ¿Cuánta memoria usa un conjunto de n elementos si un puntero ocupa k₁ bytes y un elemento k₂?</p>
+<sol><code t="Intersección y Diferencia">
+operación Intersección (A, B: Conjunto[T]; var C: Conjunto[T])
+    C:= ListaVacía
+    Primero(A); Primero(B)
+    mientras NOT EsFinal(A) AND NOT EsFinal(B) hacer
+        si Actual(A) < Actual(B) entonces Avanzar(A)
+        sino si Actual(A) > Actual(B) entonces Avanzar(B)
+        sino InsLista(C, Actual(A)); Avanzar(A); Avanzar(B)
+    finmientras
+
+operación Diferencia (A, B: Conjunto[T]; var C: Conjunto[T])     // A − B
+    C:= ListaVacía
+    Primero(A); Primero(B)
+    mientras NOT EsFinal(A) hacer
+        si EsFinal(B) OR Actual(A) < Actual(B) entonces
+            InsLista(C, Actual(A)); Avanzar(A)
+        sino si Actual(A) > Actual(B) entonces Avanzar(B)
+        sino Avanzar(A); Avanzar(B)                 // está en los dos: no va
+    finmientras
+</code><p>Min es el primero de la lista, <b>O(1)</b>; Max es el último, O(n) con una lista simple u O(1) si se guarda un puntero al último. Memoria: cada nodo guarda un elemento y un puntero, <b>n·(k₁ + k₂)</b> bytes (más el puntero inicial).</p></sol></ej>
+<box k="def" t="Conclusiones de las implementaciones básicas"><ul><li><b>Arrays de booleanos</b>: muy rápidos para insertar y consultar, pero inviables si el universo es muy grande.</li><li><b>Listas</b>: memoria razonable, proporcional a lo que se usa, pero muy ineficientes para insertar y consultar un elemento.</li><li>Solución: <b>tablas de dispersión</b> (este tema), <b>árboles</b> (tema 3) o combinaciones de estructuras.</li></ul></box>
+</ap>
+
+<ap id="t2-4" n="2.4" t="El TAD Diccionario">
+<p>Muchas aplicaciones guardan datos que cambian en tiempo de ejecución, cada uno con una <b>clave</b> y unos <b>valores</b> asociados, y las consultas son <b>por clave</b>: una agenda, un diccionario de sinónimos, los empleados de una empresa, las notas de los alumnos… No suelen hacer uniones ni intersecciones, sino inserciones, consultas y eliminaciones.</p>
+<fig src="t2-29" alt="Un conjunto de enteros frente a un diccionario de asociaciones número de alumno, nombre y nota">Un diccionario es un conjunto de asociaciones (clave → valor).</fig>
+<div class="box def"><p class="box-t">Definición</p><p>Una <b>asociación</b> es un par (clave: tipo_clave; valor: tipo_valor). Un <b>diccionario</b> (o <b>mapa</b>) es un conjunto de asociaciones con las operaciones:</p><ul><li><code>Inserta (clave, valor, var D)</code> (si la clave ya está, cambia su valor)</li><li><code>Consulta (clave, D): tvalor</code></li><li><code>Suprime (clave, var D)</code></li><li><code>Vacío (var D)</code></li></ul></div>
+<p>Todo lo dicho de los conjuntos se extiende a los diccionarios, con matices: con arrays de booleanos es imposible (el universo de claves es enorme y no hay dónde guardar el valor); con listas es complejo e ineficiente. La representación más sencilla es un array de asociaciones con un contador:</p>
+<code t="Diccionario con un array: O(n) en Inserta, Consulta y Suprime">
+tipo Diccionario[tclave, tvalor] = registro
+    último: entero
+    datos: array [1..máximo] de Asociacion[tclave, tvalor]
+finregistro
+
+operación Vacío (var D: Diccionario[tclave, tvalor])
+    D.último:= 0
+
+operación Inserta (clave: tclave; valor: tvalor; var D: Diccionario[tclave, tvalor])
+    para i:= 1 hasta D.último hacer
+        si D.datos[i].clave == clave entonces
+            D.datos[i].valor:= valor
+            acabar
+    finpara
+    si D.último < máximo entonces
+        D.último:= D.último + 1
+        D.datos[D.último]:= (clave, valor)
+    sino
+        Error("El diccionario está lleno")
+    finsi
+
+operación Consulta (clave: tclave; D: Diccionario[tclave, tvalor]): tvalor
+    para i:= 1 hasta D.último hacer
+        si D.datos[i].clave == clave entonces
+            devolver D.datos[i].valor
+    finpara
+    devolver NULO
+
+operación Suprime (clave: tclave; var D: Diccionario[tclave, tvalor])
+    i:= 1
+    mientras (i ≤ D.último) AND (D.datos[i].clave ≠ clave) hacer
+        i:= i + 1
+    finmientras
+    si i ≤ D.último entonces                 // encontrado: lo tapa el último
+        D.datos[i]:= D.datos[D.último]
+        D.último:= D.último − 1
+    finsi
+</code>
+<box k="warn" t="Ojo con los límites de Suprime">En la diapositiva el bucle y la comprobación usan <code>i &lt; D.último</code>; con «&lt;» no se borraría la clave si está justo en la última posición. Con «≤» funciona en todos los casos. Al borrar se pone el último elemento en el hueco: el orden no importa en un diccionario.</box>
+</ap>
+
+<ap id="t2-5" n="2.5" t="Tablas de dispersión: la idea">
+<p>Con listas o arrays, Inserta, Suprime y Miembro son O(n) con un uso razonable de memoria; con arrays de booleanos son O(1) pero con muchas limitaciones de memoria. ¿Cómo quedarse con lo mejor de cada uno?</p>
+<fig src="t2-35" alt="Una función h lleva cada clave a una posición de un array T de B posiciones">Se reserva un array de tamaño fijo B y una función h dice en qué posición va cada clave.</fig>
+<div class="box def"><p class="box-t">Tabla de dispersión (hash)</p><p>Un array T con B posiciones (0 … B−1) y una <b>función de dispersión</b> <code>h : tipo_clave → [0, …, B−1]</code>. Insertar: <code>T[h(clave)] := valor</code>. Consultar: <code>devolver T[h(clave)]</code>. En teoría, <b>O(1)</b>.</p></div>
+<p>Ejemplo: claves enteras, B = 10 y la función más sencilla, <code>h(k) = k mod 10</code> (el último dígito). Con D = {9, 25, 33, 976, 285, 541, 543, 2180}:</p>
+<div class="tablewrap"><table><thead><tr><th>k</th><th>9</th><th>25</th><th>33</th><th>976</th><th>285</th><th>541</th><th>543</th><th>2180</th></tr></thead><tbody><tr><td><b>h(k)</b></td><td>9</td><td>5</td><td>3</td><td>6</td><td><b>5</b></td><td>1</td><td><b>3</b></td><td>0</td></tr></tbody></table></div>
+<p>«Habemus problema»: 25 y 285 van a la misma posición, y también 33 y 543.</p>
+<div class="box def"><p class="box-t">Sinónimos</p><p>Si x ≠ y y h(x) = h(y), se dice que x e y son <b>sinónimos</b>. Los métodos de dispersión se diferencian en cómo los tratan:</p><ul><li><b>Dispersión abierta</b>: cada posición guarda una lista con todos sus sinónimos.</li><li><b>Dispersión cerrada</b>: cada posición guarda un elemento; si está ocupada, se busca otra (redispersión).</li></ul></div>
+</ap>
+
+<ap id="t2-6" n="2.6" t="Dispersión abierta">
+<p>Las celdas de la tabla no son elementos sino <b>listas</b> de elementos, llamadas <b>cubetas</b>: <code>tipo TablaHash[T] = array [0..B−1] de Lista[T]</code>. Dentro de cada cubeta están los sinónimos; el conjunto de sinónimos se llama <b>clase</b>.</p>
+<ha b="10" t="Dispersión abierta con B = 10, h(k) = k mod 10 y D = {9, 25, 33, 976, 285, 541, 543, 2180}">0: 2180; 1: 541; 3: 33 543; 5: 25 285; 6: 976; 9: 9</ha>
+<code t="Operaciones de la dispersión abierta">
+operación Inserta (x: T; var tabla: TablaHash[T])
+    si NOT Miembro(x, tabla[h(x)]) entonces      // recorrer la cubeta para no repetir
+        InsLista(tabla[h(x)], x)
+
+operación Miembro (x: T; tabla: TablaHash[T]): booleano
+    devolver Miembro(x, tabla[h(x)])              // búsqueda en una lista
+
+operación Suprime (x: T; var tabla: TablaHash[T])
+    SuprimeLista(tabla[h(x)], x)
+</code>
+<h4>Eficiencia</h4>
+<p>El tiempo de las operaciones es proporcional al tamaño de las cubetas. Con B cubetas y n elementos repartidos <b>uniformemente</b>, cada cubeta mide n/B y Inserta, Suprime y Consulta tardan <b>O(1 + n/B)</b>. Si la función de dispersión no reparte bien (todos a la misma cubeta), degenera en una lista: O(n).</p>
+<p><b>Memoria</b> (k₁ bytes por puntero, k₂ por elemento): la tabla, k₁·B; las celdas de las listas, (k₁ + k₂)·n. En total <b>k₁·B + (k₁ + k₂)·n</b>. Menos cubetas gastan menos memoria; más cubetas hacen las operaciones más rápidas.</p>
+</ap>
+
+<ap id="t2-7" n="2.7" t="Dispersión cerrada y redispersión">
+<p>Las celdas de la tabla son <b>elementos</b> del diccionario (no listas), así que no se gasta memoria extra en listas: <code>tipo TablaHash[tc, tv] = array [0..B−1] de (tc, tv)</code>. Si al insertar un elemento k su posición h(k) ya está ocupada, hay una <b>colisión</b> y se hace <b>redispersión</b>: se prueban h₁(k), h₂(k)… hasta encontrar una posición libre. La secuencia de posiciones recorridas para un elemento es su <b>cadena</b> o <b>secuencia de búsqueda</b>.</p>
+<p>La más sencilla es la <b>redispersión lineal</b>: <code>hᵢ(k) = (h(k) + i) mod B</code> (probar la siguiente posición). Insertando D en orden con B = 10:</p>
+<ol class="steps"><li>9 → 9; 25 → 5; 33 → 3; 976 → 6.</li><li>285 → 5 ocupada (25) → 6 ocupada (976) → <b>7</b>.</li><li>541 → 1.</li><li>543 → 3 ocupada (33) → <b>4</b>.</li><li>2180 → 0.</li></ol>
+<hc t="Dispersión cerrada con redispersión lineal (B = 10)">2180|541||33|*543|25|976|*285||9</hc>
+<fig src="t2-43" alt="Inserción de D en una tabla cerrada con redispersión lineal: 285 salta a la 7 y 543 a la 4">La misma tabla en la diapositiva: las flechas son los saltos de la redispersión.</fig>
+<ej id="t2-99" n="Ejercicio" t="¿Dónde va el 99? ¿Y luego el 12?"><p>Sobre la tabla anterior, inserta 99 y después 12.</p><sol><p>99 → 9 ocupada (9) → 0 ocupada (2180) → 1 ocupada (541) → <b>2</b> libre. 12 → 2 ocupada (99, que acaba de llegar) → 3, 4, 5, 6, 7 ocupadas → <b>8</b> libre: 7 intentos. Se ve el <b>agrupamiento</b>: las posiciones ocupadas seguidas forman un bloque que cada vez crece más y alarga las búsquedas.</p><hc>2180|541|*99|33|543|25|976|285|*12|9</hc></sol></ej>
+<code t="Consulta en dispersión cerrada">
+operación Consulta (clave: tclave; T: TablaHash[tc, tv]): tvalor
+    p:= h(clave)
+    i:= 0
+    mientras T[p].clave ≠ VACÍO AND T[p].clave ≠ clave AND i < B hacer
+        i:= i + 1
+        p:= hᵢ(clave)
+    finmientras
+    si T[p].clave == clave entonces devolver T[p].valor
+    sino devolver NULO
+</code>
+<p>La búsqueda para al encontrar la clave, una posición <b>vacía</b> (si estuviera, habría ido ahí) o tras recorrer toda la tabla.</p>
+</ap>
+
+<ap id="t2-8" n="2.8" t="Eliminar en dispersión cerrada">
+<p>Cuidado: la eliminación <b>no puede romper las secuencias de búsqueda</b>. Si en la tabla anterior se borra el 976 dejando la posición 6 vacía y luego se consulta el 285: 285 → 5 (está el 25) → 6 vacía → se para: ¡<b>el 285 «no está»</b>, aunque está en la 7!</p>
+<p><b>Solución 1: marca de «elemento eliminado»</b>. Al borrar se deja una marca especial (✕), distinta de vacío:</p>
+<ul><li>En <b>Consulta</b>, la búsqueda <b>sigue</b> al encontrar la marca.</li><li>En <b>Inserta</b> también sigue (hay que comprobar que la clave no esté más adelante), pero la primera marca encontrada se puede usar como posición libre.</li></ul>
+<hc t="Tras eliminar el 976 con marca">2180|541||33|543|25|#|285||9</hc>
+<p>Ahora consultar 285: 5 → 6 (marca: seguir) → 7 ✓ encontrado. Consultar 13: 3 → 4 → 5 → 6 (marca) → 7 → 8 vacía: no está (6 posiciones). Insertar 13: la misma búsqueda dice que no está, y se mete en la primera marca encontrada, la 6.</p>
+<fig src="t2-46" alt="Tabla cerrada en la que el 976 se ha sustituido por una marca de elemento eliminado y la búsqueda del 285 sigue hasta la 7">Con la marca, la búsqueda del 285 no se corta.</fig>
+<p><b>Solución 2: mover elementos</b>. Tras borrar, se revisan los elementos siguientes del bloque: si la secuencia de búsqueda de alguno pasa por el hueco, se mueve a él (y se repite con el nuevo hueco). Ejemplo, eliminar 25 y luego 33 en la tabla original:</p>
+<ol class="steps"><li>Borrar 25 (posición 5): el 976 de la 6 está en su sitio (h = 6); el 285 de la 7 tiene h = 5, su secuencia pasa por la 5 → se mueve a la 5. La 8 está vacía: fin.</li><li>Borrar 33 (posición 3): el 543 de la 4 tiene h = 3 → se mueve a la 3. El 285 (h = 5) y el 976 (h = 6) están bien. La 7 está vacía: fin.</li></ol>
+<hc t="Tras eliminar 25 y 33 moviendo elementos">2180|541||*543||*285|976|||9</hc>
+<fig src="t2-47" alt="Eliminación del 25 y del 33 moviendo el 543 y el 285 a los huecos">Lo mismo en la diapositiva: los elementos cuya secuencia pasa por el hueco se mueven hacia atrás.</fig>
+</ap>
+
+<ap id="t2-9" n="2.9" t="Eficiencia de la dispersión y reestructuración">
+<p><b>Memoria de la dispersión cerrada</b>: k₂·B (la tabla guarda los elementos) o k₁·B + k₂·n si la tabla guarda punteros a los datos. En dispersión abierta era k₁·B + (k₁ + k₂)·n.</p>
+<p><b>Tiempo</b>: la tabla cerrada nunca puede tener más de B elementos, y la probabilidad de colisión crece cuanto más llena está. El coste de Inserta es <b>O(1 / (1 − n/B))</b>: cuando n → B, el tiempo tiende a infinito. En la abierta era <b>O(1 + n/B)</b>, que crece despacio aunque n supere a B.</p>
+<fig src="t2-50" alt="Gráfica de la longitud media de las secuencias de búsqueda frente a n/B: la cerrada se dispara al acercarse a 1 y la abierta crece en línea recta">Longitud media de las secuencias de búsqueda según la ocupación n/B.</fig>
+<ej id="t2-igual" n="Ejemplo de parcial" t="¿Cuándo tardan lo mismo las dos?"><p>Si cada paso de la dispersión abierta cuesta el doble que uno de la cerrada (hay que seguir punteros), los tiempos son 2c·(1 + n/B) y c·1/(1 − n/B). ¿Para qué ocupación n/B son iguales?</p><sol><p>Con x = n/B: 2(1 + x) = 1/(1 − x) ⇒ 2(1 + x)(1 − x) = 1 ⇒ 2(1 − x²) = 1 ⇒ x² = 1/2 ⇒ <b>x = √(1/2) ≈ 0,707</b>. Por debajo de un 70 % de ocupación la cerrada es más rápida; por encima, la abierta.</p></sol></ej>
+<div class="box def"><p class="box-t">Reestructuración</p><p>Si n crece mucho, se crea una tabla nueva con más cubetas y se vuelven a insertar todos los elementos (con la nueva h, porque depende de B). Criterios de ejemplo: en <b>dispersión abierta</b>, reestructurar si <b>n &gt; 2B</b>; en <b>dispersión cerrada</b>, si <b>n &gt; 0,75·B</b>.</p></div>
+</ap>
+
+<ap id="t2-10" n="2.10" t="Funciones de dispersión con números">
+<p>Todo lo anterior supone una <b>buena</b> función de dispersión; si no lo es, el tiempo puede ser mucho mayor. Una buena función:</p>
+<ul><li><b>Reparte</b> los elementos en la tabla de manera uniforme: lo más «aleatoria» posible.</li><li>Es <b>fácil de calcular</b>.</li><li>Ojo: es una función de k, así que <b>siempre devuelve lo mismo para la misma clave</b> (nada de usar números aleatorios de verdad).</li></ul>
+<h4>Método de división: h(k) = k mod B</h4>
+<p>¿Qué valores de B son adecuados? Con B = 10 sólo cuenta el último dígito; con B = 100, los dos últimos. Si las claves tienen alguna regularidad en esos dígitos, colisionan todas. Con <b>B primo</b> el resultado depende de todos los dígitos:</p>
+<div class="tablewrap"><table><thead><tr><th>k</th><th>261</th><th>871</th><th>801</th><th>23</th><th>111</th><th>208</th><th>123</th><th>808</th></tr></thead><tbody><tr><td><b>k mod 10</b></td><td>1</td><td>1</td><td>1</td><td>3</td><td>1</td><td>8</td><td>3</td><td>8</td></tr><tr><td><b>k mod 11</b></td><td>8</td><td>2</td><td>9</td><td>1</td><td>1</td><td>10</td><td>2</td><td>5</td></tr></tbody></table></div>
+<p><b>Conclusión</b>: es aconsejable que <b>B sea un número primo</b>.</p>
+<h4>Método de multiplicación: h(k) = ⌊C·k⌋ mod B</h4>
+<p>C debe ser <b>real</b> (si es entero no mezcla nada). Con C = 1,11 y B = 10, para un número XYZ el resultado se parece a (X + Y + Z) mod 10: depende de todos los dígitos.</p>
+<div class="tablewrap"><table><thead><tr><th>k</th><th>261</th><th>871</th><th>801</th><th>23</th><th>111</th><th>208</th><th>123</th><th>808</th></tr></thead><tbody><tr><td>1,11·k</td><td>289,71</td><td>966,81</td><td>889,11</td><td>25,53</td><td>123,21</td><td>230,88</td><td>136,53</td><td>896,88</td></tr><tr><td><b>h(k)</b></td><td>9</td><td>6</td><td>9</td><td>5</td><td>3</td><td>0</td><td>6</td><td>6</td></tr></tbody></table></div>
+<p><b>Variante</b>: <code>h(k) = ⌊frac(A·k/W)·B⌋</code>, con W el valor máximo del tipo (k/W lleva al rango [0, 1]), A un número coprimo con W, frac la parte decimal y ·B lleva al rango de la tabla. Con W = 1000, A = 3 y B = 10:</p>
+<div class="tablewrap"><table><thead><tr><th>k</th><th>261</th><th>871</th><th>801</th><th>23</th><th>111</th><th>208</th><th>123</th><th>808</th></tr></thead><tbody><tr><td>3·k/1000</td><td>0,783</td><td>2,613</td><td>2,403</td><td>0,069</td><td>0,333</td><td>0,624</td><td>0,369</td><td>2,424</td></tr><tr><td><b>h(k)</b></td><td>7</td><td>6</td><td>4</td><td>0</td><td>3</td><td>6</td><td>3</td><td>4</td></tr></tbody></table></div>
+<h4>Método del centro del cuadrado: h(k) = ⌊k² / C⌋ mod B</h4>
+<p>Se eleva al cuadrado y se toman los dígitos del centro, que dependen de todos los de k. Con C = 100: 261² = 68 121 → 681 → mod 10 = 1; 871² = 758 641 → 7586 → 6. Para que funcione bien se sugiere un C ≈ W/√B.</p>
+<fig src="t2-53" alt="Diapositiva del método de división con la tabla de k mod 11">El método de división en clase: con B = 11 el valor depende de todos los dígitos.</fig>
+</ap>
+
+<ap id="t2-11" n="2.11" t="Funciones de dispersión con cadenas y secuencias">
+<p>Muchas veces la clave es una <b>secuencia</b> de números o letras: k = x₁ x₂ x₃ … (una cadena son sus códigos de carácter; HOLA = 72, 79, 76, 65). En general cualquier dato se puede tratar como la secuencia de bytes que lo forman. Objetivos: que dependa de todos (o muchos) xᵢ, que genere muchos valores distintos y que no tarde mucho.</p>
+<div class="tablewrap"><table><thead><tr><th>Método</th><th>h(k)</th><th>Valoración</th></tr></thead><tbody>
+<tr><td><b>Suma</b></td><td>(Σ xᵢ) mod B</td><td>¡Muy malo! Los anagramas colisionan (AMOR, ROMA, RAMO…) y las sumas caen en un rango pequeño.</td></tr>
+<tr><td><b>Suma posicional</b></td><td>(Σ Eⁱ·xᵢ) mod B, p. ej. x₁ + 10·x₂ + 100·x₃ + …</td><td>Mucho mejor. E (la base) suele ser primo.</td></tr>
+<tr><td><b>Plegado</b> (folding)</td><td>(x₁x₂ + x₃x₄ + x₅x₆) mod B</td><td>Suma posicional por trozos.</td></tr>
+<tr><td><b>Extracción</b></td><td>(x₄x₁x₆) mod B</td><td>Usa sólo algunos elementos.</td></tr></tbody></table></div>
+<p>¿Cómo se programa la suma posicional? Con <code>pow</code> es lento y desborda enseguida (67⁵ = 1 350 125 107 ya casi no cabe en 32 bits). Lo correcto es el <b>esquema de Horner</b>: multiplicar lo acumulado por la base y sumar el siguiente carácter.</p>
+<div class="pair">
+<code t="Mal: con pow (lento y con desbordamientos)" lang="cpp">
+unsigned int h (string clave)
+{
+    unsigned int res = 0;
+    for (int i = 0; i < clave.length(); i++)
+        res += pow(67, i) * clave[i];
+    return res % B;
+}
+</code>
+<code t="Bien: esquema de Horner" lang="cpp">
+unsigned int h (string clave)
+{
+    unsigned int res = 0;
+    for (int i = 0; i < clave.length(); i++)
+        res = 67 * res + clave[i];
+    return res % B;
+}
+</code>
+</div>
+<p>Con <code>unsigned</code> los desbordamientos no son un error: la aritmética es módulo 2³² y la función sigue repartiendo bien. Es la base de los <b>métodos hash iterativos</b>:</p>
+<code t="Esquema general de los métodos iterativos">
+operación h (k: tipo_clave): entero
+    res:= VALOR_INICIAL
+    para i:= 1 hasta longitud(k) hacer
+        res:= res · BASE
+        res:= res COMB xᵢ                 // COMB: normalmente suma o XOR
+    finpara
+    devolver res mod B
+</code>
+<div class="tablewrap"><table><thead><tr><th>Función</th><th>Valor inicial</th><th>Base</th><th>Combinación</th></tr></thead><tbody>
+<tr><td>Suma posicional</td><td>0</td><td>E</td><td>+</td></tr><tr><td>djb2</td><td>5381</td><td>33</td><td>+</td></tr><tr><td>djb2a</td><td>5381</td><td>33</td><td>XOR</td></tr><tr><td>sdbm</td><td>0</td><td>65599</td><td>+</td></tr><tr><td>FNV-1</td><td>2166136261</td><td>16777619</td><td>XOR</td></tr></tbody></table></div>
+<fig src="t2-58" alt="Las dos implementaciones de la suma posicional en C++, con pow tachada y con Horner">En clase: la versión con <code>pow</code> está tachada.</fig>
+<box k="tip" t="Para la práctica">La tabla de palabras de la práctica tiene claves de tipo cadena: usa un método iterativo (djb2, sdbm o FNV), un B primo y compara varias funciones midiendo colisiones o tiempos. En la memoria se pide justificarlo.</box>
+</ap>
+
+<ap id="t2-12" n="2.12" t="Funciones de redispersión">
+<div class="tablewrap"><table><thead><tr><th>Redispersión</th><th>hᵢ(k)</th><th>Características</th></tr></thead><tbody>
+<tr><td><b>Lineal</b></td><td>(h(k) + i) mod B</td><td>Sencilla; recorre todas las cubetas (i = 1, …, B−1). Problema de <b>agrupamiento</b>: si se llenan varias cubetas seguidas y hay una colisión hay que recorrer todo el grupo, y el grupo crece cada vez más.</td></tr>
+<tr><td><b>Con saltos de tamaño C</b></td><td>(h(k) + C·i) mod B</td><td>Sencilla; recorre todas las cubetas si C y B son <b>primos entre sí</b>. No resuelve el agrupamiento (el grupo está «a saltos», pero existe igual).</td></tr>
+<tr><td><b>Cuadrática</b></td><td>(h(k) + D(i)) mod B con D(i) = +1, −1, +2², −2², +3², −3²…</td><td>Funciona (recorre toda la tabla) cuando B es primo de la forma <b>4R + 3</b>. Reduce el agrupamiento.</td></tr>
+<tr><td><b>Doble</b></td><td>(h(k) + C(k)·i) mod B</td><td>Saltos de tamaño C(k), distinto para cada clave, con C: tipo_clave → [1, …, B−1] y B primo. Resuelve el agrupamiento si los sinónimos (igual h) dan distinto C(k). Ejemplo con k = x₁x₂x₃x₄: h(k) = x₁x₄ mod B, C(k) = 1 + (x₃x₂ mod (B−1)).</td></tr></tbody></table></div>
+<box k="warn" t="Ojo en el examen">Con saltos fijos o dobles, si el salto no es coprimo con B la secuencia de búsqueda se queda en un ciclo y no visita toda la tabla: por eso se toma B primo. En el examen de enero de 2026 se pide justo esto en una variante, la «dispersión empujón» (en los exámenes resueltos).</box>
+</ap>
+
+<ap id="t2-13" n="2.13" t="Conclusiones del tema 2">
+<ul><li>La función de dispersión dice dónde se mete cada elemento: cada k va a la posición h(k)… en principio.</li><li>Con suficientes cubetas y una buena función, las operaciones son <b>O(1)</b>. Una buena función es esencial; cuál usar depende de la aplicación.</li><li>Las tablas de dispersión son muy buenas para <b>Inserta, Suprime y Consulta</b>, pero malas para Unión, Intersección, <b>Máximo, Mínimo o listar los elementos en orden</b>: hay que recorrer toda la tabla, O(B), y ordenar. Para eso, los árboles del tema 3.</li></ul>
+<div class="tablewrap"><table class="cost"><thead><tr><th>Estructura</th><th>Inserta / Suprime / Miembro</th><th>Unión, ∩, −</th><th>Min / Max</th><th>Memoria</th></tr></thead><tbody>
+<tr><td>Array de booleanos</td><td class="good">O(1)</td><td>O(R)</td><td>O(R)</td><td>R bits (universo)</td></tr>
+<tr><td>Lista no ordenada</td><td class="bad">O(n)</td><td class="bad">O(n·m)</td><td>O(n)</td><td>n·(k₁ + k₂)</td></tr>
+<tr><td>Lista ordenada</td><td class="bad">O(n)</td><td>O(n + m)</td><td class="good">O(1) / O(n)</td><td>n·(k₁ + k₂)</td></tr>
+<tr><td>Dispersión abierta</td><td class="good">O(1 + n/B)</td><td>O(B + n)</td><td>O(B + n)</td><td>k₁·B + (k₁ + k₂)·n</td></tr>
+<tr><td>Dispersión cerrada</td><td class="good">O(1/(1 − n/B))</td><td>O(B)</td><td>O(B)</td><td>k₂·B</td></tr></tbody></table></div>
+</ap>
+</tema>
+
+<tema id="t3" n="3" t="Representación de conjuntos mediante árboles" lede="Cuatro estructuras de árbol para conjuntos y diccionarios: los tries (palabras con prefijos comunes), las relaciones de equivalencia con punteros al padre (unión-búsqueda), los árboles AVL (búsqueda equilibrada en memoria) y los árboles B (búsqueda en disco). Es la pregunta 3 del examen.">
+
+<ap id="t3-1" n="3.1" t="Árboles trie: la idea">
+<p>Aplicación típica: un <b>corrector ortográfico interactivo</b>. El diccionario de español tiene unos 3 millones de palabras: muchas palabras suponen mucha memoria y operaciones lentas, pero buscar una palabra no puede tardar más de un milisegundo. Recorrer una lista de ese tamaño por cada palabra sería eterno.</p>
+<p><b>Idea</b>: muchas palabras tienen <b>prefijos comunes</b> (espasmar, espasmo, espasmódico, espasmódica…). Un <b>trie</b> es, básicamente, un <b>árbol de prefijos</b>.</p>
+<div class="box def"><p class="box-t">Definición</p><p>Sea A un alfabeto (p. ej. A = {a, b, …, z}) al que se añade una marca de fin de palabra, <b>$</b>. Un trie es un árbol en el que:</p><ul><li>La <b>raíz</b> representa la cadena vacía.</li><li>Un nodo puede tener tantos hijos como caracteres de A <b>más uno</b>. Cada hijo está etiquetado con un carácter o con la marca $.</li><li>La sucesión de etiquetas desde la raíz hasta una hoja etiquetada con $ representa una <b>palabra</b>.</li><li>Todos los nodos, salvo la raíz y las hojas con $, son <b>prefijos</b> del árbol.</li></ul></div>
+<fig src="t3-7" alt="Trie de las palabras ELLA, ELLO, EL, TU, Y, YO">El trie de C = {ELLA, ELLO, EL, TU, Y, YO}. La marca $ hace falta porque hay palabras que acaban en un nodo intermedio (EL es prefijo de ELLA; Y, de YO).</fig>
+<p>Cambiando el alfabeto se representan otras cosas, siempre que tengan prefijos comunes. Por ejemplo, direcciones web, con «letras» como .com, .es, .um, www, dis…</p>
+<fig src="t3-8" alt="Trie de direcciones web con etiquetas .com, .es, .org, .net, .google, .um, www, dis, ditec">Un trie de URL: cada «carácter» es una parte de la dirección.</fig>
+<box k="warn">Los tries son eficaces cuando muchas claves comparten prefijos. Con números, por ejemplo, no merecen la pena.</box>
+</ap>
+
+<ap id="t3-2" n="3.2" t="Representación de los nodos">
+<p>Un trie es un puntero a su raíz, <code>ArbolTrie[A] = Puntero[NodoTrie[A]]</code>, así que la pregunta es cómo representar un nodo. Un nodo es un <b>diccionario</b> con clave un carácter de A y valor un puntero al hijo, con estas operaciones:</p>
+<code t="Operaciones de NodoTrie[A]">
+Consulta (n: NodoTrie[A]; car: A): Puntero[NodoTrie[A]]    // hijo de n con la etiqueta car (o NULO)
+Inserta (var n: NodoTrie[A]; car: A)                       // añade un hijo nuevo con la etiqueta car
+PonMarca (var n: NodoTrie[A])                              // n es final de palabra
+QuitaMarca (var n: NodoTrie[A])
+HayMarca (n: NodoTrie[A]): Bool
+para cada car hijo del nodo n hacer acción                 // iterador
+</code>
+<fig src="t3-11" alt="Un nodo trie representado con un array indexado por los caracteres A…Z y $ y con una lista de pares carácter–puntero">Las dos representaciones de un nodo con los hijos A, C, N, T y la marca $.</fig>
+<h4>Con arrays</h4>
+<code t="Nodo con un array: un puntero por carácter">
+tipo NodoTrie[A] = array [A] de Puntero[NodoTrie[A]]       // se crea todo a NULO
+
+Consulta (n; car)   devolver n[car]
+Inserta (var n; car) n[car]:= NUEVO NodoTrie[A]
+PonMarca (var n)     n[$]:= PunteroA(n)     // un puntero no nulo cualquiera
+QuitaMarca (var n)   n[$]:= NULO
+HayMarca (n)         devolver n[$] ≠ NULO
+</code>
+<p><b>Ventaja</b>: acceso muy rápido, O(1). <b>Inconveniente</b>: desperdicia muchísima memoria (casi todos los punteros de cada nodo son NULO).</p>
+<fig src="t3-14" alt="El trie de ELLA, ELLO, EL, TU, Y, YO con nodos que son arrays de punteros">El mismo trie con nodos array: cada nodo reserva un hueco para cada letra.</fig>
+<h4>Con listas con nodo cabecera</h4>
+<code t="Nodo como lista ordenada de (carácter, hijo)">
+tipo NodoTrie[A] = registro
+    car: A
+    sig, ptr: Puntero[NodoTrie[A]]
+finregistro
+// El nodo cabecera guarda la marca en car ('$' o ' '); los siguientes, un hijo cada uno.
+
+Consulta (n: NodoTrie[A]; c: A): Puntero[NodoTrie[A]]
+    tmp:= n.sig
+    mientras tmp ≠ NULO AND tmp→car < c hacer
+        tmp:= tmp→sig
+    si tmp ≠ NULO AND tmp→car == c entonces devolver tmp→ptr
+    sino devolver NULO
+
+Inserta (var n: NodoTrie[A]; c: A)       // en la posición ordenada, si no estaba
+    tmp:= PunteroA(n)
+    mientras tmp→sig ≠ NULO AND tmp→sig→car < c hacer
+        tmp:= tmp→sig
+    si tmp→sig == NULO OR tmp→sig→car ≠ c entonces
+        tmp→sig:= NUEVO NodoTrie[A](c, tmp→sig, NUEVO NodoTrie[A])
+
+PonMarca (var n)    n.car:= '$'
+QuitaMarca (var n)  n.car:= ' '
+HayMarca (n)        devolver n.car == '$'
+</code>
+<p><b>Ventaja</b>: uso razonable de memoria. <b>Inconveniente</b>: operaciones más lentas (hay que recorrer la lista de hijos).</p>
+<fig src="t3-18" alt="El trie de ejemplo con nodos que son listas enlazadas de caracteres">El mismo trie con nodos lista: cada recuadro rojo es un nodo (cabecera más un elemento por hijo).</fig>
+</ap>
+
+<ap id="t3-3" n="3.3" t="Operaciones con tries">
+<p>Con las operaciones del nodo (sirven igual con arrays que con listas) se escriben las del árbol. Insertar una palabra es bajar por el árbol creando lo que falte y poner la marca al final:</p>
+<code t="Insertar, consultar y listar palabras">
+operación Inserta (var a: ArbolTrie[A]; s: cadena)
+    pos:= a
+    para i:= 1 hasta Longitud(s) hacer
+        si Consulta(pos, s[i]) == NULO entonces
+            Inserta(pos, s[i])
+        pos:= Consulta(pos, s[i])
+    finpara
+    PonMarca(pos)
+
+operación Miembro (a: ArbolTrie[A]; s: cadena): booleano
+    pos:= a
+    para i:= 1 hasta Longitud(s) hacer
+        pos:= Consulta(pos, s[i])
+        si pos == NULO entonces devolver FALSE     // no existe ese prefijo
+    finpara
+    devolver HayMarca(pos)                         // ¿acaba aquí una palabra?
+
+operación ListarTodas (n: ArbolTrie[A]; palabra: cadena)    // en orden alfabético
+    para cada car hijo del nodo n hacer
+        si car == $ entonces Escribir(palabra)
+        sino ListarTodas(Consulta(n, car), palabra + car)
+    finpara
+// Llamada inicial: ListarTodas(raíz, "")
+</code>
+<fig src="t3-21" alt="Inserción de ELLE en el trie: pos baja por E, L, L y se crea el nodo E con su marca">Insertar ELLE: se reutilizan E-L-L y sólo se crea la última E con su $.</fig>
+<p><b>El corrector interactivo</b>: al empezar una palabra, pos se pone en la raíz; al pulsar una tecla c, si <code>Consulta(pos, c) == NULO</code> la palabra es incorrecta y si no, pos baja a ese hijo; al acabar la palabra, es correcta si y sólo si <code>HayMarca(pos)</code>. ¡Cada tecla cuesta un paso!</p>
+<p>Si se quiere guardar información asociada a cada palabra (un diccionario), el sitio natural es el nodo donde acaba: junto a la marca $. Para <b>eliminar</b> una palabra basta quitar su marca; para no dejar basura, después se borran de abajo arriba los nodos que se han quedado sin hijos ni marca.</p>
+</ap>
+
+<ap id="t3-4" n="3.4" t="Evaluación de los tries: tiempo y memoria">
+<p><b>Tiempo</b>: el factor principal es la <b>longitud m de las palabras</b>, no cuántas hay. Con nodos array, <b>O(m)</b>; con nodos lista, O(m·s), siendo s la longitud media de las listas de hijos (en la práctica, ~O(m)). Una tabla de dispersión también tiene que leer la palabra entera para calcular h, así que es comparable, y en el corrector interactivo el trie es aún mejor: cada tecla es un paso.</p>
+<p><b>Memoria</b>, con m longitud media de las palabras, l longitud total (suma de todas), n número de palabras, p número total de prefijos (n ≪ p ≪ l), k₁ bytes por puntero, k₂ por carácter y d caracteres en el alfabeto (incluido $):</p>
+<div class="tablewrap"><table><thead><tr><th>Representación</th><th>Memoria</th><th>Por qué</th></tr></thead><tbody>
+<tr><td>Nodos con arrays</td><td><b>(p + 1)·d·k₁</b></td><td>p + 1 nodos (los prefijos y la raíz) de d punteros cada uno</td></tr>
+<tr><td>Nodos con listas</td><td><b>(2p + 1)·(2k₁ + k₂)</b></td><td>unos 2p + 1 nodos de dos punteros y un carácter</td></tr>
+<tr><td>Sin trie: una lista de palabras</td><td><b>2k₁·n + k₂·l</b></td><td>referencia</td></tr></tbody></table></div>
+<p>La eficiencia de memoria depende de la relación <b>l/p</b>: si es grande, las palabras comparten muchos prefijos y el trie ahorra; si es pequeña, gasta mucho. En la práctica compensa si l/p &gt; 6.</p>
+<ej id="t3-mem" n="Ejemplo de parcial" t="Memoria de un trie con listas"><p>Un trie con nodos lista tiene 13 prefijos. Si un puntero ocupa 8 bytes y un carácter 1, ¿cuánta memoria usa?</p><sol><p>(2p + 1)·(2k₁ + k₂) = (2·13 + 1)·(2·8 + 1) = 27·17 = <b>459 bytes</b>.</p></sol></ej>
+<box k="def" t="Conclusiones">Los tries son adecuados cuando hay muchos prefijos comunes. Su tiempo sólo depende (casi) de la longitud de las palabras, ¡independientemente de cuántas haya!</box>
+</ap>
+
+<ap id="t3-5" n="3.5" t="Relaciones de equivalencia">
+<div class="box def"><p class="box-t">Definiciones</p><ul><li>Una <b>relación de equivalencia</b> en un conjunto C es una relación R <b>reflexiva</b> (a R a), <b>simétrica</b> (a R b ⇒ b R a) y <b>transitiva</b> (a R b y b R c ⇒ a R c).</li><li>La <b>clase de equivalencia</b> de a ∈ C es el subconjunto de los elementos relacionados con a.</li><li>Las clases forman una <b>partición</b> de C: subconjuntos disjuntos que lo cubren todo.</li></ul></div>
+<p>Ejemplos: ciudades del mismo país, alumnos del mismo curso, sentencias del mismo bloque, nodos del mismo componente conexo de un grafo (Kruskal, tema 4).</p>
+<fig src="t3-28" alt="El conjunto {1…6} dividido en las clases {1, 4, 5}, {2, 6} y {3}">Las clases de equivalencia forman una partición.</fig>
+<div class="box def"><p class="box-t">El TAD RelEquiv[T]</p><ul><li><code>Crear (C: Conjunto[T]): RelEquiv[T]</code>: relación vacía, en la que cada elemento es una clase en sí mismo.</li><li><code>Unión (var R; a, b: T)</code>: combina las clases de a y de b en una (unión de conjuntos disjuntos).</li><li><code>Encuentra (R; a: T): T</code>: devuelve la clase de a. El «nombre» de la clase es un elemento cualquiera de ella; lo que importa es que <b>Encuentra(x) = Encuentra(y) si y sólo si x e y están en la misma clase</b>.</li></ul></div>
+<p>Aplicación: en una imagen de 800 × 600 (480 000 píxeles), dos píxeles están relacionados si son adyacentes y del mismo color; las clases son las regiones. Con medio millón de elementos y muchísimas Unión y Encuentra, la implementación tiene que ser muy eficiente.</p>
+<fig src="t3-30" alt="Imagen en blanco y negro dividida en cuatro regiones (clases)">Cada región de píxeles del mismo color y conectados es una clase.</fig>
+</ap>
+
+<ap id="t3-6" n="3.6" t="Representaciones sencillas y su problema">
+<div class="tablewrap"><table><thead><tr><th>Representación</th><th>Encuentra</th><th>Unión</th></tr></thead><tbody>
+<tr><td><b>Un array</b>: R[i] = clase de i</td><td class="good">O(1): devolver R[a]</td><td class="bad">O(N): recorrer todo el array cambiando la clase de b por la de a</td></tr>
+<tr><td><b>Listas de clases</b>: una lista con los miembros de cada clase</td><td class="bad">O(N): recorrer las listas hasta encontrar a</td><td class="good">O(1): concatenar dos listas (con punteros al último)</td></tr></tbody></table></div>
+<arr i="1" n="R" t="El array de clases de {1, 4, 5}, {2, 6}, {3} (cada clase se llama como su menor elemento)">1 2 3 1 1 2</arr>
+<p>Una de las dos operaciones siempre es lenta. <b>Solución</b>: una estructura de <b>árboles</b>, un árbol por clase, y el nombre de la clase es la <b>raíz</b>.</p>
+</ap>
+
+<ap id="t3-7" n="3.7" t="Árboles con punteros al padre">
+<p>Se usa un array como árbol de <b>punteros al padre</b>: <code>tipo RelEquiv[N] = array [1..N] de entero</code>, con R[x] = 0 si x es raíz y, si no, R[x] = el padre de x.</p>
+<fig src="t3-37" alt="Dos árboles de punteros al padre con raíces 6 y 8 y su array R">Unir dos clases es apuntar una raíz a la otra; buscar la clase es subir hasta la raíz.</fig>
+<code t="Crear, Unión y Encuentra básicos">
+operación Crear (N: entero): RelEquiv[N]
+    para cada i:= 1, ..., N hacer R[i]:= 0
+    devolver R
+
+operación Unión (var R: RelEquiv[N]; a, b: entero)     // a y b son raíces
+    R[a]:= b
+
+operación Encuentra (R: RelEquiv[N]; a: entero): entero
+    si R[a] == 0 entonces devolver a
+    sino devolver Encuentra(R, R[a])
+</code>
+<p>Si a y b no son raíces, primero se buscan: <code>Unión(R, Encuentra(R, a), Encuentra(R, b))</code> (y si son la misma, no se hace nada).</p>
+<ej id="t3-uf1" n="Ejemplo" t="Unión(3, 4), Unión(6, 5), Unión(4, 5), Unión(5, 2), Unión(2, 1)"><p>Parte de R = Crear(6) y aplica las uniones.</p><sol>
+<arr i="1" n="Crear">0 0 0 0 0 0</arr>
+<arr i="1" n="U(3, 4)">0 0 *4 0 0 0</arr>
+<arr i="1" n="U(6, 5)">0 0 4 0 0 *5</arr>
+<arr i="1" n="U(4, 5)">0 0 4 *5 0 5</arr>
+<arr i="1" n="U(5, 2)">0 0 4 5 *2 5</arr>
+<arr i="1" n="U(2, 1)">0 *1 4 5 2 5</arr>
+<p>El árbol ha quedado como una <b>cadena</b> 3 → 4 → 5 → 2 → 1 (más el 6 colgando del 5): Encuentra(3) tiene que subir 4 niveles.</p></sol></ej>
+<p><b>Eficiencia</b>: Unión es O(1). Encuentra es, en promedio, de orden menor que O(log N), pero en el <b>peor caso</b> los árboles son cadenas y cuesta <b>O(N)</b>. Hay que garantizar que los árboles sean lo más anchos posible.</p>
+</ap>
+
+<ap id="t3-8" n="3.8" t="Balanceo del árbol y compresión de caminos">
+<p><b>Primera idea: balanceo</b>. Al unir a y b se puede poner a como hijo de b o al revés: se pone el <b>menos alto como hijo del más alto</b>. Para saber la altura, si x es raíz, R[x] guarda su profundidad <b>en negativo</b> (0 para un árbol de un nodo, −1 para altura 1…). Sólo crece la altura al unir dos árboles iguales.</p>
+<code t="Unión balanceada (a y b son raíces; R[raíz] = −altura)">
+operación Unión (var R: RelEquiv[N]; a, b: entero)
+    si R[a] < R[b] entonces          // a es más alto: b cuelga de a
+        R[b]:= a
+    sino
+        si R[a] == R[b] entonces     // igual de altos: b crece en 1
+            R[b]:= R[b] − 1
+        finsi
+        R[a]:= b                     // a cuelga de b
+    finsi
+</code>
+<ej id="t3-uf2" n="Ejemplo" t="Las mismas uniones, ahora balanceadas, con Unión(1, 5) al final"><p>Aplica Unión(3, 4), Unión(6, 5), Unión(4, 5), Unión(5, 2), Unión(1, 5).</p><sol>
+<arr i="1" n="U(3, 4)">0 0 *4 *-1 0 0</arr>
+<arr i="1" n="U(6, 5)">0 0 4 -1 *-1 *5</arr>
+<arr i="1" n="U(4, 5)">0 0 4 *5 *-2 5</arr>
+<arr i="1" n="U(5, 2)">0 *5 4 5 -2 5</arr>
+<arr i="1" n="U(1, 5)">*5 5 4 5 -2 5</arr>
+<p>En U(5, 2), R[5] = −2 &lt; R[2] = 0: el 5 es más alto y el 2 cuelga de él (aunque se pidiera al revés). Lo mismo con U(1, 5). El árbol final tiene altura 2 en lugar de 4.</p>
+<fig src="t3-42" alt="Resultado de las uniones balanceadas: todos cuelgan del 5 salvo el 3, que cuelga del 4">El resultado en clase: 5 5 4 5 −2 5.</fig></sol></ej>
+<p><b>Segunda idea: compresión de caminos</b>. Al hacer Encuentra(R, a) y descubrir que su clase es x, se aprovecha para hacer R[a] := x (y lo mismo con todos los nodos del camino): la próxima vez estarán a un paso.</p>
+<code t="Encuentra con compresión de caminos">
+operación Encuentra (R: RelEquiv[N]; a: entero): entero
+    si R[a] ≤ 0 entonces devolver a          // raíz (0 o altura negativa)
+    sino
+        R[a]:= Encuentra(R, R[a])
+        devolver R[a]
+    finsi
+</code>
+<ej id="t3-uf3" n="Ejemplo" t="Encuentra(3) y Encuentra(6) con compresión"><p>Con R = 2 −3 4 5 2 5 (el 2 es la raíz, de altura 3), aplica Encuentra(R, 3) y Encuentra(R, 6).</p><sol>
+<arr i="1" n="Antes">2 -3 4 5 2 5</arr>
+<p>Encuentra(3) sube 3 → 4 → 5 → 2 y, al volver, apunta 5, 4 y 3 directamente al 2:</p>
+<arr i="1" n="Encuentra(3)">2 -3 *2 *2 2 5</arr>
+<p>Encuentra(6) sube 6 → 5 → 2 y apunta el 6 al 2:</p>
+<arr i="1" n="Encuentra(6)">2 -3 2 2 2 *2</arr>
+<p><b>Ojo</b>: no se recalcula la altura de la raíz (sigue siendo −3 aunque el árbol ya tenga altura 1). Es una cota, no la altura exacta, y el balanceo sigue funcionando.</p>
+<fig src="t3-44" alt="El árbol tras las dos búsquedas: todos los nodos cuelgan directamente del 2">Tras las búsquedas, todos cuelgan directamente de la raíz.</fig></sol></ej>
+<div class="box def"><p class="box-t">Tiempo de ejecución y conclusión</p><p>Unión es <b>O(1)</b> y Encuentra está entre <b>O(1) y O(log N)</b>. La estructura es un array, exactamente igual que la solución sencilla, pero manejado como un árbol de punteros al padre; para que sea eficiente hay que garantizar que el árbol esté equilibrado.</p></div>
+</ap>
+
+<ap id="t3-9" n="3.9" t="Árboles binarios de búsqueda y la necesidad de balanceo">
+<p>Recapitulando: las tablas de dispersión dan acceso rápido a un elemento pero el recorrido ordenado es lento; las listas, al revés; los arrays tienen problemas de memoria y los tries son para casos con prefijos comunes. Solución general: <b>árboles de búsqueda</b>.</p>
+<div class="box def"><p class="box-t">Árbol binario de búsqueda (ABB)</p><p>Cada nodo tiene cero, uno o dos hijos (izquierdo y derecho). Los valores <b>menores</b> que un nodo x están en su subárbol <b>izquierdo</b> y los <b>mayores</b>, en el <b>derecho</b>.</p></div>
+<div class="trees"><ab t="Un ABB: búsqueda e inserción en O(log n) y recorrido en inorden ordenado en O(n)">18(12(5(,9),),28(20,35))</ab><ab t="Los mismos datos insertados en orden: una cadena y la búsqueda es O(n)">5(,9(,12(,18(,20(,28(,35))))))</ab></div>
+<p>En el <b>peor caso</b> (por ejemplo, insertando los datos ya ordenados) el ABB es una cadena y la búsqueda necesita <b>O(n)</b>. Hay que garantizar que el árbol esté <b>balanceado</b>, con una condición basada en el número de nodos o en las alturas de los subárboles.</p>
+<div class="tablewrap"><table><thead><tr><th>Condición</th><th>Definición</th><th>Resultado</th></tr></thead><tbody>
+<tr><td><b>Perfectamente balanceado</b></td><td>Para todo nodo, el número de nodos de sus subárboles izquierdo y derecho difiere como máximo en 1.</td><td>Búsqueda O(log n) en el peor caso, pero mantener la condición es muy costoso: una inserción puede ser O(n) (hay que recolocar medio árbol).</td></tr>
+<tr><td><b>AVL</b> (Adelson-Velskii y Landis)</td><td>Para todo nodo, la <b>altura</b> de sus dos subárboles difiere como máximo en 1.</td><td>Menos exigente: todo O(log n) y el balanceo es barato.</td></tr></tbody></table></div>
+<fig src="t3-52" alt="Dos AVL con la altura de cada subárbol anotada junto a cada nodo">Dos AVL: junto a cada nodo, las alturas de sus subárboles izquierdo y derecho (difieren como mucho en 1).</fig>
+</ap>
+
+<ap id="t3-10" n="3.10" t="AVL: tipo de datos y altura en el peor caso">
+<p>La búsqueda en un AVL es exactamente igual que en un ABB. La inserción y la eliminación también, pero <b>después</b> hay que comprobar la condición: se guarda la altura de cada subárbol, se inserta o elimina de forma recursiva y, <b>al volver de la recursividad</b>, en cada nodo del camino se comprueba la condición y, si no se cumple, se <b>rebalancea</b>.</p>
+<code t="Tipo de datos del AVL">
+tipo ArbolAVL[T] = Puntero[NodoAVL[T]]
+tipo NodoAVL[T] = registro
+    clave: T
+    altura: entero
+    izq, der: Puntero[NodoAVL[T]]
+finregistro
+
+operación Altura (A: Puntero[NodoAVL[T]]): entero
+    si A == NULO entonces devolver −1       // el árbol vacío tiene altura −1
+    sino devolver A→altura
+</code>
+<p>Memoria: un puntero más por nodo que una lista, y un entero más que un ABB normal.</p>
+<h4>¿Cuánto mide un AVL en el peor caso?</h4>
+<p>El tiempo es proporcional a la altura. Damos la vuelta a la pregunta: ¿cuál es el <b>mínimo número de nodos N(h)</b> de un AVL de altura h? El AVL más «flaco» de altura h tiene un subárbol de altura h−1 y otro de h−2, ambos también mínimos:</p>
+<p class="formula">N(h) = N(h−1) + N(h−2) + 1, con N(0) = 1 y N(1) = 2</p>
+<div class="tablewrap"><table><thead><tr><th>h</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead><tbody><tr><td><b>N(h)</b></td><td>1</td><td>2</td><td>4</td><td>7</td><td>12</td><td>20</td><td>33</td><td>54</td><td>88</td><td>143</td></tr></tbody></table></div>
+<figs><fig src="t3-56" alt="Los AVL mínimos de altura 0, 1, 2 y 3 con 1, 2, 4 y 7 nodos">Los AVL mínimos de altura 0 a 3.</fig><fig src="t3-57" alt="Caso general: un subárbol de altura h−1 y otro de altura h−2">El caso general da una sucesión parecida a la de Fibonacci.</fig></figs>
+<p>Es una sucesión parecida a la de Fibonacci: N(h) ≈ C·1,62ʰ, así que la altura máxima para n nodos es h ≈ D·log₁,₆₂ n, es decir, <b>O(log n)</b> (en torno a 1,44·log₂ n). La búsqueda es O(log n) en el peor caso, y la inserción y la eliminación también lo serán si el rebalanceo es O(1).</p>
+<box k="tip" t="Útil en el examen">La tabla de N(h) da la <b>altura máxima</b> de un AVL con n nodos (por ejemplo, con 30 nodos la altura es como mucho 5, porque N(6) = 33 &gt; 30). La <b>altura mínima</b> la da el árbol completo: con altura h caben como máximo 2ʰ⁺¹ − 1 nodos (1, 3, 7, 15, 31…).</box>
+</ap>
+
+<ap id="t3-11" n="3.11" t="Rotaciones">
+<p>Los rebalanceos usan <b>rotaciones</b>: cambiando unos pocos punteros se obtiene otro árbol que sigue siendo un ABB. Todas son <b>O(1)</b>. Ojo con los nombres de clase: la rotación se nombra por el lado del <b>caso</b> que arregla, no por el giro.</p>
+<figs><fig src="t3-60" alt="Rotación simple RSI: el hijo izquierdo B de A sube a la raíz y A pasa a ser su hijo derecho">RSI(A): sube el hijo <b>izquierdo</b>. Arregla el caso izquierda-izquierda.</fig><fig src="t3-59" alt="Rotación simple RSD: el hijo derecho B de A sube a la raíz">RSD(A): sube el hijo <b>derecho</b>. Arregla el caso derecha-derecha.</fig></figs>
+<code t="Rotaciones simples">
+operación RSI (var A: Puntero[NodoAVL[T]])       // sube el hijo izquierdo
+    B:= A→izq
+    A→izq:= B→der
+    B→der:= A
+    A→altura:= 1 + max(Altura(A→izq), Altura(A→der))
+    B→altura:= 1 + max(Altura(B→izq), A→altura)
+    A:= B
+
+operación RSD (var A: Puntero[NodoAVL[T]])       // sube el hijo derecho (simétrica)
+    B:= A→der
+    A→der:= B→izq
+    B→izq:= A
+    A→altura:= 1 + max(Altura(A→izq), Altura(A→der))
+    B→altura:= 1 + max(A→altura, Altura(B→der))
+    A:= B
+</code>
+<p>Las rotaciones <b>dobles</b> suben el nieto del medio a la raíz:</p>
+<figs><fig src="t3-63" alt="Rotación doble RDI: el nieto C (hijo derecho del hijo izquierdo) sube a la raíz">RDI(A) = RSD(A→izq) + RSI(A). Arregla el caso izquierda-derecha.</fig><fig src="t3-62" alt="Rotación doble RDD: el nieto C (hijo izquierdo del hijo derecho) sube a la raíz">RDD(A) = RSI(A→der) + RSD(A). Arregla el caso derecha-izquierda.</fig></figs>
+<code t="Rotaciones dobles">
+operación RDI (var A: Puntero[NodoAVL[T]])
+    RSD(A→izq)
+    RSI(A)
+
+operación RDD (var A: Puntero[NodoAVL[T]])
+    RSI(A→der)
+    RSD(A)
+</code>
+</ap>
+
+<ap id="t3-12" n="3.12" t="Inserción en un AVL">
+<p>Se inserta como en un ABB y, a la vuelta de la recursividad, en cada nodo A: si su altura no cambia, se acaba; si crece en 1 y |Altura(A→izq) − Altura(A→der)| &gt; 1, se rebalancea. Hay <b>cuatro casos</b>, según por dónde se ha insertado x respecto del nodo desbalanceado C:</p>
+<figs><fig src="t3-65" alt="Casos 1 y 2: inserción en el subárbol izquierdo del hijo izquierdo (II) o en el derecho del hijo izquierdo (ID)">Casos 1 (II) y 2 (ID).</fig><fig src="t3-66" alt="Casos 3 y 4: inserción en el izquierdo del hijo derecho (DI) o en el derecho del hijo derecho (DD)">Casos 3 (DI) y 4 (DD).</fig></figs>
+<div class="tablewrap"><table><thead><tr><th>Caso</th><th>Dónde se ha insertado x</th><th>Solución</th></tr></thead><tbody>
+<tr><td><b>II(C)</b></td><td>subárbol izquierdo del hijo izquierdo</td><td><b>RSI(C)</b></td></tr>
+<tr><td><b>ID(C)</b></td><td>subárbol derecho del hijo izquierdo</td><td><b>RDI(C)</b></td></tr>
+<tr><td><b>DI(C)</b></td><td>subárbol izquierdo del hijo derecho</td><td><b>RDD(C)</b></td></tr>
+<tr><td><b>DD(C)</b></td><td>subárbol derecho del hijo derecho</td><td><b>RSD(C)</b></td></tr></tbody></table></div>
+<figs><fig src="t3-67" alt="Caso II: tras RSI el árbol queda balanceado y con la misma altura que antes de insertar">Caso II: tras RSI(C) el árbol queda balanceado y con la <b>misma altura</b> que antes de insertar.</fig><fig src="t3-68" alt="Caso ID: tras RDI el árbol queda balanceado y con la misma altura">Caso ID: tras RDI(C), igual.</fig></figs>
+<code t="Inserción en un AVL">
+operación Inserta (var A: Puntero[NodoAVL[T]]; x: T)
+    si A == NULO entonces
+        A:= NUEVO NodoAVL[T]
+        A→clave:= x
+        A→izq:= A→der:= NULO
+        A→altura:= 0
+    sino si x < A→clave entonces                  // subárbol izquierdo
+        Inserta(A→izq, x)
+        si Altura(A→izq) − Altura(A→der) > 1 entonces
+            si x < A→izq→clave entonces RSI(A)       // caso II(A)
+            sino RDI(A)                              // caso ID(A)
+        sino
+            A→altura:= 1 + max(Altura(A→izq), Altura(A→der))
+        finsi
+    sino si x > A→clave entonces                  // subárbol derecho (simétrico)
+        Inserta(A→der, x)
+        si Altura(A→der) − Altura(A→izq) > 1 entonces
+            si x > A→der→clave entonces RSD(A)       // caso DD(A)
+            sino RDD(A)                              // caso DI(A)
+        sino
+            A→altura:= 1 + max(Altura(A→izq), Altura(A→der))
+        finsi
+    finsi                                         // si x == A→clave, ya estaba
+</code>
+<p>El procedimiento sigue recursivamente hasta la raíz, pero tras el <b>primer</b> rebalanceo no hace falta ninguno más: el subárbol rebalanceado recupera la altura que tenía antes de insertar, así que sus antecesores no notan nada. Inserta es <b>O(log n)</b>: bajar y subir por la altura del árbol, y como mucho una rotación O(1).</p>
+<ej id="t3-avl-1" n="Ejemplo de clase" t="Insertar 1 en un AVL"><p>Inserta 1 en el AVL 13(8(3, 9), 23).</p><sol><div class="trees"><ab t="Tras insertar el 1: el 13 queda desbalanceado (alturas 2 y 0)">!13(8(3(*1,),9),23)</ab><ab t="Caso II(13) → RSI(13): sube el 8">8(3(*1,),13(9,23))</ab></div><fig src="t3-64" alt="El mismo ejemplo en la diapositiva">Igual que en la diapositiva.</fig></sol></ej>
+<ej id="t3-avl-2" n="Ejercicio de clase" t="Insertar 4, 5, 7, 2, 1, 3, 6 en un AVL vacío"><p>Dibuja el árbol tras cada inserción e indica las rotaciones.</p><sol>
+<div class="trees">
+<ab t="4, 5, 7: el 4 queda desbalanceado">!4(,5(,*7))</ab>
+<ab t="Caso DD(4) → RSD(4)">5(4,*7)</ab>
+<ab t="2 y 1: el 4 queda desbalanceado">5(!4(2(*1,),),7)</ab>
+<ab t="Caso II(4) → RSI(4)">5(2(*1,4),7)</ab>
+<ab t="3: el 5 queda desbalanceado (2 y 0)">!5(2(1,4(*3,)),7)</ab>
+<ab t="3 &gt; 2: caso ID(5) → RDI(5), sube el 4">4(2(1,*3),5(,7))</ab>
+<ab t="6: el 5 queda desbalanceado">4(2(1,3),!5(,7(*6,)))</ab>
+<ab t="6 &lt; 7: caso DI(5) → RDD(5), sube el 6">4(2(1,3),6(5,7(,)))</ab>
+</div><p>El resultado final es un árbol perfecto de altura 2. En cada paso sólo hubo una rotación.</p></sol></ej>
+</ap>
+
+<ap id="t3-13" n="3.13" t="Eliminación en un AVL">
+<p>Es algo más compleja: hay más casos y puede hacer falta rebalancear en <b>varios niveles</b>. El algoritmo es la eliminación normal de un ABB más la comprobación de la condición a la vuelta de la recursividad.</p>
+<p><b>Eliminación normal en un ABB</b>: buscar el elemento; si es una <b>hoja</b>, se elimina; si tiene <b>un solo hijo</b>, se conecta su padre con ese hijo; si tiene <b>dos subárboles</b>, se sustituye por el nodo más a la derecha del subárbol izquierdo (su predecesor) o el más a la izquierda del derecho (su sucesor), y se elimina ese.</p>
+<fig src="t3-72" alt="Eliminar 20 (hoja), 4 (un hijo) y 10 (dos hijos) en un ABB">Los tres casos de la eliminación en un ABB.</fig>
+<p>Después, en cada antecesor se comprueba la condición. Para una eliminación en el subárbol <b>izquierdo</b> de A, el caso depende de las alturas h1 y h2 de los subárboles izquierdo y derecho del hijo derecho C:</p>
+<div class="tablewrap"><table><thead><tr><th>Caso (eliminando a la izquierda de A)</th><th>Solución</th><th>Altura final del subárbol</th></tr></thead><tbody>
+<tr><td>h1 = h2</td><td><b>RSD(A)</b></td><td>No cambia</td></tr>
+<tr><td>h1 &lt; h2</td><td><b>RSD(A)</b></td><td>Disminuye en 1 (puede desbalancear al padre: seguir subiendo)</td></tr>
+<tr><td>h1 &gt; h2</td><td><b>RDD(A)</b></td><td>Disminuye en 1 (seguir subiendo)</td></tr></tbody></table></div>
+<p>Eliminando en el subárbol <b>derecho</b> es simétrico: con el hijo izquierdo B, si su subárbol izquierdo es al menos tan alto como el derecho, <b>RSI(A)</b>; si es más bajo, <b>RDI(A)</b>.</p>
+<figs><fig src="t3-74" alt="Caso h1 = h2: RSD y la altura no cambia">Caso h1 = h2.</fig><fig src="t3-76" alt="Caso h1 > h2: RDD y la altura disminuye en 1">Caso h1 &gt; h2.</fig></figs>
+<p>Como puede haber una rotación por nivel, la eliminación es <b>O(log n)</b> (O(log n) niveles, cada uno O(1)).</p>
+<ej id="t3-avl-3" n="Ejercicio de clase" t="Eliminar 4, 15, 32 y 45"><p>En el AVL 20(10(4(1, 6), 15), 32( , 45)), elimina las claves 4, 15, 32 y 45 en ese orden (sustituyendo por el predecesor cuando haya dos hijos).</p><sol>
+<div class="trees">
+<ab t="Inicial">20(10(4(1,6),15),32(,45))</ab>
+<ab t="Eliminar 4 (dos hijos): lo sustituye su predecesor, el 1. Todo sigue balanceado">20(10(1(,6),15),32(,45))</ab>
+<ab t="Eliminar 15: el 10 queda con alturas 1 y −1">20(!10(1(,6),~15),32(,45))</ab>
+<ab t="A la derecha del 10; su hijo izquierdo 1 es más alto por la derecha → RDI(10), sube el 6">20(6(1,10),32(,45))</ab>
+<ab t="Eliminar 32 (un hijo): el 45 ocupa su lugar">20(6(1,10),45)</ab>
+<ab t="Eliminar 45: el 20 queda con alturas 1 y −1; su hijo izquierdo tiene los dos lados iguales → RSI(20)">6(1,20(10,))</ab>
+</div></sol></ej>
+</ap>
+
+<ap id="t3-14" n="3.14" t="Árboles B: definición y búsqueda">
+<p>Los árboles B se usan muchísimo en <b>bases de datos</b>, donde hay muchos datos (conjuntos y diccionarios), el acceso secuencial y el directo tienen que ser rápidos y los datos están en <b>disco</b>, en bloques. Hay variantes: B, B+ y B*. La idea es generalizar los ABB a árboles de búsqueda <b>n-arios</b>: en cada nodo hay n claves y n + 1 punteros a hijos.</p>
+<fig src="t3-80" alt="Comparación de un nodo de árbol binario de búsqueda con un nodo n-ario con claves a, b, c y cuatro hijos">Entre cada dos claves de un nodo cuelga el subárbol con los valores intermedios.</fig>
+<div class="box def"><p class="box-t">Árbol B de orden p</p><p>Un árbol n-ario de búsqueda que cumple:</p><ul><li><b>Raíz</b>: o no tiene hijos, o tiene como mínimo 2 y como máximo p.</li><li><b>Nodos internos</b>: entre ⌈p/2⌉ y p hijos.</li><li><b>Hojas</b>: todas al <b>mismo nivel</b> (es la condición de balanceo).</li></ul><p>Idea intuitiva: cada nodo tiene p posiciones (p punteros y p − 1 claves) que deben llenarse <b>como mínimo hasta la mitad</b>.</p></div>
+<fig src="t3-82" alt="Árbol B de orden 5 con raíz 39, nodos 20 30 y 45 62 y hojas">Un árbol B de orden 5: como mucho 4 claves por nodo.</fig>
+<p><b>Búsqueda</b>: igual que en un ABB, eligiendo en cada nodo la rama por la que seguir. La altura del árbol es ~<b>log<sub>p/2</sub> n</b> en el peor caso.</p>
+</ap>
+
+<ap id="t3-15" n="3.15" t="Inserción en un árbol B">
+<ol class="steps"><li>Buscar la <b>hoja</b> donde debería ir la clave.</li><li>Si quedan sitios libres en la hoja, insertarla en el orden adecuado.</li><li>Si no quedan (la hoja ya tiene p − 1 claves), <b>partir</b> la hoja en dos (con ⌊(p−1)/2⌋ y ⌈(p−1)/2⌉ claves) y subir la <b>mediana</b> al padre.</li><li>Si en el padre no cabe, repetir la partición recursivamente hacia arriba. Si se parte la raíz, se crea una raíz nueva: así es como crece la altura (y todas las hojas siguen al mismo nivel).</li></ol>
+<fig src="t3-83" alt="Insertar 27 en una hoja llena 20 33 42 68 de orden 5: se parte en 20 27 y 42 68 y sube el 33">Insertar 27 en una hoja llena de un árbol de orden 5: se parte y sube la mediana, 33.</fig>
+<ej id="t3-b1" n="Ejercicio de clase" t="Árbol B de orden 4: insertar 37, 14, 60, 9, 22, 51, 10, 5, 55, 70, 1, 25"><p>Con p = 4 cada nodo tiene como mucho 3 claves. Al llegar la cuarta se parte; en el ejemplo de clase, con p par, la mitad izquierda se queda con la parte mayor (2 claves), sube la tercera y la derecha se queda con 1.</p><sol>
+<ol class="steps"><li>37, 14, 60 caben en la raíz: [14 37 60].</li><li>9 → [9 14 37 60] no cabe: se parte en [9 14] y [60] y sube el 37.</li><li>22 → [9 14 22]; 51 → [51 60].</li><li>10 → [9 10 14 22] no cabe: [9 10], sube 14, [22]. Raíz [14 37].</li><li>5 → [5 9 10]; 55 → [51 55 60].</li><li>70 → [51 55 60 70]: [51 55], sube 60, [70]. Raíz [14 37 60].</li><li>1 → [1 5 9 10]: [1 5], sube 9, [10]. La raíz pasa a [9 14 37 60] y tampoco cabe: [9 14], sube 37 como raíz nueva, [60].</li><li>25 → [22 25].</li></ol>
+<bt p="4" t="Resultado con p = 4 (como en la diapositiva)">[37]([9 14]([1 5],[10],[22 25]),[60]([51 55],[70]))</bt>
+<p>¿Y con <b>p = 5</b>? Ahora caben 4 claves y al partir 5 quedan 2 y 2 (sube la tercera): 22 sube al llegar el 22 a [9 14 37 60]; 55 sube al llegar el 70; 9 sube al llegar el 1.</p>
+<bt p="5" t="Resultado con p = 5">[9 22 55]([1 5],[10 14],[25 37 51],[60 70])</bt>
+<fig src="t3-84" alt="El resultado del ejercicio con p = 4 en la diapositiva">La solución con p = 4 en clase.</fig></sol></ej>
+</ap>
+
+<ap id="t3-16" n="3.16" t="Eliminación en un árbol B">
+<p>Primero se busca la clave. Si está en un <b>nodo interno</b>, se sustituye por la siguiente (o la anterior) en orden, es decir, la menor de la rama derecha o la mayor de la izquierda, que siempre está en una hoja, y se elimina de esa hoja. En una <b>hoja</b>, con d = ⌊(p − 1)/2⌋ el mínimo de claves:</p>
+<ul><li>Si la hoja tiene <b>más de d</b> claves: se suprime y ya está.</li><li>Si tiene <b>d</b> (el mínimo): hay que reequilibrar:<ul><li><b>Préstamo</b>: si un hermano tiene más de d, la clave del padre que los separa baja a la hoja y el hermano sube una clave al padre.</li><li><b>Fusión</b>: si ningún hermano tiene más de d, la hoja (d − 1 claves), un hermano (d) y la clave del padre forman una hoja nueva con 2d claves. El padre pierde una clave, así que <b>se repite</b> el proceso en el nivel superior.</li></ul></li></ul>
+<ej id="t3-b2" n="Ejemplo de clase" t="Árbol B de orden 5 (d = 2): eliminar 67, 45 y 39"><p>Partimos del árbol [39 70]([20 30 35], [45 62 67], [73 82]).</p><sol>
+<bt p="5" t="Inicial">[39 70]([20 30 35],[45 62 67],[73 82])</bt>
+<p><b>Eliminar 67</b>: su hoja tiene 3 &gt; d claves: se quita sin más → [45 62].</p>
+<p><b>Eliminar 45</b>: la hoja [45 62] tiene d = 2; queda [62] con 1. El hermano izquierdo [20 30 35] tiene 3 &gt; d: <b>préstamo</b>. El 39 del padre baja a la hoja ([39 62]) y el 35 sube al padre.</p>
+<bt p="5" t="Tras eliminar 67 y 45">[35 70]([20 30],[39 62],[73 82])</bt>
+<figs><fig src="t3-86" alt="Préstamo: el 39 baja a la hoja y el 35 sube al padre">El préstamo en la diapositiva.</fig><fig src="t3-87" alt="Árbol tras el préstamo: raíz 35 70">El resultado.</fig></figs>
+<p><b>Eliminar 39</b>: la hoja queda [62] y ningún hermano ([20 30] y [73 82]) tiene más de d: <b>fusión</b> de [62], el 70 del padre y [73 82] → [62 70 73 82]. La raíz se queda con [35], que es válido (la raíz puede tener una sola clave).</p>
+<bt p="5" t="Tras eliminar 39">[35]([20 30],[62 70 73 82])</bt>
+<figs><fig src="t3-88" alt="Fusión: la hoja con el 62, el 70 del padre y la hoja 73 82 se juntan">La fusión.</fig><fig src="t3-89" alt="Árbol tras la fusión: raíz 35 con hojas 20 30 y 62 70 73 82">El resultado: el padre pierde el 70.</fig></figs></sol></ej>
+<div class="box def"><p class="box-t">Conclusiones</p><p>El coste es proporcional a la altura, ~log<sub>p/2</sub> n en el peor caso. El orden p se ajusta para que cada nodo ocupe un <b>bloque de disco</b>, minimizando las operaciones de entrada/salida. En <b>memoria</b>, mejor AVL; en <b>disco</b>, mejor árboles B.</p></div>
+</ap>
+
+<ap id="t3-17" n="3.17" t="Conclusiones del tema 3">
+<ul><li>Las representaciones de árbol mejoran a las lineales (listas y arrays) cuando hay que buscar y recorrer en orden.</li><li>Hay que incluir <b>condiciones de balanceo</b> para garantizar la eficiencia en todos los casos (AVL, árboles B, unión por altura).</li><li>Distinción entre TAD y estructura de datos: el TAD árbol (binario, n-ario…) es una cosa y usar estructuras de árbol para representar el TAD conjunto o diccionario es otra. Para el usuario lo importante es la <b>interfaz</b>, no la representación interna.</li></ul>
+<div class="tablewrap"><table class="cost"><thead><tr><th>Estructura</th><th>Buscar / insertar / eliminar</th><th>Min, Max, en orden</th><th>Cuándo usarla</th></tr></thead><tbody>
+<tr><td>Trie</td><td class="good">O(m) (longitud de la palabra)</td><td>O(m) / recorrido O(tamaño)</td><td>Palabras con muchos prefijos comunes; búsqueda letra a letra</td></tr>
+<tr><td>Punteros al padre (balanceo + compresión)</td><td>Unión O(1), Encuentra ≤ O(log N)</td><td>—</td><td>Relaciones de equivalencia (clases, componentes conexos)</td></tr>
+<tr><td>ABB sin balancear</td><td>O(log n) promedio, <span class="bad">O(n) peor</span></td><td>O(altura) / O(n)</td><td>Nunca si los datos pueden venir ordenados</td></tr>
+<tr><td>AVL</td><td class="good">O(log n) peor caso</td><td class="good">O(log n) / O(n)</td><td>Conjuntos y diccionarios ordenados en memoria (la práctica: precios)</td></tr>
+<tr><td>Árbol B de orden p</td><td class="good">O(log<sub>p/2</sub> n)</td><td>O(log n) / O(n)</td><td>Datos en disco (bases de datos)</td></tr></tbody></table></div>
+</ap>
+</tema>
+
+<tema id="t4" n="4" t="Grafos" lede="Qué es un grafo, cómo se representa (matrices y listas de adyacencia) y los algoritmos clásicos: recorridos en profundidad y en anchura, árboles de expansión mínimos (Prim y Kruskal), caminos mínimos (Dijkstra, Floyd y Warshall), componentes fuertemente conexos, orden topológico, puntos de articulación y circuitos de Euler. Es la pregunta 4 del examen.">
+
+<ap id="t4-1" n="4.1" t="Grafos: definición y ejemplos">
+<p>Los grafos modelan problemas de lo más variado:</p>
+<figs><fig src="t4-3" alt="Grafo de carreteras entre ciudades españolas con las distancias">Carreteras: ¿camino más corto de Murcia a Badajoz? ¿Ciudad más céntrica? ¿Tour por todas en el menor tiempo?</fig><fig src="t4-7" alt="Grafo de planificación de las tareas para construir una pirámide con sus duraciones">Planificación de tareas: ¿tiempo mínimo? ¿Cuándo empieza cada tarea? ¿Cuáles son críticas?</fig></figs>
+<p>También el grafo de transiciones de un autómata (¿es válida una cadena? ¿cuál es la más corta?) o el de un dibujo de líneas (¿cuántos objetos hay? ¿son isomorfos?).</p>
+<div class="box def"><p class="box-t">Definiciones</p><ul>
+<li>Un <b>grafo</b> G = (V, A): V es un conjunto no vacío de <b>vértices</b> o nodos y A un conjunto de <b>aristas</b> o arcos; cada arista es un par (v, w) con v, w ∈ V.</li>
+<li><b>No dirigido</b>: las aristas no están ordenadas, (v, w) = (w, v).</li>
+<li><b>Dirigido</b> (digrafo): son pares ordenados, ⟨v, w⟩ ≠ ⟨w, v⟩. En ⟨v, w⟩, w es la <b>cabeza</b> y v la <b>cola</b>.</li>
+<li><b>Etiquetado</b>: cada arista tiene una etiqueta, G = (V, A, W) con W: A → TipoEtiq. Con valores numéricos es un grafo <b>con pesos</b>.</li></ul></div>
+</ap>
+
+<ap id="t4-2" n="4.2" t="Terminología">
+<div class="tablewrap"><table><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody>
+<tr><td><b>Adyacentes</b> a v</td><td>Los nodos unidos a v por una arista. En dirigidos: adyacentes <b>a</b> v son los w con ⟨v, w⟩ ∈ A; adyacentes <b>de</b> v, los u con ⟨u, v⟩ ∈ A.</td></tr>
+<tr><td><b>Camino</b> de w₁ a w_q</td><td>Secuencia w₁, w₂, …, w_q tal que todas las aristas (w₁, w₂), …, (w_{q−1}, w_q) ∈ A. Su <b>longitud</b> es el número de aristas (nº de nodos − 1).</td></tr>
+<tr><td><b>Camino simple</b></td><td>Todos los vértices distintos (salvo el primero y el último, que pueden coincidir).</td></tr>
+<tr><td><b>Ciclo</b></td><td>Camino con el primer y el último vértice iguales (en no dirigidos, con aristas distintas). <b>Ciclo simple</b> si el camino es simple.</td></tr>
+<tr><td><b>Subgrafo</b> de G</td><td>G′ = (V′, A′) con V′ ⊆ V y A′ ⊆ A.</td></tr>
+<tr><td><b>Conexo</b></td><td>Hay un camino entre cualquier par de vértices. En dirigidos, <b>fuertemente conexo</b> (caminos en los dos sentidos).</td></tr>
+<tr><td><b>Componente</b> (fuertemente) conexo</td><td>Subgrafo <b>maximal</b> (fuertemente) conexo.</td></tr>
+<tr><td><b>Completo</b></td><td>Hay arista entre cualquier par de vértices: n(n−1)/2 aristas si es no dirigido y n(n−1) si es dirigido.</td></tr>
+<tr><td><b>Grado</b> de v</td><td>Número de aristas que inciden en él. En dirigidos, <b>grado de entrada</b> (aristas ⟨x, v⟩) y <b>de salida</b> (⟨v, x⟩).</td></tr></tbody></table></div>
+<p><b>Operaciones elementales</b>: crear un grafo vacío (o con n vértices), insertar y eliminar nodos o aristas, consultar si existe una arista (y su etiqueta) y los iteradores <code>para todo nodo w adyacente a v hacer…</code> y <code>para todo w adyacente de v hacer…</code> (este último mucho menos frecuente).</p>
+</ap>
+
+<ap id="t4-3" n="4.3" t="Representación: matrices de adyacencia">
+<fig src="t4-19" alt="Un grafo dirigido de 5 nodos con su matriz de adyacencia y sus listas de adyacencia">El mismo grafo con las dos representaciones del conjunto de aristas.</fig>
+<p><code>tipo GrafoNoEtiq = array [1..n, 1..n] de booleano</code>, con M[v, w] = cierto ⇔ (v, w) ∈ A. Para grafos etiquetados, <code>GrafoEtiq[E] = array [1..n, 1..n] de E</code>, donde E tiene un valor NULO para «no hay arista».</p>
+<fig src="t4-20" alt="Grafo no dirigido y su matriz de adyacencia simétrica">En un grafo no dirigido la matriz es simétrica: se desperdicia la mitad de la memoria.</fig>
+<ul><li><b>Adyacentes a v</b>: recorrer la fila v, <b>O(n)</b>. <b>Adyacentes de v</b>: recorrer la columna v, O(n). <b>Contar aristas</b>: O(n²).</li><li><b>Memoria</b>: k₂·n² (k₂ bytes por etiqueta).</li><li><b>Ventajas</b>: representación y operaciones muy sencillas; consultar una arista dada es O(1).</li><li><b>Inconvenientes</b>: el número de nodos no puede cambiar; con muchos nodos y pocas aristas (a ≪ n², una <b>matriz escasa</b>) se desperdicia mucha memoria.</li></ul>
+</ap>
+
+<ap id="t4-4" n="4.4" t="Representación: listas de adyacencia">
+<p><code>tipo Nodo = entero (1..n)</code>; <code>tipo GrafoNoEtiq = array [1..n] de Lista[Nodo]</code>: la lista R[v] contiene los w tales que (v, w) ∈ A. Etiquetados: <code>array [1..n] de Lista[Nodo, E]</code>.</p>
+<figs><fig src="t4-23" alt="Grafo no dirigido con sus listas de adyacencia; cada arista aparece dos veces">No dirigido: cada arista está repetida en las dos listas.</fig><fig src="t4-24" alt="Grafo dirigido etiquetado con listas de pares nodo y etiqueta">Etiquetado: cada elemento de la lista guarda el nodo y la etiqueta.</fig></figs>
+<ul><li><b>Adyacentes a v</b>: recorrer R[v], O(grado de v). <b>Adyacentes de v</b>: recorrer todas las listas, <b>O(n + a)</b>. <b>Contar aristas</b>: O(n + a).</li><li><b>Memoria</b>: k₁(n + a) + 2k₂·a (k₁ por puntero, k₂ por nodo o etiqueta).</li><li><b>Ventaja</b>: más adecuada cuando a ≪ n². <b>Inconvenientes</b>: más compleja; ineficiente para encontrar las aristas que <b>llegan</b> a un nodo.</li></ul>
+<div class="tablewrap"><table class="cost"><thead><tr><th></th><th>Matriz</th><th>Listas</th></tr></thead><tbody><tr><td>¿Existe (v, w)?</td><td class="good">O(1)</td><td>O(grado de v)</td></tr><tr><td>Adyacentes a v</td><td>O(n)</td><td class="good">O(grado de v)</td></tr><tr><td>Recorrer todo el grafo</td><td>O(n²)</td><td class="good">O(n + a)</td></tr><tr><td>Memoria</td><td>k₂·n²</td><td>k₁(n + a) + 2k₂·a</td></tr><tr><td>Mejor para</td><td>grafos pequeños o densos</td><td>grafos grandes y escasos</td></tr></tbody></table></div>
+</ap>
+
+<ap id="t4-5" n="4.5" t="Búsqueda primero en profundidad (BPP)">
+<p>Los recorridos visitan los vértices de forma ordenada y sistemática, moviéndose por las aristas desde un nodo dado, y son la herramienta básica de muchos algoritmos. Sirven para grafos dirigidos y no dirigidos; hace falta llevar la cuenta de los nodos <b>visitados</b>. La BPP es el equivalente al <b>preorden</b> de un árbol:</p>
+<code t="Búsqueda primero en profundidad">
+var marca: array [1..n] de (visitado, noVisitado)
+
+operación BorraMarcas
+    para i:= 1, ..., n hacer marca[i]:= noVisitado
+
+operación bpp (v: nodo)
+    marca[v]:= visitado
+    para cada nodo w adyacente a v hacer
+        si marca[w] == noVisitado entonces bpp(w)
+    finpara
+
+operación BúsquedaPrimeroEnProfundidad
+    BorraMarcas
+    para v:= 1, ..., n hacer
+        si marca[v] == noVisitado entonces bpp(v)
+    finpara
+</code>
+<p>El recorrido no es único: depende del nodo inicial y del orden de los adyacentes. El orden de visita forma un <b>árbol de expansión en profundidad</b> (un <b>bosque</b> si hacen falta varias llamadas desde el bucle principal).</p>
+<fig src="t4-31" alt="Bosque de expansión en profundidad de un grafo no dirigido con el orden de visita y los arcos que no son del árbol en discontinua">Arcos del árbol (continuos) y arcos que no son del árbol (discontinuos): se detectan cuando <code>marca[w] == noVisitado</code> es falso.</fig>
+<p>En grafos <b>dirigidos</b> los arcos que no son del árbol son de tres tipos: <b>de avance</b> (de un nodo a un descendiente suyo), <b>de retroceso</b> (a un antecesor) y <b>de cruce</b> (el resto).</p>
+<fig src="t4-32" alt="Bosque de expansión en profundidad de un grafo dirigido con arcos de avance, de retroceso y de cruce">Los tres tipos de arcos que no son del árbol en un grafo dirigido.</fig>
+<p><b>Coste</b>: no se pueden predecir las llamadas, así que se mide el <b>trabajo total</b>: cada nodo se visita una vez (bpp se llama n veces) y en total se recorren todos los adyacentes. Con matrices, <b>O(n²)</b>; con listas, <b>O(n + a)</b>.</p>
+</ap>
+
+<ap id="t4-6" n="4.6" t="Búsqueda primero en anchura (BPA)">
+<p>Empezando en v: primero se visita v, luego todos sus adyacentes, luego los adyacentes de estos… Es el recorrido <b>por niveles</b> de un árbol, y usa una <b>cola</b>:</p>
+<code t="Búsqueda primero en anchura">
+operación bpa (v: Nodo)
+var C: Cola[Nodo]; x, y: Nodo
+    marca[v]:= visitado
+    InsertaCola(v, C)
+    mientras NOT EsVacíaCola(C) hacer
+        x:= FrenteCola(C)
+        SuprimirCola(C)
+        para cada nodo y adyacente a x hacer
+            si marca[y] == noVisitado entonces
+                marca[y]:= visitado          // se marca al meterlo en la cola
+                InsertaCola(y, C)
+            finsi
+        finpara
+    finmientras
+
+operación BúsquedaPrimeroEnAnchura
+    BorraMarcas
+    para v:= 1, ..., n hacer
+        si marca[v] == noVisitado entonces bpa(v)
+</code>
+<fig src="t4-35" alt="Grafo no dirigido y su bosque de expansión en anchura con el orden de visita y los arcos de cruce">El bosque de expansión en anchura; en no dirigidos, los arcos que no son del árbol son de cruce.</fig>
+<p>El coste es el mismo que el de la BPP: O(n²) con matrices y O(n + a) con listas.</p>
+<p><b>Construir el bosque explícitamente</b> (para saber si un arco es de avance, cruce…): una estructura de punteros al padre, <code>marca: array [1..n] de entero</code> con −1 = no visitado, 0 = visitado y raíz de un árbol, y en otro caso, el padre. Entonces ⟨v, w⟩ es <b>de avance</b> si w es hijo de v, <b>de retroceso</b> si v es hijo de w (descendiente, en general) y <b>de cruce</b> si no es ninguna de las anteriores.</p>
+</ap>
+
+<ap id="t4-7" n="4.7" t="Aplicaciones de los recorridos">
+<p><b>Componentes conexos de un grafo no dirigido</b>: hacer una BPP (o BPA); cada árbol del bosque es un componente conexo.</p>
+<p><b>Prueba de aciclicidad</b>: ¿tiene el grafo algún ciclo?</p>
+<ul><li><b>No dirigido</b>: hay un ciclo si y sólo si aparece algún arco que <b>no es del árbol</b> de expansión.</li><li><b>Dirigido</b>: hay un ciclo si y sólo si aparece algún arco <b>de retroceso</b> (los de avance y cruce no cierran ciclos).</li></ul>
+<p>El coste es el de los recorridos: O(n²) con matrices y O(n + a) con listas.</p>
+<fig src="t4-38" alt="Grafo no dirigido con varios componentes conexos">Un grafo con varios componentes conexos: la BPP da un árbol por componente.</fig>
+</ap>
+
+<ap id="t4-8" n="4.8" t="Árboles de expansión de coste mínimo">
+<div class="box def"><p class="box-t">Definición</p><p>Un <b>árbol de expansión</b> de un grafo G = (V, A) no dirigido y conexo es un subgrafo G′ = (V, A′) <b>conexo y sin ciclos</b> (tiene n − 1 aristas). Los árboles de BPP y BPA son árboles de expansión. Con pesos, su <b>coste</b> es la suma de los de sus aristas.</p><p><b>Problema</b>: dado un grafo ponderado no dirigido, encontrar el árbol de expansión de <b>menor coste</b>.</p></div>
+<fig src="t4-41" alt="Seis ordenadores unidos por cables con distintos costes">Ejemplo: conectar todos los ordenadores con el menor coste total de cable. Lo resuelven los algoritmos de Prim y Kruskal.</fig>
+</ap>
+
+<ap id="t4-9" n="4.9" t="Algoritmo de Prim">
+<p><b>Esquema</b>: empezar con el árbol formado sólo por un vértice cualquiera; buscar el vértice <b>más próximo</b> a cualquiera de los que ya están (la arista más barata que sale del árbol) y añadirlo con esa arista; repetir hasta añadir los n vértices. Implícitamente maneja los conjuntos V, U (vértices ya añadidos) y V − U (los que quedan).</p>
+<p>Para encontrar rápido el vértice de V − U más próximo a U se usan dos arrays: <b>MAS_CERCANO[v]</b> (el vértice de U más cercano a v) y <b>MENOR_COSTE[v]</b> (el coste de esa arista).</p>
+<code t="Algoritmo de Prim (C[v, w] = matriz de costes, ∞ si no hay arista)">
+U:= {1}
+para v:= 2, ..., n hacer
+    MAS_CERCANO[v]:= 1
+    MENOR_COSTE[v]:= C[1, v]
+para i:= 1, ..., n−1 hacer
+    v:= nodo de V−U con MENOR_COSTE[v] mínimo
+    añadir la arista (v, MAS_CERCANO[v]) a la solución
+    MENOR_COSTE[v]:= ∞                      // un valor muy grande: no volver a cogerlo
+    para cada w de V−U hacer                 // ¿w está más cerca de v que de los demás?
+        si C[v, w] < MENOR_COSTE[w] entonces
+            MENOR_COSTE[w]:= C[v, w]
+            MAS_CERCANO[w]:= v
+        finsi
+finpara
+</code>
+<p>El resultado está en MAS_CERCANO: las aristas (v, MAS_CERCANO[v]). <b>Coste</b>: n − 1 iteraciones, cada una con una búsqueda del mínimo O(n) y una actualización O(n): <b>O(n²)</b>.</p>
+<fig src="t4-46" alt="Grafo de seis ordenadores con los costes de los cables">El grafo del ejemplo: aristas 1–2 (2), 1–3 (3), 1–5 (6), 2–5 (2), 2–6 (3), 3–5 (1), 3–4 (5), 4–5 (5), 5–6 (4) y 4–6 (6).</fig>
+<ej id="t4-prim" n="Ejemplo de clase" t="Prim sobre el grafo de los ordenadores, empezando en el 1"><p>Muestra la evolución de MENOR_COSTE (con MAS_CERCANO entre paréntesis).</p><sol>
+<div class="tablewrap"><table><thead><tr><th>Paso</th><th>Se añade</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>
+<tr><td>Inicio</td><td>1</td><td>2 (1)</td><td>3 (1)</td><td>∞</td><td>6 (1)</td><td>∞</td></tr>
+<tr><td>1</td><td>2, arista 1–2 (2)</td><td>—</td><td>3 (1)</td><td>∞</td><td><b>2 (2)</b></td><td><b>3 (2)</b></td></tr>
+<tr><td>2</td><td>5, arista 2–5 (2)</td><td>—</td><td><b>1 (5)</b></td><td><b>5 (5)</b></td><td>—</td><td>3 (2)</td></tr>
+<tr><td>3</td><td>3, arista 5–3 (1)</td><td>—</td><td>—</td><td>5 (5)</td><td>—</td><td>3 (2)</td></tr>
+<tr><td>4</td><td>6, arista 2–6 (3)</td><td>—</td><td>—</td><td>5 (5)</td><td>—</td><td>—</td></tr>
+<tr><td>5</td><td>4, arista 5–4 (5)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>Aristas 1–2, 2–5, 5–3, 2–6 y 5–4: <b>coste total 2 + 2 + 1 + 3 + 5 = 13</b>. En el paso 3, C[3, 4] = 5 no es menor que 5, así que el 4 sigue colgando del 5 (un empate).</p></sol></ej>
+</ap>
+
+<ap id="t4-10" n="4.10" t="Algoritmo de Kruskal">
+<p><b>Esquema</b>: empezar con un grafo sin aristas, G′ = (V, ∅); tomar la arista de <b>menor coste</b> de A; si forma un ciclo en G′ se descarta y si no, se añade; repetir hasta tener n − 1 aristas.</p>
+<p>¿Cómo saber rápido si (v, w) forma un ciclo? Lo forma si v y w ya están en el <b>mismo componente conexo</b> de G′, y «estar en el mismo componente conexo» es una <b>relación de equivalencia</b>: se usa la estructura de punteros al padre del tema 3.</p>
+<code t="Algoritmo de Kruskal con relaciones de equivalencia">
+ordenar las aristas de A de menor a mayor coste          // O(a log a)
+R:= Crear(n)                                              // cada nodo, un componente
+aceptadas:= 0
+para cada arista (v, w) en ese orden, mientras aceptadas < n−1 hacer
+    cv:= Encuentra(R, v)
+    cw:= Encuentra(R, w)
+    si cv ≠ cw entonces                                   // no forma ciclo
+        añadir (v, w) a la solución
+        Unión(R, cv, cw)                                  // juntar los dos componentes
+        aceptadas:= aceptadas + 1
+    finsi                                                 // si cv == cw, se descarta
+finpara
+</code>
+<p><b>Coste</b>: ordenar O(a log a) más a búsquedas y n − 1 uniones (casi O(1) cada una con balanceo y compresión): <b>O(a log a)</b>. Es mejor que Prim cuando el grafo es escaso (a ≪ n²).</p>
+<ej id="t4-kruskal" n="Ejemplo de clase" t="Kruskal sobre el mismo grafo"><p>Aplica Kruskal al grafo de los ordenadores.</p><sol>
+<div class="tablewrap"><table><thead><tr><th>Arista (coste)</th><th>¿Ciclo?</th><th>Componentes tras el paso</th></tr></thead><tbody>
+<tr><td>3–5 (1)</td><td>No: se añade</td><td>{3, 5}</td></tr>
+<tr><td>1–2 (2)</td><td>No: se añade</td><td>{1, 2}, {3, 5}</td></tr>
+<tr><td>2–5 (2)</td><td>No: se añade</td><td>{1, 2, 3, 5}</td></tr>
+<tr><td>1–3 (3)</td><td><b>Sí</b>: se descarta</td><td>igual</td></tr>
+<tr><td>2–6 (3)</td><td>No: se añade</td><td>{1, 2, 3, 5, 6}</td></tr>
+<tr><td>5–6 (4)</td><td><b>Sí</b>: se descarta</td><td>igual</td></tr>
+<tr><td>3–4 (5)</td><td>No: se añade (ya hay 5 aristas)</td><td>{1, …, 6}</td></tr></tbody></table></div>
+<p>Coste total 1 + 2 + 2 + 3 + 5 = <b>13</b>, el mismo que con Prim, pero el árbol no es igual: Kruskal ha cogido 3–4 y Prim 5–4 (las dos cuestan 5). Los dos algoritmos encuentran siempre una solución óptima, pero si hay empates pueden dar árboles distintos.</p></sol></ej>
+<div class="box def"><p class="box-t">Prim y Kruskal: lo que tienen en común</p><ul><li>Empiezan con una solución «vacía» y en cada paso añaden un elemento (Prim, un nodo; Kruskal, una arista).</li><li>Lo que se añade <b>no se quita nunca</b>: no se deshacen las decisiones. Son algoritmos <b>voraces</b> (se estudian en AED II).</li></ul></div>
+</ap>
+
+<ap id="t4-11" n="4.11" t="Caminos mínimos desde un origen: Dijkstra">
+<p>El <b>coste de un camino</b> es la suma de los costes de sus aristas. Hay tres problemas: el camino mínimo entre dos nodos, entre un nodo y todos los demás (<b>Dijkstra</b>) y entre todos los pares (<b>Floyd</b>).</p>
+<p><b>Dijkstra</b> (pesos <b>positivos</b>, origen 1) trabaja con dos conjuntos: los <b>escogidos</b> S, cuyo camino mínimo ya se conoce, y los <b>candidatos</b> T. Un <b>camino especial</b> es un camino desde el origen que sólo pasa por nodos de S. En cada paso se coge el candidato con el camino especial más corto (su camino mínimo coincide con él), se pasa a S y se recalculan los caminos especiales de los demás pudiendo pasar por él.</p>
+<fig src="t4-57" alt="Camino especial a w sin pasar por v (D[w]) o pasando por v (D[v] + C[v, w])">Para cada w: o el camino especial que ya tenía, D[w], o pasar por el nuevo nodo v, D[v] + C[v, w]. Nos quedamos con el menor.</fig>
+<code t="Algoritmo de Dijkstra (origen 1)">
+Entrada: C: array [1..n, 1..n] de real            // matriz de costes (∞ si no hay arista)
+Salida:  D: array [2..n] de real                  // coste del camino mínimo a cada nodo
+         P: array [2..n] de entero                // último nodo antes de v en ese camino
+Auxiliar: S: array [2..n] de booleano             // nodos escogidos
+
+para v:= 2, ..., n hacer
+    D[v]:= C[1, v]
+    P[v]:= 1
+    S[v]:= FALSE
+finpara
+para i:= 1, ..., n−1 hacer
+    v:= nodo con S[v] == FALSE y mínimo D[v]
+    S[v]:= TRUE
+    para cada nodo w adyacente a v hacer
+        si (NOT S[w]) AND (D[v] + C[v, w] < D[w]) entonces
+            D[w]:= D[v] + C[v, w]
+            P[w]:= v
+        finsi
+    finpara
+finpara
+</code>
+<p><b>Recuperar el camino</b> hasta w: se va hacia atrás con P: 1 → … → P[P[P[w]]] → P[P[w]] → P[w] → w.</p>
+<ej id="t4-dijkstra" n="Ejemplo de clase" t="Dijkstra desde el nodo 1"><p>Grafo dirigido con aristas 1→2 (1), 1→7 (4), 2→4 (8), 2→7 (1), 3→1 (2), 3→7 (1), 7→4 (3), 7→5 (2), 7→6 (3), 4→6 (1), 6→5 (2) y 5→3 (8).</p><sol>
+<div class="tablewrap"><table><thead><tr><th>Paso</th><th>Se escoge</th><th>D[2]</th><th>D[3]</th><th>D[4]</th><th>D[5]</th><th>D[6]</th><th>D[7]</th></tr></thead><tbody>
+<tr><td>Inicio</td><td>1</td><td>1</td><td>∞</td><td>∞</td><td>∞</td><td>∞</td><td>4</td></tr>
+<tr><td>1</td><td>2 (D = 1)</td><td>—</td><td>∞</td><td>9 (P 2)</td><td>∞</td><td>∞</td><td><b>2 (P 2)</b></td></tr>
+<tr><td>2</td><td>7 (D = 2)</td><td>—</td><td>∞</td><td><b>5 (P 7)</b></td><td><b>4 (P 7)</b></td><td><b>5 (P 7)</b></td><td>—</td></tr>
+<tr><td>3</td><td>5 (D = 4)</td><td>—</td><td><b>12 (P 5)</b></td><td>5</td><td>—</td><td>5</td><td>—</td></tr>
+<tr><td>4</td><td>4 (D = 5)</td><td>—</td><td>12</td><td>—</td><td>—</td><td>5 (6 no mejora)</td><td>—</td></tr>
+<tr><td>5</td><td>6 (D = 5)</td><td>—</td><td>12</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>6</td><td>3 (D = 12)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>Resultado: D = (2: 1, 3: 12, 4: 5, 5: 4, 6: 5, 7: 2) y P = (2: 1, 3: 5, 4: 7, 5: 7, 6: 7, 7: 2). El camino mínimo al 3 es P[3] = 5, P[5] = 7, P[7] = 2, P[2] = 1: <b>1 → 2 → 7 → 5 → 3</b>, de coste 1 + 1 + 2 + 8 = 12.</p>
+<fig src="t4-60" alt="El grafo del ejemplo con la tabla final de S, D y P">La tabla final en la diapositiva.</fig></sol></ej>
+<p><b>Eficiencia</b>: con matrices, inicialización O(n) y n − 1 veces buscar el mínimo O(n) y actualizar O(n): <b>O(n²)</b>. Con listas sigue siendo O(n²), pero guardando los candidatos en un montículo se consigue <b>O(a·log n)</b>, adecuado si a ≪ n².</p>
+</ap>
+
+<ap id="t4-12" n="4.12" t="Caminos mínimos entre todos los pares: Floyd">
+<p>Opciones: aplicar Dijkstra n veces (O(n³) con matrices, O(a·n·log n) con listas y montículo) o el <b>algoritmo de Floyd</b>, O(n³) con listas o con matrices, pero mucho más sencillo de programar.</p>
+<p><b>Idea</b>: en el paso k, D guarda los caminos mínimos entre todos los pares <b>pudiendo pasar por los k primeros nodos</b>. Al principio, D = caminos directos; tras el paso n, se puede pasar por cualquiera: es lo que buscamos. En el paso k, el nodo k actúa de <b>pivote</b>: el camino de i a j, o no pasa por k (D[i, j]) o pasa (D[i, k] + D[k, j]), y nos quedamos con el menor.</p>
+<fig src="t4-65" alt="El camino de i a j directo o pasando por el pivote k">El pivote k: D[i, j] frente a D[i, k] + D[k, j].</fig>
+<code t="Algoritmo de Floyd con la matriz de caminos">
+D:= C                         // caminos directos (0 en la diagonal, ∞ si no hay arista)
+P:= 0                         // P[i, j]: un nodo intermedio del camino de i a j (0 = directo)
+para k:= 1, ..., n hacer
+    para i:= 1, ..., n hacer
+        para j:= 1, ..., n hacer
+            si D[i, k] + D[k, j] < D[i, j] entonces
+                D[i, j]:= D[i, k] + D[k, j]
+                P[i, j]:= k
+            finsi
+
+operación camino (i, j: entero)        // escribe los nodos intermedios
+    k:= P[i, j]
+    si k ≠ 0 entonces
+        camino(i, k)
+        escribe(k)
+        camino(k, j)
+    finsi
+// Uso: escribe(i); camino(i, j); escribe(j)
+</code>
+<p>Se basa en la recurrencia D<sub>k</sub>(i, j) = C[i, j] si k = 0 y min(D<sub>k−1</sub>(i, j), D<sub>k−1</sub>(i, k) + D<sub>k−1</sub>(k, j)) si k &gt; 0. Como la fila y la columna k no cambian en el paso k, basta <b>una sola matriz</b>. Tres bucles anidados: <b>O(n³)</b>.</p>
+<ej id="t4-floyd" n="Ejemplo de clase" t="Floyd en un grafo dirigido de 3 nodos"><p>Aristas 1→2 (8), 1→3 (2), 2→1 (3), 3→1 (6), 3→2 (2) y un lazo 3→3 (5). Calcula D, P y el camino mínimo de 1 a 2.</p><sol>
+<p>Inicial (∞ = no hay arista): D[1] = (0, 8, 2), D[2] = (3, 0, ∞), D[3] = (6, 2, 0).</p>
+<ol class="steps"><li><b>k = 1</b>: D[2, 3] = min(∞, D[2, 1] + D[1, 3] = 3 + 2) = <b>5</b>, P[2, 3] = 1.</li><li><b>k = 2</b>: D[3, 1] = min(6, D[3, 2] + D[2, 1] = 2 + 3) = <b>5</b>, P[3, 1] = 2.</li><li><b>k = 3</b>: D[1, 2] = min(8, D[1, 3] + D[3, 2] = 2 + 2) = <b>4</b>, P[1, 2] = 3.</li></ol>
+<div class="tablewrap"><table><thead><tr><th>D</th><th>1</th><th>2</th><th>3</th><th></th><th>P</th><th>1</th><th>2</th><th>3</th></tr></thead><tbody><tr><td><b>1</b></td><td>0</td><td>4</td><td>2</td><td></td><td><b>1</b></td><td>0</td><td>3</td><td>0</td></tr><tr><td><b>2</b></td><td>3</td><td>0</td><td>5</td><td></td><td><b>2</b></td><td>0</td><td>0</td><td>1</td></tr><tr><td><b>3</b></td><td>5</td><td>2</td><td>0</td><td></td><td><b>3</b></td><td>2</td><td>0</td><td>0</td></tr></tbody></table></div>
+<p>Camino de 1 a 2: P[1, 2] = 3, P[1, 3] = 0 y P[3, 2] = 0, así que es <b>1 → 3 → 2</b>, de coste 4.</p>
+<fig src="t4-68" alt="El grafo del ejemplo con las matrices finales D y P">Las matrices finales en clase.</fig></sol></ej>
+</ap>
+
+<ap id="t4-13" n="4.13" t="Cierre transitivo: Warshall">
+<p><b>Problema</b>: dada la matriz de adyacencia M (booleana), calcular A tal que A[i, j] es cierto si y sólo si existe un camino de i a j. El <b>algoritmo de Warshall</b> es Floyd con booleanos: OR en lugar de min y AND en lugar de +.</p>
+<code t="Algoritmo de Warshall">
+A:= M
+para k:= 1, ..., n hacer
+    para i:= 1, ..., n hacer
+        para j:= 1, ..., n hacer
+            A[i, j]:= A[i, j] OR (A[i, k] AND A[k, j])
+</code>
+<box k="def" t="Caminos mínimos en resumen">Desde un origen a todos: <b>Dijkstra</b> (idea: escogidos y candidatos), O(n²). Entre todos los pares: <b>Floyd</b> (idea: pivotar sobre cada nodo), O(n³). ¿Existe camino?: <b>Warshall</b>, O(n³). Los tres se pueden modificar para resolver otros problemas relacionados (el camino más largo en un GDA, el de mayor capacidad…).</box>
+</ap>
+
+<ap id="t4-14" n="4.14" t="Componentes fuertemente conexos">
+<p>En un grafo no dirigido los componentes conexos salen de una BPP (cada árbol, uno). En uno <b>dirigido</b> una BPP simple no basta: desde un nodo se puede llegar a otros que no pueden volver. La idea es hacer <b>dos</b> búsquedas en profundidad: la primera calcula un orden para la segunda, que recorre el grafo <b>invertido</b> en ese orden. Se usa el <b>orden posterior</b>: npost[v] = orden en que termina la llamada recursiva de v en la BPP.</p>
+<code t="Componentes fuertemente conexos con dos BPP">
+1. Hacer una BPP de G numerando los vértices en orden posterior: npost[1..n].
+2. Construir el grafo invertido G′ = (V, A′): para toda arista ⟨v, w⟩ ∈ A, ⟨w, v⟩ ∈ A′.
+3. Hacer una BPP en G′ empezando por el nodo de mayor npost. Si no se visitan todos,
+   seguir por el nodo no visitado con mayor npost.
+4. Cada árbol del bosque del paso 3 es un componente fuertemente conexo de G.
+</code>
+<box k="warn" t="Sobre el nombre">En las diapositivas aparece como «algoritmo de R. Tarjan». En la bibliografía, este método de dos recorridos (con el grafo invertido) se conoce como algoritmo de <b>Kosaraju</b> (o de Kosaraju–Sharir); el de Tarjan hace un solo recorrido. En el examen, explícalo como en clase: los pasos son los que importan.</box>
+<ej id="t4-cfc" n="Ejemplo de clase" t="Componentes fuertemente conexos"><p>Grafo con aristas A→B, B→C, B→D, C→A, C→E, D→E y E→D (adyacentes en orden alfabético).</p><sol>
+<ol class="steps"><li><b>BPP de G desde A</b>: A → B → C (A ya visitado) → E → D (E ya visitado). Terminan, en este orden: D (npost 1), E (2), C (3); desde B, D ya está visitado: B (4); A (5).</li><li><b>Grafo invertido</b>: B→A, C→B, A→C, D→B, E→C, E→D y D→E.</li><li><b>BPP de G′ desde A</b> (mayor npost): A → C → B; el árbol es {A, B, C}. El no visitado con mayor npost es E: E → D; árbol {D, E}.</li></ol>
+<res>Dos componentes: {A, B, C} y {D, E}.</res>
+<fig src="t4-75" alt="El grafo del ejemplo con los nodos A, B, C, D y E">El grafo del ejemplo.</fig></sol></ej>
+<p>Coste: dos BPP y la inversión del grafo, <b>O(n + a)</b> con listas (O(n²) con matrices).</p>
+<p>Con los componentes se construye el <b>grafo reducido</b> G<sub>R</sub>: un nodo por componente y una arista entre dos si hay alguna arista entre nodos de los componentes correspondientes. Representa todos los caminos del grafo y siempre es acíclico.</p>
+<fig src="t4-76" alt="Grafo reducido con dos nodos: {A, B, C} y {D, E} con una arista entre ellos">El grafo reducido del ejemplo.</fig>
+</ap>
+
+<ap id="t4-15" n="4.15" t="Grafos dirigidos acíclicos y orden topológico">
+<p>Un <b>grafo dirigido acíclico</b> (GDA) es un grafo dirigido sin ciclos: la planificación de tareas, las expresiones aritméticas con subexpresiones comunes, los prerrequisitos de asignaturas… Son la representación de los <b>órdenes parciales</b>: relaciones con (a R a) falso para todo a y transitivas, como la inclusión propia ⊂ entre conjuntos.</p>
+<figs><fig src="t4-77" alt="Grafo de una expresión aritmética con subexpresiones compartidas y grafo de tareas">Una expresión con subexpresiones comunes y un grafo de tareas.</fig><fig src="t4-78" alt="El orden parcial de inclusión propia entre los subconjuntos de {1, 2, 3}">El orden parcial ⊂ entre los subconjuntos de {1, 2, 3}.</fig></figs>
+<p>El <b>recorrido en orden topológico</b> sólo se aplica a GDA: un vértice se visita después de todos sus predecesores. Una numeración topológica ntop cumple que si existe ⟨v, w⟩, entonces ntop[v] &lt; ntop[w]. Puede haber varias válidas. En un grafo de tareas es un orden posible de ejecución respetando las precedencias.</p>
+<code t="Recorrido topológico por grados de entrada">
+1. Calcular los grados de entrada de todos los nodos.
+2. Buscar un nodo v con grado de entrada 0 (sin predecesores). Numerarlo y marcarlo
+   como visitado. Si no hay ninguno, es que hay un ciclo.
+3. Para todos los nodos adyacentes a v, decrementar en 1 su grado de entrada.
+4. Repetir 2 y 3 hasta haber visitado todos los nodos.
+</code>
+<p>Para que el paso 2 no recorra todo el array cada vez, los nodos con grado 0 se van metiendo en una <b>cola</b>: así el algoritmo es O(n + a) con listas.</p>
+<p><b>Otra posibilidad</b>: usar el orden posterior de una BPP. Si npost es una numeración posterior de un GDA, <b>ntop[v] = n − npost[v]</b> (o n + 1 − npost[v] para numerar desde 1) es una numeración topológica válida: el orden topológico es el orden en que <b>terminan</b> las llamadas, al revés. ¿Por qué? En una BPP de un GDA, para cada arista ⟨v, w⟩ la llamada de w termina antes que la de v (no hay arcos de retroceso).</p>
+<fig src="t4-80" alt="Las tareas de la pirámide numeradas en un orden topológico">Un orden topológico de las tareas de la pirámide: Licencia, Aplanar, Comprar, Hacer camino, Cincelar, Colocar piedras y Pintar.</fig>
+<ej id="t4-topo" n="Ejemplo de clase" t="Los dos algoritmos sobre el mismo grafo"><p>Aristas 1→2, 1→3, 1→4, 2→4, 2→5, 3→4, 3→6, 4→6, 4→7, 5→4, 5→7 y 7→6.</p><sol>
+<p><b>Por grados de entrada</b> (1: 0, 2: 1, 3: 1, 4: 4, 5: 1, 6: 3, 7: 2), con una cola:</p>
+<ol class="steps"><li>Sale 1 → baja el grado de 2, 3 y 4: 2 y 3 llegan a 0.</li><li>Sale 2 → 4 baja a 2, 5 llega a 0. Sale 3 → 4 baja a 1 y 6 a 2.</li><li>Sale 5 → 4 llega a 0 y 7 baja a 1. Sale 4 → 6 baja a 1 y 7 llega a 0.</li><li>Sale 7 → 6 llega a 0. Sale 6.</li></ol>
+<res>Orden 1, 2, 3, 5, 4, 7, 6.</res>
+<p><b>Por orden posterior</b>: la BPP desde 1 visita 1 → 2 → 4 → 6, y terminan 6 (1), luego 4 → 7: 7 (2), 4 (3); 2 → 5: 5 (4), 2 (5); 1 → 3: 3 (6); 1 (7). Al revés: <b>1, 3, 2, 5, 4, 7, 6</b>. Es otro orden distinto, igual de válido.</p>
+<fig src="t4-83" alt="El grafo dirigido acíclico del ejemplo con siete nodos">El grafo del ejemplo.</fig></sol></ej>
+</ap>
+
+<ap id="t4-16" n="4.16" t="Puntos de articulación y componentes biconexos">
+<div class="box def"><p class="box-t">Definiciones (grafos no dirigidos)</p><ul><li>Un <b>punto de articulación</b> es un nodo v tal que, al eliminarlo (con sus aristas), un componente conexo se divide en dos o más.</li><li>Un grafo es <b>biconexo</b> si no tiene puntos de articulación. Un <b>componente biconexo</b> es un subgrafo biconexo maximal.</li><li>Un grafo tiene <b>conectividad k</b> si eliminar k − 1 nodos cualesquiera no lo desconecta. Biconexo ⇔ conectividad 2 o más.</li></ul></div>
+<p>Algoritmo ingenuo: eliminar los nodos uno a uno y comprobar si sigue siendo conexo, n recorridos: O(n·(n + a)). Uno mejor calcula, en una sola BPP, los caminos «alternativos» de cada nodo:</p>
+<code t="Puntos de articulación con una BPP">
+1. Hacer una BPP numerando los nodos en el orden del recorrido: nbpp[1..n].
+2. Al terminar la llamada de cada nodo v, calcular
+       bajo[v]:= mínimo { nbpp[v],
+                          nbpp[z]  siendo (v, z) un arco de retroceso,
+                          bajo[y]  siendo y hijo de v en el árbol }
+3. La raíz es un punto de articulación si y sólo si tiene dos o más hijos en el árbol.
+4. Otro nodo v es punto de articulación si y sólo si tiene algún hijo w en el árbol
+   con bajo[w] ≥ nbpp[v].
+</code>
+<p><b>Fundamento</b>: bajo[v] es el menor nbpp al que se puede llegar desde v bajando a cualquier descendiente y subiendo luego por un arco de retroceso. Si bajo[w] ≥ nbpp[v], al eliminar v, ni w ni sus descendientes pueden llegar a los antecesores de v. Cuesta lo mismo que una BPP: O(n + a) con listas.</p>
+<ej id="t4-art" n="Ejemplo de clase" t="Puntos de articulación"><p>Grafo con aristas 1–3, 1–7, 1–8, 3–7, 3–9, 7–8, 8–2, 2–4, 2–6, 4–5 y 4–6. Haz la BPP desde 1.</p><sol>
+<p>Eligiendo los adyacentes como en la diapositiva, la BPP visita 1, 3, 9, 7, 8, 2, 4, 5, 6 (nbpp 1 a 9). Los arcos de retroceso son 7–1, 8–1 y 6–2. (Con otro orden de adyacentes los números cambian, pero los puntos de articulación son los mismos.)</p>
+<div class="tablewrap"><table><thead><tr><th>Nodo</th><th>1</th><th>3</th><th>9</th><th>7</th><th>8</th><th>2</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody><tr><td><b>nbpp</b></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td><b>bajo</b></td><td>1</td><td>1</td><td>3</td><td>1</td><td>1</td><td>6</td><td>6</td><td>8</td><td>6</td></tr></tbody></table></div>
+<ul><li>La raíz 1 tiene un solo hijo (3): no es punto de articulación.</li><li><b>3</b>: su hijo 9 tiene bajo 3 ≥ nbpp[3] = 2 → <b>sí</b>.</li><li>7: su hijo 8 tiene bajo 1 &lt; 4 → no.</li><li><b>8</b>: su hijo 2 tiene bajo 6 ≥ 5 → <b>sí</b>.</li><li><b>2</b>: su hijo 4 tiene bajo 6 ≥ 6 → <b>sí</b>.</li><li><b>4</b>: su hijo 5 tiene bajo 8 ≥ 7 → <b>sí</b> (el 6, con bajo 6, no lo haría).</li></ul>
+<res>Puntos de articulación: 3, 8, 2 y 4. Componentes biconexos: {1, 3, 7, 8}, {3, 9}, {8, 2}, {2, 4, 6} y {4, 5}.</res>
+<figs><fig src="t4-88" alt="El grafo del ejemplo con nueve nodos">El grafo.</fig><fig src="t4-89" alt="El árbol de la BPP con nbpp y bajo de cada nodo">La BPP con nbpp (azul) y bajo (rojo).</fig></figs></sol></ej>
+</ap>
+
+<ap id="t4-17" n="4.17" t="Caminos y circuitos de Euler">
+<p>¿Se puede dibujar una figura sin levantar el bolígrafo, pasando una sola vez por cada línea y acabando donde se empezó? Es un problema de grafos:</p>
+<div class="box def"><ul><li>Un <b>circuito de Euler</b> es un ciclo (no necesariamente simple) que visita <b>todas las aristas exactamente una vez</b>. Si puede empezar y acabar en nodos distintos, es un <b>camino de Euler</b>.</li><li>Existe un circuito de Euler si y sólo si el grafo es <b>conexo</b> y <b>todos los nodos tienen grado par</b> (el camino entra y sale de cada nodo).</li><li>Existe un camino de Euler si y sólo si es conexo y tiene <b>exactamente 0 o 2 nodos de grado impar</b> (si hay 2, el camino empieza en uno y acaba en el otro).</li></ul></div>
+<code t="Circuito de Euler partiendo de un nodo v">
+1. Buscar un ciclo cualquiera en G empezando en v.
+2. Si quedan aristas por visitar, seleccionar el primer nodo w del ciclo que tenga una
+   arista sin visitar y buscar otro ciclo desde w por aristas no visitadas.
+3. Unir el ciclo del paso 1 con el del paso 2 (insertándolo en w).
+4. Repetir 2 y 3 hasta que no queden aristas por visitar.
+</code>
+<p>Para buscar un ciclo por aristas no visitadas basta un recorrido en profundidad que marque las <b>aristas</b> (no los nodos) y avance mientras pueda: como todos los grados son pares, sólo se puede quedar atascado en el nodo de partida. Para un <b>camino</b> de Euler, se empieza en uno de los dos nodos de grado impar.</p>
+<ej id="t4-euler" n="Ejemplo" t="Un circuito de Euler"><p>Grafo con aristas 1–2, 2–3, 3–1, 3–4, 4–5 y 5–3.</p><sol><p>Grados: 1: 2, 2: 2, 3: 4, 4: 2, 5: 2; todos pares y conexo: hay circuito. Desde 1: primer ciclo 1 → 2 → 3 → 1. Quedan aristas en el 3: ciclo 3 → 4 → 5 → 3. Se inserta en el 3 del primero:</p><res>1 → 2 → 3 → 4 → 5 → 3 → 1</res></sol></ej>
+<fig src="t4-91" alt="Condiciones de existencia del circuito de Euler y un grafo de ejemplo">Las condiciones de clase.</fig>
+</ap>
+
+<ap id="t4-18" n="4.18" t="Otros problemas con grafos">
+<div class="tablewrap"><table><thead><tr><th>Problema</th><th>Qué es</th><th>Dificultad</th></tr></thead><tbody>
+<tr><td><b>Flujo máximo</b></td><td>Grafo dirigido con capacidades C(v, w): máxima cantidad que puede ir de s a t, con lo que entra en cada nodo interior igual a lo que sale.</td><td>Eficiente. El método sencillo (coger un camino de s a t, mandar por él su arista mínima m y restar m de G) no garantiza el óptimo.</td></tr>
+<tr><td><b>Ciclo hamiltoniano</b></td><td>¿Hay un ciclo simple que pase por <b>todos los vértices</b> exactamente una vez?</td><td><b>NP-completo</b>, aunque se parece al de Euler.</td></tr>
+<tr><td><b>Viajante</b></td><td>Grafo completo con pesos: ciclo de menor coste que pase por todos los nodos (el cartero que reparte por el pueblo).</td><td><b>NP-completo</b> (reducible al hamiltoniano).</td></tr>
+<tr><td><b>Coloración</b></td><td>Asignar colores a los nodos de forma que dos nodos unidos (incompatibles) tengan colores distintos, con el mínimo de colores (pintar un mapa).</td><td><b>NP-completo</b>.</td></tr>
+<tr><td><b>Isomorfismo</b></td><td>¿Hay una biyección a: V_G → V_F tal que (v, w) ∈ A_G ⇔ (a(v), a(w)) ∈ A_F? (Reconocimiento de patrones.)</td><td>Difícil: básicamente, probar todas las asignaciones.</td></tr></tbody></table></div>
+<p>Para los problemas <b>NP-completos</b> no se conoce ningún algoritmo de tiempo polinómico: las soluciones conocidas evalúan «todas las posibilidades» (tiempo exponencial o factorial). Alternativas: <b>heurísticas</b> (soluciones aproximadas, rápidas, que pueden fallar), técnicas probabilistas, algoritmos genéticos…</p>
+<figs><fig src="t4-102" alt="Dos ciclos por cinco nodos con costes totales 140 y 135">El viajante: dos recorridos posibles con distinto coste.</fig><fig src="t4-105" alt="Grafo de las regiones de un mapa para colorearlo">Coloración: nodos = regiones, aristas = fronteras.</fig></figs>
+<box k="def" t="Conclusiones del tema 4"><ul><li>Los grafos son una herramienta fundamental para modelar problemas de la «vida real».</li><li>Representación: tamaño reducido → <b>matrices</b>; tamaño grande y grafo escaso → <b>listas</b>.</li><li>La <b>BPP</b> es la herramienta subyacente de muchos algoritmos (componentes, aciclicidad, orden topológico, articulación).</li><li>Nuestro trabajo: modelar el problema como un problema de grafos y elegir el algoritmo adecuado. Para los NP-completos, decidir entre un algoritmo óptimo costoso o uno heurístico rápido.</li></ul></box>
+</ap>
+</tema>
+
+<tema id="r" n="R" t="Chuleta: costes y algoritmos" eyebrow="Para el examen" lede="Todo lo que hay que tener a mano en una sola parte: el coste de cada estructura, las fórmulas de memoria, los algoritmos de grafos con su idea y su orden, y cómo es el examen.">
+
+<ap id="r-1" n="R.1" t="Cómo es el examen y la evaluación">
+<div class="tablewrap"><table><thead><tr><th>Parte</th><th>Peso</th><th>Cómo</th></tr></thead><tbody>
+<tr><td><b>Teoría</b></td><td>60 %</td><td>Evaluación continua (con asistencia y resúmenes) o examen final. <b>Una pregunta por tema</b> (T1 a T4, 1/4 cada uno); hace falta un 5.</td></tr>
+<tr><td><b>Práctica</b> (temas 2 y 3)</td><td>40 %</td><td>En parejas, C++ en Linux, juez Mooshak, memoria y entrevista; examen de prácticas si no se cumplen los requisitos.</td></tr>
+<tr><td>Comodines</td><td>hasta +1</td><td>Retos, pruebas opcionales, olimpiadas de programación (0,2 por comodín).</td></tr></tbody></table></div>
+<p>Teoría y práctica se aprueban <b>por separado</b>; con la asignatura suspendida, la nota final se limita a 4,5.</p>
+<div class="tablewrap"><table><thead><tr><th>Pregunta</th><th>Qué suelen pedir</th></tr></thead><tbody>
+<tr><td>1 · Especificaciones</td><td>Especificación formal axiomática (a veces constructiva) de un TAD con operaciones nuevas, casi siempre listas: NOMBRE, CONJUNTOS, SINTAXIS y SEMÁNTICA, con operaciones auxiliares si hace falta.</td></tr>
+<tr><td>2 · Dispersión</td><td>Una variante de tabla de dispersión: definir el tipo, programar inserción o consulta y razonar su eficiencia frente a la abierta y la cerrada.</td></tr>
+<tr><td>3 · Árboles</td><td>Una operación sobre AVL, trie, árbol B o relaciones de equivalencia (con los tipos de datos) y su orden de complejidad comparado.</td></tr>
+<tr><td>4 · Grafos</td><td>Modelar un problema como un grafo, elegir y adaptar el algoritmo (topológico, Dijkstra, Floyd, Prim…), ejecutarlo sobre el ejemplo y dar su coste.</td></tr></tbody></table></div>
+</ap>
+
+<ap id="r-2" n="R.2" t="Especificaciones en una tabla">
+<div class="tablewrap"><table><thead><tr><th></th><th>Axiomático</th><th>Constructivo</th></tr></thead><tbody>
+<tr><td>Semántica</td><td>axiomas <code>expr₁ = expr₂</code></td><td><code>pre-op(…) ::= …</code> y <code>post-op(…; r) ::= …</code></td></tr>
+<tr><td>Cómo se escribe</td><td>un axioma por cada (operación no constructora × constructor)</td><td>cada operación por sí misma, sobre un modelo (listas)</td></tr>
+<tr><td>Errores</td><td>conjunto M de mensajes en la imagen (T ∪ M)</td><td>precondiciones (contrato) o M en la imagen</td></tr>
+<tr><td>Condicionales</td><td colspan="2"><code>SI condición ⇒ valor si cierto | valor si falso</code></td></tr>
+<tr><td>Propiedades</td><td>completitud y corrección</td><td>el implementador cumple la post si el usuario cumple la pre</td></tr></tbody></table></div>
+</ap>
+
+<ap id="r-3" n="R.3" t="Coste de las estructuras de conjuntos y diccionarios">
+<div class="tablewrap"><table class="cost"><thead><tr><th>Estructura</th><th>Inserta / Suprime / Miembro</th><th>Unión, ∩, −</th><th>Min / Max / en orden</th></tr></thead><tbody>
+<tr><td>Array de booleanos (universo R)</td><td class="good">O(1)</td><td>O(R)</td><td>O(R)</td></tr>
+<tr><td>Lista no ordenada</td><td class="bad">O(n)</td><td class="bad">O(n·m)</td><td>O(n) / O(n log n)</td></tr>
+<tr><td>Lista ordenada</td><td class="bad">O(n)</td><td>O(n + m)</td><td class="good">O(1) / O(n)</td></tr>
+<tr><td>Array de asociaciones (diccionario)</td><td class="bad">O(n)</td><td>—</td><td>O(n)</td></tr>
+<tr><td>Dispersión abierta (B cubetas)</td><td class="good">O(1 + n/B)</td><td>O(B + n)</td><td>O(B + n) / + ordenar</td></tr>
+<tr><td>Dispersión cerrada</td><td class="good">O(1/(1 − n/B))</td><td>O(B)</td><td>O(B) / + ordenar</td></tr>
+<tr><td>Trie (palabras de longitud m)</td><td class="good">O(m) arrays; O(m·s) listas</td><td>—</td><td>O(m) / recorrido</td></tr>
+<tr><td>ABB sin balancear</td><td>O(log n) medio, <span class="bad">O(n)</span> peor</td><td>—</td><td>O(altura) / O(n)</td></tr>
+<tr><td>AVL</td><td class="good">O(log n) peor caso</td><td>—</td><td class="good">O(log n) / O(n)</td></tr>
+<tr><td>Árbol B de orden p</td><td class="good">O(log<sub>p/2</sub> n)</td><td>—</td><td>O(log n) / O(n)</td></tr>
+<tr><td>Relación de equivalencia (punteros al padre)</td><td colspan="3">Crear O(N) · Unión O(1) · Encuentra O(N) sin balanceo, entre O(1) y O(log N) con balanceo y compresión</td></tr></tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>Memoria (k₁ puntero, k₂ elemento)</th><th>Fórmula</th></tr></thead><tbody>
+<tr><td>Lista enlazada de n elementos</td><td>n·(k₁ + k₂)</td></tr>
+<tr><td>Dispersión abierta</td><td>k₁·B + (k₁ + k₂)·n</td></tr>
+<tr><td>Dispersión cerrada</td><td>k₂·B (o k₁·B + k₂·n con punteros a los datos)</td></tr>
+<tr><td>Trie con arrays (p prefijos, d símbolos)</td><td>(p + 1)·d·k₁</td></tr>
+<tr><td>Trie con listas</td><td>(2p + 1)·(2k₁ + k₂)</td></tr>
+<tr><td>Grafo con matriz / con listas</td><td>k₂·n² / k₁(n + a) + 2k₂·a</td></tr></tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>Dato clave</th><th>Valor</th></tr></thead><tbody>
+<tr><td>Reestructurar</td><td>abierta si n &gt; 2B; cerrada si n &gt; 0,75·B</td></tr>
+<tr><td>B en la función de división</td><td>primo (cuadrática: primo 4R + 3)</td></tr>
+<tr><td>AVL mínimo de altura h</td><td>N(h) = N(h−1) + N(h−2) + 1: 1, 2, 4, 7, 12, 20, 33, 54, 88, 143</td></tr>
+<tr><td>Árbol completo de altura h</td><td>2ʰ⁺¹ − 1 nodos: 1, 3, 7, 15, 31, 63…</td></tr>
+<tr><td>Árbol B de orden p</td><td>raíz 2..p hijos; internos ⌈p/2⌉..p hijos; hojas al mismo nivel; mínimo d = ⌊(p−1)/2⌋ claves</td></tr></tbody></table></div>
+</ap>
+
+<ap id="r-4" n="R.4" t="Rotaciones de AVL">
+<div class="tablewrap"><table><thead><tr><th>Inserción: caso</th><th>Rotación</th><th>Eliminación (a la izquierda de A; C hijo derecho)</th><th>Rotación</th></tr></thead><tbody>
+<tr><td>II (izquierdo del izquierdo)</td><td>RSI</td><td>h1 = h2</td><td>RSD (la altura no cambia)</td></tr>
+<tr><td>ID (derecho del izquierdo)</td><td>RDI = RSD(A→izq) + RSI(A)</td><td>h1 &lt; h2</td><td>RSD (baja 1)</td></tr>
+<tr><td>DI (izquierdo del derecho)</td><td>RDD = RSI(A→der) + RSD(A)</td><td>h1 &gt; h2</td><td>RDD (baja 1)</td></tr>
+<tr><td>DD (derecho del derecho)</td><td>RSD</td><td colspan="2">A la derecha, simétrico: RSI o RDI</td></tr></tbody></table></div>
+<p>RSI sube el hijo <b>izquierdo</b>; RSD, el <b>derecho</b>. Inserción: como mucho una rotación. Eliminación: puede haber una por nivel.</p>
+</ap>
+
+<ap id="r-5" n="R.5" t="Algoritmos de grafos">
+<div class="tablewrap"><table class="cost"><thead><tr><th>Problema</th><th>Algoritmo</th><th>Idea</th><th>Matriz</th><th>Listas</th></tr></thead><tbody>
+<tr><td>Recorrer</td><td>BPP / BPA</td><td>recursión (preorden) / cola (niveles)</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Componentes conexos, ¿ciclos?</td><td>BPP</td><td>un árbol por componente; ciclo ⇔ arco no del árbol (retroceso en dirigidos)</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Árbol de expansión mínimo</td><td>Prim</td><td>añadir el nodo más cercano (MAS_CERCANO, MENOR_COSTE)</td><td>O(n²)</td><td>O(n²)</td></tr>
+<tr><td>Árbol de expansión mínimo</td><td>Kruskal</td><td>aristas de menor a mayor; ciclo ⇔ Encuentra(v) = Encuentra(w)</td><td colspan="2">O(a log a)</td></tr>
+<tr><td>Caminos mínimos desde un origen</td><td>Dijkstra</td><td>escogidos y candidatos; D y P; pesos positivos</td><td>O(n²)</td><td>O(a log n) con montículo</td></tr>
+<tr><td>Caminos mínimos entre todos</td><td>Floyd</td><td>pivotar sobre k: min(D[i, j], D[i, k] + D[k, j]); P y camino recursivo</td><td colspan="2">O(n³)</td></tr>
+<tr><td>¿Existe camino? (cierre transitivo)</td><td>Warshall</td><td>Floyd con OR y AND</td><td colspan="2">O(n³)</td></tr>
+<tr><td>Componentes fuertemente conexos</td><td>dos BPP</td><td>npost en G; BPP en G invertido por mayor npost</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Orden topológico (GDA)</td><td>grados de entrada / npost</td><td>quitar nodos con grado 0 (cola) / npost al revés</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Puntos de articulación</td><td>BPP con nbpp y bajo</td><td>v es punto si algún hijo w tiene bajo[w] ≥ nbpp[v]; la raíz, si tiene ≥ 2 hijos</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Circuito de Euler</td><td>unir ciclos</td><td>existe ⇔ conexo y todos los grados pares</td><td>O(n²)</td><td>O(n + a)</td></tr>
+<tr><td>Hamiltoniano, viajante, coloración, isomorfismo</td><td>—</td><td>NP-completos: exhaustivo o heurísticas</td><td colspan="2">exponencial</td></tr></tbody></table></div>
+<box k="warn" t="Errores que más puntos cuestan"><ul><li>Olvidar el axioma de algún constructor (la especificación queda incompleta) o escribir uno que se deduce de otros.</li><li>En dispersión cerrada, borrar dejando la celda vacía (rompe las secuencias de búsqueda) o parar la búsqueda en una marca de eliminado.</li><li>En AVL, confundir RSI/RSD (en clase se nombran por el caso: RSI sube el hijo izquierdo) o no actualizar las alturas.</li><li>En árboles B, no subir la mediana o no propagar la partición/fusión al padre.</li><li>En Dijkstra, olvidar P (sin P no se puede dar el camino) o actualizar nodos ya escogidos.</li><li>Dar el coste sin decir la representación: con matriz y con listas suele ser distinto.</li></ul></box>
+</ap>
+</tema>

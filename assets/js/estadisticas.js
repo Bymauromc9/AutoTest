@@ -9,7 +9,7 @@
  */
 (function () {
   "use strict";
-  const { SUBJECTS, store, esc, icon, historial, repaso, progress, ROOT, sesion } = window.App;
+  const { SUBJECTS, store, esc, icon, historial, repaso, progress, ROOT, sesion, cursos } = window.App;
   const box = document.getElementById("est");
   if (!box || !sesion() || new URLSearchParams(location.search).has("cambiar")) return;
   const n1 = (x) => (Math.round(x * 10) / 10).toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -108,7 +108,8 @@
   }
 
   function pintar() {
-    const todos = SUBJECTS.map((s) => ({ s, h: historial.de(s.id) }));
+    // Las asignaturas de los cursos de la cuenta y, de las demás, sólo las que tengan tests hechos.
+    const todos = SUBJECTS.map((s) => ({ s, h: historial.de(s.id) })).filter((x) => cursos.tiene(x.s.curso) || x.h.length);
     const h = todos.flatMap((x) => x.h);
     const porDia = {}; h.forEach((x) => { const k = clave(x.d); porDia[k] = (porDia[k] || 0) + 1; });
     const r = racha(new Set(Object.keys(porDia)));
@@ -119,7 +120,7 @@
     const repHoy = rep.reduce((a, x) => a + x.hoy, 0), repTot = rep.reduce((a, x) => a + x.total, 0);
     // Por defecto, la asignatura del último test.
     const ultimoDe = (x) => (x.h.length ? x.h[x.h.length - 1].d : 0);
-    if (!SUBJECTS.some((s) => s.id === elegida)) elegida = todos.slice().sort((a, b) => ultimoDe(b) - ultimoDe(a))[0].s.id;
+    if (!todos.some((x) => x.s.id === elegida)) elegida = todos.slice().sort((a, b) => ultimoDe(b) - ultimoDe(a))[0].s.id;
     const S = SUBJECTS.find((s) => s.id === elegida);
     box.innerHTML = `<section class="est" id="estadisticas" aria-labelledby="h-est">
       <h2 id="h-est">${icon("chart")}Tus estadísticas</h2>
@@ -132,11 +133,12 @@
         <div><b>${repHoy}<small style="font-size:15px;color:var(--muted)">/${repTot}</small></b><span>para repasar hoy</span></div>
       </div></div>
       <div class="est-card"><h3>Actividad</h3>${heatmap(porDia)}</div>
-      <div class="est-chips" role="group" aria-label="Asignatura">${SUBJECTS.map((s) => `<button type="button" data-s="${s.id}" aria-pressed="${s.id === elegida}">${esc(s.short)}</button>`).join("")}</div>
+      <div class="est-chips" role="group" aria-label="Asignatura">${todos.map(({ s }) => `<button type="button" data-s="${s.id}" aria-pressed="${s.id === elegida}">${esc(s.short)}</button>`).join("")}</div>
       ${asignatura(S)}
     </section>`;
     box.querySelectorAll("[data-s]").forEach((b) => b.addEventListener("click", () => { elegida = b.dataset.s; store("app-est-asig", elegida); pintar(); }));
   }
   pintar();
+  window.addEventListener("app:cursos", pintar);   // en «Tu cuenta», al cambiar de cursos
   if (location.hash === "#estadisticas") setTimeout(() => { const t = document.getElementById("estadisticas"); if (t) t.scrollIntoView(); }, 50);
 })();

@@ -35,7 +35,7 @@
     arcoiris: { n: "Arcoíris", c: ["#FFFFFF", "#F5C531", "#7A3FD1", "#24124A"] }
   };
   const RAREZAS = { comun: "Común", rara: "Rara", epica: "Épica", legendaria: "Legendaria" };
-  const CAMPOS = { puntos: "puntos totales", tests: "tests terminados", fli: "puntos de FLI", fc: "puntos de FC", ip: "puntos de IP", gohp: "puntos de GOHP", amd: "puntos de AMD" };
+  const CAMPOS = { puntos: "puntos totales", tests: "tests terminados", fli: "puntos de FLI", fc: "puntos de FC", ip: "puntos de IP", gohp: "puntos de GOHP", amd: "puntos de AMD", aed: "puntos de AED I" };
   const ORDEN_RAREZA = { legendaria: 0, epica: 1, rara: 2, comun: 3 };
 
   /* ---------------- Dibujo ---------------- */

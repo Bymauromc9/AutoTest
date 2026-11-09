@@ -1,19 +1,19 @@
 /*!
  * portal.js — portada del sitio a partir de App.SUBJECTS (assets/js/core.js):
- * «continuar donde lo dejaste», próximo examen y una tarjeta por asignatura con su progreso.
+ * cursos de la cuenta, «continuar donde lo dejaste», próximos exámenes y una tarjeta por asignatura con su
+ * progreso, agrupadas por curso si la cuenta tiene más de uno (ver App.cursos).
  */
 (function () {
   "use strict";
-  const { SUBJECTS, SECTIONS, store, esc, icon, daysTo, progress } = window.App;
-  const list = document.getElementById("subjects");
-  if (!list) return;
+  const { SUBJECTS, SECTIONS, store, esc, icon, daysTo, progress, cursos } = window.App;
+  const caja = document.getElementById("asignaturas");
+  if (!caja) return;
 
-  function pintarAsignaturas() {
-    list.innerHTML = SUBJECTS.map((s) => {
-      const pct = progress.subject(s);
-      const counts = SECTIONS.map((x) => ({ x, n: s.resources.filter((r) => r.sec === x.id).length }));
-      const exam = s.exam && daysTo(s.exam.date) >= 0 ? `<span class="subject__exam">${icon("calendar")}Examen en ${daysTo(s.exam.date)} días</span>` : "";
-      return `
+  function tarjeta(s) {
+    const pct = progress.subject(s);
+    const counts = SECTIONS.map((x) => ({ x, n: s.resources.filter((r) => r.sec === x.id).length }));
+    const exam = s.exam && daysTo(s.exam.date) >= 0 ? `<span class="subject__exam">${icon("calendar")}${s.exam.name ? esc(s.exam.name) + " en " : "Examen en "}${daysTo(s.exam.date)} días</span>` : "";
+    return `
       <li class="subject">
         <a class="subject__link" href="${esc(s.home)}">
           <span class="subject__top"><span class="subject__short">${esc(s.short)}</span>${exam}<span class="subject__go">${icon("chevron")}</span></span>
@@ -23,10 +23,26 @@
           <span class="subject__prog"><span class="res-bar"><span style="width:${pct}%"></span></span><span class="subject__pct">${pct}%</span></span>
         </a>
       </li>`;
-    }).join("");
   }
+
+  /** Las asignaturas de los cursos de la cuenta: una lista, o una por curso si hay varios. */
+  function pintarAsignaturas() {
+    const mios = cursos.get();
+    const grupos = cursos.LISTA.filter((c) => mios.includes(c.n)).map((c) => ({ c, lista: cursos.asignaturas([c.n]) })).filter((g) => g.lista.length);
+    caja.innerHTML = grupos.length > 1
+      ? grupos.map((g) => `<section class="curso-grupo" aria-labelledby="h-curso-${g.c.n}">
+          <h2 class="curso-grupo__h" id="h-curso-${g.c.n}">${esc(g.c.largo)}<small>${g.lista.length} ${g.lista.length === 1 ? "asignatura" : "asignaturas"}</small></h2>
+          <ul class="subjects">${g.lista.map(tarjeta).join("")}</ul></section>`).join("")
+      : `<ul class="subjects" aria-label="Asignaturas">${(grupos[0] ? grupos[0].lista : []).map(tarjeta).join("")}</ul>`;
+  }
+
+  // Cursos de la cuenta: al cambiarlos, el selector se repinta solo y aquí se repintan las asignaturas.
+  const sel = document.getElementById("cursos");
+  if (sel) cursos.selector(sel, { ayuda: "Marca todos los cursos de los que tengas asignaturas. Se guarda en tu cuenta." });
+
   pintarAsignaturas();
-  // Si llegan fechas de exámenes nuevas (panel de administración), se repinta.
+  // Si cambian los cursos o llegan fechas de exámenes nuevas (panel de administración), se repinta.
+  window.addEventListener("app:cursos", pintarAsignaturas);
   window.addEventListener("app:config", pintarAsignaturas);
 
   // Continuar con el último recurso abierto, en cualquier asignatura.
@@ -40,14 +56,14 @@
   }
 })();
 
-/* Cuenta (puntos y puesto), mini ranking y cuenta atrás de los exámenes. */
+/* Cuenta (puntos y puesto), mini ranking y cuenta atrás de los exámenes de los cursos de la cuenta. */
 (function () {
   "use strict";
-  const { SUBJECTS, esc, icon, daysTo, sesion, ROOT } = window.App;
+  const { esc, icon, daysTo, sesion, ROOT, cursos } = window.App;
 
   const ex = document.getElementById("exams");
   function pintarExamenes() {
-    const items = SUBJECTS.map((s) => {
+    const items = cursos.asignaturas().map((s) => {
       if (!s.exam) return `<div class="exam-cd is-tbd"><span class="exam-cd__n">?</span><span class="exam-cd__t"><b>${esc(s.short)}</b><small class="exam-cd__l">fecha del examen por confirmar</small><small class="exam-cd__s">sin fecha</small></span></div>`;
       const d = daysTo(s.exam.date);
       if (d < 0) return "";
@@ -59,7 +75,7 @@
     ex.innerHTML = items;
     ex.hidden = !items;
   }
-  if (ex) { pintarExamenes(); window.addEventListener("app:config", pintarExamenes); }
+  if (ex) { pintarExamenes(); window.addEventListener("app:config", pintarExamenes); window.addEventListener("app:cursos", pintarExamenes); }
 
   const box = document.getElementById("cuenta-strip");
   const ses = sesion();

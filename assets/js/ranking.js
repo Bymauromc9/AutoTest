@@ -4,12 +4,14 @@
  */
 (function () {
   "use strict";
-  const { esc, icon, ROOT, SUBJECTS } = window.App;
+  const { esc, icon, ROOT, SUBJECTS, cursos } = window.App;
   const C = window.Cuentas;
   const reto = document.getElementById("rk-reto");
   const out = document.getElementById("rk"), me = document.getElementById("rk-me"), nav = document.getElementById("rk-tabs");
   if (!out || !C) return;
-  const TABLAS = [{ id: "total", label: "General" }, { id: "semana", label: "Esta semana" }].concat(SUBJECTS.map((s) => ({ id: s.id, label: s.short })));
+  // Primero las asignaturas de los cursos de la cuenta (App.cursos) y después las demás.
+  const porCurso = SUBJECTS.filter((s) => cursos.tiene(s.curso)).concat(SUBJECTS.filter((s) => !cursos.tiene(s.curso)));
+  const TABLAS = [{ id: "total", label: "General" }, { id: "semana", label: "Esta semana" }].concat(porCurso.map((s) => ({ id: s.id, label: s.short })));
   const fmt = C.fmt;
   const av = (n) => `<span class="cta-av" aria-hidden="true">${esc((n || "?").charAt(0).toUpperCase())}</span>`;
   let tabla = TABLAS.some((t) => t.id === location.hash.slice(1)) ? location.hash.slice(1) : "total";

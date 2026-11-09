@@ -16,6 +16,7 @@
  *   App.repaso     repaso de fallos con repetición espaciada (anotar, pendientes, resumen)
  *   App.historial  tests terminados de cada asignatura (para las estadísticas)
  *   App.sesion()   cuenta activa ({ id, nombre, token, local }) o null
+ *   App.cursos     cursos de la cuenta (1.º, 2.º…): get(), set(lista), tiene(n), asignaturas(), selector(el) y LISTA
  *   App.config     configuración que se cambia desde el panel de administración (aviso y fechas de
  *                  exámenes): get(), actualizar(cfg) y examenesCodigo() (las fechas que trae el código)
  *
@@ -60,11 +61,13 @@
   ];
 
   /* ---------- Registro de asignaturas ----------
+     Cada asignatura: id, curso (1, 2…; ver App.cursos), short, name, desc, home, intro, exam/exams, sub y resources.
      Cada recurso: id, sec (teoria|practicas|examen), group (opcional, p. ej. L0/L1), kind (App.KINDS), title, desc,
      href (desde la raíz) y progress (qué progreso guardado mostrar; ver App.progress.resource). */
   const SUBJECTS = [
     {
       id: "fli",
+      curso: 1,
       short: "FLI",
       name: "Fundamentos Lógicos de la Informática",
       desc: "Lógica proposicional (L0) y lógica de predicados (L1).",
@@ -103,6 +106,7 @@
     },
     {
       id: "fc",
+      curso: 1,
       short: "FC",
       name: "Fundamentos de Computadores",
       desc: "Del bit a la red: representación, circuitos, Linux, x86-64 y redes.",
@@ -131,6 +135,7 @@
     },
     {
       id: "ip",
+      curso: 1,
       short: "IP",
       name: "Introducción a la Programación",
       desc: "Algoritmos con la notación de clase y su traducción a C++.",
@@ -159,6 +164,7 @@
     },
     {
       id: "gohp",
+      curso: 1,
       short: "GOHP",
       name: "Gestión de Organizaciones y Habilidades Profesionales",
       desc: "La empresa por dentro: estrategia, organización, producción, marketing, finanzas y personas.",
@@ -187,6 +193,7 @@
     },
     {
       id: "amd",
+      curso: 1,
       short: "AMD",
       name: "Álgebra y Matemática Discreta",
       desc: "Espacios vectoriales, producto escalar, aplicaciones lineales, diagonalización y aritmética modular, con SageMath.",
@@ -227,6 +234,37 @@
           desc: "Los primeros parciales del curso 2025-26 resueltos (con sus erratas corregidas) y simulacros del segundo parcial y del examen de prácticas con SageMath.", progress: { t: "hechos", key: "amd-examen-hechos", total: 23 } },
         { id: "general", sec: "examen", kind: "general", title: "Test general", href: "amd/teoria/autotest.html#test-G",
           desc: "30 preguntas de los cinco temas repartidas según su peso.", progress: { t: "best", key: "amd-best-G", scale: 10 } }
+      ]
+    },
+    {
+      id: "aed",
+      curso: 2,
+      short: "AED I",
+      name: "Algoritmos y Estructuras de Datos I",
+      desc: "TAD y especificaciones, tablas de dispersión, árboles (trie, AVL, B) y grafos.",
+      home: "aed/index.html",
+      intro: "Cuatro temas de estructuras de datos: abstracciones y especificaciones formales, conjuntos y diccionarios con tablas de dispersión, representación de conjuntos con árboles (trie, relaciones de equivalencia, AVL y árboles B) y grafos. Con las diapositivas de clase, exámenes de otros cursos resueltos y la guía de la práctica en C++.",
+      exams: [
+        { date: "2026-11-16", name: "Parcial de los temas 2 y 3", label: "16 de noviembre de 2026 · parcial de los temas 2 y 3", href: "aed/teoria/autotest.html", cta: "repasa los temas 2 y 3 con el autotest" },
+        { date: "2026-11-22", name: "Entrega de la práctica", label: "22 de noviembre de 2026 · entrega de la práctica y de la memoria", href: "aed/practicas/guia.html", cta: "repasa la guía de la práctica" },
+        { date: "2026-12-11", name: "Investigación en grafos", label: "11 de diciembre de 2026 · actividad de investigación en grafos", href: "aed/teoria/guia.html#t4", cta: "repasa el tema 4" }
+      ],
+      sub: { teoria: "Temas 0–4", practicas: "Práctica: tienda online en C++", examen: "Exámenes de otros cursos" },
+      resources: [
+        { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "aed/teoria/guia.html",
+          desc: "Los cinco temas con las diapositivas de clase: especificaciones, dispersión, tries, AVL, árboles B y grafos, con ejemplos paso a paso y el coste de cada operación.", progress: { t: "estudio", key: "aed-teoria-estudio", visto: "aed-teoria-visto", total: 72 } },
+        { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuleta de costes y algoritmos", href: "aed/teoria/guia.html#r",
+          desc: "Todas las estructuras con el coste de sus operaciones y su memoria, y los algoritmos de grafos con su esquema, en una sola parte." },
+        { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "aed/teoria/autotest.html",
+          desc: "Preguntas de los cuatro temas con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "aed-best-", topics: [1, 2, 3, 4], names: { 1: "Abstracciones y especificaciones", 2: "Conjuntos y diccionarios", 3: "Conjuntos con árboles", 4: "Grafos" } } },
+        { id: "ejercicios", sec: "teoria", kind: "ejercicios", title: "Ejercicios de examen", href: "aed/teoria/ejercicios.html",
+          desc: "Las relaciones de ejercicios de examen de los cuatro temas y la hoja de dispersión del grupo 3, cada ejercicio con su solución explicada.", progress: { t: "hechos", key: "aed-ejercicios-hechos", total: 153 } },
+        { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de la práctica", href: "aed/practicas/guia.html",
+          desc: "La tienda online paso a paso: C++ de las sesiones, Mooshak, módulos y makefile, la tabla de dispersión de palabras, el árbol de precios y la memoria.", progress: { t: "estudio", key: "aed-practica-estudio", visto: "aed-practica-visto", total: 16 } },
+        { id: "examenes", sec: "examen", kind: "examen", title: "Exámenes resueltos", href: "aed/examen/examenes.html",
+          desc: "Exámenes de convocatorias anteriores con su solución explicada: un problema por tema, como en el examen final.", progress: { t: "hechos", key: "aed-examen-hechos", total: 12 } },
+        { id: "general", sec: "examen", kind: "general", title: "Test general", href: "aed/teoria/autotest.html#test-G",
+          desc: "30 preguntas de los cuatro temas repartidas según su peso.", progress: { t: "best", key: "aed-best-G", scale: 10 } }
       ]
     }
   ];
@@ -270,6 +308,69 @@
   }
   const store = makeStore(() => window.localStorage);
   const session = makeStore(() => window.sessionStorage);
+
+  /* ---------- Cursos ----------
+     Cada asignatura es de un curso («curso» en SUBJECTS) y cada cuenta elige de qué cursos tiene asignaturas:
+     pueden ser varios (alguna pendiente de 1.º, convalidaciones…). La portada, la cuenta atrás y las
+     estadísticas enseñan sólo las de esos cursos; las demás siguen abiertas desde su enlace.
+     Se guarda en «app-cursos» ([1], [1, 2]…), que va con el progreso de la cuenta (ver esProgreso), así que la
+     elección sigue a cada uno en cualquier dispositivo. Sin elegir nada, 1.º: el curso de todas las cuentas que
+     había antes de que hubiera varios. Al cambiar, se lanza el evento «app:cursos». */
+  const CURSOS = Object.freeze([1, 2].map((n) => Object.freeze({ n, nombre: n + ".º", largo: n + ".º curso" })));
+  const CURSOS_KEY = "app-cursos", CURSOS_POR_DEFECTO = [1];
+  const cursosValidos = (l) => (Array.isArray(l) ? Array.from(new Set(l.map(Number))) : [])
+    .filter((n) => CURSOS.some((c) => c.n === n)).sort((a, b) => a - b);
+  function misCursos() { const l = cursosValidos(store(CURSOS_KEY)); return l.length ? l : CURSOS_POR_DEFECTO.slice(); }
+  /** Cambia los cursos de la cuenta (al menos uno) y devuelve los que quedan. */
+  function ponerCursos(lista) {
+    const l = cursosValidos(lista);
+    if (!l.length) return misCursos();
+    store(CURSOS_KEY, l);
+    window.dispatchEvent(new CustomEvent("app:cursos", { detail: l.slice() }));
+    return l;
+  }
+  const asignaturasDe = (lista) => { const l = lista ? cursosValidos(lista) : misCursos(); return SUBJECTS.filter((s) => l.includes(s.curso)); };
+  /**
+   * Selector de cursos (portada y «Tu cuenta»): un botón por curso que se activa y se desactiva; siempre queda
+   * al menos uno. Con o.local = true sólo cambia la selección del propio selector (o.get()) sin guardarla,
+   * para el formulario de crear cuenta. Estilos: .cursos en assets/css/base.css.
+   */
+  function selectorCursos(el, o) {
+    o = o || {};
+    let sel = o.inicial ? cursosValidos(o.inicial) : misCursos();
+    if (!sel.length) sel = CURSOS_POR_DEFECTO.slice();
+    const id = "cursos-l-" + Math.random().toString(36).slice(2, 8);
+    function pintar() {
+      if (!o.local) sel = misCursos();
+      el.classList.add("cursos");
+      el.innerHTML = `<span class="cursos__l" id="${id}">${esc(o.titulo || "Tus cursos")}</span>
+        <span class="cursos__opts" role="group" aria-labelledby="${id}">${CURSOS.map((c) => {
+          const on = sel.includes(c.n), unico = on && sel.length === 1, n = asignaturasDe([c.n]).length;
+          return `<button type="button" class="cursos__b" data-curso="${c.n}" aria-pressed="${on}"${unico ? ' aria-disabled="true" title="Tiene que quedar al menos un curso"' : ""}>${esc(c.nombre)}<small>${n} ${n === 1 ? "asignatura" : "asignaturas"}</small></button>`;
+        }).join("")}</span>${o.ayuda ? `<small class="cursos__h">${esc(o.ayuda)}</small>` : ""}`;
+      el.hidden = false;
+    }
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-curso]");
+      if (!b || b.getAttribute("aria-disabled") === "true") return;
+      const n = Number(b.dataset.curso);
+      const nueva = sel.includes(n) ? sel.filter((x) => x !== n) : sel.concat(n);
+      if (o.local) { sel = cursosValidos(nueva); pintar(); } else ponerCursos(nueva);   // «app:cursos» lo repinta
+      const otro = el.querySelector(`[data-curso="${n}"]`); if (otro) otro.focus();
+    });
+    if (!o.local) window.addEventListener("app:cursos", pintar);
+    pintar();
+    return { get: () => sel.slice() };
+  }
+  const cursos = Object.freeze({
+    LISTA: CURSOS,
+    get: misCursos,
+    set: ponerCursos,
+    tiene: (n) => misCursos().includes(Number(n)),
+    /** Asignaturas de los cursos de la cuenta (o de los que se pasen), en el orden del registro. */
+    asignaturas: asignaturasDe,
+    selector: selectorCursos
+  });
 
   /* ---------- Configuración de la web (aviso y fechas de exámenes) ----------
      La escribe el panel de administración en Firestore (config/web) y cuentas.js la trae en segundo plano.
@@ -431,8 +532,8 @@
     document.documentElement.style.visibility = "hidden";
     location.replace(ROOT_URL + "cuenta.html?volver=" + encodeURIComponent(location.href));
   }
-  /** Progreso guardado de la cuenta: todo lo de las asignaturas y «continuar donde lo dejaste». */
-  const esProgreso = (k) => /^(fli|fc|ip|gohp|amd|eq)-|^app-last/.test(k);
+  /** Progreso guardado de la cuenta: todo lo de las asignaturas, «continuar donde lo dejaste» y los cursos. */
+  const esProgreso = (k) => /^(fli|fc|ip|gohp|amd|aed|eq)-|^app-(last|cursos)/.test(k);
   /** Suma puntos al ranking al terminar un test: { asig, tipo, aciertos, total }. Se guarda en una
       cola local y cuentas.js la envía (sirve también sin conexión: se manda más tarde). */
   function puntos(r) {
@@ -705,7 +806,7 @@
   })();
 
   window.App = Object.freeze({
-    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso, repaso, historial,
+    SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso, repaso, historial, cursos,
     ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
     config: Object.freeze({ get: () => CONFIG, actualizar: actualizarConfig, examenesCodigo: () => JSON.parse(JSON.stringify(EXAMENES_CODIGO)) }),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),

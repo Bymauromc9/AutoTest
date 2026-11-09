@@ -6,7 +6,7 @@
 .subject__link:hover{border-color:var(--accent);box-shadow:0 8px 22px -14px var(--accent)}
 .subject__link:active{transform:scale(.99)}
 .subject__top{display:flex;align-items:center;gap:10px}
-.subject__short{font-family:var(--f-display);font-weight:800;font-size:19px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:52px;height:52px;display:grid;place-items:center;padding:0 8px}
+.subject__short{white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:19px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:52px;height:52px;display:grid;place-items:center;padding:0 8px}
 .subject__exam{display:inline-flex;align-items:center;gap:6px;font:700 12.5px var(--f-mono);color:var(--bad);background:var(--bad-soft);border-radius:999px;padding:4px 10px}
 .subject__exam .ico{width:15px;height:15px}
 .subject__go{margin-left:auto;color:var(--muted)}
@@ -23,3 +23,9 @@
   .subjects{grid-template-columns:repeat(3,minmax(0,1fr))}
   .subject__link{padding:20px}
 }
+
+/* Una lista por curso cuando la cuenta tiene varios */
+.asignaturas{display:flex;flex-direction:column;gap:22px}
+.curso-grupo{display:flex;flex-direction:column;gap:10px}
+.curso-grupo__h{display:flex;align-items:baseline;gap:10px;font-size:22px}
+.curso-grupo__h small{font:600 13px var(--f-body);color:var(--muted)}

@@ -158,10 +158,30 @@ amd/                        Álgebra y Matemática Discreta (temas 0–5 y prác
   css/autotest.css          Componentes del autotest (copia de ip/css/ip.css)
   js/util.js · autotest.js  AMD.fmt / AMD.LETTERS y el autotest (copia de los de IP)
   js/data/banco.js          Banco de preguntas del autotest (AMD.ORDER: temas 1–5)
+aed/                        Algoritmos y Estructuras de Datos I (2.º: temas 0–4 y la práctica). Salvo el autotest,
+                            sus páginas las genera scripts/aed/generar.py (ver «AED I: páginas generadas»)
+  index.html                Portada de AED I (la genera assets/js/hub.js)
+  teoria/
+    guia.html               Guía de teoría con las diapositivas de clase y la chuleta de costes (#r)
+    autotest.html           Tests de los temas 1–4, test general (#test-G) y repaso de fallos (#test-R)
+    ejercicios.html         Las relaciones de «Ejercicios de examen» (temas 1–4) y la hoja de dispersión
+                            del grupo 3, cada ejercicio con su solución desplegable
+  practicas/guia.html       Guía de la práctica (tienda online en C++, Mooshak): fases, C++ de las sesiones y diseño
+  examen/examenes.html      Exámenes finales de otros cursos resueltos (enero 2025, mayo 2025, enero 2026)
+  img/                      Diapositivas de clase en WebP (las prepara scripts/aed/imagenes.py)
+  css/aed.css               Código resaltado, diapositivas, árboles, grafos, tablas de dispersión y arrays
+  css/autotest.css          Componentes del autotest (copia de amd/css/autotest.css)
+  js/util.js · autotest.js  AED.fmt / AED.LETTERS y el autotest (copia de los de AMD)
+  js/data/banco.js          Banco de preguntas del autotest (AED.ORDER: temas 1–4)
 assets/js/sage.js           SageMath en la web: celdas y cuadernos (SageMathCell); assets/css/sage.css, sus estilos
+scripts/guias/marcado.py    Piezas comunes de los generadores de guías (<tema>, <ap>, <ej>, <box>, <deep>, <res>)
 scripts/amd/
   generar.py                Convierte scripts/amd/contenido/*.html en las páginas de AMD
   contenido/                Fuente de cada página: etiquetas cortas para matrices, sistemas, ejercicios y celdas
+scripts/aed/
+  generar.py                Convierte scripts/aed/contenido/*.html en las páginas de AED I
+  imagenes.py               Saca de los PDF de clase las diapositivas que usan las guías (aed/img/*.webp)
+  contenido/                Fuente de cada página: código, diapositivas, árboles, grafos y tablas de dispersión
 ```
 
 Cada página carga sólo lo que necesita, en este orden: `core.js` (en el `<head>`, para aplicar el tema
@@ -171,7 +191,7 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
 
 - **Sin módulos ES ni `fetch`**: así todo funciona abriendo los ficheros con doble clic (`file://`),
   donde los navegadores bloquean esas dos cosas. Los datos van en ficheros `.js`.
-- **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC`, `window.IP` y `window.GOHP` (asignaturas). Cada script está envuelto
+- **Espacios de nombres**: `window.App` (común), `window.FLI`, `window.FC`, `window.IP`, `window.GOHP`, `window.AMD` y `window.AED` (asignaturas). Cada script está envuelto
   en una función autoejecutable con `"use strict"` y sólo expone lo que exporta.
 - **Estructura común**: toda asignatura tiene tres secciones, **Teoría · Prácticas · Examen**, y sus recursos son
   de un tipo fijo (`App.KINDS`: guía, chuleta, autotest, práctica, ejercicios, simulador, herramientas, examen,
@@ -193,13 +213,24 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
   HTML (`.dg-flow`, `.dg-chain`, `.dg-pyr`, `.dg-bits`, `.dg-mem`, `.dg-enc`, `.dg-grid`, `.dg-c2`) o SVG en
   línea que usa las clases `.bx`, `.bt`, `.bk`, `.ar`… para que se adapten al tema claro y oscuro.
 
+## Cursos
+
+Cada asignatura es de un curso (`curso: 1` o `curso: 2` en `App.SUBJECTS`) y cada cuenta elige de qué cursos
+tiene asignaturas, uno o varios (alguna pendiente, convalidaciones…), en la portada o en «Tu cuenta» (y al crear
+la cuenta). La portada (con una lista por curso si hay varios), la cuenta atrás de los exámenes y las
+estadísticas enseñan sólo las asignaturas de esos cursos; las demás siguen abiertas por su
+enlace, y su portada avisa y ofrece añadir el curso. Lo gestiona `App.cursos` en `assets/js/core.js`
+(`get`, `set`, `tiene`, `asignaturas` y `selector`, el selector de botones) y se guarda en `app-cursos`, que
+va con el progreso de la cuenta. Sin nada guardado es `[1]`: todas las cuentas de antes siguen en 1.º.
+Para añadir un curso nuevo basta ampliar la lista `CURSOS` de `core.js`.
+
 ## Añadir una asignatura
 
 1. Crea su carpeta (por ejemplo `mates/`). Su `index.html` es una copia de `fc/index.html` cambiando
    `data-subject`; sus páginas, una copia de la cabecera de cualquier página de `fc/` ajustando las rutas.
 2. Añade una entrada a `SUBJECTS` en `assets/js/core.js` con sus recursos:
    ```js
-   { id: "mates", short: "MAT", name: "Matemáticas", desc: "…", intro: "…", home: "mates/index.html",
+   { id: "mates", curso: 1, short: "MAT", name: "Matemáticas", desc: "…", intro: "…", home: "mates/index.html",
      sub: { teoria: "Temas 1–5", practicas: "…", examen: "…" },
      exam: { date: "2027-01-20", label: "20 de enero de 2027", href: "mates/examen/guia.html" },  // opcional
      // o, con parciales: exams: [{ date, name: "1.er parcial", label, href, cta }, …] (se muestra el próximo)
@@ -213,8 +244,8 @@ antes de pintar), las utilidades y los datos de la asignatura, y por último el 
    Si necesita estilos o utilidades propias, ponlos en `mates/css/` y `mates/js/` con su propio espacio
    de nombres (`window.MATES`).
 4. Para que cuente en el ranking y su progreso se guarde con la cuenta: añade su id a `ASIG` en
-   `assets/js/cuentas.js`, a `esProgreso` en `assets/js/core.js` y a `firestore.rules` (`unaAsignatura()`
-   y las listas `hasOnly` y `natural` del dueño y del administrador), y publica las reglas con
+   `assets/js/cuentas.js`, a `esProgreso` en `assets/js/core.js` y a `firestore.rules` (la lista
+   `asignaturas()`, un `soloCambia('mates')` en `unaAsignatura()` y un `natural('mates')` del administrador), y publica las reglas con
    `node scripts/admin/admin.js reglas`. Opcional: su descripción para la IA en `api/chat.js` y `assets/js/asistente.js`,
    y una insignia automática por sus puntos (`CAMPOS` en `assets/js/insignias.js`, la lista `campo` de
    `firestore.rules` y el pack inicial de `assets/js/admin.js`).
@@ -255,6 +286,25 @@ JupyterLite no puede ejecutar SageMath). Su cliente se descarga al ejecutar la p
   saldría en la primera celda (por eso nada se ejecuta hasta que el núcleo está abierto), y el núcleo se
   cierra a los 15 minutos sin uso (se detecta y la siguiente ejecución abre otro y repite la preparación).
 
+## AED I: páginas generadas
+
+Como las de AMD, las páginas de teoría, práctica y exámenes de AED I se generan:
+
+```
+python3 scripts/aed/generar.py                     # todas (o filtrando: python3 scripts/aed/generar.py teoria)
+python3 scripts/aed/imagenes.py CARPETA_CON_LOS_PDF  # sólo si se añaden diapositivas nuevas
+```
+
+Además de las etiquetas comunes de `scripts/guias/marcado.py`, las fuentes usan `<code t="…" lang="pseudo|cpp|maude">`
+(bloques resaltados al generar), `<fig src="t2-39">pie</fig>` (diapositiva 39 del tema 2, con su procedencia),
+`<ab>13(8(3,9),23)</ab>` (árbol binario en SVG; `*x` nodo nuevo, `!x` desbalanceado, `~x` que se quita),
+`<bt p="4">[37]([9 14],[60])</bt>` (árbol B), `<hc>…|…</hc>` y `<ha b="10">0: 2180; 3: 33 543</ha>` (tablas de
+dispersión cerrada y abierta), `<arr i="1">5 5 4</arr>` (arrays) y `<gr>` (grafos en SVG: una primera línea con
+los nodos y su posición, `a@0,60 b@90,0`, y después las aristas, `a-b:2` no dirigida o `a>b:2` dirigida, con `*`
+para resaltarla y `~` para dibujarla discontinua; las aristas entre el mismo par de nodos se curvan solas). `imagenes.py` busca las `<fig>` de las fuentes y
+convierte esas páginas de los PDF de clase (las presentaciones exportadas con LibreOffice) a WebP de 960 px. Las
+especificaciones en Maude de la guía y de los exámenes están comprobadas con Maude 3.5.1.
+
 ## Datos guardados en el navegador
 
 Las páginas guardan el progreso en el navegador (`localStorage`) con las claves de abajo. Con una cuenta,
@@ -292,6 +342,10 @@ Las páginas guardan el progreso en el navegador (`localStorage`) con las claves
 | `amd-teoria-estudio`, `amd-ejercicios-hechos`, `amd-p1-hechos` … `amd-p9-hechos`, `amd-examen-hechos` | Apartados estudiados y ejercicios hechos de AMD |
 | `amd-teoria-visto`, `amd-ejercicios-visto`, `amd-p1-visto` … `amd-p9-visto`, `amd-sage-visto`, `amd-examen-visto` | Última parte vista de cada página de AMD |
 | `sage-cuaderno:<página>` | Código de los cuadernos «Tu SageMath» de cada página (sólo en este navegador) |
+| `aed-settings`, `aed-seen`, `aed-best-1` … `aed-best-4`, `aed-best-G` | Opciones, preguntas vistas y mejores notas del autotest de AED I |
+| `aed-teoria-estudio`, `aed-teoria-hechos`, `aed-practica-estudio`, `aed-ejercicios-hechos`, `aed-examen-hechos` | Apartados estudiados, ejemplos, ejercicios y problemas hechos de AED I |
+| `aed-teoria-visto`, `aed-practica-visto`, `aed-ejercicios-visto`, `aed-examen-visto` | Última parte vista de cada página de AED I |
+| `app-cursos` | Cursos de la cuenta (`[1]`, `[1, 2]`…; sin guardar, `[1]`) |
 
 | `<asig>-repaso` | Repaso de fallos de cada asignatura: `{ huella: { b: caja 0–4, d: cuándo toca, f: fallos, t: tema }, _dom }` |
 | `<asig>-hist` | Últimos 400 tests terminados: `{ d, tipo, tema, ok, n, nota }` (estadísticas) |
@@ -411,7 +465,7 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
 
 - **Authentication** con correo y contraseña: cada usuario es `<usuario>@usuarios.web-ing-inf.firebaseapp.com`
   (en minúsculas y sin tildes; no se manda ningún correo). Firebase impide dos usuarios iguales.
-- **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip`/`gohp`/`amd` y de cada
+- **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip`/`gohp`/`amd`/`aed` y de cada
   semana `w<n>`; es público porque es el ranking), `progreso/<uid>` (el progreso; sólo su dueño),
   `config/web` (el aviso y las fechas de examen del panel; lo lee cualquiera, lo escribe un administrador)
   `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores),
