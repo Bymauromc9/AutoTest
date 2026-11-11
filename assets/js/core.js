@@ -302,6 +302,23 @@
     });
   }
 
+  /* ---------- Entregas y Aula Virtual ----------
+     El Aula Virtual de la UMU se abre en otra pestaña: la propia UMU no permite mostrarlo dentro de otra web
+     (cabecera X-Frame-Options), así que no se puede incrustar ni pedir aquí la contraseña universitaria.
+     Las entregas y fechas límite que trae el código salen siempre; el panel de administración añade más en
+     Firestore (colección «entregas»), que la página de comunidad combina con estas. Cada una:
+     { asig, titulo, limite: 'YYYY-MM-DD', hora?: 'HH:MM', enlace?, nota? }. */
+  const AULA_VIRTUAL = "https://aulavirtual.um.es/";
+  const ENTREGAS_CODIGO = [
+    { asig: "gohp", titulo: "Seminario de Ética y Aspectos Sociales: trabajo práctico", limite: "2026-11-29", hora: "23:59",
+      nota: "Reflexión personal de 3–4 páginas en PDF (fuente de 12 puntos). Se pide que sea propia, sin ChatGPT ni herramientas similares." }
+  ];
+  /** Entregas del código de una asignatura que aún no han pasado, de la más próxima a la más lejana. */
+  function entregasCodigoDe(asig) {
+    return ENTREGAS_CODIGO.filter((e) => e.asig === asig && daysTo(e.limite) >= 0)
+      .slice().sort((a, b) => (a.limite < b.limite ? -1 : 1));
+  }
+
   /* ---------- Almacenamiento ---------- */
   function makeStore(getStorage) {
     return function (key, value) {
@@ -443,6 +460,13 @@
     star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>',
     bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
     download: '<path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+    chat: '<path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3.5V16.5H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/>',
+    heart: '<path d="M12 20s-7-4.6-9.2-8.4C1.1 8.3 2.7 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3.3 0 4.9 3.3 3.2 6.6C19 15.4 12 20 12 20z"/>',
+    link: '<path d="M9.5 14.5l5-5"/><path d="M8 11l-2 2a3.5 3.5 0 0 0 5 5l2-2"/><path d="M16 13l2-2a3.5 3.5 0 0 0-5-5l-2 2"/>',
+    external: '<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/>',
+    send: '<path d="M21 4L3 11l6 2.5L12 20l3-6 6-10z"/><path d="M9 13.5L21 4"/>',
+    trash: '<path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/>',
+    pin: '<path d="M9 4h6l-1 6 3 2.5V14H7v-1.5L10 10 9 4z"/><path d="M12 14v6"/>',
   };
   function icon(name, cls) {
     return `<svg class="ico${cls ? " " + cls : ""}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
@@ -833,7 +857,8 @@
 
   window.App = Object.freeze({
     SUBJECTS, SECTIONS, KINDS, store, session, shuffle, esc, icon, daysTo, puntos, esProgreso, repaso, historial, cursos,
-    ROOT: ROOT_URL, sesion: () => store(SESION_KEY),
+    ROOT: ROOT_URL, sesion: () => store(SESION_KEY), AULA_VIRTUAL,
+    entregas: Object.freeze({ codigo: () => ENTREGAS_CODIGO.map((e) => Object.assign({}, e)), codigoDe: entregasCodigoDe }),
     config: Object.freeze({ get: () => CONFIG, actualizar: actualizarConfig, examenesCodigo: () => JSON.parse(JSON.stringify(EXAMENES_CODIGO)) }),
     progress: Object.freeze({ resource: resourceProgress, subject: subjectProgress }),
     theme: Object.freeze({ get: effective, set: setTheme, toggle: toggleTheme }),

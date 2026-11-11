@@ -83,6 +83,25 @@
     return `<div class="tiles">${tiles.join("")}</div>`;
   }
 
+  /** Comunidad de la asignatura, botón del Aula Virtual y la próxima entrega (de las que trae el código). */
+  function social() {
+    const href = root + S.home.replace("index.html", "comunidad.html");
+    const ent = (window.App.entregas.codigoDe(S.id) || [])[0];
+    let entrega = "";
+    if (ent) {
+      const d = daysTo(ent.limite);
+      const cuando = d <= 0 ? "hoy" : d === 1 ? "mañana" : "en " + d + " días";
+      entrega = `<a class="hub-entrega" href="${href}#entregas"><span class="hs-ico">${icon("calendar")}</span>
+        <span class="hs-txt"><small>Próxima entrega · ${cuando}</small><b>${esc(ent.titulo)}</b></span></a>`;
+    }
+    return `<div class="hub-social">
+      <a class="hub-comu" href="${href}"><span class="hs-ico">${icon("chat")}</span>
+        <span class="hs-txt"><small>Comunidad de ${esc(S.short)}</small><b>Pregunta, comparte apuntes y echa una mano</b></span>
+        <span class="res-go">${icon("chevron")}</span></a>
+      <a class="hub-aula" href="${window.App.AULA_VIRTUAL}" target="_blank" rel="noopener noreferrer">${icon("external")}<span>Aula Virtual</span></a>
+      ${entrega}</div>`;
+  }
+
   function cont() {
     const last = store("app-last-" + S.id);
     const r = last && S.resources.find((x) => x.id === last.r);
@@ -116,6 +135,7 @@
         <p class="lead">${esc(S.intro)}</p>
         ${stats()}
         ${cont()}
+        ${social()}
       </header>
       ${SECTIONS.map(section).join("")}
       <p class="muted hub-note">Tu progreso se guarda sólo en este navegador.</p>`;

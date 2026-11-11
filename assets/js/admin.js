@@ -8,6 +8,7 @@
  *               y deja de salir en el ranking). Borrar cuentas y cambiar contraseñas: en la terminal.
  *   #avisos     el aviso que sale debajo de la barra en toda la web (config/web)
  *   #examenes   las fechas de la cuenta atrás (config/web → examenes); sin cambios, las del código
+ *   #entregas   entregas y fechas límite de cada asignatura (entregas/<id>); salen en la comunidad
  *   #reportes   los errores que mandan los usuarios con «Reportar un error» (reportes/<id>)
  *   #insignias  el reto semanal (entregar las insignias de la semana), el catálogo, el creador de insignias
  *               y darlas o quitarlas a la gente (insignias/<id>, usuarios/<uid>.insignias, retos/<semana>)
@@ -24,9 +25,9 @@
   const ASIG = SUBJECTS.map((s) => ({ id: s.id, short: s.short }));
   const TABS = [
     { id: "resumen", label: "Resumen" }, { id: "usuarios", label: "Usuarios" }, { id: "avisos", label: "Aviso" },
-    { id: "examenes", label: "Exámenes" }, { id: "reportes", label: "Reportes" }, { id: "insignias", label: "Insignias" }
+    { id: "examenes", label: "Exámenes" }, { id: "entregas", label: "Entregas" }, { id: "reportes", label: "Reportes" }, { id: "insignias", label: "Insignias" }
   ];
-  const st = { usuarios: [], reportes: [], cfg: {}, cargado: false, filtroRep: "abierto", buscar: "", filtroUsu: "todas", cat: [], retos: [] };
+  const st = { usuarios: [], reportes: [], entregas: [], cfg: {}, cargado: false, filtroRep: "abierto", buscar: "", filtroUsu: "todas", cat: [], retos: [] };
   let tab = TABS.some((t) => t.id === location.hash.slice(1)) ? location.hash.slice(1) : "resumen";
 
   /* ---------------- Utilidades ---------------- */
@@ -63,6 +64,9 @@
   async function cargarReportes() {
     st.reportes = await D.consultar({ from: [{ collectionId: "reportes" }], orderBy: [{ field: { fieldPath: "creado" }, direction: "DESCENDING" }], limit: 300 });
   }
+  async function cargarEntregas() {
+    st.entregas = await D.consultar({ from: [{ collectionId: "entregas" }], orderBy: [{ field: { fieldPath: "limite" }, direction: "ASCENDING" }], limit: 300 });
+  }
   async function cargarConfig() { st.cfg = await C.cargarConfig(true); }
   async function cargarInsignias() {
     const [cat, retos] = await Promise.all([C.catalogo(), C.retos(12).catch(() => [])]);
@@ -70,7 +74,7 @@
     if (I) I.catalogo(true).catch(() => {});        // refresca la caché de la pestaña
   }
   async function cargarTodo() {
-    const r = await Promise.allSettled([cargarUsuarios(), cargarReportes(), cargarConfig(), cargarInsignias()]);
+    const r = await Promise.allSettled([cargarUsuarios(), cargarReportes(), cargarEntregas(), cargarConfig(), cargarInsignias()]);
     const fallo = r.find((x) => x.status === "rejected");
     st.cargado = true;
     if (fallo) throw fallo.reason;
@@ -82,7 +86,7 @@
     nav.innerHTML = TABS.map((t) => `<a class="tab${t.id === tab ? " on" : ""}" href="#${t.id}"${t.id === tab ? ' aria-current="page"' : ""}>${esc(t.label)}${t.id === "reportes" && abiertos ? ` <span class="adm-badge">${abiertos}</span>` : ""}</a>`).join("");
     nav.hidden = false;
   }
-  const VISTAS = { resumen, usuarios, avisos, examenes, reportes, insignias };
+  const VISTAS = { resumen, usuarios, avisos, examenes, entregas, reportes, insignias };
   function pintar() {
     pintarTabs();
     box.innerHTML = `<p class="callout adm-msg" id="adm-msg" role="status" hidden></p><div id="adm-vista"></div>`;
@@ -478,6 +482,62 @@
           await D.escribir([{ delete: D.ruta("reportes/" + r._id) }]);
           st.reportes = st.reportes.filter((x) => x !== r); pintarTabs(); reportes(el); aviso("Reporte borrado.");
         } catch (e) { ocupado(li, false); aviso(msgError(e), "error"); }
+      });
+    });
+  }
+
+  /* ---------------- Entregas y fechas ---------------- */
+  function entregas(el) {
+    const nombre = (C.actual() || {}).nombre || "admin";
+    const codigo = window.App.entregas.codigo();
+    const propias = st.entregas.slice().sort((a, b) => (a.limite < b.limite ? -1 : a.limite > b.limite ? 1 : 0));
+    const fila = (e, code) => {
+      const d = daysTo(e.limite), asig = (ASIG.find((x) => x.id === e.asig) || {}).short || e.asig;
+      return `<li class="adm-ent${d < 0 ? " is-old" : ""}"${code ? "" : ` data-e="${esc(e._id)}"`}>
+        <span class="adm-ent-asig">${esc(asig)}</span>
+        <span class="adm-ent-main"><b>${esc(e.titulo)}</b><small>${esc(fechaLarga(e.limite))}${e.hora ? " · " + esc(e.hora) : ""}${code ? " · del código" : e.por ? " · por " + esc(e.por) : ""}${e.enlace ? " · con enlace" : ""}</small>${e.nota ? `<small class="muted">${esc(e.nota)}</small>` : ""}</span>
+        <span class="adm-ent-dias${d < 0 ? " muted" : ""}">${d < 0 ? "pasada" : d === 0 ? "hoy" : d + " d"}</span>
+        ${code ? '<span class="adm-ent-lock muted">fija</span>' : '<button type="button" class="btn danger adm-sm" data-borrar>Borrar</button>'}</li>`;
+    };
+    el.innerHTML = `<form class="adm-form" id="ent-form" novalidate>
+      <h3 class="adm-form-h">Añadir una entrega o fecha</h3>
+      <div class="adm-grid">
+        <label>Asignatura<select id="ent-asig">${ASIG.map((a) => `<option value="${a.id}">${esc(a.short)}</option>`).join("")}</select></label>
+        <label>Fecha límite<input type="date" id="ent-fecha" min="2026-01-01" required></label>
+        <label>Hora (opcional)<input type="time" id="ent-hora"></label>
+      </div>
+      <label>Título<input type="text" id="ent-titulo" maxlength="140" placeholder="P. ej. «Práctica 9 de AMD»" required></label>
+      <label>Enlace (opcional)<input type="url" id="ent-enlace" maxlength="600" placeholder="https://aulavirtual.um.es/…"></label>
+      <label>Nota (opcional)<input type="text" id="ent-nota" maxlength="300" placeholder="Detalle corto: formato, grupo, condiciones…"></label>
+      <div class="adm-acts"><button type="submit" class="btn">Añadir entrega</button></div>
+    </form>
+    <h3 class="adm-ent-h">Entregas próximas y pasadas</h3>
+    ${codigo.length || propias.length ? `<ul class="adm-ents">${codigo.map((e) => fila(e, true)).join("")}${propias.map((e) => fila(e, false)).join("")}</ul>`
+      : '<p class="muted adm-empty">No hay entregas apuntadas. Añade la primera arriba.</p>'}`;
+    const form = el.querySelector("#ent-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const asig = el.querySelector("#ent-asig").value, titulo = el.querySelector("#ent-titulo").value.trim();
+      const limite = el.querySelector("#ent-fecha").value, hora = el.querySelector("#ent-hora").value;
+      const enlace = el.querySelector("#ent-enlace").value.trim(), nota = el.querySelector("#ent-nota").value.trim();
+      if (titulo.length < 2 || !/^\d{4}-\d{2}-\d{2}$/.test(limite)) { aviso("Pon al menos el título y la fecha límite.", "error"); return; }
+      if (enlace && !/^https?:\/\/.+/.test(enlace)) { aviso("El enlace debe empezar por http:// o https://", "error"); return; }
+      ocupado(form, true);
+      try {
+        const fields = { asig: v(asig), titulo: v(titulo), limite: v(limite), por: v(nombre) };
+        if (hora) fields.hora = v(hora);
+        if (enlace) fields.enlace = v(enlace);
+        if (nota) fields.nota = v(nota);
+        await D.escribir([{ update: { name: D.ruta("entregas/" + D.nuevoId()), fields }, currentDocument: { exists: false }, updateTransforms: [{ fieldPath: "creado", setToServerValue: "REQUEST_TIME" }] }]);
+        await cargarEntregas(); entregas(el); aviso("Entrega añadida. Ya sale en la comunidad de la asignatura.");
+      } catch (ex) { ocupado(form, false); aviso(msgError(ex), "error"); }
+    });
+    el.querySelectorAll(".adm-ent[data-e]").forEach((li) => {
+      const e = st.entregas.find((x) => x._id === li.dataset.e);
+      confirmar(li.querySelector("[data-borrar]"), async () => {
+        ocupado(li, true);
+        try { await D.escribir([{ delete: D.ruta("entregas/" + e._id) }]); st.entregas = st.entregas.filter((x) => x !== e); entregas(el); aviso("Entrega borrada."); }
+        catch (ex) { ocupado(li, false); aviso(msgError(ex), "error"); }
       });
     });
   }

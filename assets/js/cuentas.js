@@ -510,11 +510,13 @@
     try { return await sesionDe(ses.token, forzar); }
     catch (e) { if (e.status === 401) caducada(ses.id); throw e; }
   }
-  /** Documentos de una consulta: [{ _id, _t (última modificación), …campos }] */
-  async function consultar(structuredQuery) {
+  /** Documentos de una consulta: [{ _id, _t (última modificación), …campos }].
+      «parent» (opcional) es la ruta del documento padre para consultar una subcolección, p. ej.
+      «comunidad/ip» o «comunidad/ip/posts/<id>». */
+  async function consultar(structuredQuery, parent) {
     const s = await sesionActiva();
     const o = json({ structuredQuery }); o.headers.Authorization = "Bearer " + s.t;
-    const d = await pedir(DB + ":runQuery", o);
+    const d = await pedir(DB + (parent ? "/" + parent : "") + ":runQuery", o);
     return (Array.isArray(d) ? d : []).filter((x) => x.document)
       .map((x) => Object.assign({ _id: x.document.name.split("/").pop(), _t: x.document.updateTime }, leer(x.document)));
   }
