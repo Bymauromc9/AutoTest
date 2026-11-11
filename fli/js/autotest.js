@@ -109,7 +109,7 @@ function testLabel(key){if(key==="R")return "Repaso de fallos";return key==="G"?
 
 function home(){
   S.view="home";
-  const rows=[1,2,3,4].map(t=>{
+  const rows=[1,2,3,4,5,6,7,8].map(t=>{
     const n=TOPIC_IDS[t].length, best=store("fli-best-"+t);
     return `<div class="test-row"><div class="num">${t}</div>
       <div class="info"><h3>${TOPICS[t].name}</h3><p>${TOPICS[t].desc}</p>
@@ -119,7 +119,7 @@ function home(){
   const bestG=store("fli-best-G");
   app.innerHTML=`
   <header class="top">
-    <span class="eyebrow">Teoría · Temas 1–4</span>
+    <span class="eyebrow">Teoría · Temas 1–4 (L0) y 5–8 (L1)</span>
     <h1>Autotest de FLI</h1>
     <p class="muted">Elige un tema o el test general. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
     <div class="legend"><span><span class="cell ok">V</span> acierto</span><span><span class="cell bad">F</span> fallo</span><span><span class="cell blank">–</span> en blanco</span></div>
@@ -136,7 +136,7 @@ function home(){
   ${repasoBox()}
   <section class="tests" aria-label="Tests por tema">${rows}
     <div class="test-row general"><div class="num">∀</div>
-      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los cuatro temas, con el peso de cada tema en el examen.</p>
+      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los ocho temas (L0 y L1), con el peso de cada uno.</p>
       <span class="best">${BANK.length} preguntas en total${bestG!=null?` · mejor nota <b>${bestG.toFixed(1)}</b>`:""}</span></div>
       <button class="btn" data-start="G">Empezar</button></div>
   </section>
@@ -228,7 +228,7 @@ function results(){
   const failed=S.qs.map((q,k)=>({q,k,a:S.ans[k]})).filter(x=>x.a!==x.q.a);
   let topicBars="";
   if(S.key==="G"){
-    topicBars=`<div class="bytopic"><h3>Por temas</h3>`+[1,2,3,4].map(t=>{
+    topicBars=`<div class="bytopic"><h3>Por temas</h3>`+[1,2,3,4,5,6,7,8].map(t=>{
       const qs=S.qs.map((q,k)=>({q,k})).filter(x=>x.q.t===t); const ok=qs.filter(x=>S.ans[x.k]===x.q.a).length;
       const pct=qs.length?ok/qs.length*100:0;
       return `<div class="bar"><span>Tema ${t}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="v">${ok}/${qs.length}</span></div>`;

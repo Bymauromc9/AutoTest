@@ -1,0 +1,151 @@
+<!--{
+ "salida": "amd/practicas/p11.html",
+ "titulo": "Práctica 11 · Diagonalización ortogonal y SVD",
+ "descripcion": "Práctica 11 de AMD con SageMath: bases ortonormales de vectores propios de matrices simétricas, A = P·D·Pᵗ, descomposición en valores singulares A = U·D·Vᵗ, su interpretación geométrica y una deformación animada con la raíz de una matriz.",
+ "eyebrow": "Álgebra y Matemática Discreta · Prácticas con SageMath",
+ "h1": "Práctica 11 · Diagonalización ortogonal y SVD",
+ "ops": "A = U·Σ·Vᵗ",
+ "lead": "Las matrices simétricas se diagonalizan con una base ortonormal (A = P·D·Pᵗ) y cualquier matriz se descompone en valores singulares (A = U·D·Vᵗ). Se comprueba cada propiedad con SageMath, se ve qué hace A·Aᵗ con un cubo y se anima la deformación de un objeto con una «raíz trigésima» de una matriz.",
+ "marca": "AMD · Práctica 11",
+ "sym": "Σ",
+ "body": {"data-storage-key": "amd-p11-hechos", "data-visto-key": "amd-p11-visto", "data-sage-key": "amd-p11", "data-sage-datos": "amd/practicas/datos/p11/", "data-sage-ficheros": "/amd/sage/geometria.py,monkey.obj,monkey.mtl", "data-sage-prep": "from geometria import *"},
+ "paginas": [["p1.html", "P1"], ["p2.html", "P2"], ["p3.html", "P3"], ["p4.html", "P4"], ["p5.html", "P5"], ["p6.html", "P6"], ["p7.html", "P7"], ["p8.html", "P8"], ["p9.html", "P9"], ["p10.html", "P10"], ["p11.html", "P11"], ["sage.html", "SageMath"]],
+ "paginas_label": "Prácticas de AMD",
+ "pie": "Enunciados de la práctica 11 resueltos y explicados (los ejercicios 1 a 3 no traen solución en el cuaderno: la resolución es propia); el ejercicio extra parte del código que acompaña al enunciado."
+}-->
+
+<tema id="p11-0" n="0" t="Las ideas que se usan" eyebrow="Práctica 11" lede="Teorema espectral y descomposición en valores singulares (tema 4).">
+<ap id="p11-0-1" n="0.1" t="Recetario">
+<ul><li><b>Teorema espectral</b>: si A es <b>simétrica</b>, sus autovalores son reales, los vectores propios de autovalores distintos son ortogonales y existe una base ortonormal de vectores propios. Con P = [u₁ … uₙ] (ortogonal, P⁻¹ = Pᵗ): <b>A = P·D·Pᵗ</b>.</li>
+<li>Para construir P: base de cada subespacio propio, <b>Gram-Schmidt dentro de cada uno</b> (sólo hace falta si el autovalor es múltiple) y normalizar.</li>
+<li><b>SVD</b>: toda A (m × n) se escribe A = U·D·Vᵗ con U (m × m) y V (n × n) ortogonales y D (m × n) con los <b>valores singulares</b> σ₁ ≥ σ₂ ≥ … ≥ 0 en la diagonal. Las columnas de V son vectores propios de AᵗA y las de U, de AAᵗ, con autovalores σᵢ²; además A·vᵢ = σᵢ·uᵢ.</li>
+<li>A es <b>suma de matrices de rango 1</b>: A = σ₁u₁v₁ᵗ + σ₂u₂v₂ᵗ + … + σᵣuᵣvᵣᵗ (r = rango de A). Quedarse con los primeros términos es la mejor aproximación de rango bajo (compresión de imágenes).</li></ul>
+<p>En SageMath la SVD se calcula en coma flotante: <code>U, S, V = A.change_ring(RDF).SVD()</code> (S es la D del enunciado). Por eso las comprobaciones se hacen viendo que la norma de la diferencia es ≈ 10⁻¹⁵, no con <code>==</code>.</p>
+</ap>
+</tema>
+
+<tema id="p11-1" n="1" t="Ejercicio 1 · Bases ortonormales de vectores propios" eyebrow="Ejercicio 1" lede="A = P·D·Pᵗ y A¹⁰⁰⁰⁰ con la descomposición.">
+<ej id="p11-1a" n="Ejercicio 1 (a)" t="una 3 × 3 con un autovalor doble">
+<p>A = <m>3, 1, −1; 1, 3, −1; −1, −1, 3</m>. Valores y vectores propios, una base ortonormal de vectores propios, P y D con A = P·D·Pᵗ y A¹⁰⁰⁰⁰ directamente y con la descomposición.</p>
+<sol>
+<p>p(λ) = −(λ − 5)(λ − 2)². λ = 5 con (1, 1, −1) y λ = 2 (doble) con el plano x + y − z = 0, de base (1, 0, 1), (0, 1, 1).</p>
+<p>Los dos de λ = 2 no son ortogonales: Gram-Schmidt da (1, 0, 1) y (0, 1, 1) − ½(1, 0, 1) = ½(−1, 2, 1). El de λ = 5 ya es ortogonal a ellos (autovalor distinto, A simétrica). Normalizando:</p>
+<res>P = <m>1/√3, 1/√2, −1/√6; 1/√3, 0, 2/√6; −1/√3, 1/√2, 1/√6</m>,  D = diag(5, 2, 2)</res>
+<p>Con w = (1, 1, −1)/√3, A = 5wwᵗ + 2(I − wwᵗ), así que Aᵏ = 2ᵏI + (5ᵏ − 2ᵏ)wwᵗ:</p>
+<res>A¹⁰⁰⁰⁰ = 2¹⁰⁰⁰⁰·I + <fr>5¹⁰⁰⁰⁰ − 2¹⁰⁰⁰⁰|3</fr><m>1, 1, −1; 1, 1, −1; −1, −1, 1</m></res>
+<sage t="Ejercicio 1 (a)">A = matrix(QQ, [[3, 1, -1], [1, 3, -1], [-1, -1, 3]])
+print(A.charpoly().factor()); print(A.eigenvectors_right())
+cols, diag = [], []
+for val, vecs, mult in A.eigenvectors_right():
+    G, _ = matrix(QQ, vecs).gram_schmidt()                  # ortogonaliza dentro del subespacio propio
+    cols += [g / g.norm() for g in G.rows()]; diag += [val]*mult
+P = column_matrix(cols); D = diagonal_matrix(diag); show(P, D)
+print((P.transpose()*P).simplify_full() == identity_matrix(3), (P*D*P.transpose()).simplify_full() == A)
+t = walltime(); X = A^10000; print("directo:", walltime(t))
+t = walltime(); Y = P * D^10000 * P.transpose(); print("con P·D·Pᵗ:", walltime(t))
+w = vector([1, 1, -1]); print(X == Y.change_ring(QQ), X == 2^10000*identity_matrix(3) + (5^10000 - 2^10000)*w.column()*w.row()/3)</sage>
+</sol></ej>
+<ej id="p11-1b" n="Ejercicio 1 (b)" t="una 4 × 4 simétrica">
+<p>A = <m>1, 2, 3, 4; 2, 5, 6, 7; 3, 6, −1, 0; 4, 7, 0, 2</m>. Lo mismo.</p>
+<sol>
+<p>p(λ) = λ⁴ − 7λ³ − 105λ² + 62λ + 6, irreducible en ℚ: los autovalores no se pueden escribir con raíces sencillas. Como A es simétrica son reales; son distintos, así que los cuatro vectores propios ya son ortogonales y basta normalizarlos:</p>
+<res>λ ≈ 14,1221; −7,6898; 0,6524; −0,0847</res>
+<p>Se trabaja en coma flotante: P·Pᵗ ≈ I y P·D·Pᵗ ≈ A con error ≈ 10⁻¹⁵. A¹⁰⁰⁰⁰ exacta sólo se puede calcular directamente: con RDF, 14,12¹⁰⁰⁰⁰ ≈ 10¹¹⁴⁹⁹ desborda. Con un exponente pequeño (A²⁰) los dos métodos coinciden en unas 15 cifras.</p>
+<sage t="Ejercicio 1 (b)">A = matrix(ZZ, [[1, 2, 3, 4], [2, 5, 6, 7], [3, 6, -1, 0], [4, 7, 0, 2]])
+p = A.charpoly(); print(p, p.is_irreducible())
+D, P = A.change_ring(RDF).eigenmatrix_right()
+P = column_matrix([c / c.norm() for c in P.columns()]); show(D.diagonal()); show(P)
+print((P.transpose()*P - identity_matrix(4)).norm(), (P*D*P.transpose() - A).norm())
+t = walltime(); X = A^10000; print("directo (exacto):", walltime(t), "cifras:", len(str(X[0, 0])))
+B = (A^20).change_ring(RDF); print("error relativo con k = 20:", (P*D^20*P.transpose() - B).norm() / B.norm())</sage>
+</sol></ej>
+</tema>
+
+<tema id="p11-2" n="2" t="Ejercicio 2 · Descomposición en valores singulares" eyebrow="Ejercicio 2" lede="Calcular la SVD y comprobar sus cinco propiedades.">
+<ap id="p11-2-0" n="2.0" t="Las comprobaciones, una por apartado">
+<p>Para cada matriz: 1.1 A = U·D·Vᵗ; 1.2 cada columna uᵢ de U es vector propio de AAᵗ con autovalor σᵢ²; 1.3 lo mismo para vᵢ y AᵗA; 1.4 las columnas de U y de V son bases ortonormales (UᵗU = I, VᵗV = I); 1.5 A = Σ σᵢuᵢvᵢᵗ. La misma función sirve para las tres:</p>
+<sage t="Función que hace las cinco comprobaciones">def svd_completa(A):
+    A = A.change_ring(RDF); U, S, V = A.SVD(); r = A.rank()
+    show(U, S, V)
+    print("valores singulares:", [S[i, i] for i in range(min(A.dimensions()))], " rango:", r)
+    print("1.1 |A − U·D·Vᵗ| =", (A - U*S*V.transpose()).norm())
+    print("1.2", [(A*A.transpose()*U.column(i) - S[i, i]^2*U.column(i)).norm() for i in range(r)])
+    print("1.3", [(A.transpose()*A*V.column(i) - S[i, i]^2*V.column(i)).norm() for i in range(r)])
+    print("1.4", (U.transpose()*U - identity_matrix(U.nrows())).norm(), (V.transpose()*V - identity_matrix(V.nrows())).norm())
+    suma = sum(S[i, i]*U.column(i).column()*V.column(i).row() for i in range(r))
+    print("1.5 |A − Σ σᵢuᵢvᵢᵗ| =", (A - suma).norm())
+    return U, S, V</sage>
+</ap>
+<ej id="p11-2a" n="Ejercicio 2 (a)" t="una 2 × 3">
+<p>A = <m>1, 2, 3; 4, 5, 6</m>.</p>
+<sol>
+<p>AAᵗ = <m>14, 32; 32, 77</m>: σ² son las raíces de λ² − 91λ + 54 = 0, λ = (91 ± √8065)/2.</p>
+<res>σ₁ ≈ 9,5080,  σ₂ ≈ 0,7729  (rango 2)</res>
+<p>U es 2 × 2, D es 2 × 3 y V es 3 × 3. La tercera columna de V, ∝ (1, −2, 1), genera el núcleo de A (AᵗA tiene el autovalor 0). A = σ₁u₁v₁ᵗ + σ₂u₂v₂ᵗ.</p>
+<sage t="Ejercicio 2 (a)">U, S, V = svd_completa(matrix([[1, 2, 3], [4, 5, 6]]))</sage>
+</sol></ej>
+<ej id="p11-2b" n="Ejercicio 2 (b)" t="una 3 × 3 de rango 2">
+<p>A = <m>1, 1, 2; 2, 3, 1; 2, 2, 4</m>.</p>
+<sol>
+<p>La tercera fila es el doble de la primera: rango 2, así que σ₃ = 0. Con AAᵗ = <m>6, 7, 12; 7, 14, 14; 12, 14, 24</m> (traza 44 y suma de menores principales 175): σ² = 22 ± √309.</p>
+<res>σ₁ ≈ 6,2911,  σ₂ ≈ 2,1028,  σ₃ = 0  (SageMath da ≈ 10⁻¹⁶ por el redondeo)</res>
+<p>La suma de rango 1 tiene sólo <b>dos</b> términos. La tercera columna de U, ∝ (−2, 0, 1), es ortogonal a la imagen de A (que está en el plano 2x − z = 0, porque la 3.ª coordenada siempre es el doble de la 1.ª).</p>
+<sage t="Ejercicio 2 (b)">U, S, V = svd_completa(matrix([[1, 1, 2], [2, 3, 1], [2, 2, 4]]))</sage>
+</sol></ej>
+<ej id="p11-2c" n="Ejercicio 2 (c)" t="una 3 × 4">
+<p>A = <m>1, 2, 3, 4; 4, 5, 6, 7; 1, 3, 2, 1</m>.</p>
+<sol>
+<p>Rango 3: tres valores singulares no nulos.</p>
+<res>σ₁ ≈ 12,8951,  σ₂ ≈ 1,9953,  σ₃ ≈ 0,8568</res>
+<p>V es 4 × 4: su última columna, ∝ (0, 1, −2, 1), es una base del núcleo de A. Como σ₁ es mucho mayor que los demás, σ₁u₁v₁ᵗ ya es una buena aproximación de A (el error relativo es √(σ₂² + σ₃²)/‖A‖ ≈ 17 %).</p>
+<sage t="Ejercicio 2 (c)">U, S, V = svd_completa(matrix([[1, 2, 3, 4], [4, 5, 6, 7], [1, 3, 2, 1]]))
+A1 = S[0, 0]*U.column(0).column()*V.column(0).row(); print(A1); print((matrix(RDF, [[1, 2, 3, 4], [4, 5, 6, 7], [1, 3, 2, 1]]) - A1).norm('frob') / matrix(RDF, [[1, 2, 3, 4], [4, 5, 6, 7], [1, 3, 2, 1]]).norm('frob'))</sage>
+</sol></ej>
+</tema>
+
+<tema id="p11-3" n="3" t="Ejercicio 3 · Qué hace A·Aᵗ con un cubo" eyebrow="Ejercicio 3" lede="A = (1 0 0; 1 1 0; 0 1 1): las bases U y V y dos cubos.">
+<ej id="p11-3" n="Ejercicio 3 (a–d)" t="bases singulares y cubos">
+<p>Para A = <m>1, 0, 0; 1, 1, 0; 0, 1, 1</m>: a) dibuja las bases definidas por las columnas de U y de V; b) construye un cubo de lado 1 centrado en el origen con lados paralelos a la base canónica; c) otro de lado 1 centrado en el origen con lados paralelos a la base U; d) dibuja cada cubo y su transformado por A·Aᵗ.</p>
+<sol>
+<p>AAᵗ = <m>1, 1, 0; 1, 2, 1; 0, 1, 2</m> = U·D²·Uᵗ, con σ₁² ≈ 3,247, σ₂² ≈ 1,555 y σ₃² ≈ 0,198. Por eso:</p>
+<ul><li>El cubo con lados <b>paralelos a U</b> se transforma en una <b>caja</b> (prisma rectangular) con las mismas direcciones y lados σ₁², σ₂², σ₃²: en esa base AAᵗ es diagonal, sólo estira o encoge cada lado.</li>
+<li>El cubo <b>canónico</b> se transforma en un <b>paralelepípedo</b> oblicuo: sus aristas no son vectores propios, así que cambian de dirección.</li>
+<li>El volumen se multiplica en los dos casos por det(AAᵗ) = σ₁²σ₂²σ₃² = det(A)² = 1.</li></ul>
+<p>Para el cubo de lado 1 centrado en el origen con lados paralelos a {a, b, c} (ortonormal): base ±a/2 ± b/2 − c/2 y tapa la misma + c.</p>
+<sage t="Ejercicio 3">A = matrix(RDF, [[1, 0, 0], [1, 1, 0], [0, 1, 1]]); U, S, V = A.SVD(); show(U, S, V)
+M = A*A.transpose(); print([S[i, i]^2 for i in range(3)], (M - U*S^2*U.transpose()).norm())
+vectores(U.columns(), color=[rojo, verde, azul]).show(frame=False)                    # a) base U
+vectores(V.columns(), color=[naranja, gris, negro]).show(frame=False)                 #    base V
+def cubo(a, b, c):
+    abajo = [(-a - b - c)/2, (a - b - c)/2, (a + b - c)/2, (-a + b - c)/2]
+    return abajo + [x + c for x in abajo]
+canonico = cubo(*identity_matrix(RDF, 3).columns())                                   # b)
+enU = cubo(*U.columns())                                                               # c)
+(prisma(canonico, color=azul, opacidad=0.4, wire=True) + prisma([M*x for x in canonico], color=rojo, opacidad=0.4, wire=True)).show(frame=False)          # d)
+(vectores(U.columns()) + prisma(enU, color=azul, opacidad=0.4, wire=True) + prisma([M*x for x in enU], color=rojo, opacidad=0.4, wire=True)).show(frame=False)</sage>
+</sol></ej>
+</tema>
+
+<tema id="p11-4" n="4" t="Ejercicio 4 · Extra: una deformación animada" eyebrow="Ejercicio extra" lede="La cabeza de mono de monkey.obj, la matriz A y una matriz A₂ con A₂³⁰ = A.">
+<ej id="p11-4" n="Ejercicio 4" t="la raíz trigésima de una matriz">
+<p>a) Importa el objeto de monkey.obj y visualízalo. b) Aplícale A = <m>2, 1, 1; 1, 2, 1; 1, 1, 2</m>. c) Haz una animación de 30 fotogramas de la deformación: busca A₂ con A₂³⁰ = A y aplica A₂ⁱ en el fotograma i.</p>
+<sol>
+<p>A es simétrica con λ = 4 (vector (1, 1, 1)) y λ = 1 doble (el plano x + y + z = 0): A estira al cuádruple en la dirección (1, 1, 1) y deja igual lo perpendicular.</p>
+<p>Si A = P·D·P⁻¹, la matriz <b>A₂ = P·D<sup>1/30</sup>·P⁻¹</b> cumple A₂³⁰ = P·D·P⁻¹ = A (D<sup>1/30</sup> eleva cada autovalor a 1/30: 4<sup>1/30</sup> ≈ 1,0473 y 1). A₂ⁱ = P·D<sup>i/30</sup>·P⁻¹ pasa suavemente de la identidad (i = 0) a A (i = 30).</p>
+<p>En la web la animación usa 7 fotogramas (i = 0, 5, …, 30), porque con los 31 SageMathCell pasa de su límite de tiempo y cierra la sesión; en Jupyter o en tu SageMath pon <code>range(31)</code>.</p>
+<sage t="Ejercicio 4">vertices, caras, colores = importarObjeto("monkey.obj", color=True)
+objeto(vertices, caras, color=colores).show(frame=False)                                         # a)
+A = matrix(QQ, [[2, 1, 1], [1, 2, 1], [1, 1, 2]])
+objeto([A*vector(v) for v in vertices], caras, color=colores).show(frame=False)                  # b)
+D, P = A.eigenmatrix_right(); show(D, P)
+A2 = lambda i: (P * diagonal_matrix([d^(i/30) for d in D.diagonal()]) * P.inverse()).change_ring(RDF)
+print((A2(1)^30 - A).norm())                                                                     # ≈ 0
+paso = 4*vector([1, -1, 0])
+fila = Graphics()
+for k in range(4):                                                                              # i = 0, 10, 20, 30
+    fila += objeto([k*paso + A2(10*k)*vector(v) for v in vertices], caras, color=colores)
+fila.show(frame=False)
+fotogramas = [objeto([A2(i)*vector(v) for v in vertices], caras, color=colores) for i in range(0, 31, 5)]   # i = 0, 5, …, 30
+show(animate(fotogramas).interactive(), delay=20, auto_play=False, frame=False)                 # c)</sage>
+</sol></ej>
+</tema>

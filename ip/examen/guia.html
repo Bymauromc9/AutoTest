@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía del examen · IP</title>
+<meta name="description" content="Cómo es el examen de secuencias de Introducción a la Programación y 14 exámenes y problemas de convocatorias anteriores resueltos en notación algorítmica y C++.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#F9F8F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Math&display=swap">
+<link rel="stylesheet" href="../../assets/css/nav.css">
+<link rel="stylesheet" href="../../assets/css/guia.css">
+<link rel="stylesheet" href="../css/guia.css">
+<script src="../../assets/js/core.js"></script>
+</head>
+<body data-root="../../" data-subject="ip" data-title="Guía del examen" data-storage-key="ip-examen-hechos" data-visto-key="ip-examen-visto">
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <p class="side-brand"><span class="sym">✓</span> IP · Examen</p>
+      <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
+    </div>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#e1"><span class="tn">1</span><span class="tname">Cómo es el examen</span><span></span></a><ol class="toc-topics"><li><a href="#e1-1"><span class="tnum">1.1</span>Fechas y formato</a></li><li><a href="#e1-2"><span class="tnum">1.2</span>El método para cada problema</a></li><li><a href="#e1-3"><span class="tnum">1.3</span>Las plantillas en C++</a></li></ol></li><li><a class="toc-tema" href="#e2"><span class="tn">2</span><span class="tname">Exámenes de diciembre</span><span class="prog" data-prog="e2"></span></a><ol class="toc-topics"><li><a href="#e2-1"><span class="tnum">2.1</span>Diciembre de 2023</a></li><li><a href="#e2-2"><span class="tnum">2.2</span>Diciembre de 2022</a></li></ol></li><li><a class="toc-tema" href="#e3"><span class="tn">3</span><span class="tname">Noviembre 2019 y junio</span><span class="prog" data-prog="e3"></span></a><ol class="toc-topics"><li><a href="#e3-1"><span class="tnum">3.1</span>Parcial de noviembre de 2019</a></li><li><a href="#e3-2"><span class="tnum">3.2</span>Junio de 2017 y de 2025</a></li></ol></li><li><a class="toc-tema" href="#e4"><span class="tn">4</span><span class="tname">Problemas de secuencias</span><span class="prog" data-prog="e4"></span></a><ol class="toc-topics"><li><a href="#e4-1"><span class="tnum">4.1</span>Los cinco problemas</a></li></ol></li><li><a class="toc-tema" href="#e5"><span class="tn">5</span><span class="tname">1.er parcial 2026</span><span class="prog" data-prog="e5"></span></a><ol class="toc-topics"><li><a href="#e5-1"><span class="tnum">5.1</span>Las dos versiones</a></li></ol></li></ol></nav>
+  </aside>
+  <main id="app" tabindex="-1">
+<header class="hero"><p class="eyebrow">Introducción a la Programación · 1.º GII · Examen</p><h1>Guía del examen <span class="ops">20 nov</span></h1><p class="lead">Cómo son los ejercicios de secuencias del 2.º parcial, el método que da la nota y <b>14 exámenes y problemas de convocatorias anteriores resueltos</b>: el análisis (recorrido o búsqueda, invariante y esquema), la notación algorítmica y un programa en C++ compilado con una ejecución real.</p><nav class="ip-pages" aria-label="Páginas de IP"><a href="guia.html" aria-current="page">Guía del examen</a><a href="../teoria/guia.html">Guía de teoría</a><a href="../practicas/guia.html">Guía de prácticas</a><a href="../teoria/autotest.html">Autotest</a></nav></header><div class="soltools"><button type="button" class="btn-sol" data-sol="open">Abrir todas las resoluciones</button><button type="button" class="btn-sol" data-sol="close">Cerrarlas</button><span class="soltools-note">Intenta cada ejercicio antes de abrir su resolución y márcalo como hecho.</span></div><section class="tema guide" id="e1"><header class="tema-head"><p class="eyebrow">Parte 1</p><h2>Cómo es el examen</h2><p class="lede">Fechas, cómo son los ejercicios de secuencias y el método que da la nota.</p></header><section class="topic" id="e1-1"><h3><span class="tnum">1.1</span><span>Fechas y formato</span></h3><div class="prose"><div class="tablewrap"><table class=""><thead><tr><th>Prueba</th><th>Fecha</th><th>Qué entra</th></tr></thead><tbody><tr><td>1.er parcial</td><td>16 de octubre de 2026 (hecho)</td><td>Temas 0–2: tipos, registros, acciones y funciones</td></tr><tr><td><b>2.º parcial</b></td><td><b>20 de noviembre de 2026</b></td><td>Iteración y secuencias (temas 3 y 4): recorridos, búsquedas y sucesiones</td></tr><tr><td>Examen final</td><td>18 de diciembre de 2026</td><td>Toda la asignatura, también el tema 5 (tablas)</td></tr></tbody></table></div><p>Los exámenes de secuencias de cursos anteriores tienen siempre la misma forma: <b>dos o tres ejercicios cortos</b>, cada uno con su tiempo y su puntuación. En diciembre de 2023, por ejemplo:</p><div class="tablewrap"><table class=""><thead><tr><th>Ejercicio</th><th>Tiempo</th><th>Puntos</th><th>Tipo de problema</th></tr></thead><tbody><tr><td>1</td><td>20 min</td><td>4</td><td><b>Recorrido</b> de una secuencia (contar los múltiplos de 5)</td></tr><tr><td>2</td><td>20 min</td><td>3</td><td><b>Búsqueda</b> en una secuencia (¿hay alguno divisible por 3 y por 7?)</td></tr><tr><td>3</td><td>30 min</td><td>3</td><td><b>Sucesión</b> definida por recurrencia (el término M-ésimo o el primero que supera M)</td></tr></tbody></table></div><p>Se puede responder en <b>notación SP o en C++</b> leyendo la secuencia de la entrada estándar con una marca de fin (normalmente −1). La nota del examen insiste en lo mismo cada año: se valora <b>identificar bien el tipo de problema</b> y <b>elegir y aplicar el esquema adecuado</b>, además de la sencillez y la eficiencia (acceder <b>una sola vez</b> a cada elemento).</p><div class="box warn"><p class="box-t">Fechas</p><p>Las fechas son las que figuran en la cuenta atrás de la web. Ante cualquier cambio manda lo que publique el profesorado en el Aula Virtual.</p></div></div></section><section class="topic" id="e1-2"><h3><span class="tnum">1.2</span><span>El método para cada problema</span></h3><div class="prose"><p>Las soluciones oficiales siguen siempre los mismos pasos. Hacerlos por escrito es lo que da la nota:</p><ol class="steps"><li><b>Tipo de problema</b>: ¿hay que mirar todos los elementos para dar la respuesta (<b>recorrido</b>) o se puede parar en cuanto aparezca uno (<b>búsqueda</b>)? Dilo con una frase: «es un recorrido porque hasta el último elemento no se sabe…».</li><li><b>Postcondición</b> con una función con nombre: <code>Post ≡ { v = valorDecimal (S) }</code>.</li><li><b>Invariante</b>: la post cambiando S por Piz (S), y si el tratamiento necesita el <b>anterior</b>, se añade <code>u = último (Piz (S))</code>.</li><li><b>Definición recurrente</b>: el caso base da la <b>inicialización</b> y el caso general da el <b>tratamiento</b> del elemento actual. <code>valorDecimal ([]) = 0</code> → <code>v ← 0</code>; <code>valorDecimal (T·e) = 10·valorDecimal (T) + e</code> → <code>v ← 10·v + EA (S)</code>.</li><li><b>Esquema</b>: ¿se puede tratar la secuencia vacía como las demás (H1)? ¿y el primer elemento (H2)? Si se compara con el anterior, el primero no tiene anterior: <b>tercer esquema</b> (¬H1, ¬H2).</li><li>El <b>algoritmo</b> completo con su léxico, y en una búsqueda, la pregunta final de <b>por qué</b> se ha salido.</li></ol><div class="tablewrap"><table class=""><thead><tr><th>Si el enunciado dice…</th><th>Suele ser</th><th>Esquema</th></tr></thead><tbody><tr><td>«calcule», «cuántos», «la suma», «el número formado»</td><td>Recorrido</td><td>Esquema 1 (H1 y H2)</td></tr><tr><td>«la media», «el máximo»</td><td>Recorrido</td><td>Esquema 2 o 3 (la vacía o el primero aparte)</td></tr><tr><td>«compare con el anterior», «parejas adyacentes», «mesetas»</td><td>Recorrido con el anterior</td><td>Esquema 3</td></tr><tr><td>«indique si existe», «el primero que», «la posición del primer»</td><td>Búsqueda</td><td>Esquema de búsqueda</td></tr><tr><td>«antes de que aparezca»</td><td>Búsqueda con tratamiento de los que no cumplen</td><td>Búsqueda que además cuenta</td></tr><tr><td>«el término n-ésimo»</td><td>Recorrido de la sucesión</td><td>RECORRIENDO con dos o tres variables</td></tr><tr><td>«el primer término que supera»</td><td>Búsqueda en la sucesión</td><td>MIENTRAS término ≤ N</td></tr></tbody></table></div><p>Repasa los esquemas en la <a href="../teoria/guia.html#t4-3">guía de teoría (tema 4)</a> y velos funcionar en el <a href="../teoria/guia.html#t4-8">simulador de la máquina secuencial</a>.</p></div></section><section class="topic" id="e1-3"><h3><span class="tnum">1.3</span><span>Las plantillas en C++</span></h3><div class="prose"><div class="pair"><div class="codeblk"><p class="code-t">Recorrido (primer modelo, marca MF)</p><pre><code class="lang-cpp">inicialización;              // solución de la secuencia vacía
+cin &gt;&gt; EA;                   // Comenzar
+while (EA != MF) {
+    tratamiento de EA;
+    cin &gt;&gt; EA;               // Avanzar
+}
+tratamiento final;</code></pre></div><div class="codeblk"><p class="code-t">Búsqueda</p><pre><code class="lang-cpp">cin &gt;&gt; EA;                   // Comenzar
+while ((EA != MF) &amp;&amp; !Prop (EA)) {
+    cin &gt;&gt; EA;               // Avanzar
+}
+if (EA != MF) { encontrado; }
+else { no hay ninguno; }</code></pre></div></div><div class="pair"><div class="codeblk"><p class="code-t">Recorrido con el anterior (tercer esquema)</p><pre><code class="lang-cpp">cin &gt;&gt; EA;                   // Comenzar
+if (EA == MF) { secuencia vacía; }
+else {
+    inicialización con el primero;
+    anterior = EA;
+    cin &gt;&gt; EA;               // Avanzar
+    while (EA != MF) {
+        tratamiento de anterior y EA;
+        anterior = EA;
+        cin &gt;&gt; EA;           // Avanzar
+    }
+}</code></pre></div><div class="codeblk"><p class="code-t">Sucesión an = f (an-1, an-2)</p><pre><code class="lang-cpp">ant = a1; act = a2;          // los casos base
+for (i = 3; i &lt;= n; i = i + 1) {
+    sig = f (act, ant);      // INV: act = a(i-1), ant = a(i-2)
+    ant = act;
+    act = sig;
+}
+// act = an  (con n ≥ 2)</code></pre></div></div><div class="box tip"><p class="box-t">Los errores que más bajan la nota</p><ul><li>Leer al principio del cuerpo del bucle en vez de al final: se trata la marca como un dato.</li><li>En una búsqueda, decidir el resultado mirando un contador en vez de mirar <b>EA</b> (o la propiedad) tras el bucle.</li><li>Comparar con el <b>siguiente</b>: siempre se razona hacia atrás, con el actual y el anterior.</li><li>Leer la secuencia dos veces (por ejemplo, una para contar y otra para buscar): se pide un único acceso a cada elemento.</li></ul></div></div></section></section><section class="tema guide" id="e2"><header class="tema-head"><p class="eyebrow">Parte 2</p><h2>Exámenes de diciembre</h2><p class="lede">Los exámenes de secuencias de diciembre de 2023 y 2022 (dos versiones de cada uno), resueltos con el método de clase.</p></header><section class="topic" id="e2-1"><h3><span class="tnum">2.1</span><span>Diciembre de 2023</span></h3><div class="prose"><article class="card ex" data-tema="e2" id="e-x1"><div class="card-head"><span class="card-num">Diciembre 2023 · 1.A <span class="card-title">· Múltiplos, divisibles y la sucesión creativa</span></span><span class="card-tools"><label class="done" for="d-x1"><input data-key="x1" id="d-x1" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p><b>Ej. 1</b> (20 min, 4 p): S, secuencia de enteros positivos del primer modelo; calcular cuántos son múltiplos de 5. <b>Ej. 2</b> (20 min, 3 p): indicar si existe algún entero divisible por 3 y por 7. <b>Ej. 3</b> (30 min, 3 p): la «sucesión creativa» a<sub>1</sub> = 3, a<sub>2</sub> = 5, a<sub>n</sub> = 2·a<sub>n−1</sub> − a<sub>n−2</sub>: calcular el término M-ésimo (por ejemplo a<sub>20</sub>). En SP o en C++ con la entrada estándar y marca −1.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Ejercicio 1: recorrido</h4><p>Hasta el último no se sabe cuántos hay: <b>recorrido</b>. Post: { cont = nº de múltiplos de 5 de S }. Inv: { cont = nº de múltiplos de 5 de Piz (S) }. Base: cont ← 0 (la vacía no tiene ninguno: H1). Tratamiento: si EA MOD 5 = 0, cont ← cont + 1 (H2). <b>Esquema 1</b>.</p><h4>Ejercicio 2: búsqueda</h4><p>En cuanto aparece uno la respuesta es «sí»: <b>búsqueda</b> con Pro (EA) ≡ (EA MOD 3 = 0) Y (EA MOD 7 = 0), que es lo mismo que EA MOD 21 = 0. Tras el bucle se mira si EA es la marca.</p><h4>Ejercicio 3: sucesión</h4><p>Cada término depende de los <b>dos</b> anteriores: hacen falta dos variables (ant y act) que se desplazan en cada vuelta. Se conoce el número de vueltas (de 3 a M): <b>RECORRIENDO</b>. Los primeros: 3, 5, 7, 9, 11… (es a<sub>n</sub> = 2n + 1), así que a<sub>20</sub> = 41.</p></div><div class="codeblk sp"><p class="code-t">Notación algorítmica</p><pre><code class="lang-sp">// Ejercicio 1                         // Ejercicio 2
+Comenzar (S); cont ← 0;                Comenzar (S);
+MIENTRAS EA (S) ≠ MarcaFin HACER       MIENTRAS (EA (S) ≠ MarcaFin) Y
+  SI EA (S) MOD 5 = 0 ENTONCES             NO (EA (S) MOD 21 = 0) HACER
+    cont ← cont + 1                      Avanzar (S)
+  FIN_SI;                              FIN_MIENTRAS;
+  Avanzar (S)                          SI EA (S) ≠ MarcaFin ENTONCES Escribir (&quot;Sí&quot;)
+FIN_MIENTRAS;                          SI_NO Escribir (&quot;No&quot;) FIN_SI
+Escribir (cont)
+
+// Ejercicio 3 (M ≥ 2)
+ant ← 3; act ← 5;
+i RECORRIENDO [3, M] HACER
+  sig ← 2 * act − ant; ant ← act; act ← sig      // INV: act = a(i), ant = a(i−1)
+FIN_RECORRIENDO;
+Escribir (act)</code></pre></div><div class="codeblk"><p class="code-t">C++ · los tres ejercicios</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+
+// Ejercicio 1 · recorrido: cuántos son múltiplos de 5
+void Ejercicio1 ( ) {
+    int EA, cont;
+    cont = 0;                          // solución para la secuencia vacía
+    cin &gt;&gt; EA;                         // Comenzar
+    while (EA != MF) {
+        if (EA % 5 == 0) { cont = cont + 1; }
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    cout &lt;&lt; &quot;Multiplos de 5: &quot; &lt;&lt; cont &lt;&lt; endl;
+}
+
+// Ejercicio 2 · búsqueda: ¿hay alguno divisible por 3 y por 7?
+void Ejercicio2 ( ) {
+    int EA;
+    cin &gt;&gt; EA;                         // Comenzar
+    while ((EA != MF) &amp;&amp; !((EA % 3 == 0) &amp;&amp; (EA % 7 == 0))) {
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    if (EA != MF) { cout &lt;&lt; &quot;Si: &quot; &lt;&lt; EA &lt;&lt; &quot; es divisible por 3 y por 7&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;No hay ninguno divisible por 3 y por 7&quot; &lt;&lt; endl; }
+}
+
+// Ejercicio 3 · sucesión: a1 = 3, a2 = 5, an = 2·an-1 − an-2; término M-ésimo (M ≥ 1)
+int Termino (int M) {
+    int ant, act, sig, i;
+    if (M == 1) { return 3; }
+    ant = 3; act = 5;                  // a1 y a2
+    for (i = 3; i &lt;= M; i = i + 1) {   // INV: act = a(i-1), ant = a(i-2)
+        sig = 2 * act - ant;
+        ant = act;
+        act = sig;
+    }
+    return act;
+}
+
+int main ( ) {
+    int M;
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    Ejercicio1 ( );
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    Ejercicio2 ( );
+    cout &lt;&lt; &quot;M: &quot;;
+    cin &gt;&gt; M;
+    cout &lt;&lt; &quot;a&quot; &lt;&lt; M &lt;&lt; &quot; = &quot; &lt;&lt; Termino (M) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
+10 7 25 33 40 -1
+Multiplos de 5: 3
+Enteros positivos, para terminar -1
+4 9 42 5 -1
+Si: 42 es divisible por 3 y por 7
+M: 20
+a20 = 41</code></pre></div></div></details></div></article><article class="card ex" data-tema="e2" id="e-x2"><div class="card-head"><span class="card-num">Diciembre 2023 · 1.B <span class="card-title">· La otra versión del examen</span></span><span class="card-tools"><label class="done" for="d-x2"><input data-key="x2" id="d-x2" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Igual que el 1.A cambiando: <b>Ej. 1</b>, contar los divisibles por 7; <b>Ej. 2</b>, ¿existe alguno múltiplo de 2 y de 3?; <b>Ej. 3</b>, el <b>primer término</b> de la sucesión creativa que <b>supera</b> un valor M dado (para M = 100 es a<sub>50</sub> = 101).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Los ejercicios 1 y 2 son los del 1.A cambiando la propiedad: <code>EA MOD 7 = 0</code> y <code>EA MOD 6 = 0</code>. El 3 cambia de tipo: ya no se sabe cuántos términos hay que generar, así que es una <b>búsqueda</b> en la sucesión: se generan términos <b>mientras</b> no superen M, llevando la cuenta del índice n.</p></div><div class="codeblk sp"><p class="code-t">Ejercicio 3 en notación algorítmica</p><pre><code class="lang-sp">ant ← 3; act ← 5; n ← 2;
+SI ant &gt; M ENTONCES act ← ant; n ← 1          // a1 ya supera M
+SI_NO
+  MIENTRAS act ≤ M HACER                      // INV: act = a(n), ant = a(n−1), a(1..n−1) ≤ M
+    sig ← 2 * act − ant; ant ← act; act ← sig; n ← n + 1
+  FIN_MIENTRAS
+FIN_SI;
+Escribir (&quot;a&quot;, n, &quot; = &quot;, act)</code></pre></div><div class="codeblk"><p class="code-t">C++ · ejercicio 3</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// Examen 1.B · ejercicio 3: primer término de la sucesión creativa que supera M
+int main ( ) {
+    int M, ant, act, sig, n;
+    cout &lt;&lt; &quot;M: &quot;;
+    cin &gt;&gt; M;
+    ant = 3; act = 5; n = 2;           // a1 y a2
+    if (ant &gt; M) {
+        act = ant; n = 1;              // ya lo supera a1
+    } else {
+        while (act &lt;= M) {             // búsqueda: se para en el primero que supera M
+            sig = 2 * act - ant;
+            ant = act;
+            act = sig;
+            n = n + 1;
+        }
+    }
+    cout &lt;&lt; &quot;El primero que supera &quot; &lt;&lt; M &lt;&lt; &quot; es a&quot; &lt;&lt; n &lt;&lt; &quot; = &quot; &lt;&lt; act &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>M: 100
+El primero que supera 100 es a50 = 101</code></pre></div></div></details></div></article></div></section><section class="topic" id="e2-2"><h3><span class="tnum">2.2</span><span>Diciembre de 2022</span></h3><div class="prose"><article class="card ex" data-tema="e2" id="e-x3"><div class="card-head"><span class="card-num">Diciembre 2022 · A <span class="card-title">· Saldo de una cuenta y un producto financiero</span></span><span class="card-tools"><label class="done" for="d-x3"><input data-key="x3" id="d-x3" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>S es una secuencia (primer modelo) con los ingresos y reintegros de una cuenta. <b>1a</b> (4 p): calcular el saldo disponible (1100, 3300, −300, 400 → 4500 €). <b>1b</b> (3 p): indicar si la cuenta ha estado en números rojos en algún momento (1100, 3300, −5000, 4000 → saldo de −600 € tras la tercera operación). <b>2</b> (3 p): un producto dobla cada 1 de enero el capital y cobra 200 € de comisión: a<sub>0</sub> = M (1-1-2022), a<sub>n</sub> = 2·a<sub>n−1</sub> − 200. ¿Cuánto habrá el 1 de enero del año A?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>1a: recorrido</h4><p>El saldo es la <b>suma</b> de todas las operaciones: Inv { saldo = Σ Piz (S) }, saldo ← 0, saldo ← saldo + EA (S). Esquema 1.</p><h4>1b: búsqueda</h4><p>«Si en algún momento» → en cuanto el saldo sea negativo ya se sabe: <b>búsqueda</b>. Pero la propiedad no es del elemento solo, sino del <b>saldo acumulado</b>: se mantiene saldo = Σ Piz (S) y Pro ≡ saldo + EA (S) &lt; 0. Al salir, si EA no es la marca, el saldo negativo es saldo + EA.</p><h4>2: recorrido de la sucesión</h4><p>Del 2022 al año A hay A − 2022 pasos, un número conocido: <b>RECORRIENDO</b> con una sola variable, porque cada término sólo depende del anterior. Con M = 1000: 1800, 3400, 6600 y 13000 € en 2026.</p></div><div class="codeblk sp"><p class="code-t">Notación algorítmica</p><pre><code class="lang-sp">// 1b
+Comenzar (S); saldo ← 0;
+MIENTRAS (EA (S) ≠ MarcaFin) Y (saldo + EA (S) ≥ 0) HACER
+  saldo ← saldo + EA (S);                 // INV: saldo = Σ Piz (S) ≥ 0 en todo momento
+  Avanzar (S)
+FIN_MIENTRAS;
+SI EA (S) ≠ MarcaFin ENTONCES Escribir (&quot;Números rojos: &quot;, saldo + EA (S))
+SI_NO Escribir (&quot;Nunca ha estado en números rojos&quot;)
+FIN_SI
+
+// 2
+a ← M;
+año RECORRIENDO [2023, A] HACER a ← 2 * a − 200 FIN_RECORRIENDO;
+Escribir (a)</code></pre></div><p class="note">En C++ hace falta una marca que no pueda ser una operación: aquí 0 (nadie ingresa 0 €).</p><div class="codeblk"><p class="code-t">C++ · 1a, 1b y 2</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = 0;                      // marca: una operación de 0 euros no existe
+
+// 1a · recorrido: saldo final = suma de todas las operaciones
+void Saldo ( ) {
+    int EA, saldo;
+    saldo = 0;
+    cin &gt;&gt; EA;                         // Comenzar
+    while (EA != MF) {
+        saldo = saldo + EA;            // INV: saldo = suma de Piz
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    cout &lt;&lt; &quot;Saldo disponible: &quot; &lt;&lt; saldo &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+}
+
+// 1b · búsqueda: ¿algún saldo parcial negativo?
+void NumerosRojos ( ) {
+    int EA, saldo, n;
+    saldo = 0; n = 0;
+    cin &gt;&gt; EA;                         // Comenzar
+    while ((EA != MF) &amp;&amp; (saldo + EA &gt;= 0)) {
+        saldo = saldo + EA;
+        n = n + 1;
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    if (EA != MF) {
+        cout &lt;&lt; &quot;Numeros rojos: saldo de &quot; &lt;&lt; saldo + EA &lt;&lt; &quot; euros tras la operacion &quot; &lt;&lt; n + 1 &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;La cuenta nunca ha estado en numeros rojos&quot; &lt;&lt; endl;
+    }
+}
+
+// 2 · sucesión: a0 = M (1 de enero de 2022), an = 2·an-1 − 200; saldo el 1 de enero del año A
+int SaldoEnAnyo (int M, int A) {
+    int a, anyo;
+    a = M;
+    for (anyo = 2023; anyo &lt;= A; anyo = anyo + 1) {
+        a = 2 * a - 200;
+    }
+    return a;
+}
+
+int main ( ) {
+    cout &lt;&lt; &quot;Operaciones (0 para terminar):&quot; &lt;&lt; endl;
+    Saldo ( );
+    cout &lt;&lt; &quot;Operaciones (0 para terminar):&quot; &lt;&lt; endl;
+    NumerosRojos ( );
+    cout &lt;&lt; &quot;M = 1000, A = 2026: &quot; &lt;&lt; SaldoEnAnyo (1000, 2026) &lt;&lt; &quot; euros&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Operaciones (0 para terminar):
+1100 3300 -300 400 0
+Saldo disponible: 4500 euros
+Operaciones (0 para terminar):
+1100 3300 -5000 4000 0
+Numeros rojos: saldo de -600 euros tras la operacion 3
+M = 1000, A = 2026: 13000 euros</code></pre></div></div></details></div></article><article class="card ex" data-tema="e2" id="e-x4"><div class="card-head"><span class="card-num">Diciembre 2022 · B <span class="card-title">· Divisibilidad por 3 y el año del coche</span></span><span class="card-tools"><label class="done" for="d-x4"><input data-key="x4" id="d-x4" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>S es una secuencia con las cifras de un número (1, 2, 4, 5 → 1245). <b>1a</b> (4 p): indicar si el número es divisible por 3 usando que lo es si la suma de sus cifras lo es. <b>1b</b> (3 p): indicar si contiene alguna cifra par. <b>2</b> (3 p): con el producto del examen A (a<sub>0</sub> = M, a<sub>n</sub> = 2·a<sub>n−1</sub> − 200), ¿en qué año habrá suficiente para un coche de 30000 €?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>1a: recorrido</h4><p>Hay que sumar <b>todas</b> las cifras: recorrido con suma ← 0 y suma ← suma + EA (S). La pregunta (suma MOD 3 = 0) se hace en el <b>tratamiento final</b>. 1 + 2 + 4 + 5 = 12 → sí.</p><h4>1b: búsqueda</h4><p>Pro (EA) ≡ EA MOD 2 = 0. En 1245 se para en el 2.</p><h4>2: búsqueda en la sucesión</h4><p>Ahora no se sabe cuántos años: se busca el primero con a ≥ 30000. <b>Ojo</b>: si M ≤ 200 el saldo nunca crece (con 200 se queda igual y con menos baja) y el bucle no terminaría: hay que suponer M &gt; 200 o comprobarlo antes. Con M = 1000: 1800, 3400, 6600, 13000, 25800, 51400 → <b>2028</b>.</p></div><div class="codeblk sp"><p class="code-t">Ejercicio 2 en notación algorítmica</p><pre><code class="lang-sp">// PRE: M &gt; 200
+a ← M; año ← 2022;
+MIENTRAS a &lt; 30000 HACER        // INV: a = saldo el 1 de enero de año
+  a ← 2 * a − 200;
+  año ← año + 1
+FIN_MIENTRAS;
+Escribir (año)</code></pre></div><div class="codeblk"><p class="code-t">C++ · 1a, 1b y 2</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+
+// 1a · recorrido: suma de las cifras y, al final, ¿es divisible por 3?
+void DivisiblePor3 ( ) {
+    int EA, suma;
+    suma = 0;
+    cin &gt;&gt; EA;                         // Comenzar
+    while (EA != MF) {
+        suma = suma + EA;
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    if (suma % 3 == 0) { cout &lt;&lt; &quot;Divisible por 3 (suma de cifras &quot; &lt;&lt; suma &lt;&lt; &quot;)&quot; &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;No es divisible por 3 (suma de cifras &quot; &lt;&lt; suma &lt;&lt; &quot;)&quot; &lt;&lt; endl; }
+}
+
+// 1b · búsqueda: ¿alguna cifra par?
+void CifraPar ( ) {
+    int EA;
+    cin &gt;&gt; EA;                         // Comenzar
+    while ((EA != MF) &amp;&amp; (EA % 2 != 0)) {
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    if (EA != MF) { cout &lt;&lt; &quot;Contiene la cifra par &quot; &lt;&lt; EA &lt;&lt; endl; }
+    else { cout &lt;&lt; &quot;No contiene ninguna cifra par&quot; &lt;&lt; endl; }
+}
+
+// 2 · búsqueda en una sucesión: año en que el saldo llega a 30000 (necesita M &gt; 200)
+int AnyoCoche (int M) {
+    int a, anyo;
+    a = M; anyo = 2022;
+    while (a &lt; 30000) {
+        a = 2 * a - 200;
+        anyo = anyo + 1;
+    }
+    return anyo;
+}
+
+int main ( ) {
+    cout &lt;&lt; &quot;Cifras del numero, para terminar -1&quot; &lt;&lt; endl;
+    DivisiblePor3 ( );
+    cout &lt;&lt; &quot;Cifras del numero, para terminar -1&quot; &lt;&lt; endl;
+    CifraPar ( );
+    cout &lt;&lt; &quot;Con M = 1000 euros el coche se compra en &quot; &lt;&lt; AnyoCoche (1000) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Cifras del numero, para terminar -1
+1 2 4 5 -1
+Divisible por 3 (suma de cifras 12)
+Cifras del numero, para terminar -1
+1 7 3 5 -1
+No contiene ninguna cifra par
+Con M = 1000 euros el coche se compra en 2028</code></pre></div></div></details></div></article></div></section></section><section class="tema guide" id="e3"><header class="tema-head"><p class="eyebrow">Parte 3</p><h2>Noviembre de 2019 y junio</h2><p class="lede">El parcial de noviembre de 2019 con la solución oficial y los ejercicios de secuencias de junio de 2017 y 2025.</p></header><section class="topic" id="e3-1"><h3><span class="tnum">3.1</span><span>Parcial de noviembre de 2019</span></h3><div class="prose"><article class="card ex" data-tema="e3" id="e-x5"><div class="card-head"><span class="card-num">Noviembre 2019 <span class="card-title">· Número decimal, dobles del anterior y vocal débil</span></span><span class="card-tools"><label class="done" for="d-x5"><input data-key="x5" id="d-x5" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p><b>1</b> (4 p): S (primer modelo) contiene las cifras de un número; obtener el número accediendo una vez a cada elemento ([4, 5, 6, 4, 5] → 45645; vacía → 0). <b>2</b> (2,5 p): S del <b>segundo</b> modelo; contar los elementos que son el doble del anterior ([1, 2, 4, 5, 5, 7, 44, 22, 3, 6] → 3). <b>3</b> (3,5 p): función VocalDébil (S) que diga si un texto del primer modelo contiene alguna i o u.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>1: recorrido (solución oficial)</h4><p>Añadir una cifra por la derecha es multiplicar por 10 y sumarla: <code>valorDecimal ([]) = 0</code>, <code>valorDecimal (T·e) = 10·valorDecimal (T) + e</code>. La vacía vale 0 y el primero se trata igual (10·0 + e = e): <b>esquema 1</b>.</p><h4>2: recorrido con el anterior</h4><p>Cada elemento se compara con el anterior: el invariante lleva <code>u = último (Piz (S))</code> y el primero no tiene anterior: <b>tercer esquema</b>. Con el segundo modelo: Iniciar, y si no es vacía, Avanzar para tener el primero, u ← EA; luego MIENTRAS NO EsÚltimo, Avanzar y comparar.</p><h4>3: búsqueda</h4><p>En cuanto aparece una i o una u la respuesta es sí. Pro (EA) ≡ EA = 'u' O EA = 'i'; por De Morgan, NO Pro ≡ EA ≠ 'u' Y EA ≠ 'i'. Se usa <b>YDESPUÉS</b> para no mirar la marca.</p></div><div class="pair"><div class="codeblk sp"><p class="code-t">2 · segundo modelo (oficial)</p><pre><code class="lang-sp">Iniciar (S);
+SEGÚN EsVacía (S)
+  EsVacía (S) : Escribir (0);
+  NO EsVacía (S) :
+    Avanzar (S);
+    r ← 0; u ← EA (S);
+    MIENTRAS NO EsÚltimo (S) HACER
+      Avanzar (S);
+      SI EA (S) = 2 * u ENTONCES r ← r + 1 FIN_SI;
+      u ← EA (S)
+    FIN_MIENTRAS;
+    Escribir (r)
+FIN_SEGÚN</code></pre></div><div class="codeblk sp"><p class="code-t">3 · función de búsqueda (oficial)</p><pre><code class="lang-sp">VocalDébil : función (S : Secuencia de Carácter)
+             → Booleano;
+ALGORITMO
+  Comenzar (S);
+  MIENTRAS EA (S) ≠ MarcaFin YDESPUÉS
+           (EA (S) ≠ &#x27;u&#x27; Y EA (S) ≠ &#x27;i&#x27;) HACER
+    Avanzar (S)
+  FIN_MIENTRAS;
+  VocalDébil ← EA (S) ≠ MarcaFin
+FIN;</code></pre></div></div><p class="note">Con «No sé cómo resolverlo», «» o «   » devuelve falso; con «El problema es sencillo», verdadero (la i de sencillo). En C++ la secuencia del 2 se lee con marca, que es el primer modelo.</p><div class="codeblk"><p class="code-t">C++ · los tres ejercicios</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+const char MFC = &#x27;#&#x27;;
+
+// 1 · recorrido: el número formado por las cifras (valorDecimal (T·e) = 10·valorDecimal (T) + e)
+void Numero ( ) {
+    int EA, v;
+    v = 0;                             // valorDecimal ([]) = 0
+    cin &gt;&gt; EA;                         // Comenzar
+    while (EA != MF) {
+        v = 10 * v + EA;
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+    cout &lt;&lt; &quot;Numero: &quot; &lt;&lt; v &lt;&lt; endl;
+}
+
+// 2 · recorrido con el anterior (¬H1, ¬H2): parejas en las que el segundo es el doble del primero
+void Dobles ( ) {
+    int EA, u, r;
+    cin &gt;&gt; EA;                         // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;Parejas: 0&quot; &lt;&lt; endl;
+    } else {
+        r = 0;
+        u = EA;                        // u = último de Piz
+        cin &gt;&gt; EA;                     // Avanzar
+        while (EA != MF) {
+            if (EA == 2 * u) { r = r + 1; }
+            u = EA;
+            cin &gt;&gt; EA;                 // Avanzar
+        }
+        cout &lt;&lt; &quot;Parejas: &quot; &lt;&lt; r &lt;&lt; endl;
+    }
+}
+
+// 3 · búsqueda: ¿hay alguna vocal débil (i, u)? La secuencia es el texto hasta &#x27;#&#x27;
+bool VocalDebil ( ) {
+    char EA;
+    cin.get (EA);                      // Comenzar
+    while ((EA != MFC) &amp;&amp; (EA != &#x27;i&#x27;) &amp;&amp; (EA != &#x27;u&#x27;)) {
+        cin.get (EA);                  // Avanzar
+    }
+    return EA != MFC;
+}
+
+int main ( ) {
+    char c;
+    cout &lt;&lt; &quot;Cifras, para terminar -1&quot; &lt;&lt; endl;
+    Numero ( );
+    cout &lt;&lt; &quot;Enteros, para terminar -1&quot; &lt;&lt; endl;
+    Dobles ( );
+    cin.get (c);                       // se salta el fin de línea pendiente
+    cout &lt;&lt; &quot;Texto terminado en #&quot; &lt;&lt; endl;
+    if (VocalDebil ( )) { cout &lt;&lt; &quot;SI&quot; &lt;&lt; endl; } else { cout &lt;&lt; &quot;NO&quot; &lt;&lt; endl; }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Cifras, para terminar -1
+4 5 6 4 5 -1
+Numero: 45645
+Enteros, para terminar -1
+1 2 4 5 5 7 44 22 3 6 -1
+Parejas: 3
+Texto terminado en #
+El problema es sencillo#
+SI</code></pre></div></div></details></div></article></div></section><section class="topic" id="e3-2"><h3><span class="tnum">3.2</span><span>Junio de 2017 y de 2025</span></h3><div class="prose"><article class="card ex" data-tema="e3" id="e-x6"><div class="card-head"><span class="card-num">Junio 2017 <span class="card-title">· Mesetas y una sucesión con tres términos</span></span><span class="card-tools"><label class="done" for="d-x6"><input data-key="x6" id="d-x6" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p><b>1</b>: S (primer modelo) de enteros; obtener una secuencia T con un único elemento de cada meseta (31 31 31 45 22 22 33 15 15 15 15 → 31 45 22 33 15). <b>2</b>: a<sub>0</sub> = a<sub>1</sub> = 1, a<sub>i</sub> = 7·a<sub>i−1</sub> − a<sub>i−2</sub> − 2; calcular el menor i &gt; 1 tal que a<sub>i</sub> &gt; N (N &gt; 0).</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>1: recorrido con el anterior</h4><p>Un elemento empieza meseta si es <b>distinto del anterior</b>: tercer esquema. El primero siempre se registra. Inv { T = EliminarRepetidos (Piz (S)) Y anterior = último (Piz (S)) }.</p><h4>2: búsqueda en la sucesión</h4><p>Cada término depende de dos anteriores: tres variables (aant, anterior, actual). a<sub>2</sub> = 4, a<sub>3</sub> = 25, a<sub>4</sub> = 169… Se generan mientras actual ≤ N. Para N = 100: i = 4.</p></div><div class="pair"><div class="codeblk sp"><p class="code-t">1 · solución oficial (con ITERAR)</p><pre><code class="lang-sp">Comenzar (S); Crear (T);
+SEGÚN EA (S)
+  EA (S) = MarcaFin : Marcar (T);
+  EA (S) ≠ MarcaFin :
+    anterior ← EA (S);
+    Registrar (T, EA (S));
+    ITERAR
+      Avanzar (S);
+      DETENER EA (S) = MarcaFin;
+      SI EA (S) ≠ anterior ENTONCES
+        Registrar (T, EA (S))
+      FIN_SI;
+      anterior ← EA (S)
+    FIN_ITERAR;
+    Marcar (T)
+FIN_SEGÚN</code></pre></div><div class="codeblk sp"><p class="code-t">2 · solución oficial</p><pre><code class="lang-sp">Leer (N);
+aant ← 1; anterior ← 1;
+actual ← 4;            // 7 * 1 − 1 − 2
+i ← 2;
+MIENTRAS actual ≤ N HACER
+  aant ← anterior;
+  anterior ← actual;
+  actual ← 7 * anterior − aant − 2;
+  i ← i + 1
+FIN_MIENTRAS;
+Escribir (i)</code></pre></div></div><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+
+// 1 · recorrido con el anterior: un elemento de cada meseta (la salida es la secuencia T)
+void Mesetas ( ) {
+    int EA, anterior;
+    cin &gt;&gt; EA;                         // Comenzar
+    if (EA != MF) {
+        cout &lt;&lt; EA;                    // Registrar (T, primero)
+        anterior = EA;
+        cin &gt;&gt; EA;                     // Avanzar
+        while (EA != MF) {
+            if (EA != anterior) { cout &lt;&lt; &quot; &quot; &lt;&lt; EA; }   // empieza una meseta nueva
+            anterior = EA;
+            cin &gt;&gt; EA;                 // Avanzar
+        }
+    }
+    cout &lt;&lt; endl;                      // Marcar (T)
+}
+
+// 2 · búsqueda en una sucesión: menor i &gt; 1 con a(i) &gt; N (a0 = a1 = 1, ai = 7·ai-1 − ai-2 − 2)
+int MenorI (int N) {
+    int aant, anterior, actual, i;
+    aant = 1; anterior = 1;
+    actual = 4;                        // a2 = 7·1 − 1 − 2
+    i = 2;
+    while (actual &lt;= N) {              // INV: actual = a(i), anterior = a(i-1), aant = a(i-2)
+        aant = anterior;
+        anterior = actual;
+        actual = 7 * anterior - aant - 2;
+        i = i + 1;
+    }
+    return i;
+}
+
+int main ( ) {
+    int N;
+    cout &lt;&lt; &quot;Enteros, para terminar -1&quot; &lt;&lt; endl;
+    Mesetas ( );
+    cout &lt;&lt; &quot;N: &quot;;
+    cin &gt;&gt; N;
+    cout &lt;&lt; &quot;Menor i: &quot; &lt;&lt; MenorI (N) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros, para terminar -1
+31 31 31 45 22 22 33 15 15 15 15 -1
+31 45 22 33 15
+N: 100
+Menor i: 4</code></pre></div></div></details></div></article><article class="card ex" data-tema="e3" id="e-x7"><div class="card-head"><span class="card-num">Junio 2025 <span class="card-title">· La ocupación de un hotel</span></span><span class="card-tools"><label class="done" for="d-x7"><input data-key="x7" id="d-x7" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Un hotel de M habitaciones. Una secuencia marcada con −1 (de la entrada estándar) da cuántas hay ocupadas cada día, empezando en lunes. <b>3a</b>: escribir el promedio de ocupación (%) de cada semana completa. <b>3b</b>: acción LlenoVacio que devuelva en Existe 0 (ni día lleno ni vacío), 1 (algún día lleno), 2 (algún día vacío) o 3 (las dos cosas), con el menor número de accesos a la secuencia.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>3a: recorrido por bloques</h4><p>Se recorren los días contando <code>dia</code> de 1 a 7 y sumando; al llegar a 7 se escribe la semana y se reinicia. Lo que quede al final (semana incompleta) no se escribe. Promedio = 100 · suma / (7 · M), con la división <b>real</b>.</p><h4>3b: búsqueda</h4><p>«El menor número de accesos» es la pista: en cuanto se han visto un día lleno <b>y</b> uno vacío ya no hace falta leer más. Es una búsqueda cuya propiedad es Existe = 3. Usar 1 y 2 como «banderas» y sumarlas es un truco elegante: la suma da directamente el código pedido.</p></div><ul><li>La solución oficial usa un <code>switch</code> para distinguir M y 0; con <code>if … else if</code> queda igual.</li></ul><div class="codeblk"><p class="code-t">C++ · solución oficial (ordenada)</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int M = 30;                      // habitaciones del hotel (por ejemplo)
+const int DIAS_SEMANA = 7;
+const int MARCA_FIN = -1;
+const int HAY_DIA_LLENO = 1;
+const int HAY_DIA_VACIO = 2;
+const int HAY_DIAS_DE_TODO = HAY_DIA_LLENO + HAY_DIA_VACIO;
+
+// 3a · recorrido: promedio de ocupación de cada semana completa
+void Ocupacion ( ) {
+    int semana, dia, suma, EA;
+    float promedio;
+    semana = 0; dia = 0; suma = 0;
+    cin &gt;&gt; EA;                         // Comenzar
+    while (EA != MARCA_FIN) {
+        dia = dia + 1;
+        suma = suma + EA;
+        if (dia == DIAS_SEMANA) {      // se cierra una semana
+            promedio = 100.0 * suma / (DIAS_SEMANA * M);
+            semana = semana + 1;
+            cout &lt;&lt; &quot;Semana &quot; &lt;&lt; semana &lt;&lt; &quot;: &quot; &lt;&lt; promedio &lt;&lt; &quot;%&quot; &lt;&lt; endl;
+            dia = 0;
+            suma = 0;
+        }
+        cin &gt;&gt; EA;                     // Avanzar
+    }                                  // una semana incompleta no se escribe
+}
+
+// 3b · búsqueda: se para en cuanto se han visto un día lleno y uno vacío
+void LlenoVacio (int &amp;Existe) {
+    int EA, diaLleno, diaVacio;
+    diaLleno = 0; diaVacio = 0;
+    Existe = 0;
+    cin &gt;&gt; EA;                         // Comenzar
+    while ((EA != MARCA_FIN) &amp;&amp; (Existe != HAY_DIAS_DE_TODO)) {
+        if (EA == M) { diaLleno = HAY_DIA_LLENO; }
+        else if (EA == 0) { diaVacio = HAY_DIA_VACIO; }
+        Existe = diaLleno + diaVacio;
+        cin &gt;&gt; EA;                     // Avanzar
+    }
+}
+
+int main ( ) {
+    int existe;
+    cout &lt;&lt; &quot;Ocupacion diaria (M = 30), para terminar -1&quot; &lt;&lt; endl;
+    Ocupacion ( );
+    cout &lt;&lt; &quot;Ocupacion diaria (M = 30), para terminar -1&quot; &lt;&lt; endl;
+    LlenoVacio (existe);
+    cout &lt;&lt; &quot;Existe = &quot; &lt;&lt; existe &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Ocupacion diaria (M = 30), para terminar -1
+9 12 15 6 3 18 21 30 24 27 15 12 9 3 5 -1
+Semana 1: 40%
+Semana 2: 57.1429%
+Ocupacion diaria (M = 30), para terminar -1
+10 30 12 0 7 -1
+Existe = 3</code></pre></div></div></details></div></article></div></section></section><section class="tema guide" id="e4"><header class="tema-head"><p class="eyebrow">Parte 4</p><h2>Problemas de secuencias</h2><p class="lede">La hoja de problemas de secuencias de clase: diptongos, búsquedas con tratamiento, parejas adyacentes y el descenso más largo.</p></header><section class="topic" id="e4-1"><h3><span class="tnum">4.1</span><span>Los cinco problemas</span></h3><div class="prose"><article class="card ex" data-tema="e4" id="e-x8"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Diptongos crecientes y decrecientes</span></span><span class="card-tools"><label class="done" for="d-x8"><input data-key="x8" id="d-x8" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Contar los diptongos crecientes (i/u seguida de a/e/o) y decrecientes (a/e/o seguida de i/u) de un texto. «El restaurante La aceituna pasó la prueba del aislante de sonido» → 3 decrecientes y 1 creciente.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Un diptongo es una pareja <b>actual–anterior</b>: recorrido con el tercer esquema (el primero no tiene anterior). En cada paso se mira si (anterior, EA) es creciente o decreciente. Decrecientes: <b>au</b> (restaurante), <b>ei</b> (aceituna), <b>ai</b> (aislante); creciente: <b>ue</b> (prueba). Las vocales con tilde no cuentan (ó ≠ o).</p></div><ul><li>Siempre se compara el actual con el <b>anterior</b>, nunca con el siguiente.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const char MF = &#x27;#&#x27;;
+
+bool Abierta (char c) { return (c == &#x27;a&#x27;) || (c == &#x27;e&#x27;) || (c == &#x27;o&#x27;); }
+bool Cerrada (char c) { return (c == &#x27;i&#x27;) || (c == &#x27;u&#x27;); }
+
+// Problema 1 · recorrido con el anterior (tercer esquema): diptongos crecientes y decrecientes
+int main ( ) {
+    char EA, anterior;
+    int crecientes, decrecientes;
+    cout &lt;&lt; &quot;Frase terminada en #:&quot; &lt;&lt; endl;
+    cin.get (EA);                      // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;La secuencia esta vacia&quot; &lt;&lt; endl;
+    } else {
+        crecientes = 0; decrecientes = 0;
+        anterior = EA;                 // el primero no forma pareja con nadie
+        cin.get (EA);                  // Avanzar
+        while (EA != MF) {
+            if (Cerrada (anterior) &amp;&amp; Abierta (EA)) { crecientes = crecientes + 1; }
+            else if (Abierta (anterior) &amp;&amp; Cerrada (EA)) { decrecientes = decrecientes + 1; }
+            anterior = EA;
+            cin.get (EA);              // Avanzar
+        }
+        cout &lt;&lt; &quot;Decrecientes: &quot; &lt;&lt; decrecientes &lt;&lt; &quot;  Crecientes: &quot; &lt;&lt; crecientes &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Frase terminada en #:
+El restaurante La aceituna paso la prueba del aislante de sonido#
+Decrecientes: 3  Crecientes: 1</code></pre></div></div></details></div></article><article class="card ex" data-tema="e4" id="e-x9"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· El primer diptongo creciente y su posición</span></span><span class="card-tools"><label class="done" for="d-x9"><input data-key="x9" id="d-x9" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Indicar si hay algún diptongo creciente y, si lo hay, la posición de su primera letra. «La prueba del polígrafo» → posición 6; «Esto no es una pipa» → no contiene ninguno.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Ahora basta con el primero: <b>búsqueda</b> con el anterior. Pro ≡ DiptongoCreciente (anterior, EA). Se lleva la posición del elemento actual; la primera letra del diptongo es la <b>anterior</b>, así que se escribe pos − 1. En «La prueba»: L1 a2 ␣3 p4 r5 <b>u6</b> e7.</p></div><ul><li>Escribir la condición con una función booleana la hace más legible (y no cuesta nada).</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const char MF = &#x27;#&#x27;;
+
+bool DiptongoCreciente (char primero, char segundo) {
+    return ((primero == &#x27;i&#x27;) || (primero == &#x27;u&#x27;)) &amp;&amp;
+           ((segundo == &#x27;a&#x27;) || (segundo == &#x27;e&#x27;) || (segundo == &#x27;o&#x27;));
+}
+
+// Problema 2 · búsqueda con el anterior: posición del primer diptongo creciente
+int main ( ) {
+    char EA, anterior;
+    int pos;                           // posición de EA en la secuencia
+    cout &lt;&lt; &quot;Frase terminada en #:&quot; &lt;&lt; endl;
+    cin.get (EA);                      // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;No contiene ningun diptongo&quot; &lt;&lt; endl;
+    } else {
+        anterior = EA; pos = 1;
+        cin.get (EA); pos = pos + 1;   // Avanzar
+        while ((EA != MF) &amp;&amp; !DiptongoCreciente (anterior, EA)) {
+            anterior = EA;
+            cin.get (EA); pos = pos + 1;
+        }
+        if (EA != MF) { cout &lt;&lt; &quot;Contiene un diptongo en la posicion &quot; &lt;&lt; pos - 1 &lt;&lt; endl; }
+        else { cout &lt;&lt; &quot;No contiene ningun diptongo&quot; &lt;&lt; endl; }
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Frase terminada en #:
+La prueba del poligrafo#
+Contiene un diptongo en la posicion 6</code></pre></div></div></details></div></article><article class="card ex" data-tema="e4" id="e-x10"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Divisibles por 3 antes del primer impar</span></span><span class="card-tools"><label class="done" for="d-x10"><input data-key="x10" id="d-x10" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>En una secuencia de enteros positivos, contar los divisibles por 3 que hay antes del primer impar. Si hay impar, escribir el impar, su posición y la cuenta; si no, que no existe y la cuenta. 2 3 2 5 → valor 3, posición 2, divisibles 0; 6 12 4 → no existe impar, divisibles 2.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Es una <b>búsqueda</b> (del primer impar) que además <b>trata los elementos que no cumplen</b> (los pares de delante): dentro del bucle se cuentan los divisibles por 3. Tras el bucle, si EA no es la marca, EA es el impar. El impar no se cuenta aunque sea divisible por 3 (el 3 del primer ejemplo).</p></div><ul><li>Es el patrón «búsqueda + recorrido de la parte izquierda»: el contador sólo mira Piz.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+
+// Problema 3 · búsqueda del primer impar contando, mientras tanto, los divisibles por 3
+int main ( ) {
+    int EA, pos, divisibles;
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    divisibles = 0; pos = 1;
+    cin &gt;&gt; EA;                         // Comenzar
+    while ((EA != MF) &amp;&amp; (EA % 2 == 0)) {
+        if (EA % 3 == 0) { divisibles = divisibles + 1; }   // tratamiento de los que no cumplen
+        cin &gt;&gt; EA; pos = pos + 1;      // Avanzar
+    }
+    if (EA != MF) {
+        cout &lt;&lt; &quot;Valor: &quot; &lt;&lt; EA &lt;&lt; &quot;, posicion: &quot; &lt;&lt; pos &lt;&lt; &quot;, divisibles: &quot; &lt;&lt; divisibles &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;No existe impar, divisibles: &quot; &lt;&lt; divisibles &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
+2 3 2 5 -1
+Valor: 3, posicion: 2, divisibles: 0</code></pre></div><div class="codeblk out"><p class="code-t">Sin impares</p><pre><code>Enteros positivos, para terminar -1
+6 12 4 -1
+No existe impar, divisibles: 2</code></pre></div></div></details></div></article><article class="card ex" data-tema="e4" id="e-x11"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Suma de las parejas par–impar</span></span><span class="card-tools"><label class="done" for="d-x11"><input data-key="x11" id="d-x11" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Sumar las parejas adyacentes en las que el primero es par y el segundo impar. La suma de la vacía no está definida. 2 2 2 2 3 4 4 5 6 → 14 (2+3 y 4+5); 5 5 3 3 4 6 → 0.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Recorrido con el anterior: <b>tercer esquema</b>. La vacía se trata aparte porque su suma no está definida (¬H1); con un único elemento la suma es 0. Tratamiento: si anterior es par y EA impar, suma ← suma + anterior + EA.</p></div><ul><li>En C++, «impar» es <code>EA % 2 != 0</code>.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -1;
+
+// Problema 4 · recorrido con el anterior: suma de las parejas adyacentes (par, impar)
+int main ( ) {
+    int EA, anterior, suma;
+    cout &lt;&lt; &quot;Enteros positivos, para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                         // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;Secuencia vacia: la suma no esta definida&quot; &lt;&lt; endl;
+    } else {
+        suma = 0;
+        anterior = EA;
+        cin &gt;&gt; EA;                     // Avanzar
+        while (EA != MF) {
+            if ((anterior % 2 == 0) &amp;&amp; (EA % 2 != 0)) { suma = suma + anterior + EA; }
+            anterior = EA;
+            cin &gt;&gt; EA;                 // Avanzar
+        }
+        cout &lt;&lt; &quot;Salida: &quot; &lt;&lt; suma &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
+2 2 2 2 3 4 4 5 6 -1
+Salida: 14</code></pre></div></div></details></div></article><article class="card ex" data-tema="e4" id="e-x12"><div class="card-head"><span class="card-num">Problema 5 <span class="card-title">· El periodo más largo de descenso</span></span><span class="card-tools"><label class="done" for="d-x12"><input data-key="x12" id="d-x12" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Una secuencia con los positivos diarios de PCR desde el 1 de enero. Indicar el periodo más largo de descenso (S<sub>i</sub> ≤ S<sub>i−1</sub>), el día en que empezó y el día en que terminó. Con el ejemplo del enunciado: 6 días, del 8 al 13.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Es el problema de la <b>meseta más larga</b> cambiando «igual» por «menor o igual». El invariante necesita cuatro cosas de Piz: <code>anterior</code> (el último), <code>longActual</code> (lo que mide el descenso que acaba en el último), <code>longMayor</code> y <code>posFinMayor</code> (el más largo hasta ahora y dónde acaba), y la posición del EA. Si EA ≤ anterior, el descenso crece y quizá supera al mayor; si no, empieza uno nuevo de longitud 1. El inicio es posFinMayor − longMayor + 1.</p></div><ul><li>Se actualiza el mayor <b>dentro</b> del bucle, cada vez que el actual lo supera: así el último tramo no se queda sin comparar.</li></ul><div class="codeblk"><p class="code-t">C++ (la solución del profesorado, ordenada)</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MF = -100;
+
+// Problema 5 · recorrido con el anterior: el periodo de descenso (Si &lt;= Si-1) más largo
+int main ( ) {
+    int EA, anterior, posEA, longActual, longMayor, posFinMayor;
+    cout &lt;&lt; &quot;Positivos diarios, para terminar -100&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                         // Comenzar
+    if (EA == MF) {
+        cout &lt;&lt; &quot;Secuencia vacia&quot; &lt;&lt; endl;
+    } else {
+        longActual = 1; longMayor = 1; posFinMayor = 1;
+        anterior = EA; posEA = 2;
+        cin &gt;&gt; EA;                     // Avanzar
+        while (EA != MF) {
+            if (EA &lt;= anterior) {      // el descenso continúa
+                longActual = longActual + 1;
+                if (longActual &gt; longMayor) { longMayor = longActual; posFinMayor = posEA; }
+            } else {
+                longActual = 1;        // empieza un tramo nuevo en EA
+            }
+            anterior = EA;
+            posEA = posEA + 1;
+            cin &gt;&gt; EA;                 // Avanzar
+        }
+        cout &lt;&lt; &quot;El periodo mas largo de descenso es de &quot; &lt;&lt; longMayor &lt;&lt; &quot; dias, comienza el dia &quot;
+             &lt;&lt; posFinMayor - longMayor + 1 &lt;&lt; &quot; y termina el dia &quot; &lt;&lt; posFinMayor &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Positivos diarios, para terminar -100
+200 300 400 300 500 200 100 400 200 100 100 50 20 30 50 60 100 200 300 100 50 70 -100
+El periodo mas largo de descenso es de 6 dias, comienza el dia 8 y termina el dia 13</code></pre></div></div></details></div></article></div></section></section><section class="tema guide" id="e5"><header class="tema-head"><p class="eyebrow">Parte 5</p><h2>1.er parcial · 16 de octubre de 2026</h2><p class="lede">Registros, acciones y funciones: las dos versiones del examen de este curso, con la solución oficial corregida y en C++.</p></header><section class="topic" id="e5-1"><h3><span class="tnum">5.1</span><span>Las dos versiones</span></h3><div class="prose"><article class="card ex" data-tema="e5" id="e-x13"><div class="card-head"><span class="card-num">Tipo A <span class="card-title">· Reservas de una sala</span></span><span class="card-tools"><label class="done" for="d-x13"><input data-key="x13" id="d-x13" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Una hora es (h, m) y una reserva, una hora de inicio y otra de fin en el mismo día (minutos = 60·h + m). <b>1</b> (1 p) Tipos Hora y Reserva. <b>2</b> (2 p) Acción que lea una reserva (sólo escalares) y la devuelva. <b>3</b> (2,5 p) Función que diga si es válida: horas en [0, 23], minutos en [0, 59] e inicio estrictamente anterior al fin. <b>4</b> (2,5 p) Acción que devuelva la diferencia en minutos entre la duración mayor y la menor de dos reservas. <b>5</b> (2 p) Algoritmo que lea dos reservas y, si son válidas, escriba la diferencia.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><ol class="steps"><li>Registros anidados: <code>Hora = TIPO &lt;h, m : Entero&gt;</code> y <code>Reserva = TIPO &lt;ini, fin : Hora&gt;</code>.</li><li>La acción tiene un parámetro <b>resultado</b> y lee campo a campo (<code>Leer (r.ini.h, r.ini.m)</code>): no se puede leer un registro entero.</li><li>Una función auxiliar <code>Minutos (t) = 60·t.h + t.m</code> simplifica todo: «inicio antes que fin» es <code>Minutos (ini) &lt; Minutos (fin)</code>.</li><li>Diferencia = |d1 − d2| con un SI (no hay valor absoluto en la notación).</li><li>El algoritmo sólo combina lo anterior.</li></ol></div><div class="box warn"><p class="box-t">Erratas de la solución publicada</p><ul><li><code>0 ≤ r.hora_i.h ≤ 23</code> encadenado no es válido ni en la notación ni en C++: hay que escribir <code>(0 ≤ h) Y (h ≤ 23)</code>.</li><li>Faltan los <code>FIN_SI</code> y hay erratas de nombres (<code>Leer_Reseva</code>, <code>resserva2</code>).</li></ul></div><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// Apartado 1: tipos
+struct Hora {
+    int h;
+    int m;
+};
+struct Reserva {
+    Hora ini;
+    Hora fin;
+};
+
+// Apartado 2: acción con parámetro resultado (sólo se leen escalares)
+void LeerReserva (Reserva &amp;r) {
+    cout &lt;&lt; &quot;Hora y minutos de inicio: &quot;;
+    cin &gt;&gt; r.ini.h &gt;&gt; r.ini.m;
+    cout &lt;&lt; &quot;Hora y minutos de fin: &quot;;
+    cin &gt;&gt; r.fin.h &gt;&gt; r.fin.m;
+}
+
+int Minutos (Hora t) {                 // función auxiliar: minutos desde las 00:00
+    return 60 * t.h + t.m;
+}
+
+bool HoraValida (Hora t) {
+    return (t.h &gt;= 0) &amp;&amp; (t.h &lt;= 23) &amp;&amp; (t.m &gt;= 0) &amp;&amp; (t.m &lt;= 59);
+}
+
+// Apartado 3
+bool ReservaValida (Reserva r) {
+    return HoraValida (r.ini) &amp;&amp; HoraValida (r.fin) &amp;&amp; (Minutos (r.ini) &lt; Minutos (r.fin));
+}
+
+// Apartado 4: dif = duración mayor − duración menor
+void Diferencia (Reserva r1, Reserva r2, int &amp;dif) {
+    int d1, d2;
+    d1 = Minutos (r1.fin) - Minutos (r1.ini);
+    d2 = Minutos (r2.fin) - Minutos (r2.ini);
+    if (d1 &lt; d2) { dif = d2 - d1; }
+    else { dif = d1 - d2; }
+}
+
+// Apartado 5
+int main ( ) {
+    Reserva r1, r2;
+    int dif;
+    cout &lt;&lt; &quot;Reserva 1&quot; &lt;&lt; endl;
+    LeerReserva (r1);
+    cout &lt;&lt; &quot;Reserva 2&quot; &lt;&lt; endl;
+    LeerReserva (r2);
+    if (ReservaValida (r1) &amp;&amp; ReservaValida (r2)) {
+        Diferencia (r1, r2, dif);
+        cout &lt;&lt; &quot;La diferencia es de &quot; &lt;&lt; dif &lt;&lt; &quot; minutos&quot; &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;Alguna de las reservas no es valida&quot; &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Reserva 1
+Hora y minutos de inicio: 10 30
+Hora y minutos de fin: 11 15
+Reserva 2
+Hora y minutos de inicio: 9 0
+Hora y minutos de fin: 9 50
+La diferencia es de 5 minutos</code></pre></div></div></details></div></article><article class="card ex" data-tema="e5" id="e-x14"><div class="card-head"><span class="card-num">Tipo B <span class="card-title">· Tramos de una carretera</span></span><span class="card-tools"><label class="done" for="d-x14"><input data-key="x14" id="d-x14" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Lo mismo con posiciones (km, m) en una carretera de 500 km (distancia = 1000·km + m). Un tramo es válido si sus dos posiciones lo son (km en [0, 500] y m en [0, 999], y si km = 500, m = 0) y la inicial está estrictamente antes que la final. La acción devuelve la diferencia en metros entre la longitud mayor y la menor.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><p>Es el tipo A con otros nombres. La condición de posición válida tiene dos casos: <code>(0 ≤ km &lt; 500 Y 0 ≤ m ≤ 999) O (km = 500 Y m = 0)</code>. Con una función auxiliar <code>Metros (p)</code> la comparación y las longitudes son inmediatas (la solución oficial lo sugiere como «versión mejorada»).</p></div><div class="box warn"><p class="box-t">Erratas de la solución publicada</p><ul><li>Escribe <code>trm.pIni.mn</code> en lugar de <code>trm.pIni.m</code>.</li><li>El C++ tiene guiones largos (<code>–</code>) en las restas y comillas tipográficas en el último <code>cout</code>: tal cual no compila.</li></ul></div><div class="codeblk"><p class="code-t">C++ (la oficial, corregida y con funciones auxiliares)</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// Apartado 1
+struct Posicion {
+    int km;
+    int m;
+};
+struct Tramo {
+    Posicion pIni;
+    Posicion pFin;
+};
+
+// Apartado 2
+void LeerTramo (Tramo &amp;trm) {
+    cout &lt;&lt; &quot;Posicion inicial (km y m): &quot;;
+    cin &gt;&gt; trm.pIni.km &gt;&gt; trm.pIni.m;
+    cout &lt;&lt; &quot;Posicion final (km y m): &quot;;
+    cin &gt;&gt; trm.pFin.km &gt;&gt; trm.pFin.m;
+}
+
+int Metros (Posicion p) {              // distancia desde el inicio de la carretera
+    return 1000 * p.km + p.m;
+}
+
+bool PosicionValida (Posicion p) {
+    return ((p.km &gt;= 0) &amp;&amp; (p.km &lt; 500) &amp;&amp; (p.m &gt;= 0) &amp;&amp; (p.m &lt;= 999))
+           || ((p.km == 500) &amp;&amp; (p.m == 0));
+}
+
+// Apartado 3
+bool TramoValido (Tramo trm) {
+    return PosicionValida (trm.pIni) &amp;&amp; PosicionValida (trm.pFin)
+           &amp;&amp; (Metros (trm.pIni) &lt; Metros (trm.pFin));
+}
+
+// Apartado 4
+void DifTramo (Tramo t1, Tramo t2, int &amp;difer) {
+    int long1, long2;
+    long1 = Metros (t1.pFin) - Metros (t1.pIni);
+    long2 = Metros (t2.pFin) - Metros (t2.pIni);
+    if (long1 &gt;= long2) { difer = long1 - long2; }
+    else { difer = long2 - long1; }
+}
+
+// Apartado 5
+int main ( ) {
+    Tramo tramo1, tramo2;
+    int difer;
+    LeerTramo (tramo1);
+    LeerTramo (tramo2);
+    if (TramoValido (tramo1) &amp;&amp; TramoValido (tramo2)) {
+        DifTramo (tramo1, tramo2, difer);
+        cout &lt;&lt; &quot;La diferencia entre los dos tramos es de &quot; &lt;&lt; difer &lt;&lt; &quot; metros&quot; &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;Alguno de los dos tramos no es valido&quot; &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Posicion inicial (km y m): 12 500
+Posicion final (km y m): 15 0
+Posicion inicial (km y m): 100 0
+Posicion final (km y m): 100 750
+La diferencia entre los dos tramos es de 1750 metros</code></pre></div></div></details></div></article></div></section></section>
+    <p class="foot">Basado en los exámenes y la hoja de problemas de secuencias de la asignatura (las erratas de las soluciones publicadas están corregidas). Cada programa se ha compilado con g++ -Wall -Wextra sin avisos y las ejecuciones de ejemplo son salidas reales.</p>
+  </main>
+</div>
+<script src="../../assets/js/guia.js"></script>
+<script src="../js/resaltado.js"></script>
+</body>
+</html>

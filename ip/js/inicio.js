@@ -8,7 +8,7 @@
   const { store } = window.App;
   const n1 = (x) => Number(x).toFixed(1);
   const count = (key) => { const d = store(key); return d && typeof d === "object" ? Object.keys(d).length : 0; };
-  const BLOQUES = [0, 1, 2, 3, 4, 5];   // temas 0–4 y el bloque de C++ (ip/js/data/banco.js)
+  const BLOQUES = [0, 1, 2, 3, 4, 6, 5];   // temas 0–5 (el 5 es el bloque 6) y el de C++ (ip/js/data/banco.js)
 
   const progress = {
     autotest() {

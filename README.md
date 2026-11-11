@@ -63,7 +63,10 @@ fli/                        Fundamentos Lógicos de la Informática
   practicas/
     guia.html               Guía de prácticas con analizador y comprobador (enlazable: guia.html#parte-4)
     ejercicios.html         83 ejercicios de prácticas con soluciones
-  l1/                       Lógica de predicados (L1). La teoría aún no tiene páginas.
+  l1/                       Lógica de predicados (L1)
+    teoria/
+      guia.html             Guía de teoría de los temas 5–8 con los ejercicios de teoría resueltos (usa
+                            assets/css/guia.css; el autotest de L1 son los temas 5–8 de fli/teoria/autotest.html)
     practicas/
       guia.html             Guía de prácticas de L1 explicada parte por parte (enlazable: guia.html#g6)
       clase.html            Ejercicios de clase 12–32 (sesiones 6–12) resueltos y explicados
@@ -109,14 +112,16 @@ fc/                         Fundamentos de Computadores (temas 1–6)
     calculadoras.js         Calculadoras de la página de herramientas (salvo mini-okteta y red IP)
     data/banco.js           Banco de preguntas (x:1 = de examen, tres opciones, sin barajar opciones)
   img/                      Figuras de los apuntes (buses, placas base de la tarea 1)
-ip/                         Introducción a la Programación (temas 0–4 y prácticas 1–6)
+ip/                         Introducción a la Programación (temas 0–5 y prácticas 1–7)
   index.html                Portada de IP (la genera assets/js/hub.js)
   teoria/
-    guia.html               Guía de teoría de los temas 0–4, simulador de la máquina secuencial (#t4-8)
+    guia.html               Guía de teoría de los temas 0–5 (tablas y ordenación en #t5), simulador de la máquina secuencial (#t4-8)
                             y anexos: SP → C++ (#a-1), esquemas (#a-2) y códigos de Wooclap (#a-3)
-    autotest.html           Tests de cada tema, del C++ de prácticas (170 preguntas) y test general
+    autotest.html           Tests de cada tema, del C++ de prácticas (198 preguntas) y test general
   practicas/
-    guia.html               Prácticas 1–6 explicadas con 44 ejercicios resueltos (SP, C++ y ejecución real)
+    guia.html               Prácticas 1–7 explicadas con 51 ejercicios resueltos (SP, C++ y ejecución real)
+  examen/
+    guia.html               Cómo es el examen de secuencias y 14 exámenes y problemas de otros años resueltos
   css/
     guia.css                Añadidos de IP a assets/css/guia.css: resaltado de código y simulador
     ip.css                  Componentes del autotest
@@ -125,7 +130,7 @@ ip/                         Introducción a la Programación (temas 0–4 y prá
     autotest.js
     resaltado.js            Resaltado de C++ y de la notación SP (el resto de la guía es assets/js/guia.js)
     maquina.js              Simulador de la máquina secuencial (primer modelo)
-    data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4 y bloque 5 = C++)
+    data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4, bloque 6 = tema 5 y bloque 5 = C++)
 gohp/                       Gestión de Organizaciones y Habilidades Profesionales (temas 1–10 y seminario de ética)
   index.html                Portada de GOHP (la genera assets/js/hub.js)
   teoria/
@@ -147,7 +152,7 @@ gohp/                       Gestión de Organizaciones y Habilidades Profesional
     simulacro.js
     herramientas.js         Calculadoras de la página de herramientas
     data/banco.js           Banco de preguntas (GOHP.TOPICS; tema 11 = seminario, no entra en el simulacro)
-amd/                        Álgebra y Matemática Discreta (temas 0–5 y prácticas 1–9 con SageMath). Salvo el autotest,
+amd/                        Álgebra y Matemática Discreta (temas 0–5 y prácticas 1–11 con SageMath). Salvo el autotest,
                             sus páginas las genera scripts/amd/generar.py (ver «AMD: páginas generadas y SageMath»)
   index.html                Portada de AMD (la genera assets/js/hub.js)
   teoria/
@@ -155,9 +160,9 @@ amd/                        Álgebra y Matemática Discreta (temas 0–5 y prác
     ejercicios.html         Hojas 1–4 y ejercicios de clase resueltos (177 ejercicios)
     autotest.html           Tests de los temas 1–5, test general (#test-G) y repaso de fallos (#test-R)
   practicas/
-    p1.html … p9.html       Las nueve prácticas resueltas y explicadas; cada ejercicio con su cuaderno «Tu SageMath»
+    p1.html … p11.html      Las once prácticas resueltas y explicadas; cada ejercicio con su cuaderno «Tu SageMath»
     sage.html               Consola de SageMath y chuleta de órdenes
-    datos/p1 … datos/p9     Ficheros de las prácticas (.sobj, triangular.sage, .obj, imágenes)
+    datos/p1 … datos/p11    Ficheros de las prácticas (.sobj, triangular.sage, .obj, imágenes)
   examen/
     parciales.html          Primeros parciales 2025-26 resueltos y simulacros del 2.º parcial y de prácticas
   sage/geometria.py         Módulo de dibujo de la asignatura (una sola copia: la versión corregida de la práctica 7)

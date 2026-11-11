@@ -1,5 +1,5 @@
 /*!
- * autotest.js — página del autotest de IP: tests por tema (0–4 y C++), test general, cambio de tanda y resultados.
+ * autotest.js — página del autotest de IP: tests por tema (0–5 y C++), test general, cambio de tanda y resultados.
  * Adaptado de fc/js/autotest.js (los bloques se recorren con IP.ORDER y se nombran con IP.TOPICS[t].label).
  * Requiere: assets/js/core.js, ip/js/util.js, ip/js/data/banco.js.
  */
@@ -120,7 +120,7 @@ function home(){
   const bestG=store("ip-best-G");
   app.innerHTML=`
   <header class="top">
-    <span class="eyebrow">Teoría · Temas 0–4 y C++</span>
+    <span class="eyebrow">Teoría · Temas 0–5 y C++</span>
     <h1>Autotest de IP</h1>
     <p class="muted">Elige un tema (o el bloque de C++ de las prácticas) o el test general. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
     <div class="legend"><span><span class="cell ok">V</span> acierto</span><span><span class="cell bad">F</span> fallo</span><span><span class="cell blank">–</span> en blanco</span></div>
@@ -137,7 +137,7 @@ function home(){
   ${repasoBox()}
   <section class="tests" aria-label="Tests por tema">${rows}
     <div class="test-row general"><div class="num">Σ</div>
-      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los cinco temas y del bloque de C++, repartidas según el peso de cada uno.</p>
+      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los seis temas y del bloque de C++, repartidas según el peso de cada uno.</p>
       <span class="best">${BANK.length} preguntas en total${bestG!=null?` · mejor nota <b>${bestG.toFixed(1)}</b>`:""}</span></div>
       <button class="btn" data-start="G">Empezar</button></div>
   </section>

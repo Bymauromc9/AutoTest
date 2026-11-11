@@ -1,5 +1,5 @@
 /*!
- * data/banco.js — banco de preguntas del autotest de FLI (temas 1–4) y metadatos de los temas.
+ * data/banco.js — banco de preguntas del autotest de FLI (temas 1–4 de L0 y 5–8 de L1) y metadatos de los temas.
  * Exporta FLI.BANK, FLI.TOPICS, FLI.TOPIC_IDS y FLI.GENERAL_MIX.
  */
 (function (FLI) {
@@ -280,7 +280,55 @@ const BANK = [
 {t:4,q:"La clase de complejidad P contiene los problemas de decisión resolubles…",o:["Por una máquina de Turing determinista en tiempo polinómico","Por una máquina no determinista en tiempo polinómico","Sólo en tiempo exponencial con una máquina determinista","Sin ningún algoritmo"],a:0,e:"NP: máquina NO determinista en tiempo polinómico. Ejemplos de P: buscar u ordenar un vector.",w:{1:"Esa es la clase NP."}},
 {t:4,q:"¿Cuál de estos es un problema NP-completo citado en clase?",o:["El problema de la mochila","Ordenar un vector","Buscar un elemento en un vector","Insertar un valor ordenado en un vector"],a:0,e:"También el del viajante y la suma de subconjuntos. Los otros son problemas de la clase P."},
 {t:4,q:"WalkSat es…",o:["GSAT con probabilidades, un algoritmo SAT no completo","Un algoritmo SAT completo basado en ramificación, como DPLL","Una variante de los tableaux que recorre ramas al azar","Un tipo de tabla de verdad que sólo evalúa filas aleatorias"],a:0,e:"Los algoritmos no completos pueden no encontrar un modelo aunque exista."},
-{t:4,q:"En L0, los problemas SAT y UNSAT son…",o:["Decidibles","Semidecidibles","Indecidibles","Irresolubles"],a:0,e:"Siempre hay un número finito de interpretaciones."}
+{t:4,q:"En L0, los problemas SAT y UNSAT son…",o:["Decidibles","Semidecidibles","Indecidibles","Irresolubles"],a:0,e:"Siempre hay un número finito de interpretaciones."},
+/* ---------------- TEMA 5 · Lógica categórica y de relaciones ---------------- */
+{t:5,q:"Con C1 = {a, b, c} y C2 = {a, b, c, {a, b, c}}, ¿cuál es cierta?",o:["`C1 ∈ C2` y también `C1 ⊆ C2`","`C1 ∈ C2` pero `C1 ⊈ C2`","`C1 ⊆ C2` pero `C1 ∉ C2`","Ni `C1 ∈ C2` ni `C1 ⊆ C2`"],a:0,e:"{a, b, c} es uno de los elementos de C2 (∈) y además a, b y c están en C2 (⊆)."},
+{t:5,q:"Con A = {2, {3}, 3, {5}}, ¿cuál es falsa?",o:["`{2} ∈ A`","`{2} ⊆ A`","`{{5}} ⊆ A`","`{5} ∈ A`"],a:0,e:"{2} no es uno de los elementos de A (2 sí). En cambio {2} ⊆ A porque 2 ∈ A, y {{5}} ⊆ A porque {5} ∈ A."},
+{t:5,q:"Si C1 = {a, b, c} y C2 = {a, c, d, e}, entonces C1 ∆ C2 es…",o:["{b, d, e}","{a, c}","{b}","{a, b, c, d, e}"],a:0,e:"La diferencia simétrica es (C1 − C2) ∪ (C2 − C1) = {b} ∪ {d, e}.",w:{1:"Eso es la intersección.",2:"Eso es sólo C1 − C2.",3:"Eso es la unión."}},
+{t:5,q:"¿Cuántos elementos tiene ℘C si C tiene 3 elementos?",o:["8","3","6","9"],a:0,e:"Hay 2³ subconjuntos, contando ∅ y el propio C."},
+{t:5,q:"«Ningún S es P» se formaliza como…",o:["`∀x (S(x) → ¬P(x))`","`∃x (S(x) ∧ ¬P(x))`","`¬∀x (S(x) → P(x))`","`∀x (¬S(x) → P(x))`"],a:0,e:"Es la universal negativa (E): en conjuntos, S ∩ P = ∅.",w:{1:"Eso es «algún S no es P» (O).",2:"Eso equivale a «algún S no es P»."}},
+{t:5,q:"¿Qué forma categórica es la contradictoria de «Todo S es P»?",o:["Algún S no es P","Ningún S es P","Algún S es P","Todo P es S"],a:0,e:"¬∀x (S(x) → P(x)) ≡ ∃x (S(x) ∧ ¬P(x)): la A y la O son contradictorias.",w:{1:"Esa es la contraria: las dos pueden ser falsas a la vez."}},
+{t:5,q:"En conjuntos, la particular afirmativa «Algún S es P» significa…",o:["`S ∩ P ≠ ∅`","`S ⊆ P`","`S ∩ P = ∅`","`P ⊆ S`"],a:0,e:"Hay al menos un objeto que está a la vez en S y en P."},
+{t:5,q:"R = {(a, b), (a, c), (b, a), (c, a)}. ¿Es una función?",o:["No, porque a tiene dos imágenes","Sí, porque cada elemento aparece en algún par","Sí, porque el rango es {a, b, c}","No, porque no es simétrica"],a:0,e:"En una función cada argumento tiene una única imagen; a aparece con b y con c."},
+{t:5,q:"En forma tabular (filas = argumentos), una relación es función si…",o:["Cada fila del dominio tiene exactamente un 1","Cada columna tiene exactamente un 1","La tabla es simétrica","Hay al menos un 1 en cada fila y en cada columna"],a:0,e:"Un solo 1 por fila = una única imagen por argumento. Si además cada columna tiene un 1 como mucho, es inyectiva."},
+{t:5,q:"Una relación R es antisimétrica cuando…",o:["(a, b) ∈ R y (b, a) ∈ R implican a = b","(a, b) ∈ R implica (b, a) ∉ R","(a, a) ∈ R para todo a","(a, b) ∈ R implica (b, a) ∈ R"],a:0,e:"Como ≤: sólo puede ir en los dos sentidos un elemento consigo mismo.",w:{1:"Eso es asimétrica.",2:"Eso es reflexiva.",3:"Eso es simétrica."}},
+{t:5,q:"Una función biyectiva es…",o:["Inyectiva y suprayectiva","Inyectiva o suprayectiva","Una relación simétrica y transitiva","Una función con dominio y rango iguales"],a:0,e:"Empareja uno a uno los elementos de A con los de B."},
+/* ---------------- TEMA 6 · Lógica de predicados ---------------- */
+{t:6,q:"¿Qué expresa la lógica de predicados que no puede expresar L0?",o:["Que el sujeto de dos proposiciones es el mismo objeto","Razonamientos con conectivas","Proposiciones verdaderas o falsas","Equivalencias lógicas"],a:0,e:"En L0, Juan_es_abuelo y Juan_es_abogado son átomos sin relación; en L1, Abuelo(Juan) y Abogado(Juan) comparten el término Juan."},
+{t:6,q:"En L1, ¿cuál de estos es un término (y no una fórmula)?",o:["`padre(Juan)`","`EsPadre(Juan)`","`∀x P(x)`","`P(a) ∧ Q(b)`"],a:0,e:"Una función aplicada a términos nombra un objeto; un predicado tiene valor de verdad."},
+{t:6,q:"¿Cuál NO es una fbf?",o:["`madre(Feliz(x))`","`Feliz(madre(x))`","`∀x (P(x) → Q(f(x)))`","`¬∃y R(a, y)`"],a:0,e:"Una función necesita términos como argumentos, y Feliz(x) es un predicado (un valor de verdad)."},
+{t:6,q:"En `∀x P(x) ∧ Q(x)`, el ámbito del ∀x es…",o:["Sólo `P(x)`","`P(x) ∧ Q(x)`","Toda la fórmula y además Q(x) queda ligada","Ninguno: falta un paréntesis"],a:0,e:"∀ y ∃ ligan como ¬, más fuerte que ∧: la x de Q(x) está libre."},
+{t:6,q:"En `∀x (P(x) ∧ ∃x Q(x, z) → ∃y R(x, y)) ∨ S(x, z)`, ¿qué variables tienen alguna aparición libre?",o:["x y z","Sólo z","Sólo x","Ninguna: es cerrada"],a:0,e:"La x y la z de S(x, z) y la z de Q(x, z) no están en el ámbito de ningún cuantificador de su variable."},
+{t:6,q:"Una fbf es cerrada cuando…",o:["No tiene variables libres","No tiene cuantificadores","Todas sus variables están libres","Es una tautología"],a:0,e:"Si alguna variable está libre, la fbf es abierta."},
+{t:6,q:"Una instancia base es una fbf en la que…",o:["Todos los términos son constantes o funciones de constantes","No aparece ningún predicado","Todas las variables están ligadas","Sólo hay literales negados"],a:0,e:"Ejemplos: C(a) o C(a) → M(b, f(a))."},
+{t:6,q:"Una interpretación de L1 en un mundo M es la cuaterna…",o:["(D, C, F, R): dominio, constantes, funciones y relaciones","(V, F, ¬, ∧)","(variables, constantes, cuantificadores, conectivas)","(premisas, conclusión, reglas, demostración)"],a:0,e:"Después se asignan objetos a las variables y valores de verdad a los predicados."},
+{t:6,q:"Con D = {a, b, c}, `∃x P(x)` equivale a…",o:["`P(a) ∨ P(b) ∨ P(c)`","`P(a) ∧ P(b) ∧ P(c)`","`P(a)`","`¬P(a) ∨ ¬P(b) ∨ ¬P(c)`"],a:0,e:"El existencial es una disyunción sobre el dominio; el universal, una conjunción."},
+{t:6,q:"Juan y Pedro juegan; la madre de Juan es Pepa, que no se enfada; la de Pedro es Juana, que sí. `∀x [Jugar(x) → Enfadarse(madre(x))]` es…",o:["Falsa, por Juan","Verdadera, por Pedro","Verdadera, porque María no juega","No se puede evaluar sin asignar x"],a:0,e:"Con x = Juan el antecedente es V y el consecuente F: el ∀ es falso."},
+/* ---------------- TEMA 7 · Razonamientos: extensión a L1 ---------------- */
+{t:7,q:"Al aplicar una sustitución {t/x} a una fórmula…",o:["Sólo se cambian las apariciones libres de x","Se cambian todas las x, libres o ligadas","Se cambian sólo las x ligadas","Se cambia también el cuantificador ∀x por ∀t"],a:0,e:"δ = ∀x R(x, y) ∧ B(y) con {t/y} da ∀x R(x, t) ∧ B(t); las x ligadas no se tocan."},
+{t:7,q:"s1 = {f(y)/x} y s2 = {a/y}. ¿Cuánto vale s1·s2?",o:["{f(a)/x, a/y}","{f(y)/x, a/y}","{f(a)/x}","{a/y, f(y)/x, a/x}"],a:0,e:"Se aplica s2 al término de s1 (f(y) → f(a)) y se añade a/y, cuya variable no está en s1.",w:{1:"Eso es s2·s1."}},
+{t:7,q:"s1 = {g(x, y)/z} y s2 = {a/x, b/y, c/w, d/z}. s1·s2 es…",o:["{g(a, b)/z, a/x, b/y, c/w}","{g(a, b)/z, a/x, b/y, c/w, d/z}","{d/z, a/x, b/y, c/w}","{g(x, y)/z, a/x, b/y, c/w}"],a:0,e:"d/z se descarta porque z ya está en s1."},
+{t:7,q:"La composición de sustituciones es…",o:["Asociativa pero no conmutativa","Conmutativa pero no asociativa","Asociativa y conmutativa","Ni asociativa ni conmutativa"],a:0,e:"Con s1 = {f(y)/x}, s2 = {a/y}: P(x, y) da P(f(a), a) con s1·s2 y P(f(y), a) con s2·s1."},
+{t:7,q:"¿Cuál es una equivalencia de L1?",o:["`¬∀x Q(x) ≡ ∃x ¬Q(x)`","`¬∀x Q(x) ≡ ∀x ¬Q(x)`","`∀x (P(x) ∨ Q(x)) ≡ ∀x P(x) ∨ ∀x Q(x)`","`∀x ∃y R(x, y) ≡ ∃y ∀x R(x, y)`"],a:0,e:"Es el negador del universal (NU)."},
+{t:7,q:"¿Cuál de estas distributividades es correcta?",o:["`∃x (P(x) ∨ Q(x)) ≡ ∃x P(x) ∨ ∃x Q(x)`","`∃x (P(x) ∧ Q(x)) ≡ ∃x P(x) ∧ ∃x Q(x)`","`∀x (P(x) ∨ Q(x)) ≡ ∀x P(x) ∨ ∀x Q(x)`","`∀x (P(x) → Q(x)) ≡ ∀x P(x) → ∀x Q(x)`"],a:0,e:"∃ distribuye con ∨ y ∀ con ∧. Las otras son sólo implicaciones en un sentido."},
+{t:7,q:"`¬∃x (P(x) ∧ ¬Q(x))` equivale a…",o:["`∀x (P(x) → Q(x))`","`∃x (P(x) → Q(x))`","`∀x (P(x) ∧ Q(x))`","`∀x (Q(x) → P(x))`"],a:0,e:"Negar la particular negativa da la universal afirmativa: ∀x ¬(P(x) ∧ ¬Q(x)) ≡ ∀x (P(x) → Q(x))."},
+{t:7,q:"¿Cuál de estas implicaciones lógicas es correcta?",o:["`∀x P(x) ∨ ∀x Q(x) ⊨ ∀x (P(x) ∨ Q(x))`","`∀x (P(x) ∨ Q(x)) ⊨ ∀x P(x) ∨ ∀x Q(x)`","`∃x P(x) ∧ ∃x Q(x) ⊨ ∃x (P(x) ∧ Q(x))`","`∀x ∃y R(x, y) ⊨ ∃y ∀x R(x, y)`"],a:0,e:"Si todos son P (o todos son Q), cada uno es P o Q. Al revés falla: todo número es par o impar, pero no todos son pares.",w:{1:"Las transparencias la dan en este sentido, pero es una errata."}},
+{t:7,q:"«Cuantificación vacía»: `∀x (A → P(x)) ≡ A → ∀x P(x)` exige que…",o:["x no aparezca libre en A","A sea una tautología","x aparezca libre en A","P sea un predicado de aridad 2"],a:0,e:"Si A no depende de x, el cuantificador puede entrar y salir de ella."},
+{t:7,q:"Sobre la lógica de predicados es cierto que…",o:["Es sólida y completa, pero no decidible","Es decidible, como L0","No es completa","Es decidible pero no sólida"],a:0,e:"Todo lo válido se puede demostrar, pero no hay un algoritmo que siempre termine diciendo si una fórmula es satisfacible."},
+/* ---------------- TEMA 8 · Problema SAT en L1 ---------------- */
+{t:8,q:"En un tableau de L1, una δ-fórmula (`∃x φ(x)`, `¬∀x φ(x)`) se instancia con…",o:["Una constante nueva, que no aparezca antes","Todas las constantes que ya hay en la rama","Una variable libre","La constante a siempre"],a:0,e:"La δ supone un testigo concreto: no puede ser uno de los objetos de los que ya se ha dicho algo.",w:{1:"Eso es lo que se hace con las γ-fórmulas."}},
+{t:8,q:"¿Qué se hace con una γ-fórmula `∀x ψ(x)` en un tableau?",o:["Se conserva y se instancia con las constantes que ya hay","Se elimina tras instanciarla con una constante nueva","Se abre en dos ramas","Se niega y se pasa a la otra rama"],a:0,e:"Como vale para todo, se puede volver a usar con cada constante que aparezca."},
+{t:8,q:"¿En qué orden conviene aplicar las reglas de un tableau de L1?",o:["α y β cuando se pueda, después δ y por último γ","γ, después δ y por último α y β","δ, después γ y por último β","Da igual el orden: siempre termina"],a:0,e:"Así las γ se instancian con las constantes que crean las δ."},
+{t:8,q:"Para cerrar una rama de un tableau en L1, los literales complementarios deben…",o:["Ser instancias base iguales salvo el signo, como P(c) y ¬P(c)","Tener el mismo predicado, aunque las constantes sean distintas","Contener variables libres","Estar en ramas distintas"],a:0,e:"P(a) y ¬P(c) no se contradicen."},
+{t:8,q:"Si el tableau de premisas + conclusión negada queda abierto y completado…",o:["El razonamiento no es válido y la rama abierta da un contraejemplo","El razonamiento es válido","Las premisas son insatisfacibles","Hay que negar las premisas y repetirlo"],a:0,e:"Por ejemplo ∃x (P(a) → Q(x)) ⊭ P(a) → ∀x Q(x): con P(a), Q(d) verdaderos y Q(c) falso."},
+{t:8,q:"Forma prenexa de `¬∃x (P(x) → ∀y Q(x, y))`:",o:["`∀x ∃y (P(x) ∧ ¬Q(x, y))`","`∃x ∀y (P(x) ∧ ¬Q(x, y))`","`∀x ∀y (P(x) ∧ ¬Q(x, y))`","`∀x ∃y (¬P(x) ∨ Q(x, y))`"],a:0,e:"Se quita →, se meten las negaciones (¬∃ = ∀¬, ¬∀ = ∃¬) y se saca el ∃y."},
+{t:8,q:"Forma de Skolem de `∀x ∃y P(x, y)`:",o:["`∀x P(x, f(x))`","`∀x P(x, a)`","`P(a, b)`","`∃y P(f(y), y)`"],a:0,e:"y está en el ámbito de ∀x: depende de x y se cambia por una función de x.",w:{1:"Una constante diría que el mismo y sirve para todos los x (eso es ∃y ∀x)."}},
+{t:8,q:"Forma de Skolem de `∃x ∀y P(x, y)`:",o:["`∀y P(a, y)`","`∀y P(f(y), y)`","`P(a, b)`","`∀x P(x, f(x))`"],a:0,e:"El ∃x no está en el ámbito de ningún ∀: constante de Skolem."},
+{t:8,q:"UMG de {P(a, x, f(g(y))), P(z, f(z), f(u))}:",o:["{a/z, f(a)/x, g(y)/u}","{z/a, f(z)/x, u/g(y)}","{a/z, f(z)/x}","No son unificables"],a:0,e:"Discrepancias por orden: {a, z}, {x, f(a)} (z ya vale a) y {g(y), u}."},
+{t:8,q:"¿Por qué no se unifican P(f(a), g(x)) y P(y, y)?",o:["Tras {f(a)/y} queda la discrepancia g(x) frente a f(a): dos funciones distintas","Porque y aparece dos veces","Porque a es una constante","Porque P tiene aridad 2"],a:0,e:"Robinson sólo puede sustituir variables; f y g son funciones distintas."},
+{t:8,q:"¿Qué es el «occurs check» de la unificación?",o:["No se puede sustituir x por un término que contiene x, como f(x)","Comprobar que las dos expresiones tienen el mismo predicado","Comprobar que no hay constantes repetidas","Comprobar que la resolvente no es vacía"],a:0,e:"{f(x)/x} no hace iguales x y f(x): no son unificables."},
+{t:8,q:"En la resolución con conjunto soporte, cada resolución…",o:["Usa al menos una cláusula de la conclusión negada o derivada de ella","Usa sólo cláusulas de las premisas","Usa sólo cláusulas de la conclusión negada","Se hace sin unificar"],a:0,e:"Así la búsqueda parte de lo que se quiere refutar."},
+{t:8,q:"Antes de resolver en L1 se estandarizan las cláusulas. Eso significa…",o:["Dar a cada cláusula variables distintas de las de las demás","Ordenar los literales alfabéticamente","Quitar los literales negados","Cambiar las constantes por variables"],a:0,e:"Las variables de cláusulas distintas son independientes: P(x1) y ¬P(x2) se unifican sin conflictos."}
 ];
 BANK.forEach((b,i)=>{b.id=i;});
 
@@ -288,11 +336,15 @@ const TOPICS = {
   1:{name:"Introducción a la lógica",desc:"Definición, cálculo, principios, historia y componentes de la lógica clásica."},
   2:{name:"Lógica Proposicional (L0)",desc:"Sintaxis, prioridad, formalización, tablas, clasificación, equivalencias e implicaciones."},
   3:{name:"Razonamientos",desc:"Directo y refutación, sistema deductivo, solidez, completitud, consistencia, decidibilidad."},
-  4:{name:"Problema SAT en L0",desc:"FNC, propagación, DPLL, resolución, árboles semánticos y tableaux."}
+  4:{name:"Problema SAT en L0",desc:"FNC, propagación, DPLL, resolución, árboles semánticos y tableaux."},
+  5:{name:"Lógica categórica y de relaciones (L1)",desc:"Conjuntos, formas normales categóricas, relaciones, funciones y sus propiedades."},
+  6:{name:"Lógica de predicados (L1)",desc:"Términos y predicados, sintaxis, variables libres y ligadas, interpretación en un mundo."},
+  7:{name:"Razonamientos en L1",desc:"Sustituciones y su composición, equivalencias e implicaciones con cuantificadores."},
+  8:{name:"Problema SAT en L1",desc:"Tableaux con δ y γ, formas prenexa y de Skolem, unificación y resolución."}
 };
-const TOPIC_IDS = {1:[],2:[],3:[],4:[]};
+const TOPIC_IDS = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[]};
 BANK.forEach(b=>TOPIC_IDS[b.t].push(b.id));
-const GENERAL_MIX = {1:5,2:10,3:6,4:9}; // 30 preguntas
+const GENERAL_MIX = {1:3,2:5,3:3,4:4,5:3,6:4,7:4,8:4}; // 30 preguntas de L0 y L1
 
   Object.assign(FLI, { BANK, TOPICS, TOPIC_IDS, GENERAL_MIX });
 })(window.FLI = window.FLI || {});

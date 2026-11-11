@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guía de prácticas · IP</title>
-<meta name="description" content="Guía de prácticas de Introducción a la Programación: prácticas 1 a 6 en C++ explicadas, con todos los ejercicios resueltos y probados.">
+<meta name="description" content="Guía de prácticas de Introducción a la Programación: prácticas 1 a 7 en C++ explicadas, con todos los ejercicios resueltos y probados.">
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
@@ -26,10 +26,10 @@
       <p class="side-brand"><span class="sym">$</span> IP · Prácticas</p>
       <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="side">Índice</button>
     </div>
-    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#p1"><span class="tn">1</span><span class="tname">Entorno de programación</span><span class="prog" data-prog="p1"></span></a><ol class="toc-topics"><li><a href="#p1-1"><span class="tnum">1.1</span>Editar, compilar y ejecutar con Geany</a></li><li><a href="#p1-2"><span class="tnum">1.2</span>Estructura de un programa C++</a></li><li><a href="#p1-3"><span class="tnum">1.3</span>Ejercicios</a></li></ol></li><li><a class="toc-tema" href="#p2"><span class="tn">2</span><span class="tname">Léxico y estados</span><span class="prog" data-prog="p2"></span></a><ol class="toc-topics"><li><a href="#p2-1"><span class="tnum">2.1</span>Tipos, operadores y conversiones</a></li><li><a href="#p2-2"><span class="tnum">2.2</span>Entrada y salida: el buffer del teclado</a></li><li><a href="#p2-3"><span class="tnum">2.3</span>Ejercicios de clase</a></li><li><a href="#p2-4"><span class="tnum">2.4</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p3"><span class="tn">3</span><span class="tname">Análisis de casos</span><span class="prog" data-prog="p3"></span></a><ol class="toc-topics"><li><a href="#p3-1"><span class="tnum">3.1</span>De SI y SEGÚN a if y switch</a></li><li><a href="#p3-2"><span class="tnum">3.2</span>Ejercicios de clase</a></li><li><a href="#p3-3"><span class="tnum">3.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p4"><span class="tn">4</span><span class="tname">Productos de tipos y subprogramas</span><span class="prog" data-prog="p4"></span></a><ol class="toc-topics"><li><a href="#p4-1"><span class="tnum">4.1</span>struct, acciones y funciones</a></li><li><a href="#p4-2"><span class="tnum">4.2</span>Ejercicios de clase</a></li><li><a href="#p4-3"><span class="tnum">4.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p5"><span class="tn">5</span><span class="tname">Iteraciones</span><span class="prog" data-prog="p5"></span></a><ol class="toc-topics"><li><a href="#p5-1"><span class="tnum">5.1</span>Las composiciones iterativas en C++</a></li><li><a href="#p5-2"><span class="tnum">5.2</span>Ejercicios de clase</a></li><li><a href="#p5-3"><span class="tnum">5.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p6"><span class="tn">6</span><span class="tname">Primer modelo de acceso secuencial</span><span class="prog" data-prog="p6"></span></a><ol class="toc-topics"><li><a href="#p6-1"><span class="tnum">6.1</span>Secuencias desde la entrada estándar</a></li><li><a href="#p6-2"><span class="tnum">6.2</span>Ejercicios de clase</a></li><li><a href="#p6-3"><span class="tnum">6.3</span>Trabajo personal</a></li></ol></li></ol></nav><button class="reset" id="reset" type="button">Reiniciar progreso</button>
+    <nav class="toc" aria-label="Índice"><p class="toc-label">Partes</p><ol class="toc-temas"><li><a class="toc-tema" href="#p1"><span class="tn">1</span><span class="tname">Entorno de programación</span><span class="prog" data-prog="p1"></span></a><ol class="toc-topics"><li><a href="#p1-1"><span class="tnum">1.1</span>Editar, compilar y ejecutar con Geany</a></li><li><a href="#p1-2"><span class="tnum">1.2</span>Estructura de un programa C++</a></li><li><a href="#p1-3"><span class="tnum">1.3</span>Ejercicios</a></li></ol></li><li><a class="toc-tema" href="#p2"><span class="tn">2</span><span class="tname">Léxico y estados</span><span class="prog" data-prog="p2"></span></a><ol class="toc-topics"><li><a href="#p2-1"><span class="tnum">2.1</span>Tipos, operadores y conversiones</a></li><li><a href="#p2-2"><span class="tnum">2.2</span>Entrada y salida: el buffer del teclado</a></li><li><a href="#p2-3"><span class="tnum">2.3</span>Ejercicios de clase</a></li><li><a href="#p2-4"><span class="tnum">2.4</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p3"><span class="tn">3</span><span class="tname">Análisis de casos</span><span class="prog" data-prog="p3"></span></a><ol class="toc-topics"><li><a href="#p3-1"><span class="tnum">3.1</span>De SI y SEGÚN a if y switch</a></li><li><a href="#p3-2"><span class="tnum">3.2</span>Ejercicios de clase</a></li><li><a href="#p3-3"><span class="tnum">3.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p4"><span class="tn">4</span><span class="tname">Productos de tipos y subprogramas</span><span class="prog" data-prog="p4"></span></a><ol class="toc-topics"><li><a href="#p4-1"><span class="tnum">4.1</span>struct, acciones y funciones</a></li><li><a href="#p4-2"><span class="tnum">4.2</span>Ejercicios de clase</a></li><li><a href="#p4-3"><span class="tnum">4.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p5"><span class="tn">5</span><span class="tname">Iteraciones</span><span class="prog" data-prog="p5"></span></a><ol class="toc-topics"><li><a href="#p5-1"><span class="tnum">5.1</span>Las composiciones iterativas en C++</a></li><li><a href="#p5-2"><span class="tnum">5.2</span>Ejercicios de clase</a></li><li><a href="#p5-3"><span class="tnum">5.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p6"><span class="tn">6</span><span class="tname">Primer modelo de acceso secuencial</span><span class="prog" data-prog="p6"></span></a><ol class="toc-topics"><li><a href="#p6-1"><span class="tnum">6.1</span>Secuencias desde la entrada estándar</a></li><li><a href="#p6-2"><span class="tnum">6.2</span>Ejercicios de clase</a></li><li><a href="#p6-3"><span class="tnum">6.3</span>Trabajo personal</a></li></ol></li><li><a class="toc-tema" href="#p7"><span class="tn">7</span><span class="tname">Tablas I</span><span class="prog" data-prog="p7"></span></a><ol class="toc-topics"><li><a href="#p7-1"><span class="tnum">7.1</span>Tablas en C++</a></li><li><a href="#p7-2"><span class="tnum">7.2</span>Ejercicios de clase</a></li><li><a href="#p7-3"><span class="tnum">7.3</span>Trabajo personal</a></li></ol></li></ol></nav><button class="reset" id="reset" type="button">Reiniciar progreso</button>
   </aside>
   <main id="app" tabindex="-1">
-<header class="hero"><p class="eyebrow">Introducción a la Programación · 1.º GII · Prácticas</p><h1>Guía de prácticas <span class="ops">g++ ⏎</span></h1><p class="lead">Las seis prácticas explicadas: lo que hay que saber de C++ en cada una (con un bloque <b>«Explicado despacio»</b> por práctica) y <b>44 ejercicios resueltos</b>, cada uno con una <b>explicación paso a paso</b> de las fórmulas y del procedimiento (los de clase y los de trabajo personal) con el análisis, la notación SP cuando ayuda, el programa en C++ y una ejecución real. Todo el código está compilado con g++ y probado.</p><nav class="ip-pages" aria-label="Páginas de IP"><a href="guia.html" aria-current="page">Guía de prácticas</a><a href="../teoria/guia.html">Guía de teoría</a><a href="../teoria/autotest.html">Autotest</a></nav></header><div class="soltools"><button type="button" class="btn-sol" data-sol="open">Abrir todas las resoluciones</button><button type="button" class="btn-sol" data-sol="close">Cerrarlas</button><span class="soltools-note">Intenta cada ejercicio antes de abrir su resolución y márcalo como hecho.</span></div><section class="tema guide" id="p1"><header class="tema-head"><p class="eyebrow">Práctica 1</p><h2>Entorno de programación</h2><p class="lede">Geany y g++: editar, compilar y ejecutar un programa C++, y la estructura de un programa.</p></header><section class="topic" id="p1-1"><h3><span class="tnum">1.1</span><span>Editar, compilar y ejecutar con Geany</span></h3><div class="prose"><p>En el laboratorio se arranca <b>Ubuntu</b> desde el menú de GRUB (usuario y contraseña <code>alumno</code>) y se abre Geany desde «Programación → Geany». En casa: Geany (Linux, Windows) o Dev‑C++ (Windows), que se usan casi igual. El compilador es <b>GNU g++</b>.</p><div class="tablewrap"><table class=""><thead><tr><th>Paso</th><th>Cómo</th><th>Detalles</th></tr></thead><tbody><tr><td>1. Nuevo</td><td>Archivo → Nuevo</td><td>Se abre una pestaña «sin título».</td></tr><tr><td>2. Guardar</td><td>Archivo → Guardar</td><td>Nombre acabado en <b>.cpp</b>, significativo (<code>Saludos.cpp</code>), <b>sin espacios ni tildes</b> en el nombre ni en las carpetas. Al guardarlo, Geany reconoce C++ y colorea la sintaxis.</td></tr><tr><td>3. Compilar</td><td><b>F9</b> (Construir → Construir)</td><td>La pestaña «Compilador» dice si ha ido bien; si hay errores, al pulsar en uno se marca la línea (la barra inferior indica línea y columna).</td></tr><tr><td>4. Ejecutar</td><td><b>F5</b> (Construir → Ejecutar)</td><td>Se abre una terminal con la salida; las líneas finales («Pulse Intro…») las añade Geany, no tu programa.</td></tr></tbody></table></div><p>Las cuatro zonas de Geany: barra de menús y botones (arriba), símbolos del archivo (izquierda), edición (centro‑derecha) y mensajes / compilador (abajo).</p></div></section><section class="topic" id="p1-2"><h3><span class="tnum">1.2</span><span>Estructura de un programa C++</span></h3><div class="prose"><p>Igual que un algoritmo: <b>léxico</b> (bibliotecas con <code>#include</code>, tipos, constantes, variables y subprogramas globales) y <b>algoritmo principal</b>, que en C++ es la función <code>main</code>. <code>main</code> devuelve un <code>int</code> al sistema operativo: <b>0 = terminación normal</b> (si no hay <code>return</code>, se devuelve 0). En C++ no se pueden definir funciones dentro de otras.</p><ul><li><b>Bloque</b>: instrucciones entre <code>{ }</code>, cada una acabada en <code>;</code>.</li><li><b>Identificadores</b>: letras y dígitos empezando por letra (el <code>_</code> cuenta como letra, pero no empieces por él). C++ <b>distingue mayúsculas</b>: <code>notaFinal</code> ≠ <code>notafinal</code>.</li><li><b>Palabras reservadas</b> (no se pueden usar como nombres: <code>using</code>, <code>int</code>…), <b>literales</b>, <b>operadores</b> y <b>delimitadores</b>.</li><li><b>Comentarios</b>: <code>// hasta el final de la línea</code> y <code>/* varias líneas */</code>. Los blancos y saltos de línea sólo separan.</li><li><code>using namespace std;</code>: cin, cout y el resto de la biblioteca estándar están en el espacio de nombres <code>std</code>.</li></ul><details class="deep"><summary class="deep-t">Explicado despacio</summary><h4>Qué pasa cuando pulsas F9</h4>
+<header class="hero"><p class="eyebrow">Introducción a la Programación · 1.º GII · Prácticas</p><h1>Guía de prácticas <span class="ops">g++ ⏎</span></h1><p class="lead">Las siete prácticas explicadas: lo que hay que saber de C++ en cada una (con un bloque <b>«Explicado despacio»</b> por práctica) y <b>51 ejercicios resueltos</b>, cada uno con una <b>explicación paso a paso</b> de las fórmulas y del procedimiento (los de clase y los de trabajo personal) con el análisis, la notación SP cuando ayuda, el programa en C++ y una ejecución real. Todo el código está compilado con g++ y probado.</p><nav class="ip-pages" aria-label="Páginas de IP"><a href="guia.html" aria-current="page">Guía de prácticas</a><a href="../teoria/guia.html">Guía de teoría</a><a href="../teoria/autotest.html">Autotest</a><a href="../examen/guia.html">Guía del examen</a></nav></header><div class="soltools"><button type="button" class="btn-sol" data-sol="open">Abrir todas las resoluciones</button><button type="button" class="btn-sol" data-sol="close">Cerrarlas</button><span class="soltools-note">Intenta cada ejercicio antes de abrir su resolución y márcalo como hecho.</span></div><section class="tema guide" id="p1"><header class="tema-head"><p class="eyebrow">Práctica 1</p><h2>Entorno de programación</h2><p class="lede">Geany y g++: editar, compilar y ejecutar un programa C++, y la estructura de un programa.</p></header><section class="topic" id="p1-1"><h3><span class="tnum">1.1</span><span>Editar, compilar y ejecutar con Geany</span></h3><div class="prose"><p>En el laboratorio se arranca <b>Ubuntu</b> desde el menú de GRUB (usuario y contraseña <code>alumno</code>) y se abre Geany desde «Programación → Geany». En casa: Geany (Linux, Windows) o Dev‑C++ (Windows), que se usan casi igual. El compilador es <b>GNU g++</b>.</p><div class="tablewrap"><table class=""><thead><tr><th>Paso</th><th>Cómo</th><th>Detalles</th></tr></thead><tbody><tr><td>1. Nuevo</td><td>Archivo → Nuevo</td><td>Se abre una pestaña «sin título».</td></tr><tr><td>2. Guardar</td><td>Archivo → Guardar</td><td>Nombre acabado en <b>.cpp</b>, significativo (<code>Saludos.cpp</code>), <b>sin espacios ni tildes</b> en el nombre ni en las carpetas. Al guardarlo, Geany reconoce C++ y colorea la sintaxis.</td></tr><tr><td>3. Compilar</td><td><b>F9</b> (Construir → Construir)</td><td>La pestaña «Compilador» dice si ha ido bien; si hay errores, al pulsar en uno se marca la línea (la barra inferior indica línea y columna).</td></tr><tr><td>4. Ejecutar</td><td><b>F5</b> (Construir → Ejecutar)</td><td>Se abre una terminal con la salida; las líneas finales («Pulse Intro…») las añade Geany, no tu programa.</td></tr></tbody></table></div><p>Las cuatro zonas de Geany: barra de menús y botones (arriba), símbolos del archivo (izquierda), edición (centro‑derecha) y mensajes / compilador (abajo).</p></div></section><section class="topic" id="p1-2"><h3><span class="tnum">1.2</span><span>Estructura de un programa C++</span></h3><div class="prose"><p>Igual que un algoritmo: <b>léxico</b> (bibliotecas con <code>#include</code>, tipos, constantes, variables y subprogramas globales) y <b>algoritmo principal</b>, que en C++ es la función <code>main</code>. <code>main</code> devuelve un <code>int</code> al sistema operativo: <b>0 = terminación normal</b> (si no hay <code>return</code>, se devuelve 0). En C++ no se pueden definir funciones dentro de otras.</p><ul><li><b>Bloque</b>: instrucciones entre <code>{ }</code>, cada una acabada en <code>;</code>.</li><li><b>Identificadores</b>: letras y dígitos empezando por letra (el <code>_</code> cuenta como letra, pero no empieces por él). C++ <b>distingue mayúsculas</b>: <code>notaFinal</code> ≠ <code>notafinal</code>.</li><li><b>Palabras reservadas</b> (no se pueden usar como nombres: <code>using</code>, <code>int</code>…), <b>literales</b>, <b>operadores</b> y <b>delimitadores</b>.</li><li><b>Comentarios</b>: <code>// hasta el final de la línea</code> y <code>/* varias líneas */</code>. Los blancos y saltos de línea sólo separan.</li><li><code>using namespace std;</code>: cin, cout y el resto de la biblioteca estándar están en el espacio de nombres <code>std</code>.</li></ul><details class="deep"><summary class="deep-t">Explicado despacio</summary><h4>Qué pasa cuando pulsas F9</h4>
 <ol class="steps">
 <li><b>Preprocesador</b>: sustituye cada <code>#include</code> por el contenido de esa biblioteca.</li>
 <li><b>Compilador</b> (g++): comprueba que el texto es C++ válido y lo traduce a código máquina. Si encuentra un error, para y te dice la línea.</li>
@@ -2205,8 +2205,444 @@ int main ( ) {
     return 0;
 }</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -100
 0 4 1 5 10 -100
-El primero es 5</code></pre></div></div></details></div></article></div></section></section>
-    <p class="foot">Basado en los boletines de las prácticas 1 a 6 de la asignatura. Cada programa se ha compilado con g++ -Wall -Wextra sin avisos y las ejecuciones de ejemplo son salidas reales.</p>
+El primero es 5</code></pre></div></div></details></div></article></div></section></section><section class="tema guide" id="p7"><header class="tema-head"><p class="eyebrow">Práctica 7</p><h2>Tablas I</h2><p class="lede">El tipo TABLA en C++ con typedef e índices desde 0, secuencias marcadas y no marcadas guardadas en tablas y siete problemas de recorrido y búsqueda resueltos.</p></header><section class="topic" id="p7-1"><h3><span class="tnum">7.1</span><span>Tablas en C++</span></h3><div class="prose"><p>El tipo TABLA de la notación se declara en C++ con corchetes: entre <code>[</code> y <code>]</code> va el <b>número de elementos</b>, y los índices van siempre <b>de 0 a tamaño − 1</b>. Con <code>typedef</code> se da nombre al tipo (es la misma declaración que la de una variable, precedida de <code>typedef</code>).</p><div class="tablewrap"><table class=""><thead><tr><th>Notación algorítmica</th><th>C++</th></tr></thead><tbody><tr><td><code>nombre = TIPO TABLA [0, a−1] DE TipoBase;</code></td><td><code>typedef TipoBase nombre[a];</code></td></tr><tr><td><code>T[i]</code></td><td><code>t[i]</code> (el primero es <code>t[0]</code>)</td></tr><tr><td><code>i RECORRIENDO [1, n] HACER … T[i] …</code></td><td><code>for (i = 0; i &lt; n; i = i + 1) { … t[i] … }</code></td></tr><tr><td>Parámetro de una acción (dato–resultado)</td><td><code>void Leer (Vector a, int n)</code>: las tablas se pasan <b>siempre por referencia</b>; <code>const Vector a</code> si sólo se leen</td></tr></tbody></table></div><div class="pair"><div class="codeblk"><p class="code-t">Ejemplo 1 · producto escalar</p><pre><code class="lang-cpp">const int LMAX = 100;
+typedef float Vector[LMAX];
+
+void Leer_Vector (Vector a, int n) {
+    int i;
+    for (i = 0; i &lt; n; i = i + 1) {
+        cout &lt;&lt; &quot;Introduzca el componente &quot; &lt;&lt; i+1 &lt;&lt; &quot;: &quot;;
+        cin &gt;&gt; a[i];
+    }
+}
+// en main:
+producto = 0.0;
+for (i = 0; i &lt; tama; i = i + 1) {
+    producto = producto + a[i] * b[i];
+}</code></pre></div><div class="codeblk"><p class="code-t">Ejemplo 2 · secuencia marcada con '#'</p><pre><code class="lang-cpp">const int N = 20;
+typedef char Frase[N];
+Frase t = {&#x27;E&#x27;,&#x27;L&#x27;,&#x27; &#x27;,&#x27;S&#x27;,&#x27;O&#x27;,&#x27;L&#x27;,&#x27; &#x27;,&#x27;S&#x27;,&#x27;E&#x27;,&#x27; &#x27;,
+           &#x27;E&#x27;,&#x27;S&#x27;,&#x27;C&#x27;,&#x27;O&#x27;,&#x27;N&#x27;,&#x27;D&#x27;,&#x27;E&#x27;,&#x27;#&#x27;};
+i = 0;                       // Comenzar
+cont = 0;
+while (t[i] != &#x27;#&#x27;) {        // EA != MarcaFin
+    cout &lt;&lt; t[i];
+    if (t[i] == &#x27;E&#x27;) { cont = cont + 1; }
+    i = i + 1;               // Avanzar
+}
+cout &lt;&lt; &quot;El número de letras E es: &quot; &lt;&lt; cont;</code></pre></div></div><p>Si la secuencia <b>no está marcada</b> (ejemplo 3) se conoce su longitud y el recorrido es un <code>for</code> de 0 a N − 1. Para <b>buscar</b> (ejemplo 4, el primer blanco) la condición tiene dos partes y se para en el último sin pasarse (tercer modelo): <code>while ((i != N-1) &amp;&amp; (t[i] != ' ')) i = i + 1;</code> y después se mira <code>t[i] == ' '</code>.</p><div class="box warn"><p class="box-t">Detalles del boletín</p><ul><li><code>void Leer_Vector (Vector &amp;a, int n)</code>: el <code>&amp;</code> no hace falta (compila igual, como referencia a la tabla), porque las tablas <b>ya</b> se pasan por referencia: lo que la acción cambie en <code>a</code> se ve fuera aunque no lo pongas.</li><li>En el ejemplo 3 aparece <code>{cont=cont+1};</code> con el punto y coma fuera de la llave: escribe <code>{ cont = cont + 1; }</code>.</li><li>En el ejemplo 2 el <code>cout &lt;&lt; endl;</code> está dentro del bucle y escribe cada letra en una línea; si quieres la frase seguida, sácalo del <code>while</code>.</li></ul></div><details class="deep"><summary class="deep-t">Explicado despacio</summary><h4>Del tema 4 a las tablas: la ventana es un índice</h4><p>En la práctica 6 la secuencia venía de la entrada: sólo se veía el elemento actual y se avanzaba leyendo. Ahora la secuencia está <b>entera en memoria</b> y la «ventana» es la variable <code>i</code>: Comenzar es <code>i = 0</code>, EA es <code>t[i]</code> y Avanzar es <code>i = i + 1</code>. Los esquemas no cambian.</p><h4>¿Marca o longitud?</h4><ul><li><b>Marcada</b>: el bucle es <code>while (t[i] != MF)</code>; la tabla necesita una casilla más para la marca y la marca no puede ser un dato.</li><li><b>No marcada</b>: se guarda la longitud en una variable y el recorrido es un <code>for (i = 0; i &lt; lon; i = i + 1)</code>; para buscar se usa <code>while ((i != lon-1) &amp;&amp; !Prop(t[i]))</code> y después se pregunta <code>Prop(t[i])</code>.</li></ul><h4>Los tres errores típicos</h4><ol><li><b>Uno de más</b>: <code>for (i = 0; i &lt;= n; …)</code> lee t[n], que ya no es de la tabla. Con n elementos, el último es t[n-1].</li><li><b>Olvidar la marca</b> al construir la tabla: el <code>while (t[i] != MF)</code> sigue leyendo basura.</li><li><b>Copiar en el sentido equivocado</b> al desplazar: para mover a la derecha hay que ir de derecha a izquierda (problema 1).</li></ol></details><details class="deep"><summary class="deep-t">Más a fondo · índices que no empiezan en 0: macros y map</summary><p>En la notación se puede declarar <code>FrecuenciaLetras = TIPO TABLA ['A', 'Z'] DE Entero</code>, pero en C++ los índices son enteros desde 0. Dos salidas del anexo del boletín:</p><div class="codeblk"><p class="code-t">Restar el primer índice</p><pre><code class="lang-cpp">#define TAM_HISTO &#x27;Z&#x27; - &#x27;A&#x27; + 1
+#define elemHisto(h, c) h[(c) - &#x27;A&#x27;]
+int frecLetras[TAM_HISTO];
+elemHisto (frecLetras, &#x27;C&#x27;) = elemHisto (frecLetras, &#x27;C&#x27;) + 1;   // es frecLetras[2]</code></pre></div><div class="codeblk"><p class="code-t">El contenedor map de la STL (#include &lt;map&gt;)</p><pre><code class="lang-cpp">typedef map&lt;char, int&gt; TipoHistograma;
+TipoHistograma h;
+for (c = &#x27;a&#x27;; c &lt;= &#x27;z&#x27;; c = c + 1) { h[c] = 0; }   // hay que inicializar cada posición
+h[&#x27;m&#x27;] = h[&#x27;m&#x27;] + 1;</code></pre></div><p>En la práctica basta con lo primero escrito a mano: <code>frec[c - 'A']</code>.</p></details></div></section><section class="topic" id="p7-2"><h3><span class="tnum">7.2</span><span>Ejercicios de clase</span></h3><div class="prose"><article class="card ex" data-tema="p7" id="e-p7a"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Desplazamiento circular a la derecha</span></span><span class="card-tools"><label class="done" for="d-p7a"><input data-key="p7a" id="d-p7a" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dada una tabla de enteros t sobre [0, n−1], desplazarla circularmente a la derecha: t′[0] = t[n−1] y t′[k] = t[k−1] para k en [1, n−1]. El boletín da una solución con una tabla intermedia z; escribe otra <b>sin tabla intermedia</b>. ¿Qué esquema se usa? ¿Qué diferencias hay entre tratar una secuencia en una máquina secuencial y en una tabla?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>El problema de hacerlo «en el sitio»</h4><p>Si se recorre hacia delante haciendo <code>t[i] = t[i-1]</code>, el valor de t[1] se pierde al escribir t[2]: al final todos valen t[0]. Hay que recorrer <b>de derecha a izquierda</b>, y guardar antes el último, que es el único que se machaca sin haberlo copiado.</p><ol class="steps"><li>Guardar <code>ultimo = t[n-1]</code>.</li><li>Para i de n−1 <b>hasta 1</b>: <code>t[i] = t[i-1]</code>.</li><li>Poner <code>t[0] = ultimo</code>.</li></ol></div><ul><li><b>Esquema</b>: un <b>recorrido</b> (todos los elementos reciben el mismo tratamiento) con RECORRIENDO <b>EN_SENTIDO_INVERSO</b>. Tratamiento inicial: guardar el último; tratamiento de cada elemento: copiar el de su izquierda; tratamiento final: poner el último en la posición 0. No hay condición de terminación que pensar: el número de vueltas se sabe.</li><li><b>Diferencias con la máquina secuencial</b>: en una tabla el acceso es <b>directo</b> (t[i−1], t[n−1]…), se puede recorrer <b>al revés</b> y se puede <b>modificar</b> en el sitio; en la máquina secuencial sólo se ve el elemento actual y se avanza hacia delante.</li></ul><div class="codeblk"><p class="code-t">C++ · sin tabla intermedia</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int N = 10;
+typedef int Vector[N];
+
+void Escribir_Vector (const Vector t, int n) {
+    int i;
+    for (i = 0; i &lt; n; i = i + 1) {
+        cout &lt;&lt; t[i] &lt;&lt; &quot; &quot;;
+    }
+    cout &lt;&lt; endl;
+}
+
+int main ( ) {
+    Vector t = { 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 };
+    int i, ultimo;
+
+    cout &lt;&lt; &quot;Antes:   &quot;;
+    Escribir_Vector (t, N);
+
+    // Sin tabla intermedia: se guarda el último y se desplaza de derecha a izquierda
+    ultimo = t[N-1];
+    for (i = N - 1; i &gt; 0; i = i - 1) {       // RECORRIENDO EN_SENTIDO_INVERSO
+        t[i] = t[i-1];                        // t&#x27;[i] = t[i-1]
+    }
+    t[0] = ultimo;                            // t&#x27;[0] = t[N-1]
+
+    cout &lt;&lt; &quot;Despues: &quot;;
+    Escribir_Vector (t, N);
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Antes:   3 5 7 11 13 17 19 23 29 31 
+Despues: 31 3 5 7 11 13 17 19 23 29 </code></pre></div></div></details></div></article><article class="card ex" data-tema="p7" id="e-p7b"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· Frecuencia de cada nota</span></span><span class="card-tools"><label class="done" for="d-p7b"><input data-key="p7b" id="d-p7b" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Leer notas enteras de 0 a 10 hasta el −1 y mostrar cuántas veces aparece cada nota que aparezca al menos una vez y su frecuencia relativa en %. Además, una función que devuelva la primera nota cuya frecuencia sea al menos el 50 % del total, o −1 si no hay ninguna.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>La tabla como «contador por casillas»</h4><p>La entrada se trata con el <b>primer modelo</b> (marca −1) y un <b>recorrido</b>: hay que mirarlas todas. La tabla tiene una casilla por nota: como la nota es un entero de 0 a 10, <b>la nota es el índice</b> y <code>f[EA] = f[EA] + 1</code> cuenta sin ningún SEGÚN.</p><ol class="steps"><li>Tratamiento inicial: <code>f[0..10] = 0</code> (un recorrido de la tabla) y <code>total = 0</code>.</li><li>Tratamiento de cada nota: <code>f[EA]++</code>, <code>total++</code>.</li><li>Tratamiento final: recorrer la tabla y escribir sólo las casillas con <code>f[nota] &gt; 0</code>; el porcentaje es <code>100.0 * f[nota] / total</code> (con 100.0 para que la división sea real).</li></ol><h4>La función: una búsqueda en la tabla</h4><p>«La primera nota que…» es una <b>búsqueda</b> del tercer modelo sobre las 11 casillas, con la propiedad <code>2·f[nota] ≥ total</code> (así se evitan los reales).</p></div><ul><li><b>Entrada</b>: recorrido del primer modelo. <b>Tabla</b>: una frecuencia por nota, indexada por la propia nota.</li><li><b>Resultado</b>: recorrido de la tabla escribiendo las casillas no nulas; <b>función</b>: búsqueda del tercer modelo.</li><li>Si no se introduce ninguna nota, total = 0: se avisa en lugar de dividir entre 0.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int NOTA_MAX = 10;
+const int MF = -1;
+typedef int Frecuencias[NOTA_MAX + 1];        // posiciones 0..10: una por nota
+
+// Primera nota cuya frecuencia es al menos el 50 % del total, o -1 si no hay ninguna
+int NotaMayoritaria (const Frecuencias f, int total) {
+    int nota;
+    nota = 0;
+    while ((nota &lt; NOTA_MAX) &amp;&amp; (2 * f[nota] &lt; total)) {   // búsqueda (tercer modelo)
+        nota = nota + 1;
+    }
+    if ((total &gt; 0) &amp;&amp; (2 * f[nota] &gt;= total)) {
+        return nota;
+    } else {
+        return -1;
+    }
+}
+
+int main ( ) {
+    Frecuencias f;
+    int nota, EA, total;
+
+    for (nota = 0; nota &lt;= NOTA_MAX; nota = nota + 1) {   // tratamiento inicial
+        f[nota] = 0;
+    }
+    total = 0;
+
+    cout &lt;&lt; &quot;Notas (enteros de 0 a 10), para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                                // Comenzar
+    while (EA != MF) {
+        f[EA] = f[EA] + 1;                    // la nota es el índice de la tabla
+        total = total + 1;
+        cin &gt;&gt; EA;                            // Avanzar
+    }
+
+    if (total == 0) {
+        cout &lt;&lt; &quot;No se ha introducido ninguna nota&quot; &lt;&lt; endl;
+    } else {
+        for (nota = 0; nota &lt;= NOTA_MAX; nota = nota + 1) {
+            if (f[nota] &gt; 0) {
+                cout &lt;&lt; &quot;Nota &quot; &lt;&lt; nota &lt;&lt; &quot;: &quot; &lt;&lt; f[nota] &lt;&lt; &quot; veces (&quot;
+                     &lt;&lt; 100.0 * f[nota] / total &lt;&lt; &quot; %)&quot; &lt;&lt; endl;
+            }
+        }
+        cout &lt;&lt; &quot;Nota con al menos el 50 %: &quot; &lt;&lt; NotaMayoritaria (f, total) &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Notas (enteros de 0 a 10), para terminar -1
+7 5 10 7 3 5 7 9 7 -1
+Nota 3: 1 veces (11.1111 %)
+Nota 5: 2 veces (22.2222 %)
+Nota 7: 4 veces (44.4444 %)
+Nota 9: 1 veces (11.1111 %)
+Nota 10: 1 veces (11.1111 %)
+Nota con al menos el 50 %: -1</code></pre></div><div class="codeblk out"><p class="code-t">Otra ejecución</p><pre><code>Notas (enteros de 0 a 10), para terminar -1
+8 8 8 2 -1
+Nota 2: 1 veces (25 %)
+Nota 8: 3 veces (75 %)
+Nota con al menos el 50 %: 8</code></pre></div></div></details></div></article><article class="card ex" data-tema="p7" id="e-p7c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Intersección de dos conjuntos</span></span><span class="card-tools"><label class="done" for="d-p7c"><input data-key="p7c" id="d-p7c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Obtener en una tabla R la intersección de dos conjuntos de enteros guardados (ordenados) en S1 y S2, sin marca y con marca. ¿Qué problemas tiene cada versión? S1 = [−44, −21, −1, 3, 5, 7, 18, 24, 30, 33, 54, 66, 101], S2 = [−32, −28, −21, 0, 3, 4, 6, 7, 14, 20, 24, 31, 33, 51, 66, 104, 200] → R = [−21, 3, 7, 24, 33, 66].</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Aprovechar que están ordenados: dos índices a la vez</h4><p>Comparar cada elemento de S1 con todos los de S2 funciona, pero son n1·n2 comparaciones. Como los dos están <b>ordenados</b>, basta avanzar dos índices en paralelo (como al mezclar dos listas):</p><ol class="steps"><li>Si <code>s1[i] &lt; s2[j]</code>, s1[i] no puede estar en S2 (los que quedan son mayores): avanza i.</li><li>Si <code>s1[i] &gt; s2[j]</code>, lo mismo con s2[j]: avanza j.</li><li>Si son iguales, es común: se <b>registra</b> en R (<code>r[k] = s1[i]; k++</code>) y avanzan los dos.</li></ol><p>Se para en cuanto <b>uno de los dos se acaba</b>: lo que quede del otro ya no puede ser común.</p></div><ul><li><b>Sin marca</b>: hacen falta las longitudes n1 y n2 como parámetros, y la de R hay que devolverla. La condición es <code>(i &lt; n1) &amp;&amp; (j &lt; n2)</code>.</li><li><b>Con marca</b>: no hay que pasar longitudes, la condición es <code>(s1[i] != MF) &amp;&amp; (s2[j] != MF)</code> y R se marca al terminar. Pero cada tabla necesita <b>una casilla más</b>, la marca tiene que ser un valor que <b>nunca</b> sea un dato (aquí 9999, mayor que todos) y para saber la longitud hay que recorrer hasta la marca.</li></ul><div class="codeblk"><p class="code-t">C++ · las dos versiones</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int LMAX = 50;
+const int MF = 9999;                          // marca: mayor que cualquier dato
+typedef int Conjunto[LMAX];
+
+void Escribir (const Conjunto t, int n) {
+    int i;
+    cout &lt;&lt; &quot;[&quot;;
+    for (i = 0; i &lt; n; i = i + 1) {
+        cout &lt;&lt; t[i];
+        if (i &lt; n - 1) { cout &lt;&lt; &quot;, &quot;; }
+    }
+    cout &lt;&lt; &quot;]&quot; &lt;&lt; endl;
+}
+
+// (a) Sin marca: se conocen las longitudes n1 y n2; devuelve la longitud de r
+int Interseccion (const Conjunto s1, int n1, const Conjunto s2, int n2, Conjunto r) {
+    int i, j, k;
+    i = 0; j = 0; k = 0;
+    while ((i &lt; n1) &amp;&amp; (j &lt; n2)) {            // se acaba en cuanto se agota uno de los dos
+        if (s1[i] &lt; s2[j]) {
+            i = i + 1;
+        } else if (s1[i] &gt; s2[j]) {
+            j = j + 1;
+        } else {                              // común: se registra en r
+            r[k] = s1[i];
+            k = k + 1;
+            i = i + 1; j = j + 1;
+        }
+    }
+    return k;
+}
+
+// (b) Con marca: s1 y s2 terminan en MF y r se marca al final
+void InterseccionMarcada (const Conjunto s1, const Conjunto s2, Conjunto r) {
+    int i, j, k;
+    i = 0; j = 0; k = 0;
+    while ((s1[i] != MF) &amp;&amp; (s2[j] != MF)) {
+        if (s1[i] &lt; s2[j]) {
+            i = i + 1;
+        } else if (s1[i] &gt; s2[j]) {
+            j = j + 1;
+        } else {
+            r[k] = s1[i];
+            k = k + 1;
+            i = i + 1; j = j + 1;
+        }
+    }
+    r[k] = MF;                                // Marcar
+}
+
+int main ( ) {
+    Conjunto s1 = { -44, -21, -1, 3, 5, 7, 18, 24, 30, 33, 54, 66, 101 };
+    Conjunto s2 = { -32, -28, -21, 0, 3, 4, 6, 7, 14, 20, 24, 31, 33, 51, 66, 104, 200 };
+    Conjunto m1 = { -44, -21, -1, 3, 5, 7, 18, 24, 30, 33, 54, 66, 101, MF };
+    Conjunto m2 = { -32, -28, -21, 0, 3, 4, 6, 7, 14, 20, 24, 31, 33, 51, 66, 104, 200, MF };
+    Conjunto r;
+    int nr, i;
+
+    nr = Interseccion (s1, 13, s2, 17, r);
+    cout &lt;&lt; &quot;Sin marca: &quot;;
+    Escribir (r, nr);
+
+    InterseccionMarcada (m1, m2, r);
+    cout &lt;&lt; &quot;Con marca: &quot;;
+    i = 0;
+    while (r[i] != MF) { i = i + 1; }        // la longitud hay que contarla hasta la marca
+    Escribir (r, i);
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Sin marca: [-21, 3, 7, 24, 33, 66]
+Con marca: [-21, 3, 7, 24, 33, 66]</code></pre></div></div></details></div></article><article class="card ex" data-tema="p7" id="e-p7d"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· El primer número par</span></span><span class="card-tools"><label class="done" for="d-p7d"><input data-key="p7d" id="d-p7d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dada una secuencia de enteros en [−99, 99] marcada con −1, averiguar cuál es el primer número par, si hay alguno. ¿Es un recorrido o una búsqueda? ¿Cuál es la condición de parada? Diséñalo con el primer modelo e impleméntalo en C++.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>¿Recorrido o búsqueda?</h4><p>Una <b>búsqueda</b>: en cuanto aparece un par ya se sabe la respuesta y no hace falta mirar más. La iteración se detiene cuando <b>se acaba la secuencia o se encuentra</b> un par, así que sigue mientras <code>(EA != MF) &amp;&amp; (EA % 2 != 0)</code>.</p><p>Tras el bucle hay que mirar <b>por qué</b> se ha salido: si EA es la marca, no había ninguno. La marca −1 es impar, así que nunca se confunde con un par.</p></div><div class="codeblk sp"><p class="code-t">Notación algorítmica (primer modelo)</p><pre><code class="lang-sp">Comenzar (S);
+MIENTRAS (EA (S) ≠ MarcaFin) Y (EA (S) MOD 2 ≠ 0) HACER
+  Avanzar (S)
+FIN_MIENTRAS;
+SI EA (S) ≠ MarcaFin ENTONCES Escribir (&quot;El primer par es &quot;, EA (S))
+SI_NO Escribir (&quot;No hay ningún número par&quot;)
+FIN_SI</code></pre></div><p class="note">Ojo con los negativos: en C++ <code>-7 % 2</code> vale −1, no 1. Por eso se pregunta <code>!= 0</code> y no <code>== 1</code>.</p><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main ( ) {
+    const int MF = -1;
+    int EA;
+
+    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -1&quot; &lt;&lt; endl;
+    cin &gt;&gt; EA;                                        // Comenzar
+    while ((EA != MF) &amp;&amp; (EA % 2 != 0)) {             // búsqueda: para en el primer par
+        cin &gt;&gt; EA;                                    // Avanzar
+    }
+    if (EA != MF) {                                   // ¿por qué hemos salido?
+        cout &lt;&lt; &quot;El primer par es &quot; &lt;&lt; EA &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; &quot;No hay ningun numero par&quot; &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -1
+15 -7 33 42 9 -1
+El primer par es 42</code></pre></div><div class="codeblk out"><p class="code-t">Sin pares</p><pre><code>Enteros en [-99, 99], para terminar -1
+5 7 -1
+No hay ningun numero par</code></pre></div></div></details></div></article></div></section><section class="topic" id="p7-3"><h3><span class="tnum">7.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p7" id="e-p7e"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Letras dobles</span></span><span class="card-tools"><label class="done" for="d-p7e"><input data-key="p7e" id="d-p7e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Contar las apariciones de letras dobles (dos letras seguidas iguales) en una línea de como mucho 80 caracteres guardada en una tabla. Tres versiones: (a) marcada con '#' sin acceder a t[i−1]; (b) marcada accediendo a t[i−1]; (c) sin marca accediendo a t[i−1].</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Leer la línea en la tabla</h4><p><code>cin.get (c)</code> lee también los blancos. Se registra cada carácter hasta el fin de línea y al final se <b>marca</b> con '#' (por eso la tabla tiene 81 casillas). La acción devuelve además la longitud, que es lo que necesita la versión sin marca.</p><h4>Las tres versiones</h4><ol class="steps"><li><b>(a)</b> Es el esquema 3 del tema 4 (¬H2): el primero no tiene anterior, así que se guarda en <code>anterior</code> y se empieza a comparar desde el segundo. Es lo que haríamos con la máquina secuencial, donde sólo se ve el EA.</li><li><b>(b)</b> Con la tabla se puede mirar <code>t[i-1]</code> directamente: sobra la variable.</li><li><b>(c)</b> Sin marca el recorrido es un <code>for</code> de 1 a lon − 1 (de 2 a long en la notación).</li></ol><p>«llll» cuenta 3 parejas; «Ll» no cuenta porque mayúscula y minúscula son caracteres distintos. Los blancos dobles no son letras y no cuentan.</p></div><ul><li>Las tres dan lo mismo: «Llevaba la llave del carro y el bloc de notas» tiene <b>2</b> (ll de llave y rr de carro).</li><li>(a) funciona igual leyendo de la entrada sin tabla; (b) y (c) necesitan la tabla para volver atrás.</li></ul><div class="codeblk"><p class="code-t">C++ · las tres versiones</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int LMAX = 81;                          // 80 caracteres + la marca
+const char MF = &#x27;#&#x27;;
+typedef char Linea[LMAX];
+
+bool EsLetra (char c) {
+    return ((c &gt;= &#x27;a&#x27;) &amp;&amp; (c &lt;= &#x27;z&#x27;)) || ((c &gt;= &#x27;A&#x27;) &amp;&amp; (c &lt;= &#x27;Z&#x27;));
+}
+
+// Lee una línea de la entrada y la guarda marcada con &#x27;#&#x27;; devuelve su longitud
+int LeerLinea (Linea t) {
+    int i;
+    char c;
+    i = 0;
+    cin.get (c);
+    while ((c != &#x27;\n&#x27;) &amp;&amp; (c != MF) &amp;&amp; (i &lt; LMAX - 1)) {
+        t[i] = c;                             // Registrar
+        i = i + 1;
+        cin.get (c);
+    }
+    t[i] = MF;                                // Marcar
+    return i;
+}
+
+// (a) Marcada y sin acceder a t[i-1]: el anterior se guarda en una variable
+int DoblesA (const Linea t) {
+    int i, cont;
+    char anterior;
+    cont = 0;
+    if (t[0] != MF) {
+        anterior = t[0];                      // el primero no tiene anterior
+        i = 1;
+        while (t[i] != MF) {
+            if (EsLetra (t[i]) &amp;&amp; (t[i] == anterior)) { cont = cont + 1; }
+            anterior = t[i];
+            i = i + 1;
+        }
+    }
+    return cont;
+}
+
+// (b) Marcada y accediendo a t[i-1]
+int DoblesB (const Linea t) {
+    int i, cont;
+    cont = 0;
+    if (t[0] != MF) {
+        i = 1;
+        while (t[i] != MF) {
+            if (EsLetra (t[i]) &amp;&amp; (t[i] == t[i-1])) { cont = cont + 1; }
+            i = i + 1;
+        }
+    }
+    return cont;
+}
+
+// (c) Sin marca (se conoce la longitud) y accediendo a t[i-1]
+int DoblesC (const Linea t, int lon) {
+    int i, cont;
+    cont = 0;
+    for (i = 1; i &lt; lon; i = i + 1) {
+        if (EsLetra (t[i]) &amp;&amp; (t[i] == t[i-1])) { cont = cont + 1; }
+    }
+    return cont;
+}
+
+int main ( ) {
+    Linea t;
+    int lon;
+    cout &lt;&lt; &quot;Escribe una linea de texto (como mucho 80 caracteres):&quot; &lt;&lt; endl;
+    lon = LeerLinea (t);
+    cout &lt;&lt; &quot;(a) &quot; &lt;&lt; DoblesA (t) &lt;&lt; &quot;   (b) &quot; &lt;&lt; DoblesB (t) &lt;&lt; &quot;   (c) &quot; &lt;&lt; DoblesC (t, lon) &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Escribe una linea de texto (como mucho 80 caracteres):
+Llevaba la llave del carro y el bloc de notas
+(a) 2   (b) 2   (c) 2</code></pre></div></div></details></div></article><article class="card ex" data-tema="p7" id="e-p7f"><div class="card-head"><span class="card-num">Problema 2 <span class="card-title">· De la posición en el año a la fecha</span></span><span class="card-tools"><label class="done" for="d-p7f"><input data-key="p7f" id="d-p7f" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Dada la posición P de un día en un año no bisiesto, escribir la fecha día/mes a partir de una tabla tp con la posición del primer día de cada mes. 24 → 24/1, 144 → 24/5. Está resuelto en teoría en notación algorítmica: tradúcelo.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>La búsqueda</h4><p>Se busca el <b>primer mes que empieza después de P</b>; el bueno es el anterior. Si no hay ninguno (P está en diciembre), el mes es diciembre. Es la versión 1 del <a href="../teoria/guia.html#t5-3">apartado 5.3 de teoría</a>.</p><h4>Cuidado con los índices</h4><p>En C++ los meses van de 0 a 11: el índice que en teoría empieza en 2 aquí empieza en 1, la condición <code>i ≠ 12</code> pasa a <code>i &lt; MESES - 1</code> y al escribir hay que sumar 1 al mes. El día es <code>p - tp[mes] + 1</code> (el día 1 del mes está en la posición tp[mes]).</p></div><ul><li>Pruebas de los extremos: 1 → 1/1, 59 → 28/2, 335 → 1/12 y 365 → 31/12.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int MESES = 12;
+typedef int Primeros[MESES];
+
+int main ( ) {
+    // tp[m] = posición en el año del día 1 del mes m+1 (en C++ los meses van de 0 a 11)
+    const Primeros tp = { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 };
+    int p, i, mes, dia;
+
+    cout &lt;&lt; &quot;Posicion del dia en el anyo (1-365): &quot;;
+    cin &gt;&gt; p;
+
+    // Búsqueda del primer mes que empieza después de p (versión 1 de teoría)
+    i = 1;
+    while ((i &lt; MESES - 1) &amp;&amp; (tp[i] &lt;= p)) {   // INV: p &gt;= tp[j] para todo j &lt; i
+        i = i + 1;
+    }
+    if (tp[i] &gt; p) {
+        mes = i - 1;                            // el bueno es el mes anterior
+    } else {
+        mes = MESES - 1;                        // diciembre
+    }
+    dia = p - tp[mes] + 1;
+    cout &lt;&lt; dia &lt;&lt; &quot;/&quot; &lt;&lt; mes + 1 &lt;&lt; endl;      // en la fecha los meses van de 1 a 12
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Posicion del dia en el anyo (1-365): 144
+24/5</code></pre></div><div class="codeblk out"><p class="code-t">Otra ejecución</p><pre><code>Posicion del dia en el anyo (1-365): 365
+31/12</code></pre></div></div></details></div></article><article class="card ex" data-tema="p7" id="e-p7g"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Palabras repetidas (como el corrector de Word)</span></span><span class="card-tools"><label class="done" for="d-p7g"><input data-key="p7g" id="d-p7g" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Una línea con letras, blancos y la marca '#' (palabras de como mucho 10 letras). Cada vez que una palabra sea igual a la anterior, preguntar si se quiere eliminar y, si es así, eliminarla. Se recomienda una acción que vaya obteniendo las palabras y otra que actualice la línea. Mostrar la línea procesada.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Descomposición</h4><ol class="steps"><li><code>LeerLinea</code>: guarda la línea marcada con '#'.</li><li><code>SiguientePalabra (t, i, p)</code>: salta blancos desde i, copia la palabra en p (también marcada) y deja i justo detrás. Devuelve false si ya no quedan palabras.</li><li><code>Iguales (a, b)</code>: una <b>búsqueda</b> de la primera posición distinta; son iguales si se llega a la marca a la vez.</li><li><code>Eliminar (t, desde, hasta)</code>: desplaza a la izquierda todo lo que hay desde <code>hasta</code>, <b>incluida la marca</b>, para tapar el trozo eliminado.</li></ol><h4>El bucle principal</h4><p>Es un recorrido de las palabras con ¬H2: la primera no tiene anterior. Se guarda dónde acaba la palabra anterior (<code>finAnterior</code>); si la actual es igual y el usuario dice que sí, se elimina el trozo <code>[finAnterior, i)</code> (el blanco y la segunda copia) y el índice vuelve a <code>finAnterior</code>.</p></div><ul><li>Con «el el sol se esconde esconde detras de de la montanya#» y las respuestas s, n, s, se quitan el segundo «el» y el segundo «de», pero «esconde esconde» se queda.</li></ul><div class="codeblk"><p class="code-t">C++</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+const int LMAX = 81;
+const int PMAX = 11;                          // 10 letras + la marca
+const char MF = &#x27;#&#x27;;
+typedef char Linea[LMAX];
+typedef char Palabra[PMAX];
+
+// Lee la línea hasta &#x27;#&#x27; y la guarda marcada
+void LeerLinea (Linea t) {
+    int i;
+    char c;
+    i = 0;
+    cin.get (c);
+    while ((c != MF) &amp;&amp; (c != &#x27;\n&#x27;) &amp;&amp; (i &lt; LMAX - 1)) {
+        t[i] = c;
+        i = i + 1;
+        cin.get (c);
+    }
+    t[i] = MF;
+}
+
+// Acción que obtiene la siguiente palabra a partir de la posición i.
+// Al volver, i queda justo detrás de la palabra. Devuelve false si ya no quedan palabras.
+bool SiguientePalabra (const Linea t, int &amp;i, Palabra p) {
+    int k;
+    while (t[i] == &#x27; &#x27;) { i = i + 1; }        // saltar blancos
+    if (t[i] == MF) { return false; }
+    k = 0;
+    while ((t[i] != &#x27; &#x27;) &amp;&amp; (t[i] != MF)) {
+        if (k &lt; PMAX - 1) { p[k] = t[i]; k = k + 1; }
+        i = i + 1;
+    }
+    p[k] = MF;                                // la palabra también va marcada
+    return true;
+}
+
+bool Iguales (const Palabra a, const Palabra b) {
+    int k;
+    k = 0;
+    while ((a[k] != MF) &amp;&amp; (a[k] == b[k])) { k = k + 1; }   // búsqueda de la primera diferencia
+    return a[k] == b[k];
+}
+
+void Copiar (Palabra destino, const Palabra origen) {
+    int k;
+    k = 0;
+    while (origen[k] != MF) { destino[k] = origen[k]; k = k + 1; }
+    destino[k] = MF;
+}
+
+// Acción que actualiza la línea: quita el trozo [desde, hasta) desplazando el resto a la izquierda
+void Eliminar (Linea t, int desde, int hasta) {
+    int i;
+    i = hasta;
+    while (t[i] != MF) {
+        t[desde + i - hasta] = t[i];
+        i = i + 1;
+    }
+    t[desde + i - hasta] = MF;                // la marca también se desplaza
+}
+
+void EscribirPalabra (const Palabra p) {
+    int k;
+    for (k = 0; p[k] != MF; k = k + 1) { cout &lt;&lt; p[k]; }
+}
+
+int main ( ) {
+    Linea t;
+    Palabra anterior, actual;
+    int i, finAnterior;
+    char resp;
+    bool hay;
+
+    cout &lt;&lt; &quot;Escribe una linea terminada en #:&quot; &lt;&lt; endl;
+    LeerLinea (t);
+
+    i = 0;
+    hay = SiguientePalabra (t, i, anterior);
+    finAnterior = i;                          // donde acaba la palabra anterior
+    if (hay) { hay = SiguientePalabra (t, i, actual); }
+    while (hay) {
+        if (Iguales (anterior, actual)) {
+            cout &lt;&lt; &quot;Palabra repetida: &quot;;
+            EscribirPalabra (actual);
+            cout &lt;&lt; &quot;. Eliminarla (s/n)? &quot;;
+            cin &gt;&gt; resp;
+            if (resp == &#x27;s&#x27;) {
+                Eliminar (t, finAnterior, i); // se van el blanco y la segunda copia
+                i = finAnterior;
+            }
+        }
+        Copiar (anterior, actual);
+        finAnterior = i;
+        hay = SiguientePalabra (t, i, actual);
+    }
+
+    cout &lt;&lt; &quot;Linea final: &quot;;
+    for (i = 0; t[i] != MF; i = i + 1) { cout &lt;&lt; t[i]; }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Escribe una linea terminada en #:
+el el sol se esconde esconde detras de de la montanya#
+Palabra repetida: el. Eliminarla (s/n)? s
+Palabra repetida: esconde. Eliminarla (s/n)? n
+Palabra repetida: de. Eliminarla (s/n)? s
+Linea final: el sol se esconde esconde detras de la montanya</code></pre></div></div></details></div></article></div></section></section>
+    <p class="foot">Basado en los boletines de las prácticas 1 a 7 de la asignatura. Cada programa se ha compilado con g++ -Wall -Wextra sin avisos y las ejecuciones de ejemplo son salidas reales.</p>
   </main>
 </div>
 <script src="../../assets/js/guia.js"></script>
