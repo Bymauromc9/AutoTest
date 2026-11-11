@@ -97,23 +97,3 @@
 /* Aviso de asignatura de otro curso (assets/js/hub.js) */
 .curso-aviso{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
 .curso-aviso p{margin:0;flex:1 1 260px}
-
-/* Comunidad, Aula Virtual y próxima entrega en la portada (assets/js/hub.js) */
-.hub-social{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
-.hub-comu{grid-column:1;display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-l);background:var(--surface);color:var(--ink);text-decoration:none;box-shadow:var(--shadow-soft)}
-.hub-comu:hover{background:var(--hover);border-color:var(--line-strong)}
-.hub-comu .hs-ico{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:var(--r-m);background:var(--accent-soft);color:var(--accent)}
-.hub-comu .hs-txt{display:flex;flex-direction:column;min-width:0}
-.hub-comu .hs-txt small{color:var(--muted);font-size:.8rem}
-.hub-comu .hs-txt b{font-weight:600}
-.hub-comu .res-go{margin-left:auto;color:var(--muted)}
-.hub-aula{grid-column:2;grid-row:1;display:inline-flex;align-items:center;gap:8px;padding:0 16px;border:1px solid var(--line);border-radius:var(--r-l);background:var(--surface);color:var(--ink);text-decoration:none;font:600 .9rem var(--f-display);white-space:nowrap}
-.hub-aula:hover{background:var(--hover);border-color:var(--line-strong)}
-.hub-aula .ico{width:18px;height:18px}
-.hub-entrega{grid-column:1 / -1;display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--warn);border-radius:var(--r-l);background:var(--warn-soft);color:var(--ink);text-decoration:none}
-.hub-entrega:hover{filter:brightness(.98)}
-.hub-entrega .hs-ico{display:grid;place-items:center;width:34px;height:34px;flex:none;color:var(--warn)}
-.hub-entrega .hs-txt{display:flex;flex-direction:column;min-width:0}
-.hub-entrega .hs-txt small{color:var(--warn);font-weight:600;font-size:.8rem}
-.hub-entrega .hs-txt b{font-weight:600}
-@media (max-width:560px){.hub-social{grid-template-columns:1fr}.hub-aula{grid-column:1;grid-row:auto;just-content:center;justify-content:center}}

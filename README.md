@@ -28,9 +28,6 @@ assets/
   js/estadisticas.js        «Tus estadísticas» en cuenta.html: evolución de notas, temas, actividad y racha
   js/admin.js               Panel de administración (admin.html)
   js/reportes.js            «Reportar un error» de la barra superior (lo carga core.js)
-  js/comunidad.js           Comunidad de cada asignatura: publicaciones (preguntas, materiales por enlace, debates),
-                            respuestas, «me gusta» y el panel de entregas y fechas; la carga <asig>/comunidad.html
-  css/comunidad.css         Estilos de la comunidad
   js/pwa.js                 Web instalable y notificaciones push: registra sw.js, «Instalar la app» y la suscripción
                             de cada dispositivo (lo carga core.js; ver «Web instalable y notificaciones push»)
   img/icon-*.png            Iconos de la app instalable (los genera scripts/pwa/iconos.py)
@@ -53,7 +50,7 @@ manifest.webmanifest        Manifiesto de la app instalable (nombre, iconos, col
 sw.js                       Service worker: páginas guardadas para usar sin conexión y notificaciones push
 offline.html                Lo que se ve sin conexión si la página aún no estaba guardada
 vercel.json                 Tiempo máximo de las funciones y cabeceras de sw.js y del manifiesto
-firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso, ranking, configuración, reportes, comunidad y entregas)
+firestore.rules             Reglas de seguridad de Firestore (cuentas, progreso, ranking, configuración y reportes)
   img/favicon.svg
 fli/                        Fundamentos Lógicos de la Informática
   index.html                Portada de FLI (la genera assets/js/hub.js): Teoría, Prácticas y Examen, con L0 y L1 dentro
@@ -264,8 +261,6 @@ Para añadir un curso nuevo basta ampliar la lista `CURSOS` de `core.js`.
    `node scripts/admin/admin.js reglas`. Opcional: su descripción para la IA en `api/chat.js` y `assets/js/asistente.js`,
    y una insignia automática por sus puntos (`CAMPOS` en `assets/js/insignias.js`, la lista `campo` de
    `firestore.rules` y el pack inicial de `assets/js/admin.js`).
-5. Para la comunidad y las entregas: copia `fli/comunidad.html` a `mates/comunidad.html` (cambiando `data-subject`)
-   y añade su id a `asigValida()` de `firestore.rules`.
 
 ## AMD: páginas generadas y SageMath
 
@@ -517,11 +512,6 @@ suma puntos en el **ranking global** (ranking.html: general, esta semana y por a
 - **Firestore**: `usuarios/<uid>` (nombre, puntos, tests, puntos por asignatura `fli`/`fc`/`ip`/`gohp`/`amd`/`aed` y de cada
   semana `w<n>`; es público porque es el ranking), `progreso/<uid>` (el progreso; sólo su dueño),
   `config/web` (el aviso y las fechas de examen del panel; lo lee cualquiera, lo escribe un administrador)
-- `comunidad/<asig>/posts/<id>` (publicaciones de la comunidad: preguntas, materiales por enlace y debates),
-  con `respuestas/<rid>` y `megusta/<uid>` dentro; la lee cualquiera, la crea cada cuenta; el autor y los
-  administradores borran o moderan. Anidada por asignatura para no necesitar índices de Firestore
-- `entregas/<id>` (entregas y fechas límite; las añade un administrador en la pestaña «Entregas» del panel,
-  además de las que trae el código en `assets/js/core.js`)
   `reportes/<id>` (los errores que reportan los usuarios; sólo los leen los administradores),
   `insignias/<id>` (el catálogo; lo lee cualquiera, lo escribe un administrador) y `retos/<semana>`
   (ganadores de cada reto semanal entregado). Las insignias de cada uno van en `usuarios/<uid>.insignias`
