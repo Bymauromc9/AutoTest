@@ -1,6 +1,6 @@
 /*!
  * simulacro.js — simulacro del test de GOHP con las reglas de la guía docente:
- *   40 preguntas de cuatro opciones de los temas 1–10 (4 de cada uno; el seminario no entra), nota sobre 10,
+ *   44 preguntas de cuatro opciones de los temas 1–11 (4 de cada uno; los seminarios no entran), nota sobre 10,
  *   cada fallo resta 1/3 de acierto, las preguntas en blanco no cuentan y hace falta un 4 para hacer media.
  * Las preguntas se ven todas a la vez, como en el papel; se puede cambiar o quitar una respuesta hasta entregar.
  * El simulacro en curso (con la hora límite) se guarda en sessionStorage: sobrevive a recargar la página.
@@ -11,6 +11,7 @@
   "use strict";
   const { store, session, shuffle, esc, icon } = window.App;
   const { BANK, TOPICS, EXAM_IDS, EXAM_MIX, fmt } = window.GOHP;
+  const num = (t) => (TOPICS[t] && TOPICS[t].num) || String(t);   // número que se ve (el tema 11 es la clave 12)
   const LET = ["a", "b", "c", "d"];
   const STATE = "gohp-sim-state";
   const app = document.getElementById("app");
@@ -47,7 +48,7 @@
     </header>
     <div class="callout"><b class="big">Reglas</b>
       <ul class="rules">
-        <li>40 preguntas de cuatro opciones; la nota del test va <b>sobre 10</b>.</li>
+        <li>44 preguntas de cuatro opciones (4 de cada uno de los 11 temas); la nota del test va <b>sobre 10</b>.</li>
         <li><b>Cada fallo resta 1/3</b> (3 fallos anulan 1 acierto). Las que dejes en blanco ni suman ni restan.</li><li>En el examen real necesitas al menos un <b>4 sobre 10</b> en el test para hacer media con la parte práctica.</li>
         <li>Reparto: 4 preguntas de cada uno de los temas 1 a 10.</li>
         <li>Puedes cambiar o quitar una respuesta (tócala otra vez) hasta que entregues.</li>
@@ -87,7 +88,7 @@
     const cards = S.ids.map((id, i) => {
       const q = BANK[id], ord = optOrder(i);
       return `<article class="qcard sim-q" id="q${i}" aria-labelledby="qt${i}">
-        <div class="sim-qh"><span class="sim-n">${i + 1}</span><span class="tag">Tema ${q.t}</span></div>
+        <div class="sim-qh"><span class="sim-n">${i + 1}</span><span class="tag">Tema ${num(q.t)}</span></div>
         <p class="qtext" id="qt${i}">${fmt(q.q)}</p>
         <div class="opts" role="radiogroup" aria-labelledby="qt${i}">${ord.map((k, p) =>
           `<button class="opt" type="button" role="radio" aria-checked="${S.ans[i] === k}" data-i="${i}" data-k="${k}"><span class="k">${LET[p]}</span><span class="t">${fmt(q.o[k])}</span></button>`).join("")}</div>
@@ -153,12 +154,12 @@
     session(STATE, null);
     const bars = Object.keys(g.byT).sort().map((t) => {
       const b = g.byT[t], pct = b.ok / b.n * 100;
-      return `<div class="bar"><span>Tema ${t}</span><div class="track"><div class="fill" style="width:${pct}%;background:${pct < 50 ? "var(--bad)" : pct < 75 ? "var(--warn)" : "var(--ok)"}"></div></div><span class="v">${b.ok}/${b.n}</span></div>`;
+      return `<div class="bar"><span>Tema ${num(t)}</span><div class="track"><div class="fill" style="width:${pct}%;background:${pct < 50 ? "var(--bad)" : pct < 75 ? "var(--warn)" : "var(--ok)"}"></div></div><span class="v">${b.ok}/${b.n}</span></div>`;
     }).join("");
     const weak = Object.keys(g.byT).filter((t) => g.byT[t].ok / g.byT[t].n < 0.5);
     const review = S.ids.map((id, i) => ({ q: BANK[id], i, a: S.ans[i] })).filter((x) => x.a !== x.q.a).map((x) => {
       const blank = x.a == null;
-      return `<div class="ritem${blank ? " blank" : ""}"><span class="tag">Pregunta ${x.i + 1} · Tema ${x.q.t} · ${esc(TOPICS[x.q.t].name)}</span>
+      return `<div class="ritem${blank ? " blank" : ""}"><span class="tag">Pregunta ${x.i + 1} · Tema ${num(x.q.t)} · ${esc(TOPICS[x.q.t].name)}</span>
         <p><b>${fmt(x.q.q)}</b></p>
         <p class="yours">${blank ? "La dejaste en blanco." : `Tu respuesta: ${letra(x.i, x.a)}) ${fmt(x.q.o[x.a])}`}</p>
         <p class="right">Correcta: ${letra(x.i, x.q.a)}) ${fmt(x.q.o[x.q.a])}</p><p>${fmt(x.q.e)}</p></div>`;
@@ -176,7 +177,7 @@
       <p class="muted" style="margin:0;font-size:14px;flex-basis:100%">${g.ok} aciertos − ${g.bad} fallos ÷ 3 = ${n1(g.net)} netas de ${g.n} → ${n1(g.net)} ÷ ${g.n} × 10.</p>
     </section>
     <div class="bytopic"><h3>Por temas</h3>${bars}</div>
-    ${weak.length ? `<p class="callout">Repasa primero: ${weak.map((t) => `<a href="../teoria/guia.html#t${t}">tema ${t} (${esc(TOPICS[t].name)})</a>`).join(", ")}.</p>` : ""}
+    ${weak.length ? `<p class="callout">Repasa primero: ${weak.map((t) => `<a href="../teoria/guia.html#t${num(t)}">tema ${num(t)} (${esc(TOPICS[t].name)})</a>`).join(", ")}.</p>` : ""}
     <div class="actions" style="justify-content:flex-start"><button class="btn" id="sim-again" type="button">Otro simulacro</button>
       <a class="btn ghost" href="../teoria/chuleta.html">Repasar la chuleta</a></div>
     <section class="review" aria-label="Repaso"><h3>Fallos y preguntas en blanco</h3>${review || `<div class="perfect"><b>Sin fallos.</b> Un 10.</div>`}</section>`;

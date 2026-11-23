@@ -7,6 +7,8 @@
   const { store, session, shuffle, repaso } = window.App;
   const ASIG = "gohp";
   const { BANK, TOPICS, TOPIC_IDS, GENERAL_MIX, LETTERS, fmt } = window.GOHP;
+  const ORDER = window.GOHP.ORDER || Object.keys(TOPICS).map(Number);
+  const num = (t) => (TOPICS[t] && TOPICS[t].num) || String(t);   // número que se ve (el tema 11 es la clave 12)
 
 /* ======================= ESTADO ======================= */
 const S = {view:"home", key:null, qs:[], i:0, ans:[], len:"20", penalty:true, batch:1, flash:false};
@@ -106,13 +108,13 @@ function restore(){
 }
 function render(){ if(S.view==="quiz") quiz(); else if(S.view==="results") results(); else home(); persist(); }
 
-function testLabel(key){if(key==="R")return "Repaso de fallos";return key==="G"?"Test general":key===11?"Seminario de ética":"Tema "+key;}
+function testLabel(key){if(key==="R")return "Repaso de fallos";return key==="G"?"Test general":key===11?"Seminario de ética":key===13?"Seminario de salidas profesionales":"Tema "+num(key);}
 
 function home(){
   S.view="home";
-  const rows=Object.keys(TOPICS).map(Number).map(t=>{
+  const rows=ORDER.map(t=>{
     const n=TOPIC_IDS[t].length, best=store("gohp-best-"+t);
-    return `<div class="test-row"><div class="num">${t===11?"S":t}</div>
+    return `<div class="test-row"><div class="num">${num(t)}</div>
       <div class="info"><h3>${TOPICS[t].name}</h3><p>${TOPICS[t].desc}</p>
       <span class="best">${n} preguntas en el banco${best!=null?` · mejor nota <b>${best.toFixed(1)}</b>`:""}</span></div>
       <button class="btn" data-start="${t}">Empezar</button></div>`;
@@ -120,7 +122,7 @@ function home(){
   const bestG=store("gohp-best-G");
   app.innerHTML=`
   <header class="top">
-    <span class="eyebrow">Teoría · Temas 1–10 y seminario</span>
+    <span class="eyebrow">Teoría · Temas 1–11 y seminarios</span>
     <h1>Autotest de GOHP</h1>
     <p class="muted">Elige un tema o el test general. Como en el examen, <b>cada fallo resta 1/3</b> (puedes quitarlo abajo) y las preguntas en blanco no cuentan. Al responder cada pregunta verás al momento si es correcta y por qué; al final tienes la nota y el repaso de tus fallos. Las preguntas y las respuestas salen siempre en orden aleatorio, y dentro de cada test el botón <b>↻ Cambiar preguntas</b> carga una tanda nueva con preguntas distintas.</p>
     <div class="legend"><span><span class="cell ok">V</span> acierto</span><span><span class="cell bad">F</span> fallo</span><span><span class="cell blank">–</span> en blanco</span></div>
@@ -137,7 +139,7 @@ function home(){
   ${repasoBox()}
   <section class="tests" aria-label="Tests por tema">${rows}
     <div class="test-row general"><div class="num">Σ</div>
-      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los diez temas (3 de cada uno). El seminario de ética no entra.</p>
+      <div class="info"><h3>Test general</h3><p>30 preguntas al azar de los once temas, repartidas según su peso. Los seminarios no entran.</p>
       <span class="best">${BANK.length} preguntas en total${bestG!=null?` · mejor nota <b>${bestG.toFixed(1)}</b>`:""}</span></div>
       <button class="btn" data-start="G">Empezar</button></div>
   </section>
@@ -229,10 +231,10 @@ function results(){
   const failed=S.qs.map((q,k)=>({q,k,a:S.ans[k]})).filter(x=>x.a!==x.q.a);
   let topicBars="";
   if(S.key==="G"){
-    topicBars=`<div class="bytopic"><h3>Por temas</h3>`+Object.keys(TOPICS).map(Number).filter(t=>GENERAL_MIX[t]).map(t=>{
+    topicBars=`<div class="bytopic"><h3>Por temas</h3>`+ORDER.filter(t=>GENERAL_MIX[t]).map(t=>{
       const qs=S.qs.map((q,k)=>({q,k})).filter(x=>x.q.t===t); const ok=qs.filter(x=>S.ans[x.k]===x.q.a).length;
       const pct=qs.length?ok/qs.length*100:0;
-      return `<div class="bar"><span>Tema ${t}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="v">${ok}/${qs.length}</span></div>`;
+      return `<div class="bar"><span>Tema ${num(t)}</span><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="v">${ok}/${qs.length}</span></div>`;
     }).join("")+`</div>`;
   }
   const msg = g.nota>=9?"Excelente: dominas este bloque.":g.nota>=7?"Muy bien. Repasa los fallos de abajo y estarás listo.":g.nota>=5?"Aprobado, pero hay conceptos que conviene repasar.":"Toca repasar: lee las explicaciones de los fallos y vuelve a intentarlo.";

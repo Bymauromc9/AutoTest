@@ -173,16 +173,16 @@
       name: "Gestión de Organizaciones y Habilidades Profesionales",
       desc: "La empresa por dentro: estrategia, organización, producción, marketing, finanzas y personas.",
       home: "gohp/index.html",
-      intro: "Diez temas: la empresa, las teorías de la administración, el entorno, la planificación, la organización, la producción, el marketing, las finanzas, la dirección y los recursos humanos, más el seminario de ética. Teoría, prácticas resueltas, calculadoras y todo lo necesario para el examen.",
+      intro: "Once temas: la empresa, las teorías de la administración, el entorno, la planificación, la organización, la producción, el marketing, las finanzas, la dirección, los recursos humanos y los sistemas de información, más los seminarios de ética y de salidas profesionales. Teoría, prácticas resueltas, calculadoras y todo lo necesario para el examen.",
       exam: { date: "2027-01-08", label: "8 de enero de 2027 · test + parte escrita", href: "gohp/examen/guia.html" },
-      sub: { teoria: "Temas 1–10", practicas: "Prácticas 1–10", examen: "Test + parte escrita" },
+      sub: { teoria: "Temas 1–11", practicas: "Prácticas 1–10", examen: "Test + parte escrita" },
       resources: [
         { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "gohp/teoria/guia.html",
-          desc: "Los diez temas y el seminario de ética: definiciones, cálculos resueltos (productividad, punto muerto, VAN y TIR) y las trampas del test.", progress: { t: "estudio", key: "gohp-teoria-estudio", visto: "gohp-teoria-visto", total: 62 } },
+          desc: "Los once temas y los seminarios: definiciones, cálculos resueltos (productividad, punto muerto, VAN y TIR) y las trampas del test.", progress: { t: "estudio", key: "gohp-teoria-estudio", visto: "gohp-teoria-visto", total: 71 } },
         { id: "chuleta", sec: "teoria", kind: "chuleta", title: "Chuleta", href: "gohp/teoria/chuleta.html",
           desc: "Tamaños y formas de empresa, teorías, estrategias, todas las fórmulas de producción e inversión y las teorías de la motivación, en una página." },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "gohp/teoria/autotest.html",
-          desc: "Unas 300 preguntas de los diez temas y del seminario con corrección inmediata, explicación y la penalización del examen (−1/3).", progress: { t: "autotest", prefix: "gohp-best-", topics: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], names: { 1: "La empresa", 2: "La administración", 3: "El entorno", 4: "Planificación", 5: "Organización", 6: "Producción", 7: "Marketing", 8: "Finanzas", 9: "Dirección", 10: "Recursos humanos" } } },
+          desc: "Unas 340 preguntas de los once temas y de los seminarios con corrección inmediata, explicación y la penalización del examen (−1/3).", progress: { t: "autotest", prefix: "gohp-best-", topics: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12], names: { 1: "La empresa", 2: "La administración", 3: "El entorno", 4: "Planificación", 5: "Organización", 6: "Producción", 7: "Marketing", 8: "Finanzas", 9: "Dirección", 10: "Recursos humanos", 12: "Sistemas de información" } } },
         { id: "guia-p", sec: "practicas", kind: "guia", title: "Guía de prácticas", href: "gohp/practicas/guia.html",
           desc: "Las prácticas de los diez temas resueltas: casos de empresa, organigramas y todos los problemas de producción e inversión paso a paso (41 ejercicios).", progress: { t: "hechos", key: "gohp-practicas-hechos", total: 41 } },
         { id: "herramientas", sec: "practicas", kind: "herramientas", title: "Herramientas", href: "gohp/practicas/herramientas.html",
@@ -190,9 +190,9 @@
         { id: "guia-e", sec: "examen", kind: "examen", title: "Guía del examen", href: "gohp/examen/guia.html",
           desc: "Cómo es el examen, los mínimos, la penalización del test, qué estudiar primero y 8 problemas tipo examen resueltos.", progress: { t: "hechos", key: "gohp-examen-hechos", total: 8 } },
         { id: "simulacro", sec: "examen", kind: "simulacro", title: "Simulacro del test", href: "gohp/examen/simulacro.html",
-          desc: "40 preguntas de cuatro opciones, 4 de cada tema, con reloj y la penalización del examen (cada fallo resta 1/3). Nota sobre 10.", progress: { t: "best", key: "gohp-sim-best" } },
+          desc: "44 preguntas de cuatro opciones, 4 de cada tema, con reloj y la penalización del examen (cada fallo resta 1/3). Nota sobre 10.", progress: { t: "best", key: "gohp-sim-best" } },
         { id: "general", sec: "examen", kind: "general", title: "Test general", href: "gohp/teoria/autotest.html#test-G",
-          desc: "30 preguntas de los diez temas con corrección inmediata: para repasar sin reloj.", progress: { t: "best", key: "gohp-best-G", scale: 10 } }
+          desc: "30 preguntas de los once temas con corrección inmediata: para repasar sin reloj.", progress: { t: "best", key: "gohp-best-G", scale: 10 } }
       ]
     },
     {
@@ -211,7 +211,7 @@
         { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "amd/teoria/guia.html",
           desc: "Repaso de bachillerato y los cinco temas: definiciones, métodos paso a paso, ejemplos resueltos y las órdenes de SageMath de cada cálculo.", progress: { t: "estudio", key: "amd-teoria-estudio", visto: "amd-teoria-visto", total: 36 } },
         { id: "ejercicios", sec: "teoria", kind: "ejercicios", title: "Hojas de ejercicios resueltas", href: "amd/teoria/ejercicios.html",
-          desc: "Las hojas 1 a 4 y los ejercicios de clase resueltos y explicados apartado por apartado, con la comprobación en SageMath.", progress: { t: "hechos", key: "amd-ejercicios-hechos", total: 177 } },
+          desc: "Las hojas 1 a 4 y los ejercicios de clase resueltos y explicados apartado por apartado, con la comprobación en SageMath.", progress: { t: "hechos", key: "amd-ejercicios-hechos", total: 182 } },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "amd/teoria/autotest.html",
           desc: "Preguntas de los cinco temas con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "amd-best-", topics: [1, 2, 3, 4, 5], names: { 1: "Espacios vectoriales", 2: "Producto escalar", 3: "Aplicaciones lineales", 4: "Diagonalización y SVD", 5: "Aritmética modular" } } },
         { id: "sage", sec: "practicas", kind: "herramientas", title: "SageMath en la web", href: "amd/practicas/sage.html",

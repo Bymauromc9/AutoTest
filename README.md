@@ -131,10 +131,10 @@ ip/                         Introducción a la Programación (temas 0–5 y prá
     resaltado.js            Resaltado de C++ y de la notación SP (el resto de la guía es assets/js/guia.js)
     maquina.js              Simulador de la máquina secuencial (primer modelo)
     data/banco.js           Banco de preguntas del autotest (IP.ORDER: temas 0–4, bloque 6 = tema 5 y bloque 5 = C++)
-gohp/                       Gestión de Organizaciones y Habilidades Profesionales (temas 1–10 y seminario de ética)
+gohp/                       Gestión de Organizaciones y Habilidades Profesionales (temas 1–11 y seminarios de ética y de salidas profesionales)
   index.html                Portada de GOHP (la genera assets/js/hub.js)
   teoria/
-    guia.html               Guía de teoría de los diez temas y del seminario (62 apartados)
+    guia.html               Guía de teoría de los once temas y de los seminarios (71 apartados)
     chuleta.html            Chuleta: empresa, teorías, estrategias, fórmulas de producción e inversión, motivación
     autotest.html           Tests de cada tema (unas 300 preguntas) y test general; penalización −1/3 opcional
   practicas/
@@ -142,7 +142,7 @@ gohp/                       Gestión de Organizaciones y Habilidades Profesional
     herramientas.html       Calculadoras: punto muerto, fabricar o comprar, productividad, VAN/TIR, coste efectivo y TAE
   examen/
     guia.html               Cómo es el examen (8 de enero de 2027), qué estudiar y 8 problemas tipo examen
-    simulacro.html          Simulacro del test: 40 preguntas (4 por tema), reloj y −1/3 por fallo, nota sobre 10
+    simulacro.html          Simulacro del test: 44 preguntas (4 por tema), reloj y −1/3 por fallo, nota sobre 10
   css/
     guia.css                Añadidos de GOHP a assets/css/guia.css: organigramas, matrices DAFO, gráfico del punto muerto
     gohp.css                Componentes del autotest y del simulacro
