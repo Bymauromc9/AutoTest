@@ -21,29 +21,62 @@
 <li><b>Simetría respecto al plano de normal n</b>: S = I − 2<fr>nnᵗ|nᵗn</fr>.</li>
 <li><b>Dilatación</b>: λ en la dirección u y μ en las perpendiculares: A = μI + (λ − μ)<fr>uuᵗ|uᵗu</fr>.</li>
 <li>En general: si B = [u v w] es la base ortonormal adaptada y D la diagonal con lo que hace la aplicación en cada vector, <b>A = B·D·Bᵗ</b> (la inversa de una ortogonal es su traspuesta).</li></ul>
-<p>Para transformar un objeto se aplica la matriz a cada vértice y se mantienen las caras: <code>objeto([A*vector(v) for v in vertices], caras, …)</code>. Al ejecutar la primera celda se cargan <code>geometria.py</code> y la función <code>giro(a)</code>.</p>
+<p>Para transformar un objeto se aplica la matriz a cada vértice y se mantienen las caras: <code>objeto([A*vector(v) for v in vertices], caras, …)</code>. Al ejecutar la primera celda se cargan <code>geometria.py</code> y, como atajo, la función <code>giro(a)</code>, que devuelve la matriz del giro de ángulo a.</p>
+<box k="warn" t="En el aula no existe giro(a)"><p>La función <code>giro(a)</code> la añade esta web; en el SageMath del aula sólo tienes <code>geometria.py</code>. Allí escribe la matriz a mano: <code>G = matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])</code>, o define tú la función al principio: <code>def giro(a): return matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])</code>.</p></box>
 </ap>
 </tema>
 
-<tema id="p9-1" n="1" t="Ejercicio 1 · Un giro de 30°" eyebrow="Ejercicio 1" lede="Matriz del giro y su efecto sobre un hexágono.">
+<tema id="p9-1" n="1" t="Ejercicio 1 · Un giro de 30°" eyebrow="Ejercicio 1" lede="Construir la matriz de un giro a partir de lo que hace con la base canónica y usarla para girar un hexágono.">
 <ej id="p9-1a" n="Ejercicio 1 (a)" t="la matriz">
-<p>Calcula la matriz del giro g de 30° en ℝ².</p>
+<p>Calcula la matriz de la aplicación lineal g : ℝ² → ℝ² correspondiente al giro de 30°.</p>
 <sol>
-<p>cos 30° = √3/2 y sin 30° = 1/2:</p>
-<res>G = <m>√3/2, −1/2; 1/2, √3/2</m></res>
+<box k="tip" t="Qué pide exactamente"><p>El enunciado <b>no da ninguna matriz</b>: hay que construirla. «El giro de 30°» es la aplicación que gira cada vector 30° alrededor del origen en sentido <b>antihorario</b> (el positivo), sin cambiar su longitud. Es lineal, así que tiene una matriz G y g(x) = G·x.</p></box>
+<p><b>La idea clave</b> (tema 3): las <b>columnas</b> de la matriz de una aplicación lineal son las <b>imágenes de la base canónica</b>. Basta saber adónde va a parar e₁ = (1, 0) y adónde e₂ = (0, 1).</p>
+<ol class="steps">
+<li><b>Imagen de e₁ = (1, 0).</b> Es el vector de longitud 1 sobre el eje X. Girado 30° queda a 30° del eje X, y un vector unitario con ángulo α es (cos α, sin α): g(e₁) = (cos 30°, sin 30°) = (√3/2, 1/2).</li>
+<li><b>Imagen de e₂ = (0, 1).</b> Está a 90° del eje X; girado 30° queda a 120°: g(e₂) = (cos 120°, sin 120°) = (−1/2, √3/2). Es lo mismo que (−sin 30°, cos 30°): el perpendicular a g(e₁) girado a la izquierda.</li>
+<li><b>Se ponen por columnas.</b> Primera columna g(e₁), segunda g(e₂).</li>
+</ol>
+<md>G = <m>cos 30°, −sin 30°; sin 30°, cos 30°</m> = <m>√3/2, −1/2; 1/2, √3/2</m></md>
+<res>G = <m>√3/2, −1/2; 1/2, √3/2</m>, es decir, g(x, y) = ((√3/2)x − (1/2)y, (1/2)x + (√3/2)y)</res>
+<p>Lo mismo vale para cualquier ángulo α: <b>giro de α = <m>cos α, −sin α; sin α, cos α</m></b>. Si el ángulo es negativo (sentido horario), cambia el signo de los senos.</p>
+<p><b>Comprobaciones</b> que conviene hacer (y que se piden a menudo):</p>
+<ul><li>G·(1, 0) = (√3/2, 1/2), que forma 30° con (1, 0): cos = (1, 0)·(√3/2, 1/2) = √3/2 = cos 30° ✓</li>
+<li>No cambia longitudes: las columnas son unitarias y perpendiculares, así que G es <b>ortogonal</b> (Gᵗ·G = I) y det G = 3/4 + 1/4 = 1.</li>
+<li>Doce giros de 30° dan la vuelta completa: G¹² = I.</li></ul>
+<sage t="Ejercicio 1 (a)"># En el SageMath del aula no hay ninguna función «giro»: la matriz se escribe a mano
+a = pi/6                                   # 30 grados en radianes
+G = matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])
+show(G)                                    # [sqrt(3)/2, -1/2; 1/2, sqrt(3)/2]
+show(G*vector([1, 0]), G*vector([0, 1]))   # las columnas: las imágenes de e1 y e2
+show(G.T*G == identity_matrix(2), G.det(), G^12 == identity_matrix(2))</sage>
 </sol></ej>
 <ej id="p9-1b" n="Ejercicio 1 (b)" t="hexágono y su giro">
-<p>C es el hexágono regular centrado en el origen con un vértice en (5, 4). Calcula sus vértices y los de g(C) y dibuja ambos.</p>
+<p>Sea C el hexágono regular (centrado en el origen) con un vértice en (5, 4). Calcula los vértices de C y de g(C) y dibuja los dos hexágonos.</p>
 <sol>
-<p>Radio √41. Con u = (5, 4)/√41 y v = (−4, 5)/√41, los vértices son √41(cos(kπ/3)u + sin(kπ/3)v) = cos(kπ/3)(5, 4) + sin(kπ/3)(−4, 5):</p>
+<p>El enunciado ya trae el código que calcula los vértices de C; esto es lo que hace y por qué:</p>
+<ol class="steps">
+<li><b>Radio</b>: la distancia del centro (el origen) al vértice dado, r = ‖(5, 4)‖ = √41.</li>
+<li><b>Base ortonormal adaptada</b>: u = (5, 4)/√41 apunta al primer vértice y v = (−4, 5)/√41 es su perpendicular (en ℝ², (a, b) ⟂ (−b, a)).</li>
+<li><b>Vértices</b>: en un hexágono regular los vértices están separados 360°/6 = 60°. En la base {u, v}, el vértice k está a ángulo k·60°: P<sub>k</sub> = r·(cos(k·60°)·u + sin(k·60°)·v), para k = 0, …, 5. Como r·u = (5, 4) y r·v = (−4, 5), queda P<sub>k</sub> = cos(k·60°)(5, 4) + sin(k·60°)(−4, 5).</li>
+</ol>
 <res>C: (5, 4), (5/2 − 2√3, 2 + 5√3/2), (−5/2 − 2√3, −2 + 5√3/2), (−5, −4), (−5/2 + 2√3, −2 − 5√3/2), (5/2 + 2√3, 2 − 5√3/2)</res>
-<p>g(C) se obtiene multiplicando cada vértice por G; por ejemplo g(5, 4) = (5√3/2 − 2, 5/2 + 2√3). Como el hexágono tiene simetría de 60°, g(C) es el mismo hexágono «a medio camino»: sus vértices caen en las bisectrices de los de C.</p>
-<sage t="Ejercicio 1">G = giro(pi/6); show(G)
-r = vector([5, 4]).norm(); u = vector([5, 4]) / r; v = vector([-4, 5]) / r
-C = [r*cos(k*pi/3)*u + r*sin(k*pi/3)*v for k in range(6)]
-gC = [G*P for P in C]
-print([P.simplify_full() for P in C]); print([P.simplify_full() for P in gC])
-(poligono(C, color=amarillo, wire=True) + poligono(gC, color=azul, wire=True)).show(aspect_ratio=1)</sage>
+<p><b>g(C)</b>: como g es lineal, la imagen del hexágono es el polígono que forman las imágenes de sus vértices. Se multiplica cada vértice por la G del apartado (a); por ejemplo:</p>
+<md>g(5, 4) = <m>√3/2, −1/2; 1/2, √3/2</m><m>5; 4</m> = (5√3/2 − 2, 5/2 + 2√3) ≈ (2,33; 5,96)</md>
+<p>Qué se ve al dibujarlos: g(C) es el mismo hexágono girado 30°, la mitad de los 60° que separan dos vértices, así que cada vértice de g(C) queda justo «entre» dos vértices de C. Si el giro fuera de 60°, g(C) coincidiría con C.</p>
+<sage t="Ejercicio 1 (b)">from geometria import *
+a = pi/6
+G = matrix([[cos(a), -sin(a)], [sin(a), cos(a)]])     # la matriz del apartado (a)
+# Los vértices de C (el código que da el enunciado)
+r = vector([5, 4]).norm()
+u = vector([5, 4]).normalized()                       # hacia el primer vértice
+v = vector([-4, 5]).normalized()                      # perpendicular a u
+vertices = [r*cos(i*2*pi/6)*u + r*sin(i*2*pi/6)*v for i in range(6)]
+# Los vértices de g(C): G por cada vértice
+girados = [G*P for P in vertices]
+print([P.simplify_full() for P in vertices])
+print([P.simplify_full() for P in girados])
+(poligono(vertices, color=amarillo, wire=True) + poligono(girados, color=azul, wire=True)).show(aspect_ratio=1)</sage>
 </sol></ej>
 </tema>
 
