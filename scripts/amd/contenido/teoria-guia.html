@@ -515,6 +515,41 @@ U, S, V = A.SVD()
 show(U.n(digits=4), S.n(digits=4), V.n(digits=4))
 show((U * S * V.transpose() - A).norm() < 1e-12)</sage>
 </ap>
+
+<ap id="t4-6" n="4.6" t="Aplicaciones de la SVD">
+<p>Con A = U·Σ·V<sup>t</sup> ya calculada salen, casi gratis, cuatro cosas que se piden en la hoja 4 (ejercicio 5) y en el examen. Todas usan las <b>columnas</b> uᵢ de U y vᵢ de V.</p>
+<box t="1. Comprobación y suma de matrices de rango 1">
+<p>Para cada i: <b>A·vᵢ = σᵢ·uᵢ</b> (y A·vᵢ = 0 si σᵢ = 0). Por eso A = σ₁u₁v₁<sup>t</sup> + ⋯ + σ<sub>k</sub>u<sub>k</sub>v<sub>k</sub><sup>t</sup> (sólo los σ no nulos): cada sumando es una matriz de rango 1 y quedarse con los primeros <b>comprime</b> la matriz (ver 4.5).</p>
+</box>
+<box t="2. Sistemas homogéneos: la mejor solución de A·X = 0 con |X| = 1">
+<p>Las columnas de V de los σᵢ = 0 son una <b>base ortonormal del núcleo</b>. Y, en general, el vector unitario que hace |A·X| más pequeño es la <b>última columna de V</b>, con |A·X| = σ<sub>min</sub>: si σ<sub>min</sub> = 0 es una solución exacta; si no, la que menos se aleja.</p>
+<p>Ejemplo de clase: A = <m sm>1 1; 1 1</m> tiene σ₁ = 2, σ₂ = 0 y v₂ = (1, −1)/<r>2</r>: A·v₂ = 0.</p>
+</box>
+<box t="3. La seudoinversa de Moore-Penrose">
+<md><b>A<sup>+</sup> = V·Σ<sup>+</sup>·U<sup>t</sup></b> = Σ <fr>1|σᵢ</fr>·vᵢuᵢ<sup>t</sup></md>
+<p>Σ<sup>+</sup> se obtiene <b>invirtiendo los σ no nulos</b> (los ceros se quedan) y <b>trasponiendo</b> (es n × m). Si A es cuadrada e invertible, A<sup>+</sup> = A<sup>−1</sup>. <b>x = A<sup>+</sup>b</b> resuelve A·x = b por mínimos cuadrados y, si hay infinitas soluciones, da la de <b>menor longitud</b>.</p>
+<p>Ejemplo de clase: para A = <m sm>1 1; 1 1</m>, Σ<sup>+</sup> = <m sm>1/2 0; 0 0</m> y A<sup>+</sup> = <m sm>1/4 1/4; 1/4 1/4</m>; para A·x = (2, 2), x = A<sup>+</sup>(2, 2) = (1, 1), la solución más corta de x + y = 2.</p>
+</box>
+<box t="4. El número de condición">
+<md><b>κ(A) = σ<sub>max</sub> / σ<sub>min</sub></b></md>
+<p>Mide cuánto se amplifican los errores de los datos al resolver A·x = b. κ ≈ 1: <b>bien condicionado</b>; κ muy grande: <b>mal condicionado</b>; si σ<sub>min</sub> = 0, κ = ∞ (A no es invertible).</p>
+<p>Ejemplo de clase: A = <m sm>1000 0; 0 10⁻³</m> tiene κ = 10⁶. Con b = (1000; 0,001) la solución es (1, 1), pero si b pasa a (1000; 0,002) la solución salta a (1, 2): un error de 0,001 en los datos cambia la solución en 1.</p>
+</box>
+<box k="tip" t="PageRank (versión light): un sistema homogéneo resuelto con SVD">
+<p>Cada página j con k<sub>j</sub> enlaces reparte su importancia x<sub>j</sub> a partes iguales: p<sub>ij</sub> = 1/k<sub>j</sub> si j enlaza a i (cada columna de P suma 1). La importancia en equilibrio cumple P·x = x, es decir, <b>(P − I)·x = 0</b>, y se normaliza para que las xᵢ sumen 1.</p>
+<p>Ejemplo: A → B, C; B → C; C → A. P = <m sm>0 0 1; 1/2 0 0; 1/2 1 0</m> y el núcleo de P − I es ⟨(2, 1, 2)⟩: A 40 %, C 40 %, B 20 %.</p>
+<p>¿Por qué SVD y no Gauss? En el ordenador 1/3 se redondea, P − I deja de ser singular y Gauss devuelve sólo x = 0. Con la SVD el último σ sale diminuto (≈ 10⁻⁷) y la <b>última columna de V</b> recupera el ranking de forma estable.</p>
+</box>
+<p><b>En análisis de datos</b>: con los datos centrados, las columnas de V son las <b>componentes principales</b> (PCA: las direcciones de más varianza, ordenadas por σᵢ), y en los <b>sistemas de recomendación</b> (Netflix, Spotify) la SVD de la matriz usuarios × productos encuentra perfiles latentes que sirven para predecir las notas que faltan.</p>
+<sage t="Núcleo, seudoinversa y número de condición">A = matrix(RDF, [[0, 0, 1], [1/2, 0, 0], [1/2, 1, 0]]) - identity_matrix(RDF, 3)
+U, S, V = A.SVD()
+x = V.column(2)                      # la última columna de V
+show(S.diagonal())                   # el último valor singular es (casi) 0
+show(x / sum(x))                     # PageRank normalizado: (0.4, 0.2, 0.4)
+B = matrix(RDF, [[1000, 0], [0, 0.001]])
+s = B.SVD()[1].diagonal()
+show(max(s) / min(s))                # número de condición</sage>
+</ap>
 </tema>
 
 <tema id="t5" n="5" t="Aritmética modular" lede="División entera, máximo común divisor con el algoritmo de Euclides, la identidad de Bezout, el conjunto ℤₙ con sus inversos y divisores de cero, la función φ de Euler y la exponenciación modular. Este tema se hace sin matrices.">

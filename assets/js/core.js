@@ -209,9 +209,9 @@
       sub: { teoria: "Temas 0–5", practicas: "Prácticas 1–11 con SageMath", examen: "Parciales y examen de prácticas" },
       resources: [
         { id: "guia-t", sec: "teoria", kind: "guia", title: "Guía de teoría", href: "amd/teoria/guia.html",
-          desc: "Repaso de bachillerato y los cinco temas: definiciones, métodos paso a paso, ejemplos resueltos y las órdenes de SageMath de cada cálculo.", progress: { t: "estudio", key: "amd-teoria-estudio", visto: "amd-teoria-visto", total: 36 } },
+          desc: "Repaso de bachillerato y los cinco temas: definiciones, métodos paso a paso, ejemplos resueltos y las órdenes de SageMath de cada cálculo.", progress: { t: "estudio", key: "amd-teoria-estudio", visto: "amd-teoria-visto", total: 37 } },
         { id: "ejercicios", sec: "teoria", kind: "ejercicios", title: "Hojas de ejercicios resueltas", href: "amd/teoria/ejercicios.html",
-          desc: "Las hojas 1 a 4 y los ejercicios de clase resueltos y explicados apartado por apartado, con la comprobación en SageMath.", progress: { t: "hechos", key: "amd-ejercicios-hechos", total: 182 } },
+          desc: "Las hojas 1 a 4 y los ejercicios de clase resueltos y explicados apartado por apartado, con la comprobación en SageMath.", progress: { t: "hechos", key: "amd-ejercicios-hechos", total: 189 } },
         { id: "autotest", sec: "teoria", kind: "autotest", title: "Autotest por temas", href: "amd/teoria/autotest.html",
           desc: "Preguntas de los cinco temas con corrección inmediata y la explicación de cada respuesta.", progress: { t: "autotest", prefix: "amd-best-", topics: [1, 2, 3, 4, 5], names: { 1: "Espacios vectoriales", 2: "Producto escalar", 3: "Aplicaciones lineales", 4: "Diagonalización y SVD", 5: "Aritmética modular" } } },
         { id: "sage", sec: "practicas", kind: "herramientas", title: "SageMath en la web", href: "amd/practicas/sage.html",
@@ -239,7 +239,7 @@
         { id: "p11", sec: "practicas", kind: "ejercicios", title: "Práctica 11 · Diagonalización ortogonal y SVD", href: "amd/practicas/p11.html",
           desc: "Bases ortonormales de vectores propios, A = P·D·Pᵗ, la descomposición en valores singulares comprobada paso a paso, qué hace A·Aᵗ con un cubo y una deformación animada.", progress: { t: "hechos", key: "amd-p11-hechos", total: 7 } },
         { id: "parciales", sec: "examen", kind: "examen", title: "Exámenes resueltos", href: "amd/examen/parciales.html",
-          desc: "Los primeros parciales del curso 2025-26 resueltos (con sus erratas corregidas) y simulacros del segundo parcial y del examen de prácticas con SageMath.", progress: { t: "hechos", key: "amd-examen-hechos", total: 23 } },
+          desc: "Parciales resueltos (con sus erratas corregidas), los exámenes de enero y junio y las prácticas evaluables del curso anterior, y simulacros del segundo parcial y del examen de prácticas con SageMath.", progress: { t: "hechos", key: "amd-examen-hechos", total: 43 } },
         { id: "general", sec: "examen", kind: "general", title: "Test general", href: "amd/teoria/autotest.html#test-G",
           desc: "30 preguntas de los cinco temas repartidas según su peso.", progress: { t: "best", key: "amd-best-G", scale: 10 } }
       ]

@@ -1821,7 +1821,7 @@ tratamiento final;       // p. ej. la media si n &gt; 0</code></pre></div></deta
 <li>Cuando por fin lee el −1, ya está dentro del cuerpo: lo <b>escribe y lo cuenta</b> antes de volver a comprobar la condición. Trata la marca como un dato más y el contador sale uno de más.</li>
 </ul>
 <p><b>Traza</b> de la correcta con 4 8 15 −1: lee 4 → escribe, cont 1, lee 8 → escribe, cont 2, lee 15 → escribe, cont 3, lee −1 → sale. <b>3</b> datos.</p>
-<p class="note">Ninguna de las dos compila tal cual porque usan <code>EA_S</code>, que no está declarada. El compilador lo dice con «was not declared in this scope».</p></div><ul><li><b>Esquema</b>: recorrido del primer modelo (esquema 1): escribir cada dato y contarlos.</li><li><b>Al compilar</b>: <b>ninguna compila</b>, porque usan <code>EA_S</code>, que no está declarada (debería ser <code>EA</code>).</li><li><b>Corregido eso</b>, la de la izquierda es la correcta: Comenzar antes del bucle y Avanzar al final del cuerpo.</li><li>La de la derecha <b>compara EA sin haberle dado valor</b> (comportamiento indefinido: puede que ni entre) y, cuando lee el −1, lo escribe y lo cuenta antes de comprobar la condición: <b>trata la marca como un dato</b> y cuenta uno de más.</li></ul><div class="codeblk"><p class="code-t">C++ · versión correcta</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+<p class="note">En la primera versión del enunciado las dos usaban <code>EA_S</code>, que no está declarada, y no compilaban («was not declared in this scope»). En la versión actual (v3) ya pone <code>EA</code>: las dos compilan y la diferencia es sólo de esquema.</p></div><ul><li><b>Esquema</b>: recorrido del primer modelo (esquema 1): escribir cada dato y contarlos.</li><li><b>Al compilar</b>: las dos compilan (la errata <code>EA_S</code> de la primera versión del enunciado ya está corregida).</li><li>La de la <b>izquierda</b> es la correcta: Comenzar antes del bucle y Avanzar al final del cuerpo.</li><li>La de la derecha <b>compara EA sin haberle dado valor</b> (comportamiento indefinido: puede que ni entre) y, cuando lee el −1, lo escribe y lo cuenta antes de comprobar la condición: <b>trata la marca como un dato</b> y cuenta uno de más.</li></ul><div class="codeblk"><p class="code-t">C++ · versión correcta</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
 using namespace std;
 
 int main( )
@@ -1833,7 +1833,7 @@ int main( )
     cin &gt;&gt; EA;                     // Comenzar
     cont = 0;
     while (EA != MF) {
-        cout &lt;&lt; EA &lt;&lt; &quot;, &quot;;        // tratamiento (EA_S no existe: es EA)
+        cout &lt;&lt; EA &lt;&lt; &quot;, &quot;;        // tratamiento
         cont = cont + 1;
         cin &gt;&gt; EA;                 // Avanzar
     }
@@ -1874,13 +1874,13 @@ int main ( ) {
     return 0;
 }</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
 1 4 5 3 5 6 -1
-1 5 10 13 18 24 </code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Sumas de elementos adyacentes</span></span><span class="card-tools"><label class="done" for="d-p6c"><input data-key="p6c" id="d-p6c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>De S = [S1, …, Sn] obtén R = [S1+S2, S2+S3, …, Sn−1+Sn]. Si S está vacía o tiene un único elemento, «La secuencia está vacía». ¿Qué tipo de problema es? ¿Qué esquema? Postcondición, invariante y diseño.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Por qué es el esquema 3</h4>
+1 5 10 13 18 24 </code></pre></div></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6c"><div class="card-head"><span class="card-num">Problema 3 <span class="card-title">· Sumas de elementos adyacentes</span></span><span class="card-tools"><label class="done" for="d-p6c"><input data-key="p6c" id="d-p6c" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>De S = [S1, …, Sn] obtén R = [S1+S2, S2+S3, …, Sn−1+Sn]. Si S está vacía, «La secuencia está vacía». Al final se pide <b>modificarlo</b> para que, si S tiene un único elemento, también muestre ese mensaje. ¿Qué tipo de problema es? ¿Qué esquema? Postcondición, invariante y diseño.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Por qué es el esquema 3</h4>
 <p>Cada suma usa <b>dos</b> elementos seguidos, el anterior y el actual. El primer elemento no tiene anterior, así que no produce ninguna suma: <b>no se puede tratar como los demás</b> (¬H2). Y la secuencia vacía necesita un mensaje propio (¬H1). Además, con un solo elemento tampoco hay pares.</p>
 <h4>Procedimiento</h4>
 <ol class="steps">
 <li>Leer el primero. Si es la marca → «vacía».</li>
 <li>Si no, guardarlo en <code>ant</code> (tratamiento del primer elemento: sólo recordarlo) y leer el siguiente.</li>
-<li>Si ese es la marca → sólo había uno → «vacía» (según el enunciado).</li>
+<li>Si ese es la marca → sólo había uno: no hay ningún par. En la versión básica no se escribe nada; con la <b>modificación</b> que se pide al final, «La secuencia está vacía» (es el programa de abajo).</li>
 <li>Si no, repetir: escribir <code>ant + EA</code>; <code>ant ← EA</code>; leer el siguiente; hasta llegar a la marca.</li>
 </ol>
 <p>El invariante: <b>lo escrito = las sumas adyacentes de Piz</b> y <b>ant = el último de Piz</b>. Por eso, al tratar EA, la única suma nueva es ant + EA.</p>
@@ -1912,7 +1912,7 @@ int main ( ) {
     return 0;
 }</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros positivos, para terminar -1
 3 1 4 1 5 -1
-4 5 5 6 </code></pre></div><p>Se ha supuesto, como en el resto de la práctica, enteros positivos con marca −1 (el enunciado no fija la marca).</p></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6d"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Primer número par</span></span><span class="card-tools"><label class="done" for="d-p6d"><input data-key="p6d" id="d-p6d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Secuencia de enteros de [−99, 99] con marca −1: ¿cuál es el primer par, si hay alguno? ¿Recorrido o búsqueda? ¿Condición para detener?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Recorrido o búsqueda</h4>
+4 5 5 6 </code></pre></div><p>Se ha supuesto, como en el resto de la práctica, enteros positivos con marca −1 (el enunciado no fija la marca).</p></div></details></div></article><article class="card ex" data-tema="p6" id="e-p6d"><div class="card-head"><span class="card-num">Problema 4 <span class="card-title">· Primer número par</span></span><span class="card-tools"><label class="done" for="d-p6d"><input data-key="p6d" id="d-p6d" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Secuencia de enteros de [−99, 99] con marca −100: ¿cuál es el primer par, si hay alguno? ¿Recorrido o búsqueda? ¿Condición para detener?</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Recorrido o búsqueda</h4>
 <p>No hace falta mirar todos los números: en cuanto aparece el primer par, ya tenemos la respuesta. Eso es una <b>búsqueda</b>, que se para por una de dos razones: se encuentra lo buscado o se llega al final.</p>
 <p class="formula">continuar mientras (EA ≠ MF) Y (EA no es par)</p>
 <ol class="steps">
@@ -1921,14 +1921,14 @@ int main ( ) {
 <li>Al salir, mirar <b>por qué</b> se ha salido: si EA es la marca, no había pares; si no, EA es el primer par.</li>
 </ol>
 <div class="box warn"><p class="box-t">Impar con negativos</p><p>En C++, <code>-3 % 2</code> vale <b>−1</b>, no 1 (el resto lleva el signo del dividendo). Por eso «es impar» se escribe <code>EA % 2 != 0</code>, que funciona con positivos y negativos; <code>EA % 2 == 1</code> fallaría con −3.</p></div>
-<p><b>Traza</b> con 7 −3 15 −8 4: 7 impar → sigue; −3 impar → sigue; 15 → sigue; −8 % 2 = 0 → par → para. Primer par: <b>−8</b>. El 4 no llega a leerse.</p></div><p><b>Búsqueda</b>: se para en cuanto aparece un par (o en la marca). Condición de continuación: <code>(EA != MF) &amp;&amp; (EA % 2 != 0)</code>. Al salir, se mira si se paró en la marca (no hay) o en un par.</p><div class="box warn"><p class="box-t">Dos detalles</p><ul><li>Con negativos, <code>-3 % 2</code> vale −1, así que «impar» es <code>EA % 2 != 0</code>, no <code>EA % 2 == 1</code>.</li><li>El −1 está dentro de [−99, 99] pero es la marca: no puede aparecer como dato (y al ser impar no afecta a la búsqueda).</li></ul></div><div class="codeblk"><p class="code-t">C++ · primerpar.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
+<p><b>Traza</b> con 7 −3 15 −8 4: 7 impar → sigue; −3 impar → sigue; 15 → sigue; −8 % 2 = 0 → par → para. Primer par: <b>−8</b>. El 4 no llega a leerse.</p></div><p><b>Búsqueda</b>: se para en cuanto aparece un par (o en la marca). Condición de continuación: <code>(EA != MF) &amp;&amp; (EA % 2 != 0)</code>. Al salir, se mira si se paró en la marca (no hay) o en un par.</p><div class="box warn"><p class="box-t">Dos detalles</p><ul><li>Con negativos, <code>-3 % 2</code> vale −1, así que «impar» es <code>EA % 2 != 0</code>, no <code>EA % 2 == 1</code>.</li><li>La marca es <b>−100</b>, fuera de [−99, 99], así que nunca se confunde con un dato. (La primera versión del enunciado usaba −1, que sí está dentro del intervalo; la versión actual lo corrige.)</li></ul></div><div class="codeblk"><p class="code-t">C++ · primerpar.cpp</p><pre><code class="lang-cpp">#include &lt;iostream&gt;
 using namespace std;
 
 int main ( ) {
-    const int MF = -1;
+    const int MF = -100;
     int EA;
 
-    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -1&quot; &lt;&lt; endl;
+    cout &lt;&lt; &quot;Enteros en [-99, 99], para terminar -100&quot; &lt;&lt; endl;
     cin &gt;&gt; EA;                                   // Comenzar
     while ((EA != MF) &amp;&amp; (EA % 2 != 0)) {       // continuar: no es el final Y no es par
         cin &gt;&gt; EA;                               // Avanzar
@@ -1939,8 +1939,8 @@ int main ( ) {
         cout &lt;&lt; &quot;El primer par es &quot; &lt;&lt; EA &lt;&lt; endl;
     }
     return 0;
-}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -1
-7 -3 15 -8 4 -1
+}</code></pre></div><div class="codeblk out"><p class="code-t">Ejecución de ejemplo</p><pre><code>Enteros en [-99, 99], para terminar -100
+7 -3 15 -8 4 -100
 El primer par es -8</code></pre></div></div></details></div></article></div></section><section class="topic" id="p6-3"><h3><span class="tnum">6.3</span><span>Trabajo personal</span></h3><div class="prose"><article class="card ex" data-tema="p6" id="e-p6e"><div class="card-head"><span class="card-num">Problema 1 <span class="card-title">· Marcador de tenis</span></span><span class="card-tools"><label class="done" for="d-p6e"><input data-key="p6e" id="d-p6e" type="checkbox"><span>Hecho</span></label></span></div><div class="card-body"><p>Una función que, dado el marcador y quién gana el punto, muestre el nuevo marcador; y un algoritmo que simule el partido con una secuencia de '1' y '2' terminada en '0'. Gana el partido quien llegue a seis juegos. Para «112211221»: quince–nada, treinta–nada, treinta–quince, iguales a treinta, cuarenta–treinta, juego para el jugador 1, nada–quince, nada–treinta, quince–treinta.</p><details class="sol"><summary>Resolución explicada</summary><div class="sol-body"><div class="expl"><p class="expl-t">Explicación paso a paso</p><h4>Cómo se cuenta en el tenis (lo que hay que programar)</h4>
 <ul>
 <li>Dentro de un juego se cuentan puntos: 0, 1, 2, 3 se dicen «nada, quince, treinta, cuarenta».</li>

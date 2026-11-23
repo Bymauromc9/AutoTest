@@ -32,6 +32,7 @@
 <ul><li>k = (1, 0, −1)/√2, la dirección de la recta;</li><li>u = (1, 0, 1)/√2 y v = (0, 1, 0), en el plano.</li></ul>
 <p>El punto C = 2u = (√2, 0, √2) está en el plano y a distancia 2. Para que el diamante apunte hacia fuera (dirección u) se lleva e₃ a u con la base positiva M = [k v u] (k × v = u):</p>
 <res>vértice colocado = C + M·v,  M = <m>1/√2, 0, 1/√2; 0, 1, 0; −1/√2, 0, 1/√2</m></res>
+<box k="warn" t="Diferencia con la resolución oficial"><p>La resolución que se ha publicado en el Aula Virtual coloca el diamante a <b>distancia 6</b> del origen (C = 6u), no a distancia 2 como dice el enunciado. Se hace igual: basta cambiar el 2 por un 6 en C, y la corona del apartado (b) sale más abierta.</p></box>
 <sage t="Ejercicio 1 (a)">k = vector([1, 0, -1]).normalized(); u = vector([1, 0, 1]).normalized(); v = vector([0, 1, 0])
 M = column_matrix([k, v, u]); show(M); print(M.det())          # 1: base positiva
 C = 2*u; print(C, C.norm(), C*vector([1, 0, -1]))                 # distancia 2 y en el plano

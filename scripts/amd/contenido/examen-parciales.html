@@ -1,11 +1,11 @@
 <!--{
  "salida": "amd/examen/parciales.html",
  "titulo": "Exámenes de AMD resueltos",
- "descripcion": "Exámenes de Álgebra y Matemática Discreta resueltos y explicados: los dos primeros parciales del curso 2025-26, un simulacro del segundo parcial y otro del examen de prácticas con SageMath.",
+ "descripcion": "Exámenes de Álgebra y Matemática Discreta resueltos y explicados: parciales, los exámenes de enero y junio y las prácticas evaluables del curso anterior, y simulacros del segundo parcial y del examen de prácticas con SageMath.",
  "eyebrow": "Álgebra y Matemática Discreta · Exámenes",
  "h1": "Exámenes resueltos",
  "ops": "6 + 4",
- "lead": "Los primeros parciales del curso 2025-26 (grupos 1 y 2 y grupos 3 y 4) resueltos paso a paso, con las erratas de las soluciones oficiales corregidas, y dos simulacros para lo que queda: el segundo parcial (aplicaciones lineales, diagonalización, SVD y aritmética modular) y el examen de prácticas con SageMath.",
+ "lead": "Los primeros parciales del curso 2025-26 (grupos 1 y 2 y grupos 3 y 4) resueltos paso a paso, con las erratas de las soluciones oficiales corregidas, y dos simulacros para lo que queda: el segundo parcial (aplicaciones lineales, diagonalización, SVD y aritmética modular) y el examen de prácticas con SageMath. Al final, los exámenes del curso anterior que hay en Recursos (segundo parcial, enero, junio y las dos prácticas evaluables), también resueltos.",
  "marca": "AMD · Exámenes",
  "sym": "✓",
  "body": {"data-storage-key": "amd-examen-hechos", "data-visto-key": "amd-examen-visto", "data-sage-key": "amd-examen", "data-sage-ficheros": "/amd/sage/geometria.py", "data-sage-prep": "from geometria import *"},
@@ -266,5 +266,246 @@ print(G, p, v - p, (v - p).norm(), A*(v - p))</sage>
 C = vector([1, 1, 1]); w = vector([1, 2, 2]).normalized(); u = vector([-w[1], w[0], 0]).normalized(); v = w.cross_product(u)
 base = [C + cos(2*pi*k/5)*u + sin(2*pi*k/5)*v for k in range(5)]
 recta(w, C=C) + prisma(base + [P + 2*w for P in base], wire=True)</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-5" n="5" t="Segundo parcial del curso anterior · resolución oficial" eyebrow="Curso 2025-26" lede="Aplicaciones lineales, construcción de f, SVD y aritmética modular, según la resolución que se publicó en Recursos › Exámenes curso anterior.">
+<ej id="ex-5-1" n="1" t="núcleo, imagen y subespacios">
+<p>f : ℝ³ → ℝ³, f(x, y, z) = (x + z, x − y, y + z). a) Núcleo e imagen; ¿inyectiva? ¿suprayectiva? b) f(W₁) con W₁ = {x − y + z = 0} y f<sup>−1</sup>(W₂) con W₂ = ⟨(1, 1, 0), (1, 1, 1)⟩.</p>
+<sol>
+<p>a) A = <m>1 0 1; 1 −1 0; 0 1 1</m>. Núcleo: z = −x, y = x (la tercera ecuación sobra) ⇒ Nuc f = ⟨(1, 1, −1)⟩: <b>no inyectiva</b>. Imagen: las columnas, con C₃ = C₁ + C₂ ⇒ Im f = ⟨(1, 1, 0), (0, −1, 1)⟩, dim 2 &lt; 3: <b>no suprayectiva</b>.</p>
+<p>b) Base de W₁ (y = x + z): (1, 1, 0) y (0, 1, 1). f(1, 1, 0) = (1, 0, 1), f(0, 1, 1) = (1, −1, 2). Para W₂: normal (1, 1, 0) × (1, 1, 1) = (1, −1, 0), así que W₂ = {x − y = 0}; se sustituye f: (x + z) − (x − y) = y + z = 0.</p>
+<res>f(W₁) = ⟨(1, 0, 1), (1, −1, 2)⟩;  f<sup>−1</sup>(W₂) = {y + z = 0} = ⟨(1, 0, 0), (0, 1, −1)⟩</res>
+<sage t="Segundo parcial · ejercicio 1">A = matrix(QQ, [[1, 0, 1], [1, -1, 0], [0, 1, 1]])
+show(A.right_kernel().basis(), A.column_space().basis())
+show(span([A*vector([1, 1, 0]), A*vector([0, 1, 1])]).basis())
+H = matrix(QQ, [[1, -1, 0]])                     # implícita de W2
+show((H*A).right_kernel().basis())               # f^-1(W2)</sage>
+</sol></ej>
+<ej id="ex-5-2" n="2" t="construir f">
+<p>Construye f : ℝ³ → ℝ³ con Nuc f = ⟨(1, 1, 1)⟩, f(1, 0, 1) = (2, 1, 1) y f(0, 1, 1) en el plano x − z = 0.</p>
+<sol>
+<p>f(1, 1, 1) = 0, f(1, 0, 1) = (2, 1, 1) y se <b>elige</b> f(0, 1, 1) = (1, 0, 1), que está en el plano (cualquier vector del plano que no haga crecer el núcleo vale). B = {(1, 1, 1), (1, 0, 1), (0, 1, 1)} es base. Escribiendo (x, y, z) = α(1, 1, 1) + β(1, 0, 1) + γ(0, 1, 1): α = x + y − z, β = z − y, γ = z − x, y por linealidad:</p>
+<res>f(x, y, z) = (−x − 2y + 3z, −y + z, −x − y + 2z)</res>
+<p>Comprobación: f(1, 1, 1) = (0, 0, 0), f(1, 0, 1) = (2, 1, 1) y f(0, 1, 1) = (1, 0, 1) ✓. Con otra elección de f(0, 1, 1) sale otra f igual de válida.</p>
+<sage t="Segundo parcial · ejercicio 2">B = column_matrix(QQ, [[1, 1, 1], [1, 0, 1], [0, 1, 1]])
+F = column_matrix(QQ, [[0, 0, 0], [2, 1, 1], [1, 0, 1]])
+M = F*B.inverse(); show(M, M.right_kernel().basis())</sage>
+</sol></ej>
+<ej id="ex-5-3" n="3" t="SVD">
+<p>Descomposición en valores singulares de A = <m>1 1; 0 1; 1 0</m>.</p>
+<sol>
+<p>AᵗA = <m>2 1; 1 2</m>, (2 − λ)² − 1 = (λ − 3)(λ − 1): σ₁ = √3, σ₂ = 1, con v₁ = (1, 1)/√2 y v₂ = (1, −1)/√2.</p>
+<p>u₁ = A·v₁/√3 = (2, 1, 1)/√6, u₂ = A·v₂ = (0, −1, 1)/√2, y u₃ ⟂ a los dos: u₁ × u₂ ∼ (1, −1, −1)/√3.</p>
+<res>U = <m>2/√6, 0, 1/√3; 1/√6, −1/√2, −1/√3; 1/√6, 1/√2, −1/√3</m>,  Σ = <m>√3 0; 0 1; 0 0</m>,  V = <fr>1|√2</fr><m>1 1; 1 −1</m></res>
+<sage t="Segundo parcial · ejercicio 3">A = matrix(QQ, [[1, 1], [0, 1], [1, 0]])
+U = column_matrix([vector([2, 1, 1])/sqrt(6), vector([0, -1, 1])/sqrt(2), vector([1, -1, -1])/sqrt(3)])
+S = matrix([[sqrt(3), 0], [0, 1], [0, 0]]); V = matrix([[1, 1], [1, -1]])/sqrt(2)
+show((U*S*V.T).simplify_full() == A)</sage>
+</sol></ej>
+<ej id="ex-5-4" n="4" t="aritmética modular">
+<p>a) Inverso de 23 en ℤ₄₀. b) φ(20) y 23⁴² en ℤ₂₀. c) Las soluciones del sistema x + y + z = 2, 2x − z = 1.</p>
+<sol>
+<p>a) 40 = 1·23 + 17; 23 = 1·17 + 6; 17 = 2·6 + 5; 6 = 1·5 + 1. Hacia atrás: 1 = 3·6 − 17 = 3·23 − 4·17 = 7·23 − 4·40 ⇒ <b>23<sup>−1</sup> = 7</b> (23·7 = 161 = 4·40 + 1 ✓).</p>
+<p>b) φ(20) = 20·(1 − ½)(1 − ⅕) = 8. 23 ≡ 3 y mcd(3, 20) = 1, así que 3⁸ ≡ 1; 42 = 5·8 + 2 ⇒ 23⁴² ≡ 3² = <b>9</b>.</p>
+<p>c) z = 2x − 1 y y = 3 − 3x: S = {(λ, 3 − 3λ, 2λ − 1)}.</p>
+<box k="warn" t="Ojo con el apartado c)"><p>La resolución oficial lo resuelve en ℝ. Si en tu enunciado el sistema es en ℤₚ (como en el examen de enero, que pide las soluciones en ℤ₇), el método es el mismo, pero cada división se convierte en multiplicar por un inverso módulo p y hay exactamente p soluciones, una por cada valor del parámetro.</p></box>
+<sage t="Segundo parcial · ejercicio 4">print(xgcd(23, 40), inverse_mod(23, 40), euler_phi(20), power_mod(23, 42, 20))</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-6" n="6" t="Examen de enero del curso anterior" eyebrow="Curso 2025-26" lede="Primer y segundo parcial en el mismo examen. Quien se presenta a toda la teoría hace el primer parcial y, del segundo, sólo los ejercicios 1, 3 y los apartados a) y c) del 4 (1,25, 1,5 y 1,25 puntos).">
+<ej id="ex-6-p1-1" n="P1 · 1" t="W ⊂ ℝ⁴, W<sup>⊥</sup> y descomposición · 1 p">
+<p>W = ⟨(1, 1, 0, 0), (0, 1, 1, −1), (1, 2, 1, −1)⟩ y v = (2, 0, 1, 1). a) Base, dimensión e implícitas de W. b) Base ortonormal de W<sup>⊥</sup> con Gram-Schmidt. c) v como suma de un vector de W y otro de W<sup>⊥</sup>.</p>
+<sol>
+<p>a) El tercer generador es la suma de los dos primeros: base {(1, 1, 0, 0), (0, 1, 1, −1)}, <b>dim 2</b>. Los vectores perpendiculares a la base cumplen x + y = 0 y y + z − t = 0 ⇒ W<sup>⊥</sup> = ⟨(−1, 1, 0, 1), (0, 0, 1, 1)⟩, y sus coordenadas son los coeficientes de las implícitas:</p>
+<res>W = {−x + y + t = 0, z + t = 0}</res>
+<p>b) w₁ = (−1, 1, 0, 1); w₂ = (0, 0, 1, 1) − <fr>1|3</fr>(−1, 1, 0, 1) = (1/3, −1/3, 1, 2/3) ∼ (1, −1, 3, 2).</p>
+<res>W<sup>⊥</sup>: {(−1, 1, 0, 1)/√3, (1, −1, 3, 2)/√15}</res>
+<p>c) Proyección sobre W<sup>⊥</sup> con la base ortonormal: v·w₁ = −1 y v·(1, −1, 3, 2) = 7 ⇒ <fr>−1|3</fr>(−1, 1, 0, 1) + <fr>7|15</fr>(1, −1, 3, 2) = (4/5, −4/5, 7/5, 3/5).</p>
+<res>v = (6/5, 4/5, −2/5, 2/5) + (4/5, −4/5, 7/5, 3/5), el primero en W y el segundo en W<sup>⊥</sup></res>
+<sage t="Enero · P1 ejercicio 1">W = span(QQ, [[1, 1, 0, 0], [0, 1, 1, -1], [1, 2, 1, -1]]); Wp = W.complement()
+show(W.dimension(), Wp.basis())
+G, _ = matrix(QQ, [[-1, 1, 0, 1], [0, 0, 1, 1]]).gram_schmidt(); show(G)
+v = vector(QQ, [2, 0, 1, 1]); q = sum((v*g)/(g*g)*g for g in G.rows())
+show(v - q, q, (v - q) in W)</sage>
+</sol></ej>
+<ej id="ex-6-p1-2" n="P1 · 2" t="mínimos cuadrados · 1 p">
+<p>Mejor solución por mínimos cuadrados de x − y = 2, 2x + y = 1, x + y = 4.</p>
+<sol>
+<md>A<sup>t</sup>A = <m>6 2; 2 3</m>,  A<sup>t</sup>B = <m>8; 3</m>  ⇒  6x + 2y = 8, 2x + 3y = 3</md>
+<res>x = 9/7, y = 1/7</res>
+<sage t="Enero · P1 ejercicio 2">A = matrix(QQ, [[1, -1], [2, 1], [1, 1]]); B = vector(QQ, [2, 1, 4])
+show((A.T*A).solve_right(A.T*B))</sage>
+</sol></ej>
+<ej id="ex-6-p2-1" n="P2 · 1" t="núcleo, imagen y subespacios · 0,75 p">
+<p>f(x, y, z) = (x − y, y + z, x + z). a) Núcleo e imagen; ¿inyectiva? ¿suprayectiva? b) f(W₁) con W₁ = {x + y + z = 0} y f<sup>−1</sup>(W₂) con W₂ = ⟨(1, 0, 1), (0, 1, 0)⟩.</p>
+<sol>
+<p>a) A = <m>1 −1 0; 0 1 1; 1 0 1</m>, det A = 0. Núcleo: x = y, z = −y ⇒ Nuc f = ⟨(1, 1, −1)⟩: <b>no inyectiva</b>. Columnas: C₃ = C₁ + C₂ ⇒ Im f = ⟨(1, 0, 1), (−1, 1, 0)⟩, con normal (1, 0, 1) × (−1, 1, 0) = (−1, −1, 1): Im f = {x + y − z = 0}, <b>no suprayectiva</b>.</p>
+<p>b) W₁ = ⟨(1, −1, 0), (1, 0, −1)⟩: f(1, −1, 0) = (2, −1, 1), f(1, 0, −1) = (1, −1, 0), independientes. Como el núcleo no está en W₁ (1 + 1 − 1 ≠ 0), f(W₁) tiene dimensión 2 y coincide con la imagen. W₂: normal (1, 0, 1) × (0, 1, 0) = (−1, 0, 1), W₂ = {x − z = 0}; se sustituye f: (x − y) − (x + z) = −y − z = 0.</p>
+<res>f(W₁) = ⟨(2, −1, 1), (1, −1, 0)⟩ = Im f;  f<sup>−1</sup>(W₂) = {y + z = 0} = ⟨(1, 0, 0), (0, 1, −1)⟩</res>
+<sage t="Enero · P2 ejercicio 1">A = matrix(QQ, [[1, -1, 0], [0, 1, 1], [1, 0, 1]])
+show(A.right_kernel().basis(), A.column_space().complement().basis())
+show(span([A*vector([1, -1, 0]), A*vector([1, 0, -1])]) == A.column_space())
+show((matrix(QQ, [[1, 0, -1]])*A).right_kernel().basis())</sage>
+</sol></ej>
+<ej id="ex-6-p2-2" n="P2 · 2" t="construir f · 0,75 p">
+<p>f : ℝ³ → ℝ³ con Nuc f = ⟨(0, 1, −1)⟩, f(1, 0, 0) = (1, 2, 3) y f(1, 1, 0) en el plano x + y = 0.</p>
+<sol>
+<p>Se elige f(1, 1, 0) = (1, −1, 0) (en el plano y no nulo, para que el núcleo no crezca). Con B = {(0, 1, −1), (1, 0, 0), (1, 1, 0)}: f(e₁) = (1, 2, 3); f(e₂) = f(1, 1, 0) − f(e₁) = (0, −3, −3); y f(0, 1, −1) = 0 ⇒ f(e₃) = f(e₂).</p>
+<res>M(f) = <m>1 0 0; 2 −3 −3; 3 −3 −3</m>, f(x, y, z) = (x, 2x − 3y − 3z, 3x − 3y − 3z)</res>
+<p>Comprobación: rango 2 (la fila 3 menos la 2 es la 1), así que el núcleo es exactamente ⟨(0, 1, −1)⟩ ✓, y f(1, 1, 0) = (1, −1, 0) ✓.</p>
+<sage t="Enero · P2 ejercicio 2">B = column_matrix(QQ, [[0, 1, -1], [1, 0, 0], [1, 1, 0]]); F = column_matrix(QQ, [[0, 0, 0], [1, 2, 3], [1, -1, 0]])
+M = F*B.inverse(); show(M, M.right_kernel().basis())</sage>
+</sol></ej>
+<ej id="ex-6-p2-3" n="P2 · 3" t="SVD · 0,75 p">
+<p>Descomposición en valores singulares de A = <m>1 0; 1 1; 0 1</m>.</p>
+<sol>
+<p>AᵗA = <m>2 1; 1 2</m>: λ = 3, 1 ⇒ σ₁ = √3, σ₂ = 1, v₁ = (1, 1)/√2, v₂ = (1, −1)/√2. u₁ = A·v₁/√3 = (1, 2, 1)/√6, u₂ = A·v₂ = (1, 0, −1)/√2, u₃ = (1, −1, 1)/√3 (producto vectorial, normalizado).</p>
+<res>U = <m>1/√6, 1/√2, 1/√3; 2/√6, 0, −1/√3; 1/√6, −1/√2, 1/√3</m>,  Σ = <m>√3 0; 0 1; 0 0</m>,  V = <fr>1|√2</fr><m>1 1; 1 −1</m></res>
+<sage t="Enero · P2 ejercicio 3">A = matrix(QQ, [[1, 0], [1, 1], [0, 1]])
+U = column_matrix([vector([1, 2, 1])/sqrt(6), vector([1, 0, -1])/sqrt(2), vector([1, -1, 1])/sqrt(3)])
+S = matrix([[sqrt(3), 0], [0, 1], [0, 0]]); V = matrix([[1, 1], [1, -1]])/sqrt(2)
+show((U*S*V.T).simplify_full() == A)</sage>
+</sol></ej>
+<ej id="ex-6-p2-4" n="P2 · 4" t="aritmética modular · 0,75 p">
+<p>a) Inverso de 17 en ℤ₅₀ (Euclides extendido). b) φ(18) y 5⁵⁰ en ℤ₁₈. c) Todas las soluciones en ℤ₇ de 2x + 3y + z = 1, x − 2z = 3.</p>
+<sol>
+<p>a) 50 = 2·17 + 16; 17 = 1·16 + 1 ⇒ 1 = 17 − 16 = 17 − (50 − 2·17) = 3·17 − 50: <b>17<sup>−1</sup> = 3</b>.</p>
+<p>b) φ(18) = 18·(1 − ½)(1 − ⅓) = 6; mcd(5, 18) = 1 y 50 = 8·6 + 2 ⇒ 5⁵⁰ ≡ 5² = 25 ≡ <b>7</b>.</p>
+<p>c) x = 3 + 2z. Sustituyendo: 2(3 + 2z) + 3y + z = 1 ⇒ 3y = −5 − 5z ≡ 2 + 2z. Como 3<sup>−1</sup> = 5 en ℤ₇: y = 5(2 + 2z) ≡ 3 + 3z. Con z = t libre:</p>
+<res>(3 + 2t, 3 + 3t, t), t ∈ ℤ₇: (3, 3, 0), (5, 6, 1), (0, 2, 2), (2, 5, 3), (4, 1, 4), (6, 4, 5), (1, 0, 6)</res>
+<sage t="Enero · P2 ejercicio 4">print(inverse_mod(17, 50), euler_phi(18), power_mod(5, 50, 18))
+F = GF(7); print([(x, y, z) for x in F for y in F for z in F if 2*x + 3*y + z == 1 and x - 2*z == 3])</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-7" n="7" t="Examen de junio del curso anterior" eyebrow="Curso 2025-26" lede="Examen final de teoría de la convocatoria de junio: QR, construir f y su matriz en otras bases, diagonalización ortogonal y aritmética modular con matrices.">
+<ej id="ex-7-1" n="1" t="col(A) y QR · 1,5 p">
+<p>A = <m>2 1; 1 0; 1 1; 0 0</m>. a) Base, dimensión e implícitas de col(A). b) Descomposición QR.</p>
+<sol>
+<p>a) Las dos columnas son independientes: <b>dim 2</b>. Los perpendiculares cumplen 2x + y + z = 0 y x + z = 0 ⇒ (1, −1, −1, 0) y (0, 0, 0, 1):</p>
+<res>col(A) = ⟨(2, 1, 1, 0), (1, 0, 1, 0)⟩ = {x − y − z = 0, t = 0}</res>
+<p>b) Gram-Schmidt: u₁ = (2, 1, 1, 0), ‖u₁‖ = √6; u₂ = (1, 0, 1, 0) − <fr>3|6</fr>u₁ = (0, −1/2, 1/2, 0), de norma 1/√2. R = Q<sup>t</sup>A: r₁₁ = √6, r₁₂ = q₁·a₂ = 3/√6 = √6/2, r₂₂ = q₂·a₂ = √2/2.</p>
+<res>Q = <m>2/√6, 0; 1/√6, −1/√2; 1/√6, 1/√2; 0, 0</m>,  R = <m>√6, √6/2; 0, √2/2</m></res>
+<sage t="Junio · ejercicio 1">A = matrix(QQ, [[2, 1], [1, 0], [1, 1], [0, 0]])
+show(A.column_space().complement().basis())
+G, M = A.T.gram_schmidt(); Q = column_matrix([g/g.norm() for g in G.rows()])
+R = (Q.T*A).simplify_full(); show(Q, R, (Q*R).simplify_full() == A)</sage>
+</sol></ej>
+<ej id="ex-7-2" n="2" t="construir f : ℝ⁴ → ℝ³ y M<sub>B₁B₂</sub>(f) · 1,5 p">
+<p>Nuc f = ⟨(0, 1, −1, 1), (0, 1, 0, 1)⟩, f(1, 0, 0, 1) en la recta r = {x + y + z = 0, x − z = 0} y f(1, 1, 1, 1) = (0, 1, 2). Después, M<sub>B₁B₂</sub>(f) con B₁ = {(1, 1, 0, 0), (0, 1, 1, 0), (0, 0, 1, 1), (0, 0, 0, 1)} y B₂ = {(0, 1, 0), (1, 1, 0), (0, 1, 1)}.</p>
+<sol>
+<p>La recta r tiene dirección (1, −2, 1): se elige f(1, 0, 0, 1) = (1, −2, 1). Los cuatro vectores (los dos del núcleo, (1, 0, 0, 1) y (1, 1, 1, 1)) forman base (determinante −1), y M(f) = (imágenes por columnas)·B<sup>−1</sup>:</p>
+<res>M(f) = <m>0 −1 0 1; 1 3 0 −3; 2 1 0 −1</m>, f(x, y, z, t) = (−y + t, x + 3y − 3t, 2x + y − t)</res>
+<p>Comprobación: los dos vectores del núcleo van a 0, f(1, 0, 0, 1) = (1, −2, 1) y f(1, 1, 1, 1) = (0, 1, 2) ✓. En las otras bases, M<sub>B₁B₂</sub>(f) = B₂<sup>−1</sup>·M(f)·B₁:</p>
+<res>M<sub>B₁B₂</sub>(f) = <m>2 3 −3 −3; −1 −1 1 1; 3 1 −1 −1</m></res>
+<p>Por ejemplo, f(1, 1, 0, 0) = (−1, 4, 3) = 2(0, 1, 0) − (1, 1, 0) + 3(0, 1, 1) ✓.</p>
+<sage t="Junio · ejercicio 2">B = column_matrix(QQ, [[0, 1, -1, 1], [0, 1, 0, 1], [1, 0, 0, 1], [1, 1, 1, 1]])
+F = column_matrix(QQ, [[0, 0, 0], [0, 0, 0], [1, -2, 1], [0, 1, 2]])
+M = F*B.inverse(); show(M, M.right_kernel().basis())
+B1 = column_matrix(QQ, [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]); B2 = column_matrix(QQ, [[0, 1, 0], [1, 1, 0], [0, 1, 1]])
+show(B2.inverse()*M*B1)</sage>
+</sol></ej>
+<ej id="ex-7-3" n="3" t="diagonalización ortogonal y A⁸⁰ · 1,5 p">
+<p>A = <m>2 2 2; 2 2 2; 2 2 2</m>, con valores propios 0 (doble) y 6. a) P ortogonal con A = P·D·P<sup>t</sup>. b) Cómo calcular A⁸⁰.</p>
+<sol>
+<p>a) V₆ = ⟨(1, 1, 1)⟩ y V₀ = {x + y + z = 0} = ⟨(1, −1, 0), (1, 0, −1)⟩; Gram-Schmidt dentro de V₀: (1, 0, −1) − ½(1, −1, 0) = (1/2, 1/2, −1) ∼ (1, 1, −2).</p>
+<res>P = <m>1/√3, 1/√2, 1/√6; 1/√3, −1/√2, 1/√6; 1/√3, 0, −2/√6</m>,  D = <m>6 0 0; 0 0 0; 0 0 0</m></res>
+<p>b) A⁸⁰ = P·D⁸⁰·P<sup>t</sup> = 6⁸⁰·p₁p₁<sup>t</sup> (sólo queda la columna del 6) = <fr>6⁸⁰|3</fr><m>1 1 1; 1 1 1; 1 1 1</m> = 2⁸⁰·3⁷⁹ <m>1 1 1; 1 1 1; 1 1 1</m>.</p>
+<sage t="Junio · ejercicio 3">A = matrix(QQ, 3, 3, [2]*9); show(A.eigenvectors_right())
+show(A^80 == 2^80*3^79*matrix(QQ, 3, 3, [1]*9))</sage>
+</sol></ej>
+<ej id="ex-7-4" n="4" t="inverso en ℤ₄₁ y matriz inversa en ℤ₅ · 1,5 p">
+<p>a) Inverso de 73 en ℤ₄₁ con el algoritmo extendido de Euclides. b) Inversa de A = <m>2 2 1; 3 1 0; 4 1 2</m> con entradas en ℤ₅.</p>
+<sol>
+<p>a) 73 = 1·41 + 32; 41 = 1·32 + 9; 32 = 3·9 + 5; 9 = 1·5 + 4; 5 = 1·4 + 1. Hacia atrás: 1 = 2·5 − 9 = 2·32 − 7·9 = 9·32 − 7·41 = 9·73 − 16·41 ⇒ <b>73<sup>−1</sup> = 9</b> en ℤ₄₁ (73·9 = 657 = 16·41 + 1 ✓).</p>
+<p>b) det A = −9 ≡ 1 (mod 5), así que A<sup>−1</sup> es la adjunta traspuesta, <m>2 −3 −1; −6 0 3; −1 6 −4</m>, reducida módulo 5:</p>
+<res>A<sup>−1</sup> = <m>2 2 4; 4 0 3; 4 1 1</m> en ℤ₅</res>
+<p>Comprobación: A·A<sup>−1</sup> = <m>16 5 15; 10 6 15; 20 10 21</m> ≡ I (mod 5) ✓</p>
+<sage t="Junio · ejercicio 4">print(inverse_mod(73, 41))
+A = matrix(GF(5), [[2, 2, 1], [3, 1, 0], [4, 1, 2]]); show(A.det(), A.inverse())</sage>
+</sol></ej>
+</tema>
+
+<tema id="ex-8" n="8" t="Exámenes de prácticas del curso anterior" eyebrow="SageMath · curso 2025-26" lede="Las prácticas evaluables del subgrupo 3.4 (primer parcial) y del grupo 3.2 (segundo parcial), resueltas con las órdenes de la web. En el aula se usan los ficheros algebra.py y geom3d.py del profesor; aquí, sus equivalentes de geometria.py.">
+<ap id="ex-8-0" n="8.0" t="Qué entra en el examen de prácticas del segundo parcial"><p>Según la lista publicada en el Aula Virtual:</p><ul><li><b>Práctica 6</b>: sistemas por mínimos cuadrados (si x es solución, Ax está en col(A) y Ax − b es perpendicular a col(A)), rectas de regresión y ajuste de curvas.</li><li><b>Práctica 7</b>: paramétricas e implícitas de rectas y planos, bases ortonormales adaptadas a rectas y planos y posiciones relativas.</li><li><b>Práctica 8</b>: polígonos, estrellas, prismas, pirámides y otros objetos.</li><li><b>Práctica 9</b>: giros, simetrías y dilataciones en el plano y simetrías en el espacio.</li><li><b>Práctica 10</b>: giros en el espacio, proyección oblicua, diagonalización y potencias de matrices diagonalizables.</li><li><b>Práctica 11</b>: diagonalización ortonormal de matrices simétricas, SVD (qué significan U, S y V) y la base en la que A·Aᵗ es diagonal, con un objeto construido en ella.</li></ul></ap>
+<ej id="ex-8-1" n="1er parcial · 1" t="LU con matrices elementales">
+<p>Descomposición LU de A = <m>1 2 1; 1 1 1; 0 1 2</m> usando matrices elementales.</p>
+<sol>
+<p>E₁ = «F₂ − F₁» y E₂ = «F₃ + F₂» dejan U = E₂E₁A = <m>1 2 1; 0 −1 0; 0 0 2</m>. Entonces A = E₁<sup>−1</sup>E₂<sup>−1</sup>U, y las inversas de estas elementales sólo cambian el signo del multiplicador:</p>
+<res>L = <m>1 0 0; 1 1 0; 0 −1 1</m>,  U = <m>1 2 1; 0 −1 0; 0 0 2</m>,  A = L·U</res>
+<sage t="Prácticas 1er parcial · ejercicio 1">A = matrix(QQ, [[1, 2, 1], [1, 1, 1], [0, 1, 2]])
+E1 = elementary_matrix(QQ, 3, row1=1, row2=0, scale=-1); E2 = elementary_matrix(QQ, 3, row1=2, row2=1, scale=1)
+U = E2*E1*A; L = E1.inverse()*E2.inverse(); show(L, U, L*U == A)</sage>
+</sol></ej>
+<ej id="ex-8-2" n="1er parcial · 2" t="implícitas e intersección">
+<p>W₁ = ⟨(1, 2, 1, 1), (1, 1, 0, 1)⟩ y W₂ = {x + z + t = 0}. a) Implícitas de W₁. b) Base y dimensión de W₁ ∩ W₂.</p>
+<sol>
+<p>a) Los perpendiculares cumplen x + 2y + z + t = 0 y x + y + t = 0 ⇒ (−1, 1, −1, 0) y (−1, 0, 0, 1):</p>
+<res>W₁ = {x − y + z = 0, x − t = 0}</res>
+<p>b) Se juntan las tres ecuaciones: t = x, z = −2x, y = x + z = −x.</p>
+<res>W₁ ∩ W₂ = ⟨(1, −1, −2, 1)⟩, dim 1</res>
+<sage t="Prácticas 1er parcial · ejercicio 2">W1 = span(QQ, [[1, 2, 1, 1], [1, 1, 0, 1]]); W2 = matrix(QQ, [[1, 0, 1, 1]]).right_kernel()
+show(W1.complement().basis(), W1.intersection(W2).basis())</sage>
+</sol></ej>
+<ej id="ex-8-3" n="1er parcial · 3" t="base adaptada a un plano y prisma octogonal">
+<p>W = ⟨(1, 1, 1), (2, 1, 1)⟩. a) Base ortonormal con los dos primeros vectores en el plano; dibuja el plano y la base. b) Prisma de base octogonal de radio 2 contenida en el plano y altura 4.</p>
+<sol>
+<p>a) u = (1, 1, 1)/√3; Gram-Schmidt: (2, 1, 1) − <fr>4|3</fr>(1, 1, 1) = (2/3, −1/3, −1/3) ⇒ v = (2, −1, −1)/√6; w = normal = (1, 1, 1) × (2, 1, 1) ∼ (0, 1, −1)/√2.</p>
+<p>b) Base: 2(cos(kπ/4)·u + sen(kπ/4)·v), k = 0, …, 7; la tapa, la base + 4w.</p>
+<sage t="Prácticas 1er parcial · ejercicio 3">from geometria import *
+u = vector([1, 1, 1]).normalized(); v = vector([2, -1, -1]).normalized(); w = u.cross_product(v)
+base = [2*(cos(k*pi/4)*u + sin(k*pi/4)*v) for k in range(8)]
+plano([u, v]) + vectores([u, v, w]) + prisma(base + [P + 4*w for P in base], wire=True)</sage>
+</sol></ej>
+<ej id="ex-8-4" n="2º parcial · 1" t="base ortonormal y descomposición · 0,5 p">
+<p>Base ortonormal de W y v como suma de un vector de W y otro ortogonal: a) W = ⟨(1, 0, 1), (1, 1, 0)⟩, v = (2, 1, 2) (dibujándolo); b) W = ⟨(1, 2, 1, 0, 1), (2, 1, 0, 1, 1)⟩, v = (0, 2, 1, 1, 1).</p>
+<sol>
+<p>a) q₁ = (1, 0, 1)/√2; (1, 1, 0) − ½(1, 0, 1) ∼ (1, 2, −1) ⇒ q₂ = (1, 2, −1)/√6. Proyección: 2(1, 0, 1) + <fr>2|6</fr>(1, 2, −1) = (7/3, 2/3, 5/3).</p>
+<res>(2, 1, 2) = (7/3, 2/3, 5/3) + (−1/3, 1/3, 1/3)</res>
+<p>b) q₁ = (1, 2, 1, 0, 1)/√7; (2, 1, 0, 1, 1) − <fr>5|7</fr>(1, 2, 1, 0, 1) ∼ (9, −3, −5, 7, 2) ⇒ q₂ = (9, −3, −5, 7, 2)/√168. Con las ecuaciones normales, proy = <fr>11|12</fr>(1, 2, 1, 0, 1) − <fr>1|12</fr>(2, 1, 0, 1, 1).</p>
+<res>v = (3/4, 7/4, 11/12, −1/12, 5/6) + (−3/4, 1/4, 1/12, 13/12, 1/6)</res>
+<sage t="Prácticas 2º parcial · ejercicio 1">from geometria import *
+for gen, v in [([[1, 0, 1], [1, 1, 0]], [2, 1, 2]), ([[1, 2, 1, 0, 1], [2, 1, 0, 1, 1]], [0, 2, 1, 1, 1])]:
+    A = matrix(QQ, gen); v = vector(QQ, v)
+    G, _ = A.gram_schmidt(); p = sum((v*g)/(g*g)*g for g in G.rows())
+    print(G.rows(), p, v - p, A*(v - p))
+q1 = vector([1, 0, 1]).normalized(); q2 = vector([1, 2, -1]).normalized()
+plano([q1, q2]) + vectores([q1, q2, vector([2, 1, 2]), vector([7/3, 2/3, 5/3]), vector([-1/3, 1/3, 1/3])])</sage>
+</sol></ej>
+<ej id="ex-8-5" n="2º parcial · 2" t="giro de 60° y proyección oblicua · 0,9 p">
+<p>a) Matriz del giro de 60° alrededor de r = ⟨(1, 2, 1)⟩. b) Matriz de la proyección oblicua sobre π = {x − y − z = 0} en la dirección (5, −1, −1). c) Aplicarlas a la pirámide de base de 9 lados del enunciado.</p>
+<sol>
+<p>a) Base ortonormal con el eje primero: u = (1, 2, 1)/√6, v = (−2, 1, 0)/√5 (perpendicular), w = u × v. En ella el giro es G = <m c>1, 0, 0; 0, cos 60°, −sen 60°; 0, sen 60°, cos 60°</m> y M = P·G·P<sup>t</sup>. Sale lo mismo con la fórmula de Rodrigues, con n = (1, 2, 1)/√6:</p>
+<md>M = <fr>1|2</fr>I + <fr>1|12</fr><m>1 2 1; 2 4 2; 1 2 1</m> + <fr>√2|4</fr><m>0 −1 2; 1 0 −1; −2 1 0</m></md>
+<p>b) Cada punto se lleva al plano moviéndolo en la dirección d = (5, −1, −1): P(x) = x − <fr>n·x|n·d</fr>d con n = (1, −1, −1) y n·d = 7.</p>
+<res>P = I − <fr>1|7</fr>d·nᵗ = <fr>1|7</fr><m>2 5 5; 1 6 −1; 1 −1 6</m></res>
+<p>Comprobación: P·d = 0 y P deja fijos los vectores del plano, como (1, 1, 0) y (1, 0, 1) ✓.</p>
+<sage t="Prácticas 2º parcial · ejercicio 2">from geometria import *
+u = vector([1, 2, 1]).normalized(); v = vector([-2, 1, 0]).normalized(); w = u.cross_product(v)
+P = column_matrix([u, v, w]); t = pi/3
+G = matrix([[1, 0, 0], [0, cos(t), -sin(t)], [0, sin(t), cos(t)]]); M = (P*G*P.T).simplify_full()
+d = vector([5, -1, -1]); n = vector([1, -1, -1]); Pr = identity_matrix(3) - d.column()*n.row()/(n*d)
+show(M, Pr, (M*u - u).simplify_full(), Pr*d)
+a = vector([1, 1, 1]).normalized(); b = vector([-a[1], a[0], 0]).normalized(); c = a.cross_product(b)
+desp = vector([-1, 1, 1]).normalized()
+vert = [cos(2*pi*i/9)*a + sin(2*pi*i/9)*b + desp for i in range(9)] + [2*c + desp]
+girada = [M*x for x in vert]
+recta(u) + plano(ec="x-y-z=0") + piramide(girada, wire=True) + piramide([Pr*x for x in girada], color=azul, wire=True)</sage>
+</sol></ej>
+<ej id="ex-8-6" n="2º parcial · 3" t="recurrencia con matrices · 0,6 p">
+<p>a₀ = 1, a₁ = 2, a<sub>n+2</sub> = 3a<sub>n+1</sub> − 2a<sub>n</sub>. Escribe la recurrencia con matrices, diagonaliza, calcula a₁₀, a₁₀₀, a₁₀₀₀ y a₁₀₀₀₀ y comenta qué pasa según los valores propios.</p>
+<sol>
+<p>Con xₙ = (a<sub>n+1</sub>, aₙ): x<sub>n+1</sub> = A·xₙ con A = <m>3 −2; 1 0</m>, así que xₙ = Aⁿ·(2, 1).</p>
+<p>p(λ) = λ² − 3λ + 2 = (λ − 2)(λ − 1): dos valores propios distintos ⇒ <b>diagonalizable</b>, con V₂ = ⟨(2, 1)⟩ y V₁ = ⟨(1, 1)⟩.</p>
+<md>A = <m>2 1; 1 1</m><m>2 0; 0 1</m><m>2 1; 1 1</m><sup>−1</sup></md>
+<p>El vector inicial (2, 1) ya es propio de valor 2, así que Aⁿ(2, 1) = 2ⁿ(2, 1) y <b>aₙ = 2ⁿ</b>: a₁₀ = 1024, a₁₀₀ = 2¹⁰⁰ ≈ 1,27·10³⁰, a₁₀₀₀ ≈ 1,07·10³⁰¹, a₁₀₀₀₀ ≈ 2·10³⁰¹⁰.</p>
+<p>En general aₙ = α·2ⁿ + β·1ⁿ: la parte del valor propio 2 (&gt; 1) crece sin límite y manda; la del valor propio 1 se queda constante (y la de un |λ| &lt; 1 tendería a 0).</p>
+<sage t="Prácticas 2º parcial · ejercicio 3">A = matrix(QQ, [[3, -2], [1, 0]]); D, P = A.eigenmatrix_right(); show(P, D, P*D*P.inverse() == A)
+x0 = vector([2, 1])
+for n in (10, 100, 1000, 10000):
+    a = (P*D^n*P.inverse()*x0)[1]
+    print(n, a == 2^n, N(a, digits=5))</sage>
 </sol></ej>
 </tema>
